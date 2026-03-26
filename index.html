@@ -861,7 +861,7 @@ body.onboarding-active #onb-screen{
           <div class="rowb" style="margin-bottom:2px;"><span class="t-xxs muted sn">Kcal</span><span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span></div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
             <div class="macro-val neon sn" id="m-kcal" style="margin:0;">—</div>
-            <svg width="40" height="40" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true"><circle cx="22" cy="22" r="17" class="ring-track" style="stroke:rgba(255,255,255,.12);"/><circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="stroke-width:3.5;opacity:.35;filter:drop-shadow(0 0 4px rgba(77,220,198,.5));transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1),stroke .3s,opacity .3s;"/></svg>
+            <svg width="40" height="40" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true"><circle cx="22" cy="22" r="17" class="ring-track" style="stroke:rgba(255,255,255,.18);"/><circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring" stroke="var(--p)" style="stroke-width:3.5;stroke-dasharray:106.8;stroke-dashoffset:106.8;opacity:.35;filter:drop-shadow(0 0 4px rgba(77,220,198,.5));transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1),stroke .3s,opacity .3s;"/></svg>
           </div>
           <div class="bar-track md"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
         </div>
@@ -3642,16 +3642,21 @@ function migrateTargetKcal(){
   if(changed)try{lsW(SK.diet,JSON.stringify(dietData));}catch{}
 }
 
-/* ── Sum kcal from checked meals for the given day ── */
+/* ── Sum kcal from checked meals for the given day ──
+   Falls back to dist-based estimate when targetKcal is missing (old plans). */
 function getCompletedMealKcal(dayNum){
   if(!dietData)return 0;
   const day=(dietData.days||[]).find(d=>d.d===dayNum);
   if(!day)return 0;
+  const mNames=getMealNames();
+  const total=calcMacros().kcal||baseKcal();
+  const dist={2:[0.45,0.55],3:[0.25,0.40,0.35],4:[0.20,0.35,0.10,0.35],5:[0.20,0.30,0.10,0.30,0.10]}[mNames.length]||[0.25,0.40,0.35];
   let sum=0;
-  getMealNames().forEach(n=>{
+  mNames.forEach((n,mi)=>{
     if(lsR(mk(dayNum,n))==='1'){
-      const kcal=day[n]?.targetKcal;
-      if(typeof kcal==='number'&&kcal>0)sum+=kcal;
+      const stored=day[n]?.targetKcal;
+      const kcal=(typeof stored==='number'&&stored>0)?stored:Math.round(total*dist[mi]);
+      sum+=kcal;
     }
   });
   return sum;
