@@ -696,13 +696,19 @@ body.onboarding-active #onb-screen{
       <p class="field-label" style="margin-bottom:8px;">Proteine preferite</p>
       <div class="chip-row" id="food-proteins">
         <button class="food-tag" onclick="toggleFood(this,'pollo')">🍗 Pollo</button>
+        <button class="food-tag" onclick="toggleFood(this,'coscia pollo')">🍗 Coscia pollo</button>
+        <button class="food-tag" onclick="toggleFood(this,'tacchino')">🦃 Tacchino</button>
         <button class="food-tag" onclick="toggleFood(this,'manzo')">🥩 Manzo</button>
         <button class="food-tag" onclick="toggleFood(this,'salmone')">🐟 Salmone</button>
         <button class="food-tag" onclick="toggleFood(this,'tonno')">🐠 Tonno</button>
+        <button class="food-tag" onclick="toggleFood(this,'merluzzo')">🐡 Merluzzo</button>
+        <button class="food-tag" onclick="toggleFood(this,'branzino')">🐟 Branzino</button>
+        <button class="food-tag" onclick="toggleFood(this,'platessa')">🐠 Platessa</button>
+        <button class="food-tag" onclick="toggleFood(this,'sgombro')">🐟 Sgombro</button>
+        <button class="food-tag" onclick="toggleFood(this,'trota')">🐡 Trota</button>
+        <button class="food-tag" onclick="toggleFood(this,'gamberetti')">🦐 Gamberetti</button>
         <button class="food-tag" onclick="toggleFood(this,'uova')">🥚 Uova</button>
         <button class="food-tag" onclick="toggleFood(this,'albume')">⬜ Albume</button>
-        <button class="food-tag" onclick="toggleFood(this,'tacchino')">🦃 Tacchino</button>
-        <button class="food-tag" onclick="toggleFood(this,'merluzzo')">🐡 Merluzzo</button>
         <button class="food-tag" onclick="toggleFood(this,'tofu')">🧊 Tofu</button>
         <button class="food-tag" onclick="toggleFood(this,'legumi')">🫘 Legumi</button>
       </div>
@@ -712,12 +718,19 @@ body.onboarding-active #onb-screen{
       <p class="field-label" style="margin-bottom:8px;">Carboidrati preferiti</p>
       <div class="chip-row" id="food-carbs">
         <button class="food-tag" onclick="toggleFood(this,'riso')">🍚 Riso</button>
+        <button class="food-tag" onclick="toggleFood(this,'riso basmati')">🍚 Riso basmati</button>
+        <button class="food-tag" onclick="toggleFood(this,'riso integrale')">🌾 Riso integrale</button>
         <button class="food-tag" onclick="toggleFood(this,'pasta')">🍝 Pasta</button>
         <button class="food-tag" onclick="toggleFood(this,'patate')">🥔 Patate</button>
+        <button class="food-tag" onclick="toggleFood(this,'patate dolci')">🍠 Patate dolci</button>
         <button class="food-tag" onclick="toggleFood(this,'pane')">🍞 Pane</button>
         <button class="food-tag" onclick="toggleFood(this,'avena')">🌾 Avena</button>
         <button class="food-tag" onclick="toggleFood(this,'quinoa')">🌿 Quinoa</button>
         <button class="food-tag" onclick="toggleFood(this,'farro')">🌾 Farro</button>
+        <button class="food-tag" onclick="toggleFood(this,'couscous')">🌾 Couscous</button>
+        <button class="food-tag" onclick="toggleFood(this,'orzo')">🌾 Orzo</button>
+        <button class="food-tag" onclick="toggleFood(this,'mais')">🌽 Mais</button>
+        <button class="food-tag" onclick="toggleFood(this,'polenta')">🟡 Polenta</button>
         <button class="food-tag" onclick="toggleFood(this,'frutta')">🍎 Frutta</button>
       </div>
     </div>
@@ -729,8 +742,16 @@ body.onboarding-active #onb-screen{
         <button class="food-tag" onclick="toggleFood(this,'olio oliva')">🫒 Olio EVO</button>
         <button class="food-tag" onclick="toggleFood(this,'mandorle')">🌰 Mandorle</button>
         <button class="food-tag" onclick="toggleFood(this,'noci')">🥜 Noci</button>
+        <button class="food-tag" onclick="toggleFood(this,'nocciole')">🌰 Nocciole</button>
+        <button class="food-tag" onclick="toggleFood(this,'pistacchi')">🟢 Pistacchi</button>
+        <button class="food-tag" onclick="toggleFood(this,'burro arachidi')">🥜 Burro arachidi</button>
+        <button class="food-tag" onclick="toggleFood(this,'tahini')">🫙 Tahini</button>
+        <button class="food-tag" onclick="toggleFood(this,'semi chia')">🌱 Semi chia</button>
+        <button class="food-tag" onclick="toggleFood(this,'semi lino')">🌱 Semi lino</button>
+        <button class="food-tag" onclick="toggleFood(this,'olive')">🫒 Olive</button>
         <button class="food-tag" onclick="toggleFood(this,'yogurt greco')">🍶 Yogurt greco</button>
         <button class="food-tag" onclick="toggleFood(this,'ricotta')">🧀 Ricotta</button>
+        <button class="food-tag" onclick="toggleFood(this,'fiocchi latte')">🥛 Fiocchi latte</button>
         <button class="food-tag" onclick="toggleFood(this,'cioccolato fondente')">🍫 Cioccolato</button>
       </div>
     </div>
@@ -840,7 +861,7 @@ body.onboarding-active #onb-screen{
           <div class="rowb" style="margin-bottom:2px;"><span class="t-xxs muted sn">Kcal</span><span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span></div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
             <div class="macro-val neon sn" id="m-kcal" style="margin:0;">—</div>
-            <svg width="40" height="40" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true"><circle cx="22" cy="22" r="17" class="ring-track"/><circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="stroke-width:3.5;filter:drop-shadow(0 0 4px rgba(77,220,198,.5));"/></svg>
+            <svg width="40" height="40" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true"><circle cx="22" cy="22" r="17" class="ring-track" style="stroke:rgba(255,255,255,.12);"/><circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="stroke-width:3.5;opacity:.35;filter:drop-shadow(0 0 4px rgba(77,220,198,.5));transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1),stroke .3s,opacity .3s;"/></svg>
           </div>
           <div class="bar-track md"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
         </div>
@@ -2443,7 +2464,133 @@ const FOOD_DB={
   'fiocchi latte': {kcal:84, pro:11, carb:3.4, fat:2.3, fiber:0,   gi:10, sat:1.5, omega3:0.1, ca:80,  fe:0.1,na:320,  fodmap:false,label:'Fiocchi di latte',        isDairy:true,isProtein:true, maxPortionG:300},
   ricotta:         {kcal:174,pro:11, carb:3,   fat:13,  fiber:0,   gi:27, sat:8.3, omega3:0.1, ca:207, fe:0.4,na:84,   fodmap:false,label:'Ricotta',                 isFat:true,  isDairy:true, maxPortionG:200},
   'cioccolato fondente':{kcal:546,pro:5,carb:60,fat:31, fiber:11,  gi:25, sat:18,  omega3:0,   ca:73,  fe:8.0,na:20,   fodmap:false,label:'Cioccolato fondente 85%',isSweet:true, maxPortionG:30},
+  /* ── NUOVI PESCI ──────────────────────────────────────────────────────────────── */
+  platessa:        {kcal:83, pro:17, carb:0,   fat:1.3, fiber:0,   gi:0,  sat:0.3, omega3:0.3, ca:18,  fe:0.3,na:70,   fodmap:false,label:'Platessa al vapore',      isProtein:true, maxPortionG:250},
+  orata:           {kcal:96, pro:18, carb:0,   fat:2.5, fiber:0,   gi:0,  sat:0.6, omega3:0.5, ca:30,  fe:0.6,na:80,   fodmap:false,label:'Orata al forno',           isProtein:true, maxPortionG:250},
+  sgombro:         {kcal:205,pro:19, carb:0,   fat:14,  fiber:0,   gi:0,  sat:3.3, omega3:2.6, ca:12,  fe:1.1,na:90,   fodmap:false,label:'Sgombro al vapore',        isProtein:true, maxPortionG:200},
+  sardine:         {kcal:208,pro:25, carb:0,   fat:11,  fiber:0,   gi:0,  sat:2.9, omega3:2.0, ca:382, fe:2.9,na:120,  fodmap:false,label:'Sardine al naturale',      isProtein:true, maxPortionG:150},
+  'pesce spada':   {kcal:121,pro:20, carb:0,   fat:4,   fiber:0,   gi:0,  sat:1.1, omega3:0.7, ca:30,  fe:0.9,na:115,  fodmap:false,label:'Pesce spada alla griglia', isProtein:true, maxPortionG:220},
+  trota:           {kcal:119,pro:20, carb:0,   fat:3.7, fiber:0,   gi:0,  sat:0.8, omega3:0.9, ca:70,  fe:0.7,na:52,   fodmap:false,label:'Trota al vapore',          isProtein:true, maxPortionG:220},
+  /* ── NUOVI CARBOIDRATI ───────────────────────────────────────────────────────── */
+  mais:            {kcal:86, pro:3.2,carb:19,  fat:1.2, fiber:2.4, gi:52, sat:0.2, omega3:0,   ca:3,   fe:0.5,na:15,   fodmap:false,label:'Mais cotto',               isCarb:true, maxPortionG:200},
+  polenta:         {kcal:72, pro:1.8,carb:15,  fat:0.5, fiber:0.9, gi:69, sat:0.1, omega3:0,   ca:2,   fe:0.3,na:1,    fodmap:false,label:'Polenta cotta',             isCarb:true, rawFactor:0.25, maxPortionG:300},
+  /* ── NUOVI GRASSI/SEMI ───────────────────────────────────────────────────────── */
+  nocciole:        {kcal:628,pro:15, carb:17,  fat:61,  fiber:10,  gi:15, sat:4.5, omega3:0.1, ca:114, fe:4.7,na:1,    fodmap:false,label:'Nocciole',                 isFat:true,  maxPortionG:30},
+  tahini:          {kcal:595,pro:17, carb:21,  fat:54,  fiber:9,   gi:10, sat:7.6, omega3:0.4, ca:426, fe:8.9,na:17,   fodmap:false,label:'Tahini (pasta di sesamo)', isFat:true,  maxPortionG:25},
+  'semi lino':     {kcal:534,pro:18, carb:29,  fat:42,  fiber:27,  gi:1,  sat:3.7, omega3:23.0,ca:255, fe:5.7,na:30,   fodmap:false,label:'Semi di lino',             isFat:true,  maxPortionG:20},
+  'semi zucca':    {kcal:559,pro:30, carb:10,  fat:49,  fiber:6,   gi:1,  sat:8.7, omega3:0.1, ca:46,  fe:8.8,na:7,    fodmap:false,label:'Semi di zucca',            isFat:true,  maxPortionG:25},
+  olive:           {kcal:115,pro:0.8,carb:6,   fat:11,  fiber:3.2, gi:15, sat:1.4, omega3:0.1, ca:88,  fe:3.3,na:735,  fodmap:false,label:'Olive verdi/nere',         isFat:true,  maxPortionG:40},
 };
+
+/* ══════════════════════════════════════════════════════
+   FOOD ALIAS MAP — normalizza input utente → chiave FOOD_DB
+   Supporta sinonimi italiani/inglesi comuni
+══════════════════════════════════════════════════════ */
+const FOOD_ALIASES={
+  /* proteine */
+  'petto di pollo':'pollo','petto pollo':'pollo','chicken breast':'pollo','chicken':'pollo',
+  'coscia':'coscia pollo','cosce':'coscia pollo',
+  'manzo magro':'manzo','carne bovina':'manzo','bistecca':'manzo','beef':'manzo',
+  'macinato':'macinato magro','carne macinata':'macinato magro',
+  'gamber':'gamberetti','gambero':'gamberetti','shrimp':'gamberetti','prawns':'gamberetti','gambas':'gamberetti',
+  'albumi':'albume','egg white':'albume','egg whites':'albume',
+  'uovo':'uova','eggs':'uova','egg':'uova',
+  'fiocchi di latte':'fiocchi latte','cottage cheese':'fiocchi latte','fiocchi':'fiocchi latte','quark':'fiocchi latte',
+  'greek yogurt':'yogurt greco','yogurt 0%':'yogurt greco','yogurt 0':'yogurt greco',
+  'platessa':'platessa','plaice':'platessa','sogliola':'platessa',
+  'orata':'orata','sea bream':'orata','bream':'orata',
+  'sgombro':'sgombro','mackerel':'sgombro',
+  'sardina':'sardine','acciuga':'sardine','alice':'sardine','anchovies':'sardine',
+  'spada':'pesce spada','swordfish':'pesce spada',
+  'trota':'trota','trout':'trota',
+  'branzino':'branzino','sea bass':'branzino','spigola':'branzino',
+  'merluzzo':'merluzzo','cod':'merluzzo','baccalà':'merluzzo',
+  'salmone':'salmone','salmon':'salmone',
+  'tonno sott\'olio':'tonno','tonno al naturale':'tonno','tuna':'tonno',
+  'tacchino petto':'tacchino','turkey':'tacchino',
+  'tofu':'tofu','soya bean curd':'tofu',
+  'tempeh':'tempeh',
+  'seitan':'seitan','wheat gluten':'seitan',
+  'ceci':'legumi','fagioli':'legumi','lenticchie':'legumi','legumes':'legumi','beans':'legumi','chickpeas':'legumi',
+  /* carboidrati */
+  'riso basmati':'riso basmati','basmati':'riso basmati',
+  'riso integrale':'riso integrale','brown rice':'riso integrale',
+  'riso':'riso','rice':'riso',
+  'pasta integrale':'pasta','spaghetti':'pasta','penne':'pasta','rigatoni':'pasta','fusilli':'pasta',
+  'patate americane':'patate dolci','patata dolce':'patate dolci','sweet potato':'patate dolci',
+  'patata':'patate','potato':'patate',
+  'avena':'avena','oats':'avena','porridge':'avena','fiocchi di avena':'avena',
+  'pane integrale':'pane','bread':'pane',
+  'tortilla':'wrap','piadina':'wrap',
+  'quinoa':'quinoa',
+  'farro':'farro',
+  'couscous':'couscous','cous cous':'couscous',
+  'orzo perlato':'orzo','barley':'orzo',
+  'gallette di riso':'gallette','rice cakes':'gallette',
+  'mais':'mais','corn':'mais','granoturco':'mais',
+  'polenta':'polenta',
+  'frutta':'frutta','fruit':'frutta','mele':'frutta','banana':'frutta','arance':'frutta','mela':'frutta',
+  /* grassi/latticini */
+  'olio d\'oliva':'olio oliva','olio evo':'olio oliva','olio extravergine':'olio oliva','evo':'olio oliva','olive oil':'olio oliva',
+  'avocado':'avocado',
+  'mandorla':'mandorle','almonds':'mandorle','mandorle':'mandorle',
+  'noce':'noci','walnut':'noci','walnuts':'noci',
+  'nocciola':'nocciole','hazelnut':'nocciole','hazelnuts':'nocciole',
+  'pistacchio':'pistacchi','pistachio':'pistacchi',
+  'burro arachidi':'burro arachidi','burro di arachidi':'burro arachidi','peanut butter':'burro arachidi','arachidi':'burro arachidi',
+  'semi di chia':'semi chia','chia seeds':'semi chia','chia':'semi chia',
+  'semi lino':'semi lino','lino':'semi lino','flax':'semi lino','flaxseed':'semi lino','semi di lino':'semi lino',
+  'semi di zucca':'semi zucca','pumpkin seeds':'semi zucca','zucca semi':'semi zucca',
+  'tahini':'tahini','pasta di sesamo':'tahini','sesame paste':'tahini',
+  'olive':'olive','oliva':'olive','olives':'olive',
+  'ricotta':'ricotta',
+  'parmigiano':'parmigiano','parmigiano reggiano':'parmigiano','parmesan':'parmigiano','grana':'parmigiano',
+  'skyr':'skyr',
+  'cioccolato':'cioccolato fondente','dark chocolate':'cioccolato fondente','fondente':'cioccolato fondente',
+};
+
+/* Resolve extra foods typed by user → valid FOOD_DB keys with category tags */
+function resolveExtraFoods(extraFoodsStr){
+  if(!extraFoodsStr)return{proteins:[],carbs:[],fats:[],unrecognized:[]};
+  const raw=extraFoodsStr.split(/[,;\n]/).map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const deduped=[...new Set(raw)];
+  const proteins=[],carbs=[],fats=[],unrecognized=[];
+  deduped.forEach(input=>{
+    /* Try direct key match first */
+    let key=null;
+    if(FOOD_DB[input]){key=input;}
+    else{
+      /* Try alias map */
+      const aliasKey=FOOD_ALIASES[input];
+      if(aliasKey&&FOOD_DB[aliasKey])key=aliasKey;
+      else{
+        /* Partial match: find FOOD_DB key whose label/key contains the input word */
+        const match=Object.keys(FOOD_DB).find(k=>{
+          const lbl=(FOOD_DB[k].label||k).toLowerCase();
+          return lbl.includes(input)||input.includes(k);
+        });
+        if(match)key=match;
+        else{
+          /* Try alias keys as substrings */
+          const alMatch=Object.keys(FOOD_ALIASES).find(a=>a.includes(input)||input.includes(a));
+          if(alMatch&&FOOD_DB[FOOD_ALIASES[alMatch]])key=FOOD_ALIASES[alMatch];
+        }
+      }
+    }
+    if(key&&FOOD_DB[key]){
+      const e=FOOD_DB[key];
+      if(e.isProtein)proteins.push(key);
+      else if(e.isCarb)carbs.push(key);
+      else if(e.isFat||e.isDairy)fats.push(key);
+      else{/* dual or other category: try to classify */
+        if(e.pro>=8)proteins.push(key);
+        else if(e.carb>=10)carbs.push(key);
+        else fats.push(key);
+      }
+    }else{unrecognized.push(input);}
+  });
+  return{proteins:[...new Set(proteins)],carbs:[...new Set(carbs)],fats:[...new Set(fats)],unrecognized};
+}
 
 /* ══════════════════════════════════════════════════════
    GENERATORE PIANO — Constraint Satisfaction + MILP-lite
@@ -2463,24 +2610,39 @@ function generatePersonalizedPlan(prof, prefs, macros){
 
   /* CSP: escludi allergeni/intolleranze — barriera booleana assoluta */
   const excluded=(prefs.intolerances||'').toLowerCase().split(/[,;]/).map(s=>s.trim()).filter(Boolean);
-  const extra   =(prefs.extraFoods||'').split(/[,;\n]/).map(s=>s.trim()).filter(Boolean);
+
+  /* ExtraFoods: parse, normalise, map to FOOD_DB */
+  const extraResolved=resolveExtraFoods(prefs.extraFoods||'');
 
   const DB=FOOD_DB;
 
   /* ── Selezione proteine per stile alimentare — pool espanso ── */
-  const userProteins=foods.filter(f=>DB[f]?.isProtein).length>0
-    ?foods.filter(f=>DB[f]?.isProtein)
-    :style==='vegano'
-      ?['tofu','legumi','tempeh','seitan']
-      :style==='vegetariano'
-        ?['uova','albume','legumi','tofu','yogurt greco','skyr','fiocchi latte','ricotta']
-        :['pollo','coscia pollo','tacchino','manzo','salmone','tonno','merluzzo','branzino','gamberetti','uova'];
-  const userCarbs=foods.filter(f=>DB[f]?.isCarb).length>0
-    ?foods.filter(f=>DB[f]?.isCarb)
-    :['riso','riso basmati','riso integrale','pasta','patate','patate dolci','quinoa','avena','couscous','orzo'];
-  const userFats=foods.filter(f=>DB[f]?.isFat||DB[f]?.isDairy).length>0
-    ?foods.filter(f=>DB[f]?.isFat||DB[f]?.isDairy)
-    :['olio oliva','mandorle','noci','avocado','pistacchi','semi chia'];
+  const _defaultProteins=style==='vegano'
+    ?['tofu','legumi','tempeh','seitan']
+    :style==='vegetariano'
+      ?['uova','albume','legumi','tofu','yogurt greco','skyr','fiocchi latte','ricotta']
+      :['pollo','coscia pollo','tacchino','manzo','salmone','tonno','merluzzo','branzino','gamberetti','uova','platessa','sgombro','trota'];
+  const _defaultCarbs=['riso','riso basmati','riso integrale','pasta','patate','patate dolci','quinoa','avena','couscous','orzo','mais','gallette'];
+  const _defaultFats=['olio oliva','mandorle','noci','avocado','pistacchi','semi chia','nocciole','tahini','olive'];
+
+  /* Merge user chip selections + extraFoods, fall back to defaults */
+  const userProteins=[...new Set([
+    ...foods.filter(f=>DB[f]?.isProtein),
+    ...extraResolved.proteins
+  ])];
+  const baseProteins=userProteins.length>0?userProteins:_defaultProteins;
+
+  const userCarbs=[...new Set([
+    ...foods.filter(f=>DB[f]?.isCarb),
+    ...extraResolved.carbs
+  ])];
+  const baseCarbs=userCarbs.length>0?userCarbs:_defaultCarbs;
+
+  const userFats=[...new Set([
+    ...foods.filter(f=>DB[f]?.isFat||DB[f]?.isDairy),
+    ...extraResolved.fats
+  ])];
+  const baseFats=userFats.length>0?userFats:_defaultFats;
 
   /* CSP filter: esclusione binaria allergeni + FODMAP se IBS */
   const cspFilter=arr=>arr.filter(f=>{
@@ -2490,9 +2652,9 @@ function generatePersonalizedPlan(prof, prefs, macros){
     const fodmapExcl=isIBS&&entry?.fodmap===true;
     return !allergenExcl&&!fodmapExcl;
   });
-  const proteins=cspFilter(userProteins).length>0?cspFilter(userProteins):cspFilter(['pollo','tofu','tonno']).length>0?cspFilter(['pollo','tofu','tonno']):['pollo'];
-  const carbsList=cspFilter(userCarbs).length>0?cspFilter(userCarbs):['riso','patate'];
-  const fatsList =cspFilter(userFats).length>0?cspFilter(userFats):['olio oliva'];
+  const proteins=cspFilter(baseProteins).length>0?cspFilter(baseProteins):cspFilter(['pollo','tofu','tonno']).length>0?cspFilter(['pollo','tofu','tonno']):['pollo'];
+  const carbsList=cspFilter(baseCarbs).length>0?cspFilter(baseCarbs):['riso','patate'];
+  const fatsList =cspFilter(baseFats).length>0?cspFilter(baseFats):['olio oliva'];
 
   /* Carb primario: preferenza low-GI (GI<60) per IBS/T2D */
   const primaryCarb=isIBS
@@ -3220,6 +3382,7 @@ function saveDailyCheckin(){
   try{localStorage.setItem('ik_checkins',JSON.stringify(arr));}catch{}
   updateStreaks();
   updateAdherenceCalendar();
+  if(activeTab==='prog')renderCalendar();
   const fb=document.getElementById('checkin-feedback');
   const prof=getProfile();
   const goal=prof?.goal||'maintain';
@@ -3503,9 +3666,12 @@ function renderKcalRing(){
   const targetKcal=calcMacros().kcal;
   const completedKcal=getCompletedMealKcal(selDay);
   const pct=targetKcal>0?Math.min(100,completedKcal/targetKcal*100):0;
-  ring.style.strokeDashoffset=`${KCAL_CIRC*(1-pct/100)}`;
-  /* Colour shifts to signal overage (completedKcal > target after rounding) */
-  ring.style.stroke=pct>=99.5?'var(--p)':'var(--p)';
+  const offset=KCAL_CIRC*(1-pct/100);
+  ring.style.strokeDasharray=String(KCAL_CIRC);
+  ring.style.strokeDashoffset=String(offset);
+  /* Green at 100%, teal below */
+  ring.style.stroke=pct>=99.5?'#22c55e':'var(--p)';
+  ring.style.opacity=pct>0?'1':'0.35';
 }
 
 /* ═══════════════════════════════════════
@@ -3834,26 +4000,27 @@ function swapMealComponent(dayNum, mealName, component){
 
   /* ── Build pool from FOOD_DB (richer than hardcoded list) ── */
   const userFoods=prefs.foods||[];
+  const _sxr=resolveExtraFoods(prefs.extraFoods||'');
   let pool=[];
   if(component==='protein'){
-    /* Prefer user-liked proteins first, then style defaults */
-    const liked=userFoods.filter(f=>FOOD_DB[f]?.isProtein&&cspOk(f));
+    /* Prefer user-liked + extraFoods proteins first, then style defaults */
+    const liked=[...new Set([...userFoods.filter(f=>FOOD_DB[f]?.isProtein&&cspOk(f)),..._sxr.proteins.filter(cspOk)])];
     const defaults=style==='vegano'?['tofu','legumi','tempeh','seitan']:
       style==='vegetariano'?['uova','albume','legumi','tofu','yogurt greco','skyr','fiocchi latte','ricotta']:
-      ['pollo','coscia pollo','tacchino','manzo','salmone','tonno','merluzzo','branzino','gamberetti','uova','bresaola'];
+      ['pollo','coscia pollo','tacchino','manzo','salmone','tonno','merluzzo','branzino','gamberetti','uova','bresaola','platessa','sgombro','trota'];
     /* Extend with any FOOD_DB proteins not already present */
     const extra=Object.keys(FOOD_DB).filter(f=>FOOD_DB[f].isProtein&&cspOk(f)&&!liked.includes(f)&&!defaults.includes(f));
     pool=[...new Set([...liked,...defaults,...extra])].filter(cspOk);
   }else if(component==='carb'){
-    const liked=userFoods.filter(f=>FOOD_DB[f]?.isCarb&&cspOk(f));
+    const liked=[...new Set([...userFoods.filter(f=>FOOD_DB[f]?.isCarb&&cspOk(f)),..._sxr.carbs.filter(cspOk)])];
     const defaults=isIBS
-      ?['riso','riso basmati','riso integrale','patate','patate dolci','quinoa','avena','gallette'] /* low-FODMAP carbs */
-      :['riso','riso basmati','riso integrale','pasta','patate','patate dolci','frutta','avena','quinoa','couscous','orzo','pane'];
+      ?['riso','riso basmati','riso integrale','patate','patate dolci','quinoa','avena','gallette','mais'] /* low-FODMAP carbs */
+      :['riso','riso basmati','riso integrale','pasta','patate','patate dolci','frutta','avena','quinoa','couscous','orzo','pane','mais','polenta','gallette'];
     const extra=Object.keys(FOOD_DB).filter(f=>FOOD_DB[f].isCarb&&cspOk(f)&&!liked.includes(f)&&!defaults.includes(f));
     pool=[...new Set([...liked,...defaults,...extra])].filter(cspOk);
   }else if(component==='fat'){
-    const liked=userFoods.filter(f=>(FOOD_DB[f]?.isFat||FOOD_DB[f]?.isDairy)&&cspOk(f));
-    const defaults=['olio oliva','mandorle','noci','avocado','pistacchi','burro arachidi','semi chia','parmigiano','ricotta'];
+    const liked=[...new Set([...userFoods.filter(f=>(FOOD_DB[f]?.isFat||FOOD_DB[f]?.isDairy)&&cspOk(f)),..._sxr.fats.filter(cspOk)])];
+    const defaults=['olio oliva','mandorle','noci','avocado','pistacchi','burro arachidi','semi chia','parmigiano','ricotta','nocciole','tahini','semi lino','semi zucca','olive'];
     const extra=Object.keys(FOOD_DB).filter(f=>(FOOD_DB[f].isFat||FOOD_DB[f].isDairy)&&cspOk(f)&&!liked.includes(f)&&!defaults.includes(f));
     pool=[...new Set([...liked,...defaults,...extra])].filter(cspOk);
   }else{return;}
@@ -3928,7 +4095,7 @@ function regenSingleMeal(dayNum,mealName){
   const isDASH=prof?.clinical==='DASH';
 
   const foods=prefs.foods||[];
-  const userProteins=foods.filter(f=>FOOD_DB[f]?.isProtein).length>0?foods.filter(f=>FOOD_DB[f]?.isProtein):style==='vegano'?['tofu','legumi','tempeh','seitan']:style==='vegetariano'?['uova','albume','legumi','tofu','yogurt greco','skyr','fiocchi latte','ricotta']:['pollo','coscia pollo','tacchino','manzo','salmone','tonno','merluzzo','branzino','gamberetti','uova'];
+  const _xr=resolveExtraFoods(prefs.extraFoods||'');
   const excluded=(prefs.intolerances||'').toLowerCase().split(/[,;]/).map(s=>s.trim()).filter(Boolean);
 
   const cspFilter=arr=>arr.filter(f=>{
@@ -3939,14 +4106,21 @@ function regenSingleMeal(dayNum,mealName){
     return !allergenExcl&&!fodmapExcl;
   });
 
+  const _rp=[...new Set([...foods.filter(f=>FOOD_DB[f]?.isProtein),..._xr.proteins])];
+  const rDefProt=style==='vegano'?['tofu','legumi','tempeh','seitan']:style==='vegetariano'?['uova','albume','legumi','tofu','yogurt greco','skyr','fiocchi latte','ricotta']:['pollo','coscia pollo','tacchino','manzo','salmone','tonno','merluzzo','branzino','gamberetti','uova','platessa','sgombro','trota'];
+  const userProteins=_rp.length>0?_rp:rDefProt;
   const proteins=cspFilter(userProteins).length>0?cspFilter(userProteins):['pollo'];
   const prot=proteins[(dayNum-1+mealIdx)%proteins.length];
 
-  const userCarbs=foods.filter(f=>FOOD_DB[f]?.isCarb).length>0?foods.filter(f=>FOOD_DB[f]?.isCarb):['riso','riso basmati','riso integrale','pasta','patate','patate dolci','quinoa','avena','couscous','orzo'];
+  const _rc=[...new Set([...foods.filter(f=>FOOD_DB[f]?.isCarb),..._xr.carbs])];
+  const rDefCarbs=['riso','riso basmati','riso integrale','pasta','patate','patate dolci','quinoa','avena','couscous','orzo','mais','gallette'];
+  const userCarbs=_rc.length>0?_rc:rDefCarbs;
   const carbsList=cspFilter(userCarbs).length>0?cspFilter(userCarbs):['riso','patate'];
   const carb=carbsList[(dayNum-1+mealIdx*2)%carbsList.length];
 
-  const userFats=foods.filter(f=>FOOD_DB[f]?.isFat||FOOD_DB[f]?.isDairy).length>0?foods.filter(f=>FOOD_DB[f]?.isFat||FOOD_DB[f]?.isDairy):['olio oliva','mandorle'];
+  const _rf=[...new Set([...foods.filter(f=>FOOD_DB[f]?.isFat||FOOD_DB[f]?.isDairy),..._xr.fats])];
+  const rDefFats=['olio oliva','mandorle','noci','avocado','nocciole','semi chia'];
+  const userFats=_rf.length>0?_rf:rDefFats;
   const fatsList=cspFilter(userFats).length>0?cspFilter(userFats):['olio oliva'];
   const fat=fatsList[(dayNum-1)%fatsList.length];
 
@@ -4016,16 +4190,22 @@ function generateShoppingList(){
     if(name.includes('pollo')||name.includes('manzo')||name.includes('tonno')||name.includes('salmone')||
        name.includes('tacchino')||name.includes('merluzzo')||name.includes('uova')||name.includes('uovo')||
        name.includes('albume')||name.includes('tofu')||name.includes('legumi')||name.includes('seitan')||
-       name.includes('prosciutto')||name.includes('proteine'))return'proteine';
+       name.includes('prosciutto')||name.includes('branzino')||name.includes('platessa')||
+       name.includes('sgombro')||name.includes('trota')||name.includes('orata')||name.includes('sardine')||
+       name.includes('pesce spada')||name.includes('gamberetti')||name.includes('proteine'))return'proteine';
     if(name.includes('riso')||name.includes('pasta')||name.includes('patate')||name.includes('avena')||
        name.includes('pane')||name.includes('quinoa')||name.includes('farro')||name.includes('frutta')||
        name.includes('banana')||name.includes('mela')||name.includes('arancia')||name.includes('mango')||
        name.includes('mirtilli')||name.includes('fragole')||name.includes('frutti di bosco')||
+       name.includes('couscous')||name.includes('orzo')||name.includes('mais')||name.includes('polenta')||
        name.includes('soffiato')||name.includes('carb'))return'carboidrati';
     if(name.includes('olio')||name.includes('mandorle')||name.includes('noci')||name.includes('avocado')||
-       name.includes('burro di')||name.includes('semi di')||name.includes('semi '))return'grassi';
-    if(name.includes('yogurt')||name.includes('fiocchi di latte')||name.includes('ricotta')||
-       name.includes('latte')||name.includes('parmigiano'))return'latticini';
+       name.includes('nocciole')||name.includes('pistacchi')||name.includes('tahini')||
+       name.includes('olive')||name.includes('burro di')||name.includes('burro arachidi')||
+       name.includes('semi di')||name.includes('semi lino')||name.includes('semi zucca')||
+       name.includes('semi chia')||name.includes('semi '))return'grassi';
+    if(name.includes('yogurt')||name.includes('fiocchi di latte')||name.includes('fiocchi latte')||
+       name.includes('ricotta')||name.includes('latte')||name.includes('parmigiano'))return'latticini';
     if(name.includes('verdure')||name.includes('broccoli')||name.includes('spinaci')||
        name.includes('zucchine')||name.includes('carote')||name.includes('asparagi')||
        name.includes('cavolfiore')||name.includes('fagiolini')||name.includes('melanzane')||
@@ -4310,7 +4490,7 @@ function updateAdherenceCalendar(){
     if(lsR(mk(parseInt(dd),n))==='1')done++;
   });
 
-  const hasCheckin=lsR(dk('checkin'))==='1';
+  let hasCheckin=false;try{const _ci=JSON.parse(localStorage.getItem('ik_checkins')||'[]');hasCheckin=_ci.some(c=>c.iso===iso);}catch{}
 
   calData[dd]={
     meals:done,
