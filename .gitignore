@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Environment / secrets
+.env
+.env.*
+*.env
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temp / OS
+Thumbs.db
+Desktop.ini
+
+# Local junk / scratch folders
+stitch/
+"Nuova cartella con elementi"/
+
+# Duplicate/old assets
+"manifest (1).webmanifest"
+"sw (1).js"
+
+# CSV data files (not part of this project)
+*.csv
+
+# Zip archives
+*.zip
+
+# Logs
+*.log
