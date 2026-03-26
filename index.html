@@ -3729,7 +3729,7 @@ function _renderProfileCard(prof){
   /* Hero metrics */
   const heroTdee=document.getElementById('set-hero-tdee');
   const heroBmr=document.getElementById('set-hero-bmr');
-  if(heroTdee)heroTdee.innerHTML=prof.targetKcal?`${prof.targetKcal}<span style="font-size:20px;color:var(--on);opacity:.4;margin-left:5px;font-weight:500;">kcal</span>`:'—';
+  if(heroTdee)heroTdee.textContent=prof.targetKcal?String(prof.targetKcal):'—';
   if(heroBmr)heroBmr.innerHTML=prof.bmr?`${prof.bmr}<span style="font-size:14px;opacity:.5;margin-left:4px;font-weight:500;">kcal</span>`:'—';
   const el=document.getElementById('set-profile-text');if(!el)return;
   const proRateDisplay=prof.proRate?`${prof.proRate}g/kg`:'2.0g/kg';
