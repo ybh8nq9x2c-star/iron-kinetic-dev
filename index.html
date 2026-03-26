@@ -4495,9 +4495,22 @@ function updateAdherenceCalendar(){
 
   const mNames=getMealNames();
   let done=0;
+  /* Use selDay (plan day 1-7) not the calendar day-of-month */
   mNames.forEach(n=>{
-    if(lsR(mk(parseInt(dd),n))==='1')done++;
+    if(lsR(mk(selDay,n))==='1')done++;
   });
+
+  /* Backfill: also count meals from the plan day matching today's weekday
+     in case selDay differs (defensive, handles edge-case date mismatches) */
+  if(done===0&&dietData){
+    const dow=new Date().getDay();
+    const todayPlanDay=(dow===0?7:dow);
+    if(todayPlanDay!==selDay){
+      mNames.forEach(n=>{
+        if(lsR(mk(todayPlanDay,n))==='1')done++;
+      });
+    }
+  }
 
   let hasCheckin=false;try{const _ci=JSON.parse(localStorage.getItem('ik_checkins')||'[]');hasCheckin=_ci.some(c=>c.iso===iso);}catch{}
 
@@ -4519,7 +4532,7 @@ const TABS=['oggi','prog','set','info'];
 function switchTab(name){
   if(!dietData&&name!=='oggi'&&name!=='info')return;hap();activeTab=name;
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
-  if(name==='prog'){renderProgress();renderCalendar();updateNotifUI();}if(name==='set'){renderSettings();renderKcalRing();}if(name==='info'){updateConsentUI();}
+  if(name==='prog'){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();}if(name==='set'){renderSettings();renderKcalRing();}if(name==='info'){updateConsentUI();}
 }
 
 /* ═══════════════════════════════════════
@@ -4544,7 +4557,7 @@ function mountApp(){
   selDay=(match||days[0]).d;buildDaySelector();
   applyTranslations();
   renderMacros();renderTrackers();renderCoach();renderMeals();renderRefeed();renderPersonalInsight();
-  renderCalendar();
+  updateAdherenceCalendar();renderCalendar();
   setTimeout(()=>{try{renderSettings();}catch{}},0);
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t==='oggi'?'block':'none';});
   document.getElementById('nav-oggi').classList.add('on');
