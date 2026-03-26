@@ -857,15 +857,23 @@ body.onboarding-active #onb-screen{
       </div>
 
       <!-- Macros -->
-      <div class="macro-grid">
-        <div class="macro-card">
-          <div class="rowb" style="margin-bottom:2px;"><span class="t-xxs muted sn">Kcal</span><span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-            <div class="macro-val neon sn" id="m-kcal" style="margin:0;">—</div>
-            <svg width="40" height="40" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true"><circle cx="22" cy="22" r="17" class="ring-track" style="stroke:rgba(255,255,255,.18);"/><circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="3.5" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="opacity:.35;filter:drop-shadow(0 0 4px rgba(77,220,198,.5));"/></svg>
+      <!-- Kcal: full-width card with large ring — same visual language as water/salt -->
+      <div class="macro-card" style="margin-bottom:10px;">
+        <div class="rowb" style="margin-bottom:10px;"><span class="t-xxs muted sn">Kcal</span><span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span></div>
+        <div class="rowb" style="margin-bottom:10px;">
+          <div>
+            <div class="macro-val neon sn" id="m-kcal" style="margin:0;font-size:32px;line-height:1;">—</div>
+            <div class="t-xxs muted sn" style="margin-top:4px;">kcal / giorno</div>
           </div>
-          <div class="bar-track md"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
+          <svg width="64" height="64" viewBox="0 0 70 70" class="ring-svg" aria-hidden="true">
+            <circle cx="35" cy="35" r="30" class="ring-track" style="stroke:rgba(255,255,255,.18);stroke-width:4;"/>
+            <circle cx="35" cy="35" r="30" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="4" stroke-dasharray="188.5" stroke-dashoffset="188.5" style="opacity:.35;filter:drop-shadow(0 0 4px rgba(77,220,198,.5));"/>
+          </svg>
         </div>
+        <div class="bar-track md"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
+      </div>
+      <!-- Pro / Carbs / Fat — 3-column mini-grid -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
         <div class="macro-card"><span class="t-xxs muted sn">Proteine</span><div class="macro-val sn" id="m-pro">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-pro" style="width:0%;"></div></div></div>
         <div class="macro-card"><span class="t-xxs muted sn">Carbs</span><div class="macro-val sn" id="m-carbs">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-carbs" style="width:0%;"></div></div></div>
         <div class="macro-card"><span class="t-xxs muted sn">Grassi</span><div class="macro-val sn" id="m-fat">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-fat" style="width:0%;"></div></div></div>
@@ -3668,11 +3676,10 @@ function getCompletedMealKcal(dayNum){
 function renderKcalRing(){
   const ring=document.getElementById('kcal-ring');
   if(!ring||!dietData)return;
-  const KCAL_CIRC=106.8;
+  const KCAL_CIRC=188.5; /* 2π×30, matches SVG: cx=35 cy=35 r=30 viewBox 0 0 70 70 */
   const targetKcal=calcMacros().kcal;
   const completedKcal=getCompletedMealKcal(selDay);
   const pct=targetKcal>0?Math.min(100,completedKcal/targetKcal*100):0;
-  /* Same pattern as water/salt rings: set style.strokeDashoffset to override the HTML attribute */
   ring.style.strokeDashoffset=`${KCAL_CIRC*(1-pct/100)}`;
   ring.style.stroke=pct>=99.5?'#22c55e':'var(--p)';
   ring.style.opacity=pct>0?'1':'0.35';
