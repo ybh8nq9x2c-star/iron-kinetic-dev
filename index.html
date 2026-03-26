@@ -857,26 +857,12 @@ body.onboarding-active #onb-screen{
       </div>
 
       <!-- Macros -->
-      <!-- Kcal: donut ring with number inside — matches profile-page visual language -->
-      <div class="macro-card" style="margin-bottom:10px;padding:16px 14px 14px;">
-        <div class="rowb" style="margin-bottom:12px;"><span class="t-xxs muted sn">Kcal</span><span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span></div>
-        <!-- Ring wraps around the number, like the profile TARGET TDEE display -->
-        <div style="display:flex;justify-content:center;margin-bottom:12px;">
-          <div style="position:relative;width:150px;height:150px;">
-            <svg width="150" height="150" viewBox="0 0 160 160" class="ring-svg" aria-hidden="true" style="position:absolute;top:0;left:0;">
-              <circle cx="80" cy="80" r="68" class="ring-track" style="stroke:rgba(255,255,255,.15);stroke-width:6;"/>
-              <circle cx="80" cy="80" r="68" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="6" stroke-dasharray="427.3" stroke-dashoffset="427.3" style="opacity:.35;filter:drop-shadow(0 0 6px rgba(77,220,198,.6));"/>
-            </svg>
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:110px;">
-              <div id="m-kcal" style="font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:700;letter-spacing:-.04em;line-height:1;color:var(--p);">—</div>
-              <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px;">kcal</div>
-            </div>
-          </div>
+      <div class="macro-grid">
+        <div class="macro-card">
+          <div class="rowb" style="margin-bottom:2px;"><span class="t-xxs muted sn">Kcal</span><span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span></div>
+          <div class="macro-val neon sn" id="m-kcal">—</div>
+          <div class="bar-track md"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
         </div>
-        <div class="bar-track md"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
-      </div>
-      <!-- Pro / Carbs / Fat — 3-column mini-grid -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
         <div class="macro-card"><span class="t-xxs muted sn">Proteine</span><div class="macro-val sn" id="m-pro">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-pro" style="width:0%;"></div></div></div>
         <div class="macro-card"><span class="t-xxs muted sn">Carbs</span><div class="macro-val sn" id="m-carbs">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-carbs" style="width:0%;"></div></div></div>
         <div class="macro-card"><span class="t-xxs muted sn">Grassi</span><div class="macro-val sn" id="m-fat">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-fat" style="width:0%;"></div></div></div>
@@ -1062,11 +1048,21 @@ body.onboarding-active #onb-screen{
   <div id="scr-set" class="scr" style="display:none;">
     <div class="pg">
       <p class="sec-title">Profilo</p>
-      <!-- Hero Metrics: Target TDEE + Base BMR -->
+      <!-- Hero Metrics: Target TDEE with kcal progress ring + Base BMR -->
       <div class="prof-hero">
         <div>
-          <p class="t-xxs muted sn" style="text-transform:uppercase;letter-spacing:.14em;margin-bottom:2px;">Target TDEE</p>
-          <p id="set-hero-tdee" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;line-height:1;color:var(--p);">—</p>
+          <p class="t-xxs muted sn" style="text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;">Target TDEE</p>
+          <!-- Kcal progress ring: shows completed meal kcal vs daily target -->
+          <div style="position:relative;width:190px;height:190px;margin:0 auto;">
+            <svg width="190" height="190" viewBox="0 0 200 200" class="ring-svg" aria-hidden="true" style="position:absolute;top:0;left:0;">
+              <circle cx="100" cy="100" r="88" class="ring-track" style="stroke:rgba(255,255,255,.15);stroke-width:6;"/>
+              <circle cx="100" cy="100" r="88" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="6" stroke-dasharray="552.9" stroke-dashoffset="552.9" style="opacity:.35;filter:drop-shadow(0 0 8px rgba(77,220,198,.6));"/>
+            </svg>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:140px;">
+              <p id="set-hero-tdee" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:700;line-height:1;color:var(--p);margin:0;">—</p>
+              <p class="t-xxs muted sn" style="margin-top:6px;letter-spacing:.14em;">KCAL</p>
+            </div>
+          </div>
         </div>
         <div class="prof-hero-divider"></div>
         <div>
@@ -3519,7 +3515,6 @@ function renderMacros(){
   document.getElementById('m-kcal').style.color=m.modified?'#FFB800':'var(--p)';
   document.getElementById('m-carbs').style.color=m.modified?'#FFB800':'var(--on)';
   const mb=document.getElementById('m-mod-badge');if(mb)mb.style.display=m.modified?'block':'none';
-  renderKcalRing();
 }
 
 /* ═══════════════════════════════════════
@@ -3629,7 +3624,7 @@ function renderMeals(){
     </div>`;
   }).join('');
   document.getElementById('meals-done').textContent=done;
-  renderKcalRing();
+  if(activeTab==='set')renderKcalRing();
 }
 function toggleMeal(d,n){hap();const k=mk(d,n);const c=lsR(k)==='1';lsW(k,c?'0':'1');if(!c)toast(t('toast.mealMarcato',{n}));renderMeals();}
 
@@ -3679,7 +3674,7 @@ function getCompletedMealKcal(dayNum){
 function renderKcalRing(){
   const ring=document.getElementById('kcal-ring');
   if(!ring||!dietData)return;
-  const KCAL_CIRC=427.3; /* 2π×68, matches SVG: cx=80 cy=80 r=68 viewBox 0 0 160 160 */
+  const KCAL_CIRC=552.9; /* 2π×88, matches SVG on profile page: r=88 viewBox 0 0 200 200 */
   const targetKcal=calcMacros().kcal;
   const completedKcal=getCompletedMealKcal(selDay);
   const pct=targetKcal>0?Math.min(100,completedKcal/targetKcal*100):0;
@@ -4524,7 +4519,7 @@ const TABS=['oggi','prog','set','info'];
 function switchTab(name){
   if(!dietData&&name!=='oggi'&&name!=='info')return;hap();activeTab=name;
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
-  if(name==='prog'){renderProgress();renderCalendar();updateNotifUI();}if(name==='set')renderSettings();if(name==='info'){updateConsentUI();}
+  if(name==='prog'){renderProgress();renderCalendar();updateNotifUI();}if(name==='set'){renderSettings();renderKcalRing();}if(name==='info'){updateConsentUI();}
 }
 
 /* ═══════════════════════════════════════
