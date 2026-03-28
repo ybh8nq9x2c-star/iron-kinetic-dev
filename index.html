@@ -1785,7 +1785,7 @@ function initLang(){
   try{const s=localStorage.getItem('ik_lang');if(s==='en'||s==='it')_lang=s;}catch{}
   document.documentElement.lang=_lang;
 }
-function applyTranslations(){
+function applyTranslations(deferOffscreen){
   /* Helper shortcuts */
   const txt=(id,key)=>{const e=document.getElementById(id);if(e)e.textContent=t(key);};
   const nlTxt=(sel,key)=>document.querySelectorAll(sel).forEach(e=>e.textContent=t(key));
@@ -1867,6 +1867,8 @@ function applyTranslations(){
   document.querySelectorAll('#scr-oggi .t-xxs.muted').forEach(e=>{
     if(e.textContent.trim()==='Giorno'||e.textContent.trim()==='Day')e.textContent=t('oggi.giorno');
   });
+  /* ── OFF-SCREEN TABS: defer when called from boot, run immediately otherwise ── */
+  const _offscreen=()=>{
   /* ── PROGRESS ── */
   const progTitle=document.querySelector('#scr-prog .sec-title');
   if(progTitle)progTitle.textContent=t('prog.title');
@@ -2044,6 +2046,9 @@ function applyTranslations(){
   if(gdprAccBtn)gdprAccBtn.textContent=t('gdpr.btn.accetta');
   const gdprReadBtn=document.querySelector('button[onclick="openModal(\'privacy\')"].btn-ghost.w100');
   if(gdprReadBtn)gdprReadBtn.textContent=t('gdpr.btn.leggi');
+  }; /* end _offscreen */
+  if(deferOffscreen)(window.requestIdleCallback||window.setTimeout)(_offscreen,{timeout:300});
+  else _offscreen();
 }
 
 const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
@@ -4555,18 +4560,23 @@ function mountApp(){
   document.getElementById('log-date').value=toISO();
   const dow=new Date().getDay();const days=dietData.days||[];const match=days.find(d=>d.d===(dow===0?7:dow));
   selDay=(match||days[0]).d;buildDaySelector();
-  applyTranslations();
-  renderMacros();renderTrackers();renderCoach();renderMeals();renderRefeed();renderPersonalInsight();
-  updateAdherenceCalendar();renderCalendar();
-  setTimeout(()=>{try{renderSettings();}catch{}},0);
+  /* Hide non-oggi screens immediately — before any render work */
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t==='oggi'?'block':'none';});
   document.getElementById('nav-oggi').classList.add('on');
   ['nav-prog','nav-set','nav-info'].forEach(id=>{const b=document.getElementById(id);if(b){b.classList.remove('on');b.classList.add('inactive');}});
-  updateConsentUI();
-  updateStreaks();
-  updateNotifUI();
-  setTimeout(()=>{try{restoreTodayCheckin();}catch{}},80);
-  setTimeout(()=>{try{renderCheckinAnalytics();}catch{}},120);
+  /* Translate oggi+nav sync; off-screen tabs deferred via requestIdleCallback */
+  applyTranslations(true);
+  /* Critical oggi-tab path only — paint these synchronously */
+  renderMacros();renderTrackers();renderMeals();
+  /* Defer everything non-visible to next frame */
+  requestAnimationFrame(()=>{
+    renderCoach();renderRefeed();renderPersonalInsight();
+    updateAdherenceCalendar();renderCalendar();
+    updateConsentUI();updateStreaks();updateNotifUI();
+    setTimeout(()=>{try{renderSettings();}catch{}},0);
+    setTimeout(()=>{try{restoreTodayCheckin();}catch{}},80);
+    setTimeout(()=>{try{renderCheckinAnalytics();}catch{}},120);
+  });
 }
 
 /* Touch handlers */
