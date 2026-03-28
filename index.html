@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/></noscript>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-3PCTzKMnO97rTuMoAGrlkhFPDWW9qWqIkS2JFTWfHuCaAIGTGMRQcYNEuVGQEdra" crossorigin="anonymous" defer></script>
 <style>
 :root{
   --p:#4ddcc6; --p-dim:rgba(77,220,198,.15);
@@ -1056,7 +1056,7 @@ body.onboarding-active #onb-screen{
           <div style="position:relative;width:190px;height:190px;margin:0 auto;">
             <svg width="190" height="190" viewBox="0 0 200 200" class="ring-svg" aria-hidden="true" style="position:absolute;top:0;left:0;">
               <circle cx="100" cy="100" r="88" class="ring-track" style="stroke:rgba(255,255,255,.15);stroke-width:6;"/>
-              <circle cx="100" cy="100" r="88" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="6" stroke-dasharray="552.9" stroke-dashoffset="552.9" style="opacity:.35;filter:drop-shadow(0 0 8px rgba(77,220,198,.6));"/>
+              <circle cx="100" cy="100" r="88" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="6" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="opacity:.35;filter:drop-shadow(0 0 8px rgba(77,220,198,.6));"/>
             </svg>
             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:140px;">
               <p id="set-hero-tdee" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:700;line-height:1;color:var(--p);margin:0;">—</p>
@@ -1262,6 +1262,17 @@ body.onboarding-active #onb-screen{
 
 <script>
 'use strict';
+/* ── FIX 5: global error handler ── */
+window.addEventListener('unhandledrejection',e=>{
+  console.error('Unhandled:',e.reason);
+  try{showToast(t('toast.errore')||'Errore inatteso');}catch{}
+});
+window.onerror=(msg,src,line)=>{
+  console.error('Error:',msg,src,line);
+  return false;
+};
+/* ── FIX 1: sanitize helper ── */
+function sanitize(s){const d=document.createElement('div');d.textContent=String(s??'');return d.innerHTML;}
 /* ═══════════════════════════════════════
    KEYS
 ═══════════════════════════════════════ */
@@ -3481,7 +3492,7 @@ function renderCoach(){
   const sbEl=document.getElementById('coach-streak-badge');
   if(sbEl){
     if(streakCount>=1){
-      sbEl.innerHTML=`<span class="streak-badge"><span class="fire">🔥</span> ${streakCount}</span>`;
+      sbEl.innerHTML=`<span class="streak-badge"><span class="fire">🔥</span> ${sanitize(streakCount)}</span>`;
     }else{
       sbEl.innerHTML='';
     }
@@ -3496,10 +3507,10 @@ function renderPersonalInsight(){
   card.style.display='block';
   const foodsList=prefs.foods?.length>0?prefs.foods.join(', '):t('misc.noData');
   const die=t('prof.die');
-  content.innerHTML=`<p style="margin:0 0 4px;"><strong style="color:var(--on);">${p.sex==='M'?'♂':'♀'} ${p.age}${t('prof.anni')} · ${p.weight}kg${p.bf?` · ${p.bf}% ${t('prof.grassi').toLowerCase()}`:''}</strong></p>`+
-    `<p style="margin:0 0 4px;">${t('prof.obiettivo')}: <strong style="color:var(--p);">${p.goal?t('goal.label.'+p.goal)||'—':'—'}</strong> · ${t('prof.target')}: <strong style="color:var(--p);">${p.targetKcal} kcal${die}</strong></p>`+
-    `<p style="margin:0 0 4px;">${prefs.mealsCount||3} ${t('prefs.pasti')} · ${t('prefs.gusto')}: ${prefs.taste||'—'} · ${prefs.dietStyle||'—'}</p>`+
-    `<p style="margin:0;">${t('prefs.cibiScelti')}: ${foodsList}${prefs.intolerances?` · ${t('prefs.esclusi')}: ${prefs.intolerances}`:''}</p>`;
+  content.innerHTML=`<p style="margin:0 0 4px;"><strong style="color:var(--on);">${p.sex==='M'?'♂':'♀'} ${sanitize(p.age)}${t('prof.anni')} · ${sanitize(p.weight)}kg${p.bf?` · ${sanitize(p.bf)}% ${t('prof.grassi').toLowerCase()}`:''}</strong></p>`+
+    `<p style="margin:0 0 4px;">${t('prof.obiettivo')}: <strong style="color:var(--p);">${p.goal?t('goal.label.'+p.goal)||'—':'—'}</strong> · ${t('prof.target')}: <strong style="color:var(--p);">${sanitize(p.targetKcal)} kcal${die}</strong></p>`+
+    `<p style="margin:0 0 4px;">${sanitize(prefs.mealsCount||3)} ${t('prefs.pasti')} · ${t('prefs.gusto')}: ${sanitize(prefs.taste||'—')} · ${sanitize(prefs.dietStyle||'—')}</p>`+
+    `<p style="margin:0;">${t('prefs.cibiScelti')}: ${sanitize(foodsList)}${prefs.intolerances?` · ${t('prefs.esclusi')}: ${sanitize(prefs.intolerances)}`:''}</p>`;
 }
 
 /* ═══════════════════════════════════════
@@ -3599,30 +3610,30 @@ function renderMeals(){
     const diff=fa!==null?fa-meal.baseAmount:0;
     const carbLabel=meal.carbSource?(FOOD_DB[meal.carbSource]?.label||meal.carbSource):'';
     /* Badge shows modifier delta for ALL meal types; carbLine only for computed main meals */
-    const badge=(diff!==0&&meal.carbSource)?`<span class="mod-badge">${diff>0?'+':''}${diff}g ${carbLabel}</span>`:'';
-    const carbLine=(fa!==null&&!isHardcodedMeal)?`<strong style="color:var(--on);">${fa}g ${carbLabel}</strong>, `:'';
+    const badge=(diff!==0&&meal.carbSource)?`<span class="mod-badge">${diff>0?'+':''}${diff}g ${sanitize(carbLabel)}</span>`:'';
+    const carbLine=(fa!==null&&!isHardcodedMeal)?`<strong style="color:var(--on);">${fa}g ${sanitize(carbLabel)}</strong>, `:'';
     const bs=checked?'border:1px solid rgba(77,220,198,.22);background:rgba(77,220,198,.03);':'border:1px solid var(--line);background:var(--s1);';
     /* Breakfast/snack use hardcoded string recipes — component swap is meaningless for them.
        Show only the regen button to avoid misleading protein/carb swap labels. */
     const actionsHtml=isHardcodedMeal
       ?`<div class="meal-actions">
-          <button onclick="regenSingleMeal(${day.d},'${n}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
+          <button onclick="regenSingleMeal(${day.d},'${sanitize(n)}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
         </div>`
       :`<div class="meal-actions">
-          <button onclick="swapMealComponent(${day.d},'${n}','protein')" class="btn-xs-swap">${t('meal.swap.pro')}</button>
-          <button onclick="swapMealComponent(${day.d},'${n}','carb')" class="btn-xs-swap">${t('meal.swap.carb')}</button>
-          <button onclick="regenSingleMeal(${day.d},'${n}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
+          <button onclick="swapMealComponent(${day.d},'${sanitize(n)}','protein')" class="btn-xs-swap">${t('meal.swap.pro')}</button>
+          <button onclick="swapMealComponent(${day.d},'${sanitize(n)}','carb')" class="btn-xs-swap">${t('meal.swap.carb')}</button>
+          <button onclick="regenSingleMeal(${day.d},'${sanitize(n)}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
         </div>`;
     return `<div style="width:100%;">
-      <button class="meal-row${checked?' done':''}" onclick="toggleMeal(${day.d},'${n}')"
-        aria-pressed="${checked}" aria-label="${n}${checked?' '+t('meal.completed'):''}"
+      <button class="meal-row${checked?' done':''}" onclick="toggleMeal(${day.d},'${sanitize(n)}')"
+        aria-pressed="${checked}" aria-label="${sanitize(n)}${checked?' '+t('meal.completed'):''}"
         style="${bs}border-radius:var(--r);display:flex;align-items:flex-start;gap:12px;padding:13px;touch-action:manipulation;cursor:pointer;width:100%;text-align:left;">
         <div style="width:32px;height:32px;border-radius:var(--r2);border:1.5px solid ${checked?'var(--p)':'var(--line)'};background:${checked?'rgba(77,220,198,.10)':'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
           ${checked?`<span class="material-symbols-outlined sn" style="font-size:16px;color:var(--p);font-variation-settings:'FILL' 1;">check</span>`:''}
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${n}</span>${badge}</div>
-          <p class="meal-desc sn">${carbLine}${meal.rest}</p>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(n)}</span>${badge}</div>
+          <p class="meal-desc sn">${carbLine}${sanitize(meal.rest)}</p>
         </div>
       </button>
       ${actionsHtml}
@@ -3679,7 +3690,7 @@ function getCompletedMealKcal(dayNum){
 function renderKcalRing(){
   const ring=document.getElementById('kcal-ring');
   if(!ring||!dietData)return;
-  const KCAL_CIRC=552.9; /* 2π×88, matches SVG on profile page: r=88 viewBox 0 0 200 200 */
+  const KCAL_CIRC=2*Math.PI*17; // 106.8
   const targetKcal=calcMacros().kcal;
   const completedKcal=getCompletedMealKcal(selDay);
   const pct=targetKcal>0?Math.min(100,completedKcal/targetKcal*100):0;
@@ -3735,7 +3746,7 @@ function _renderProfileCard(prof){
   const heroTdee=document.getElementById('set-hero-tdee');
   const heroBmr=document.getElementById('set-hero-bmr');
   if(heroTdee)heroTdee.textContent=prof.targetKcal?String(prof.targetKcal):'—';
-  if(heroBmr)heroBmr.innerHTML=prof.bmr?`${prof.bmr}<span style="font-size:14px;opacity:.5;margin-left:4px;font-weight:500;">kcal</span>`:'—';
+  if(heroBmr)heroBmr.innerHTML=prof.bmr?`${sanitize(prof.bmr)}<span style="font-size:14px;opacity:.5;margin-left:4px;font-weight:500;">kcal</span>`:'—';
   const el=document.getElementById('set-profile-text');if(!el)return;
   const proRateDisplay=prof.proRate?`${prof.proRate}g/kg`:'2.0g/kg';
   const waterDisplay=prof.waterTarget?`${prof.waterTarget}L`:`${Math.round(parseFloat(prof.weight||70)*0.035*10)/10}L`;
@@ -3780,9 +3791,11 @@ function applyMod(u){
   else{const n=Math.max(-5,Math.min(5,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
   renderModDisplay();renderMacros();renderCoach();renderMeals();
 }
+const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
+function clearAppData(){Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
 function resetProfile(){
   if(!confirm(t('confirm.ricomincia')))return;
-  try{localStorage.clear();}catch{}
+  try{clearAppData();}catch{}
   if(bodyChart){bodyChart.destroy();bodyChart=null;}
   dietData=null;
   profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
@@ -3838,7 +3851,7 @@ function renderHistList(){
   const log=getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1).reverse();
   const el=document.getElementById('hist-list');
   if(!log.length){el.innerHTML=`<div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">${t('prog.storico.empty')}</span></div>`;return;}
-  el.innerHTML=log.map(e=>`<div class="hist-row"><span style="font-size:12px;font-weight:600;color:var(--muted);" class="sn">${e.date}</span><div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--p);" class="sn">${e.weight}<span style="font-size:9px;color:var(--muted);font-weight:600;margin-left:2px;">kg</span></span>${e.waist?`<span style="font-size:12px;font-weight:600;color:var(--on);" class="sn">⌀${e.waist}<span style="font-size:9px;color:var(--muted);">cm</span></span>`:''}<button onclick="deleteEntry(${e.ts})" style="font-size:11px;font-weight:600;color:var(--dim);background:none;border:none;padding:4px 8px;touch-action:manipulation;" class="sn" aria-label="Elimina">del</button></div></div>`).join('');
+  el.innerHTML=log.map(e=>`<div class="hist-row"><span style="font-size:12px;font-weight:600;color:var(--muted);" class="sn">${sanitize(e.date)}</span><div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--p);" class="sn">${sanitize(e.weight)}<span style="font-size:9px;color:var(--muted);font-weight:600;margin-left:2px;">kg</span></span>${e.waist?`<span style="font-size:12px;font-weight:600;color:var(--on);" class="sn">⌀${sanitize(e.waist)}<span style="font-size:9px;color:var(--muted);">cm</span></span>`:''}<button onclick="deleteEntry(${e.ts})" style="font-size:11px;font-weight:600;color:var(--dim);background:none;border:none;padding:4px 8px;touch-action:manipulation;" class="sn" aria-label="Elimina">del</button></div></div>`).join('');
 }
 function renderChart(data){
   const cv=document.getElementById('wChart');const wrap=document.getElementById('wChart-wrap');const em=document.getElementById('chart-empty');
