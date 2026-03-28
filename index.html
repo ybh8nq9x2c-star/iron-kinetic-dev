@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/></noscript>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-3PCTzKMnO97rTuMoAGrlkhFPDWW9qWqIkS2JFTWfHuCaAIGTGMRQcYNEuVGQEdra" crossorigin="anonymous" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous" defer></script>
 <style>
 :root{
   --p:#4ddcc6; --p-dim:rgba(77,220,198,.15);
@@ -1069,7 +1069,7 @@ body.onboarding-active #onb-screen{
           <div style="position:relative;width:190px;height:190px;margin:0 auto;">
             <svg width="190" height="190" viewBox="0 0 200 200" class="ring-svg" aria-hidden="true" style="position:absolute;top:0;left:0;">
               <circle cx="100" cy="100" r="88" class="ring-track" style="stroke:rgba(255,255,255,.15);stroke-width:6;"/>
-              <circle cx="100" cy="100" r="88" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="6" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="opacity:.35;filter:drop-shadow(0 0 8px rgba(77,220,198,.6));"/>
+              <circle cx="100" cy="100" r="88" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="6" stroke-dasharray="552.9" stroke-dashoffset="552.9" style="opacity:.35;filter:drop-shadow(0 0 8px rgba(77,220,198,.6));"/>
             </svg>
             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:140px;">
               <p id="set-hero-tdee" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:700;line-height:1;color:var(--p);margin:0;">—</p>
@@ -3723,7 +3723,7 @@ function getCompletedMealKcal(dayNum){
 function renderKcalRing(){
   const ring=document.getElementById('kcal-ring');
   if(!ring||!dietData)return;
-  const KCAL_CIRC=2*Math.PI*17; // 106.8
+  const KCAL_CIRC=552.9; // 2π×88, profile ring r=88
   const targetKcal=calcMacros().kcal;
   const completedKcal=getCompletedMealKcal(selDay);
   const pct=targetKcal>0?Math.min(100,completedKcal/targetKcal*100):0;
