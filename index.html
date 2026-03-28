@@ -231,6 +231,19 @@ body.onboarding-active #onb-screen{
 .streak-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);padding:6px 10px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.06em;color:#f97316;margin-top:8px;}
 .streak-badge .fire{font-size:12px;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}.rfon{animation:none;}.bar-fill,.result-card{transition:none;}}
+/* ── Trackers collapsible ── */
+#trackers-body{max-height:800px;overflow:hidden;transition:max-height .35s ease;}
+#trackers-chevron{transition:transform .25s ease;color:var(--muted);font-size:18px;}
+/* ── Tracker blocks ── */
+.tracker-block{padding:14px 16px;border-top:1px solid var(--line);}
+.tracker-block:first-child{border-top:none;}
+.tracker-2col{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);}
+.tracker-2col>div:first-child{border-right:1px solid var(--line);padding:14px 16px;}
+.tracker-2col>div:last-child{padding:14px 16px;}
+/* ── Pasti card internals ── */
+.pasti-header{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+.pasti-day-sel{padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;}
+.pasti-shopping{padding:12px 16px;border-top:1px solid var(--line);}
 @media(max-width:390px){.pg{padding-left:12px;padding-right:12px;}.grid2,.range-row{grid-template-columns:1fr;}#nav{left:max(8px,var(--sal));right:max(8px,var(--sar));}#hdr{left:max(8px,var(--sal));right:max(8px,var(--sar));}}
 
 /* ═══════════════════════════════════════
@@ -805,10 +818,10 @@ body.onboarding-active #onb-screen{
   <div id="scr-oggi" class="scr">
     <div class="pg">
 
-      <!-- [A] AI Coach personalizzato -->
+      <!-- 1. Coach Card -->
       <div id="coach-card" class="card-neon" style="padding:16px;position:relative;overflow:hidden;">
         <div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:200px;height:80px;background:rgba(77,220,198,.08);filter:blur(40px);pointer-events:none;border-radius:50%;"></div>
-        <div class="row g3" style="position:relative;">
+        <div class="row g3" style="position:relative;padding-right:56px;">
           <div id="coach-ico-wrap" style="width:40px;height:40px;border-radius:12px;background:var(--p);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 16px rgba(77,220,198,.28);">
             <span class="material-symbols-outlined sn" id="coach-ico" style="font-size:20px;color:#003730;font-variation-settings:'FILL' 1;">bolt</span>
           </div>
@@ -817,127 +830,149 @@ body.onboarding-active #onb-screen{
             <p class="sn" id="coach-msg" style="font-size:13px;font-weight:600;color:var(--on);line-height:1.4;">— Analisi in corso...</p>
           </div>
         </div>
-        <div id="coach-streak-badge"></div>
+        <div id="coach-streak-badge" style="position:absolute;top:14px;right:14px;"></div>
       </div>
 
-      <!-- [B] Date label -->
-      <p id="oggi-date-label" class="t-xxs muted sn" style="text-align:center;letter-spacing:.14em;"></p>
+      <!-- 2. Date Label -->
+      <p id="oggi-date-label" class="t-xxs muted sn" style="text-align:center;letter-spacing:.14em;padding:2px 0;"></p>
 
-      <!-- [C] Macro + Kcal block -->
+      <!-- 3. Macro + Kcal Card -->
       <div class="card" style="padding:16px;">
-        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-          <div style="flex:1;min-width:0;">
+        <!-- Hero row: kcal + ring -->
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;">
+          <div>
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-              <span class="t-xxs muted sn">KCAL TARGET</span>
+              <span class="t-xxs muted sn">Target Giorno</span>
               <span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span>
             </div>
-            <p class="sn" id="m-kcal" style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--p);line-height:1;margin:0;">—</p>
+            <p id="m-kcal" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;color:var(--p);line-height:1;margin:0 0 6px;">—</p>
+            <span class="t-xxs muted sn">Kcal totali</span>
             <div style="height:0;overflow:hidden;"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
-            <p id="oggi-kcal-pct" class="t-xxs muted sn" style="margin-top:6px;">0% consumato</p>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;">
-            <svg width="56" height="56" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+            <svg width="72" height="72" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true">
               <circle cx="22" cy="22" r="17" class="ring-track"/>
               <circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring-oggi" stroke="var(--p)" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4))"/>
             </svg>
-            <span class="t-xxs muted sn" style="font-size:8px;letter-spacing:.1em;">consumato</span>
+            <span id="oggi-kcal-pct" class="t-xxs muted sn" style="font-size:9px;">0% consumato</span>
           </div>
         </div>
-        <div style="display:flex;gap:8px;">
-          <div style="flex:1;background:var(--s2);border-radius:var(--r3);padding:10px 8px;">
-            <p class="t-xxs muted sn" style="margin-bottom:4px;">Pro</p>
-            <p class="sn" id="m-pro" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--on);margin:0 0 6px;">—</p>
+        <!-- 3 Macro chips -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;">
+              <span class="t-xxs muted sn">PROT</span>
+              <span id="m-pro" class="sn" style="font-size:11px;font-weight:700;color:var(--on);">—</span>
+            </div>
             <div class="bar-track"><div class="bar-fill bfw" id="b-pro" style="width:0%;"></div></div>
           </div>
-          <div style="flex:1;background:var(--s2);border-radius:var(--r3);padding:10px 8px;">
-            <p class="t-xxs muted sn" style="margin-bottom:4px;">Carbs</p>
-            <p class="sn" id="m-carbs" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--on);margin:0 0 6px;">—</p>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;">
+              <span class="t-xxs muted sn">CARB</span>
+              <span id="m-carbs" class="sn" style="font-size:11px;font-weight:700;color:var(--on);">—</span>
+            </div>
             <div class="bar-track"><div class="bar-fill bfw" id="b-carbs" style="width:0%;"></div></div>
           </div>
-          <div style="flex:1;background:var(--s2);border-radius:var(--r3);padding:10px 8px;">
-            <p class="t-xxs muted sn" style="margin-bottom:4px;">Grassi</p>
-            <p class="sn" id="m-fat" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--on);margin:0 0 6px;">—</p>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;">
+              <span class="t-xxs muted sn">GRASSI</span>
+              <span id="m-fat" class="sn" style="font-size:11px;font-weight:700;color:var(--on);">—</span>
+            </div>
             <div class="bar-track"><div class="bar-fill bfw" id="b-fat" style="width:0%;"></div></div>
           </div>
         </div>
       </div>
 
-      <!-- [D] Pasti section -->
+      <!-- 4. Pasti Card -->
       <div class="card" style="overflow:hidden;">
-        <div class="bar-track" style="border-radius:0;height:3px;margin:0;background:var(--s3);"><div id="oggi-pasti-bar" class="bar-fill bfn" style="width:0%;border-radius:0;transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
-        <div style="padding:14px;">
-          <div class="rowb" style="margin-bottom:10px;">
-            <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);">Pasti</p>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <span style="color:var(--p);font-size:11px;font-weight:700;" class="sn" id="meals-done">0</span><span class="muted sn" style="font-size:11px;font-weight:600;" id="meals-total">/3</span>
-            </div>
+        <!-- Header -->
+        <div class="pasti-header">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);margin:0;">Pasti</p>
+            <div class="bar-track" style="width:44px;flex-shrink:0;"><div id="oggi-pasti-bar" class="bar-fill bfn" style="width:0%;transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
+            <span style="color:var(--p);font-size:11px;font-weight:700;" class="sn" id="meals-done">0</span><span class="muted sn" style="font-size:11px;font-weight:600;" id="meals-total">/3</span>
           </div>
-          <div class="rowb" style="margin-bottom:12px;">
-            <span class="t-xxs muted sn">Giorno</span>
-            <div id="day-sel" style="display:flex;gap:5px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;max-width:200px;"></div>
+        </div>
+        <!-- Day selector with arrows -->
+        <div class="pasti-day-sel">
+          <button onclick="shiftDay(-1)" class="btn-icon sn" style="width:30px;height:30px;flex-shrink:0;" aria-label="Giorno precedente"><span class="material-symbols-outlined" style="font-size:15px;">chevron_left</span></button>
+          <div id="day-sel" style="display:flex;gap:5px;flex:1;overflow-x:auto;scrollbar-width:none;"></div>
+          <button onclick="shiftDay(1)" class="btn-icon sn" style="width:30px;height:30px;flex-shrink:0;" aria-label="Giorno successivo"><span class="material-symbols-outlined" style="font-size:15px;">chevron_right</span></button>
+        </div>
+        <!-- Refeed (shown by renderRefeed when phase=2) -->
+        <div id="refeed-card" style="display:none;border-bottom:1px solid var(--line);">
+          <div class="rowb" style="padding:13px 15px;">
+            <div><p class="t-xxs sn" style="color:var(--p);">Refeed Day</p><p style="font-size:12px;font-weight:500;color:var(--muted);margin-top:2px;" class="sn">+400 kcal · +50g carbs</p></div>
+            <button id="refeed-oggi-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 12px;">OFF</button>
           </div>
-          <div class="maintain-card" id="maintain-card" style="margin-bottom:10px;">
-            <div class="rowb" style="margin-bottom:10px;"><span class="sec-label" style="margin-bottom:0;color:#0A84FF;">Mantenimento</span><span class="t-xxs" style="color:#8ec5ff;">LONG TERM</span></div>
-            <p id="maintain-msg" class="sn" style="font-size:13px;line-height:1.6;font-weight:600;color:var(--on);">Sei in fase di mantenimento. Focus su routine sostenibile e stabilità del peso.</p>
-          </div>
-          <div id="refeed-card" style="display:none;margin-bottom:10px;" class="card">
-            <div class="rowb" style="padding:13px 15px;">
-              <div><p class="t-xxs sn" style="color:var(--p);">Refeed Day</p><p style="font-size:12px;font-weight:500;color:var(--muted);margin-top:2px;" class="sn">+400 kcal · +50g carbs</p></div>
-              <button id="refeed-oggi-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 12px;">OFF</button>
-            </div>
-          </div>
-          <div id="meals-list" style="display:flex;flex-direction:column;gap:8px;">
-            <div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Genera il tuo piano dall'onboarding —</span></div>
-          </div>
-          <button onclick="openShoppingList()" class="btn btn-primary w100" style="margin-top:12px;display:none;">🛒 Lista della Spesa</button>
+        </div>
+        <!-- Meals list -->
+        <div id="meals-list" style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;">
+          <div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Genera il tuo piano dall'onboarding —</span></div>
+        </div>
+        <!-- Shopping -->
+        <div class="pasti-shopping">
+          <button onclick="openShoppingList()" class="btn btn-primary w100 sn" style="display:none;">🛒 Lista della Spesa</button>
         </div>
       </div>
 
-      <!-- [E] Trackers section -->
+      <!-- 5. Trackers Card (collapsible, open by default) -->
       <div class="card" style="overflow:hidden;">
-        <div style="padding:16px;border-bottom:1px solid var(--line);">
-          <div class="rowb" style="margin-bottom:10px;">
-            <div><p class="t-xxs muted sn">Acqua</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span style="color:var(--p);" id="water-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ <span id="water-target">4.5</span>L</span></p></div>
-            <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="water-ring" stroke="var(--p)" stroke-dasharray="138.2" stroke-dashoffset="138.2" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4));"/></svg>
+        <button onclick="toggleTrackers()" id="trackers-toggle-btn" aria-expanded="true" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;background:transparent;border:none;cursor:pointer;text-align:left;touch-action:manipulation;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);font-variation-settings:'FILL' 0;">monitoring</span>
+            <span class="t-xxs muted sn">Attività e Trackers</span>
           </div>
-          <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill bfn" id="water-bar" style="width:0%;"></div></div>
-          <div class="row g2">
-            <button onclick="addWater(.5)" class="btn btn-neon-o btn-sm f1 sn">+0.5L</button>
-            <button onclick="addWater(.25)" class="btn btn-ghost btn-sm f1 sn">+250ml</button>
-            <button onclick="resetT('water')" class="btn-icon sn" aria-label="Azzera acqua"><span class="material-symbols-outlined" style="font-size:15px;">refresh</span></button>
+          <span class="material-symbols-outlined sn" id="trackers-chevron">expand_more</span>
+        </button>
+        <div id="trackers-body">
+          <!-- Acqua -->
+          <div class="tracker-block">
+            <div class="rowb" style="margin-bottom:10px;">
+              <div><p class="t-xxs muted sn">Acqua</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span style="color:var(--p);" id="water-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ <span id="water-target">4.5</span>L</span></p></div>
+              <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="water-ring" stroke="var(--p)" stroke-dasharray="138.2" stroke-dashoffset="138.2" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4));"/></svg>
+            </div>
+            <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill bfn" id="water-bar" style="width:0%;"></div></div>
+            <div class="row g2">
+              <button onclick="addWater(.5)" class="btn btn-neon-o btn-sm f1 sn">+0.5L</button>
+              <button onclick="addWater(.25)" class="btn btn-ghost btn-sm f1 sn">+250ml</button>
+              <button onclick="resetT('water')" class="btn-icon sn" aria-label="Azzera acqua"><span class="material-symbols-outlined" style="font-size:15px;">refresh</span></button>
+            </div>
           </div>
-        </div>
-        <div style="padding:16px;border-bottom:1px solid var(--line);">
-          <div class="rowb" style="margin-bottom:10px;">
-            <div><p class="t-xxs muted sn">Sale</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span id="salt-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ 6g</span></p></div>
-            <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="salt-ring" stroke="rgba(199,196,216,.4)" stroke-dasharray="138.2" stroke-dashoffset="138.2"/></svg>
+          <!-- Sale -->
+          <div class="tracker-block">
+            <div class="rowb" style="margin-bottom:10px;">
+              <div><p class="t-xxs muted sn">Sale</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span id="salt-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ 6g</span></p></div>
+              <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="salt-ring" stroke="rgba(199,196,216,.4)" stroke-dasharray="138.2" stroke-dashoffset="138.2"/></svg>
+            </div>
+            <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill" id="salt-bar" style="width:0%;background:rgba(199,196,216,.35);transition:width .5s cubic-bezier(.4,0,.2,1),background .3s;"></div></div>
+            <div class="row g2">
+              <button onclick="addSalt(1)" class="btn btn-ghost btn-sm f1 sn">+1g</button>
+              <button onclick="addSalt(.5)" class="btn btn-ghost btn-sm f1 sn">+0.5g</button>
+              <button onclick="resetT('salt')" class="btn-icon sn" aria-label="Azzera sale"><span class="material-symbols-outlined" style="font-size:15px;">refresh</span></button>
+            </div>
           </div>
-          <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill" id="salt-bar" style="width:0%;background:rgba(199,196,216,.35);transition:width .5s cubic-bezier(.4,0,.2,1),background .3s;"></div></div>
-          <div class="row g2">
-            <button onclick="addSalt(1)" class="btn btn-ghost btn-sm f1 sn">+1g</button>
-            <button onclick="addSalt(.5)" class="btn btn-ghost btn-sm f1 sn">+0.5g</button>
-            <button onclick="resetT('salt')" class="btn-icon sn" aria-label="Azzera sale"><span class="material-symbols-outlined" style="font-size:15px;">refresh</span></button>
-          </div>
-        </div>
-        <div class="grid2" style="padding:14px;gap:0;">
-          <div style="padding-right:10px;border-right:1px solid var(--line);">
-            <p class="t-xxs muted sn">Passi</p>
-            <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--p);margin:4px 0;" class="sn" id="steps-val">0</p>
-            <p class="t-xxs sn" style="color:var(--dim);">/ <span id="steps-tgt">8.000</span></p>
-            <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill bfn" id="steps-bar" style="width:0%;"></div></div>
-            <div class="row g2"><button onclick="addSteps(1000)" class="btn btn-neon-o btn-xs f1 sn">+1k</button><button onclick="addSteps(2500)" class="btn btn-ghost btn-xs f1 sn">+2.5k</button></div>
-          </div>
-          <div style="padding-left:10px;">
-            <p class="t-xxs muted sn">Workout</p>
-            <p id="wk-ratio" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--on);margin:4px 0;" class="sn">0/1</p>
-            <p id="wk-status" class="t-xxs sn" style="color:var(--dim);">Non fatto</p>
-            <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill" id="wk-bar" style="width:0%;background:rgba(199,196,216,.25);transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
-            <button id="wk-btn" onclick="toggleWk()" class="btn btn-ghost btn-xs w100 sn">Fatto ✓</button>
+          <!-- Passi + Workout -->
+          <div class="tracker-2col">
+            <div>
+              <p class="t-xxs muted sn">Passi</p>
+              <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--p);margin:4px 0;" class="sn" id="steps-val">0</p>
+              <p class="t-xxs sn" style="color:var(--dim);">/ <span id="steps-tgt">8.000</span></p>
+              <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill bfn" id="steps-bar" style="width:0%;"></div></div>
+              <div class="row g2"><button onclick="addSteps(1000)" class="btn btn-neon-o btn-xs f1 sn">+1k</button><button onclick="addSteps(2500)" class="btn btn-ghost btn-xs f1 sn">+2.5k</button></div>
+            </div>
+            <div>
+              <p class="t-xxs muted sn">Workout</p>
+              <p id="wk-ratio" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--on);margin:4px 0;" class="sn">0/1</p>
+              <p id="wk-status" class="t-xxs sn" style="color:var(--dim);">Non fatto</p>
+              <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill" id="wk-bar" style="width:0%;background:rgba(199,196,216,.25);transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
+              <button id="wk-btn" onclick="toggleWk()" class="btn btn-ghost btn-xs w100 sn">Fatto ✓</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- [F] Check-in Card -->
+      <!-- 6. Check-in Card -->
       <div class="check-card" id="daily-check-card">
         <div class="rowb"><span class="sec-label" style="margin-bottom:0;">Check-in giornaliero</span><span class="t-xxs muted">20 sec</span></div>
         <div class="range-row">
@@ -961,7 +996,13 @@ body.onboarding-active #onb-screen{
         <div class="note-box" id="checkin-feedback">Dopo il primo check-in riceverai un supporto contestuale.</div>
       </div>
 
-      <!-- [G] Profilo Card (collapsible) -->
+      <!-- 7. Maintain Card (hidden, preserve) -->
+      <div class="maintain-card" id="maintain-card">
+        <div class="rowb" style="margin-bottom:10px;"><span class="sec-label" style="margin-bottom:0;color:#0A84FF;">Mantenimento</span><span class="t-xxs" style="color:#8ec5ff;">LONG TERM</span></div>
+        <p id="maintain-msg" class="sn" style="font-size:13px;line-height:1.6;font-weight:600;color:var(--on);">Sei in fase di mantenimento. Focus su routine sostenibile e stabilità del peso.</p>
+      </div>
+
+      <!-- 8. Profilo Card (collapsible, default closed) -->
       <div class="card" style="overflow:hidden;">
         <button onclick="toggleInsight()" id="insight-toggle-btn" aria-expanded="false" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;background:transparent;border:none;cursor:pointer;text-align:left;touch-action:manipulation;">
           <span class="sec-label sn" style="margin:0;">Il Tuo Profilo</span>
@@ -3544,6 +3585,24 @@ function renderCoach(){
   }
 }
 
+function toggleTrackers(){
+  const b=getEl('trackers-body');
+  const c=getEl('trackers-chevron');
+  const btn=getEl('trackers-toggle-btn');
+  if(!b)return;
+  const open=b.style.maxHeight!=='0px';
+  b.style.maxHeight=open?'0':'800px';
+  if(c)c.style.transform=open?'rotate(180deg)':'';
+  if(btn)btn.setAttribute('aria-expanded',String(!open));
+}
+function shiftDay(delta){
+  if(!dietData)return;
+  const days=dietData.days||[];
+  const idx=days.findIndex(d=>d.d===selDay);
+  const next=days[idx+delta];
+  if(!next)return;
+  hap();selDay=next.d;buildDaySelector();renderMeals();
+}
 function toggleInsight(){
   const card=getEl('personal-insight-card');
   const chev=getEl('insight-chevron');
