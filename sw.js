@@ -1,8 +1,8 @@
-/* Iron Kinetic — Service Worker v14
+/* Iron Kinetic — Service Worker v15
    Cache: cache-first for assets, network-first for navigation.
    Offline fallback: cached index.html.
 */
-const CACHE = 'iron-kinetic-v14';
+const CACHE = 'iron-kinetic-v15';
 const ASSETS = [
   './',
   './index.html',

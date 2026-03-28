@@ -833,6 +833,23 @@ body.onboarding-active #onb-screen{
         <div id="coach-streak-badge" style="position:absolute;top:14px;right:14px;"></div>
       </div>
 
+      <!-- Adaptive Macro Engine Banner -->
+      <div id="adaptive-banner" style="display:none;">
+        <div style="background:rgba(255,159,10,.08);border:1px solid rgba(255,159,10,.22);border-radius:var(--r);padding:14px;">
+          <div style="display:flex;align-items:flex-start;gap:10px;">
+            <span class="material-symbols-outlined" style="font-size:20px;color:var(--orange);flex-shrink:0;font-variation-settings:'FILL' 1;margin-top:1px;">tips_and_updates</span>
+            <div style="flex:1;min-width:0;">
+              <span class="t-xxs sn" style="color:var(--orange);letter-spacing:.1em;font-weight:700;">ADAPTIVE ENGINE</span>
+              <p id="adaptive-msg" class="sn" style="font-size:12px;font-weight:600;color:var(--on);line-height:1.45;margin:4px 0 10px;"></p>
+              <div style="display:flex;gap:8px;">
+                <button onclick="applyAdaptiveSuggestion()" class="btn btn-xs sn" style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:11px;font-weight:700;height:30px;border-radius:var(--r3);padding:0 12px;">Applica</button>
+                <button onclick="dismissAdaptive()" class="btn btn-xs sn" style="background:transparent;border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:600;height:30px;border-radius:var(--r3);padding:0 12px;">Ignora</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 2. Date Label -->
       <p id="oggi-date-label" class="t-xxs muted sn" style="text-align:center;letter-spacing:.14em;padding:2px 0;"></p>
 
@@ -1069,9 +1086,13 @@ body.onboarding-active #onb-screen{
         <div class="row g2" style="margin-bottom:12px;">
           <button onclick="switchChart('weight',this)" id="ctab-w" class="btn btn-neon-o btn-xs sn chart-tab" style="padding:0 14px;">Peso</button>
           <button onclick="switchChart('waist',this)" id="ctab-wst" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Girovita</button>
+          <button onclick="switchChart('prediction',this)" id="ctab-pred" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Previsione</button>
         </div>
         <p id="chart-empty" class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;text-align:center;padding:24px 0;display:none;">Nessun dato</p>
         <div id="wChart-wrap" style="display:none;"><canvas id="wChart"></canvas></div>
+        <div id="prediction-summary" style="display:none;margin-top:10px;padding:10px;background:var(--s2);border-radius:var(--r3);border:1px solid var(--line);">
+          <p id="prediction-text" class="sn" style="font-size:11px;color:var(--muted);line-height:1.5;margin:0;"></p>
+        </div>
       </div>
       <!-- Check-in analytics (unchanged) -->
       <div class="analytics-card" id="checkin-analytics-card">
@@ -1084,6 +1105,24 @@ body.onboarding-active #onb-screen{
         </div>
         <div class="note-box" id="checkin-analytics-note">Salva almeno 2-3 check-in per visualizzare trend interpretabili.</div>
       </div>
+      <!-- Metabolic Fingerprint -->
+      <div class="card" id="fingerprint-card" style="padding:14px;display:none;">
+        <div class="rowb" style="margin-bottom:12px;">
+          <span class="sec-label" style="margin-bottom:0;">Impronta Metabolica</span>
+          <span class="t-xxs muted">PROFILO UNICO</span>
+        </div>
+        <div id="fingerprint-content"></div>
+      </div>
+
+      <!-- Weekly Metabolic Report -->
+      <div class="card" id="weekly-report-card" style="padding:14px;display:none;">
+        <div class="rowb" style="margin-bottom:10px;">
+          <span class="sec-label" style="margin-bottom:0;">Report Settimanale</span>
+          <button onclick="shareWeeklyReport()" class="btn btn-xs sn" style="background:rgba(77,220,198,.1);border:1px solid rgba(77,220,198,.2);color:var(--p);font-size:10px;font-weight:700;height:26px;border-radius:var(--r3);padding:0 10px;">Condividi</button>
+        </div>
+        <div id="weekly-report-content"></div>
+      </div>
+
       <!-- Calendario aderenza -->
       <div class="card" style="padding:14px;">
         <span class="sec-label">Calendario Aderenza</span>
@@ -1655,6 +1694,11 @@ it:{
   'clinical.hint.IBD_acute':'Proteine elevate a 1.5g/kg (ESPEN). Profilo lipidico antinfiammatorio omega-3.',
   'clinical.hint.IBD_remiss':'Proteine 1.0g/kg (ESPEN). Fase di consolidamento post-riacutizzazione.',
   'shopping.empty':'Nessun dato','shopping.noPlan':'Carica un piano per generare la lista',
+  'adaptive.rule.lowEnergy':'Energia media bassa: aggiungere +{delta} kcal ({kcal} → {newKcal} kcal) per sostenere il recupero.',
+  'adaptive.rule.canIntensify':'Segnali ottimali: possibile ridurre −{delta} kcal ({kcal} → {newKcal} kcal) per accelerare il deficit.',
+  'adaptive.rule.stallingRefeed':'Plateau rilevato: +{delta} kcal temporanee per reset della leptina ({kcal} → {newKcal} kcal).',
+  'adaptive.rule.hungerAdher':'Fame alta + aderenza bassa: aggiungere +{delta} kcal ({kcal} → {newKcal} kcal) per sostenibilità.',
+  'adaptive.toast.applied':'{delta} kcal applicati dal motore adattivo.',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -1901,6 +1945,11 @@ en:{
   'clinical.hint.IBD_acute':'Elevated protein at 1.5g/kg (ESPEN). Anti-inflammatory omega-3 lipid profile.',
   'clinical.hint.IBD_remiss':'Protein 1.0g/kg (ESPEN). Post-flare consolidation phase.',
   'shopping.empty':'No data','shopping.noPlan':'Load a plan to generate the list',
+  'adaptive.rule.lowEnergy':'Low average energy: add +{delta} kcal ({kcal} → {newKcal} kcal) to support recovery.',
+  'adaptive.rule.canIntensify':'Optimal signals: reduce −{delta} kcal ({kcal} → {newKcal} kcal) to accelerate deficit.',
+  'adaptive.rule.stallingRefeed':'Plateau detected: +{delta} kcal temporary leptin reset ({kcal} → {newKcal} kcal).',
+  'adaptive.rule.hungerAdher':'High hunger + low adherence: add +{delta} kcal ({kcal} → {newKcal} kcal) for sustainability.',
+  'adaptive.toast.applied':'{delta} kcal applied by adaptive engine.',
 }
 };
 let _lang='it';
@@ -2306,6 +2355,293 @@ function detectStall(){
   const slope=num/den; /* kg/giorno */
   const weeklyRate=Math.abs(slope*7);
   return weeklyRate<0.15; /* <150g/sett = stallo NEAT */
+}
+
+/* ═══════════════════════════════════════
+   ADVANCED FEATURES — 6 engines
+═══════════════════════════════════════ */
+const SK_ADAPTIVE='ikadaptive';
+const SK_REPORT='ikweeklyreport';
+function avg(arr){return arr.length?arr.reduce((a,v)=>a+v,0)/arr.length:0;}
+
+/* ── Feature 1: Adaptive Macro Engine ── */
+function runAdaptiveEngine(){
+  if(lsR(SK_ADAPTIVE)===toISO())return;
+  let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch{}
+  if(arr.length<3)return;
+  const recent=arr.slice(0,5);
+  const avgE=avg(recent.map(c=>+(c.energy||5)));
+  const avgH=avg(recent.map(c=>+(c.hunger||5)));
+  const avgA=avg(recent.map(c=>+(c.adherence||5)));
+  let rule=null;
+  if(avgE<=3){rule={key:'adaptive.rule.lowEnergy',delta:100};}
+  else if(avgE>=8&&avgH<=3&&avgA>=8){rule={key:'adaptive.rule.canIntensify',delta:-100};}
+  else if(detectStall()&&!isRefeed()){rule={key:'adaptive.rule.stallingRefeed',delta:200};}
+  else if(avgH>=7&&avgA<=4){rule={key:'adaptive.rule.hungerAdher',delta:150};}
+  if(rule)showAdaptiveBanner(rule);
+}
+function showAdaptiveBanner(rule){
+  const banner=document.getElementById('adaptive-banner');
+  const msg=document.getElementById('adaptive-msg');
+  if(!banner||!msg)return;
+  const m=calcMacros();
+  msg.textContent=t(rule.key,{kcal:m.kcal,newKcal:m.kcal+rule.delta,delta:Math.abs(rule.delta)});
+  banner._rule=rule;
+  banner.style.display='block';
+}
+function applyAdaptiveSuggestion(){
+  const banner=document.getElementById('adaptive-banner');
+  if(!banner||!banner._rule)return;
+  const units=Math.round(banner._rule.delta/100);
+  lsS(SK.mod,String(getMod()+units));
+  banner.style.display='none';
+  lsS(SK_ADAPTIVE,toISO());
+  renderMacros();renderMeals();renderKcalRing();
+  toast(t('adaptive.toast.applied',{delta:banner._rule.delta>0?'+'+banner._rule.delta:banner._rule.delta}));
+}
+function dismissAdaptive(){
+  const banner=document.getElementById('adaptive-banner');
+  if(banner)banner.style.display='none';
+  lsS(SK_ADAPTIVE,toISO());
+}
+
+/* ── Feature 2: Circadian Nutrition Timing ── */
+function getCircadianTips(n,idx,total){
+  if(idx===0)return'';
+  const nl=n.toLowerCase();
+  if(nl.includes('colazione'))return'';
+  // Last meal ≥ 2-meal plan → evening
+  if(idx===total-1&&total>=2){
+    return'<span style="font-size:11px;margin-left:3px;" title="Finestra serale: privilegia proteine e verdure, riduci carboidrati semplici">🌙</span>';
+  }
+  // Second meal in ≥3-meal plan → pre-workout window
+  if(total>=3&&idx===1){
+    return'<span style="font-size:11px;margin-left:3px;" title="Finestra pre-workout: carboidrati a basso IG 60 min prima">⚡</span>';
+  }
+  // Third meal in ≥4-meal plan → post-workout window
+  if(total>=4&&idx===2){
+    return'<span style="font-size:11px;margin-left:3px;" title="Finestra post-workout: proteine rapide + carboidrati entro 45 min">🔄</span>';
+  }
+  return'';
+}
+
+/* ── Feature 5: Meal Synergy Score ── */
+const SYNERGY_RULES=[
+  {keywords:['riso','pollo','tacchino','uova','broccoli','spinaci'],score:3,label:'Sinergia ottimale'},
+  {keywords:['salmone','avocado','quinoa','verdure'],score:3,label:'Sinergia ottimale'},
+  {keywords:['pasta','carne','legumi','patate'],score:2,label:'Buona sinergia'},
+  {keywords:['yogurt','frutta','fiocchi','avena'],score:2,label:'Buona sinergia'},
+  {keywords:['dolci','fritto','burro','zucchero'],score:1,label:'Sinergia limitata'},
+];
+function calcSynergyScore(desc){
+  if(!desc)return null;
+  const d=desc.toLowerCase();
+  let best={score:2,label:'Neutro'};
+  for(const rule of SYNERGY_RULES){
+    const matches=rule.keywords.filter(k=>d.includes(k)).length;
+    if(matches>=2&&rule.score>best.score)best=rule;
+    else if(matches>=1&&rule.score===3&&best.score<3)best=rule;
+  }
+  const emoji=best.score>=3?'🟢':best.score<=1?'🔴':'';
+  return emoji?{...best,emoji}:null;
+}
+
+/* ── Feature 3: Metabolic Fingerprint ── */
+function calcMetabolicFingerprint(){
+  const log=getLog().filter(e=>e.weight&&Number(e.weight)>0).sort((a,b)=>a.isoDate<b.isoDate?-1:1);
+  if(log.length<5)return null;
+  const n=log.length;
+  const t0=new Date(log[0].isoDate).getTime();
+  const xs=log.map(e=>(new Date(e.isoDate).getTime()-t0)/86400000);
+  const ys=log.map(e=>Number(e.weight));
+  const mX=xs.reduce((a,v)=>a+v,0)/n;
+  const mY=ys.reduce((a,v)=>a+v,0)/n;
+  const num=xs.reduce((a,v,i)=>a+(v-mX)*(ys[i]-mY),0);
+  const den=xs.reduce((a,v)=>a+(v-mX)**2,0);
+  const slope=den===0?0:num/den;
+  const actualWeekly=Math.abs(slope*7);
+  const m=calcMacros();
+  const profile=getProfile();
+  const um=profile?calculateUserMacros(profile):null;
+  const tdee=um?.tdee||m.kcal+200;
+  const weeklyDeficit=Math.max(0.01,(tdee-m.kcal)*7/7700);
+  const efficiency=Math.min(150,Math.round(actualWeekly/weeklyDeficit*100));
+  const adaptation=Math.max(0,Math.min(100,Math.round((1-actualWeekly/weeklyDeficit)*100)));
+  const span=(new Date(log[n-1].isoDate)-new Date(log[0].isoDate))/86400000;
+  const responseDays=Math.max(7,Math.min(21,Math.round(span/n*3)));
+  const avgWeekly=Math.round(actualWeekly*100)/100;
+  return{efficiency,adaptation,responseDays,avgWeekly};
+}
+function renderFingerprint(){
+  const card=document.getElementById('fingerprint-card');
+  const cont=document.getElementById('fingerprint-content');
+  if(!card||!cont)return;
+  const fp=calcMetabolicFingerprint();
+  if(!fp){card.style.display='none';return;}
+  card.style.display='block';
+  const bar=(v,color)=>`<div style="height:6px;border-radius:3px;background:var(--s3);overflow:hidden;"><div style="width:${Math.min(100,Math.max(0,v))}%;height:100%;background:${color};border-radius:3px;transition:width .4s;"></div></div>`;
+  cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">EFFICIENZA</span>
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--p);margin:2px 0 4px;">${fp.efficiency}%</p>
+      ${bar(fp.efficiency,'var(--p)')}
+      <p class="muted sn" style="font-size:10px;margin-top:4px;">risposta al deficit</p></div>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">ADATTAMENTO</span>
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--orange);margin:2px 0 4px;">${fp.adaptation}%</p>
+      ${bar(fp.adaptation,'var(--orange)')}
+      <p class="muted sn" style="font-size:10px;margin-top:4px;">riduzione metabolica</p></div>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">RISPOSTA</span>
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.responseDays}gg</p>
+      <p class="muted sn" style="font-size:10px;margin-top:2px;">per segnale affidabile</p></div>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">PERDITA REALE</span>
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.avgWeekly}kg/w</p>
+      <p class="muted sn" style="font-size:10px;margin-top:2px;">media settimanale</p></div>
+  </div>`;
+}
+
+/* ── Feature 4: Predictive Weight Curve ── */
+function calcPredictiveCurve(){
+  const log=getLog().filter(e=>e.weight&&Number(e.weight)>0).sort((a,b)=>a.isoDate<b.isoDate?-1:1);
+  if(log.length<5)return null;
+  const n=log.length;
+  const t0=new Date(log[0].isoDate).getTime();
+  const xs=log.map(e=>(new Date(e.isoDate).getTime()-t0)/86400000);
+  const ys=log.map(e=>Number(e.weight));
+  const mX=xs.reduce((a,v)=>a+v,0)/n;
+  const mY=ys.reduce((a,v)=>a+v,0)/n;
+  const num=xs.reduce((a,v,i)=>a+(v-mX)*(ys[i]-mY),0);
+  const den=xs.reduce((a,v)=>a+(v-mX)**2,0);
+  const slope=den===0?0:num/den;
+  const lastWeight=ys[n-1];
+  const lastDate=new Date(log[n-1].isoDate);
+  const points=[];
+  for(let w=1;w<=12;w++){
+    const adaptFactor=Math.pow(0.85,w);
+    const adaptedW=lastWeight+slope*w*7*adaptFactor;
+    const d=new Date(lastDate);d.setDate(d.getDate()+w*7);
+    const iso=d.toISOString().slice(0,10);
+    const[,m,day]=iso.split('-');
+    points.push({label:`${day}/${m}`,weight:Math.round(adaptedW*10)/10});
+  }
+  return{points,slope,lastWeight};
+}
+function renderPredictionChart(){
+  const cv=document.getElementById('wChart');const wrap=document.getElementById('wChart-wrap');const em=document.getElementById('chart-empty');
+  const predTxt=document.getElementById('prediction-text');
+  const predSum=document.getElementById('prediction-summary');
+  if(!cv||!wrap||!em)return;
+  if(typeof Chart==='undefined'){em.style.display='block';wrap.style.display='none';return;}
+  const curve=calcPredictiveCurve();
+  if(!curve){
+    em.style.display='block';wrap.style.display='none';
+    if(predTxt)predTxt.textContent='Registra almeno 5 pesate per attivare la previsione.';
+    if(predSum)predSum.style.display='block';
+    return;
+  }
+  em.style.display='none';
+  if(bodyChart){try{bodyChart.destroy();}catch(e){}bodyChart=null;}
+  wrap.style.display='block';
+  const log=getLog().filter(e=>e.weight&&Number(e.weight)>0).sort((a,b)=>a.isoDate<b.isoDate?-1:1).slice(-8);
+  const realLabels=log.map(e=>{const[,m,d]=(e.isoDate||'').split('-');return`${d}/${m}`;});
+  const realValues=log.map(e=>Math.round(Number(e.weight)*10)/10);
+  const predLabels=curve.points.map(p=>p.label);
+  const predValues=curve.points.map(p=>p.weight);
+  const allLabels=[...realLabels,...predLabels];
+  const allReal=[...realValues,...Array(predLabels.length).fill(null)];
+  const lastReal=realValues[realValues.length-1];
+  const allPred=[...Array(realLabels.length-1).fill(null),lastReal,...predValues];
+  const lastPred=predValues[predValues.length-1];
+  const diff=Math.round((lastPred-curve.lastWeight)*10)/10;
+  if(predTxt)predTxt.textContent=`Tra 12 settimane: ${lastPred} kg (${diff>0?'+':''}${diff} kg). Proiezione con correzione adattamento metabolico.`;
+  if(predSum)predSum.style.display='block';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(bodyChart){try{bodyChart.destroy();}catch(e){}bodyChart=null;}
+    if(!cv.offsetWidth||!cv.offsetHeight){cv.width=wrap.offsetWidth||300;cv.height=165;}
+    bodyChart=new Chart(cv,{
+      type:'line',
+      data:{labels:allLabels,datasets:[
+        {label:'Reale',data:allReal,borderColor:'#4ddcc6',backgroundColor:'rgba(77,220,198,.10)',borderWidth:2.25,pointBackgroundColor:'#4ddcc6',pointBorderWidth:0,pointRadius:3,tension:.35,fill:true,spanGaps:false},
+        {label:'Previsione',data:allPred,borderColor:'rgba(77,220,198,.45)',backgroundColor:'transparent',borderWidth:2,borderDash:[5,4],pointRadius:2,pointBackgroundColor:'rgba(77,220,198,.45)',tension:.35,fill:false,spanGaps:false}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,animation:false,
+        plugins:{legend:{display:false},tooltip:{displayColors:false,backgroundColor:'#151515',borderColor:'#4ddcc6',borderWidth:1,titleColor:'#8A8A8A',bodyColor:'#fff',callbacks:{label:ctx=>{const v=ctx.parsed.y;return v!=null?(Math.round(v*10)/10)+' kg':'';} }}},
+        scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#8A8A8A',maxRotation:0,autoSkip:true,maxTicksLimit:6,font:{family:'Manrope',size:10,weight:'600'}},border:{display:false}},
+                y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#8A8A8A',font:{family:'Manrope',size:10,weight:'600'},callback:v=>v!=null?(Math.round(v*10)/10)+' kg':''},border:{display:false}}}}
+    });
+  }));
+}
+
+/* ── Feature 6: Weekly Metabolic Report ── */
+function generateWeeklyReport(){
+  const now=new Date();
+  const isoWeekAgo=new Date(now-7*24*3600*1000).toISOString().slice(0,10);
+  const log=getLog().filter(e=>e.isoDate&&e.isoDate>=isoWeekAgo&&Number(e.weight)>0).sort((a,b)=>a.isoDate<b.isoDate?-1:1);
+  let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch{}
+  const ciWeek=arr.filter(c=>c.iso>=isoWeekAgo);
+  const weightChange=log.length>=2?Math.round((Number(log[log.length-1].weight)-Number(log[0].weight))*10)/10:null;
+  const avgF=(k)=>ciWeek.length?Math.round(avg(ciWeek.map(c=>+(c[k]||5)))*10)/10:null;
+  const ciDays=ciWeek.length;
+  let mealsDone=0,mealsTotal=0;
+  if(dietData){
+    const days=dietData.days||[];const names=getMealNames();
+    for(let i=0;i<7;i++){
+      const d=new Date(now.getTime()-i*24*3600*1000);
+      const dow=d.getDay()===0?7:d.getDay();
+      const dayData=days.find(x=>x.d===dow);if(!dayData)continue;
+      names.forEach(n=>{mealsTotal++;if(lsR(mk(dow,n))==='1')mealsDone++;});
+    }
+  }
+  return{weightChange,avgHunger:avgF('hunger'),avgEnergy:avgF('energy'),avgAdher:avgF('adherence'),ciDays,mealsDone,mealsTotal};
+}
+function generateReportInsight(rep){
+  const{weightChange,avgEnergy,avgHunger,avgAdher,ciDays}=rep;
+  if(!ciDays&&weightChange===null)return'Registra pesate e check-in per ricevere analisi personalizzata.';
+  const parts=[];
+  if(weightChange!==null){
+    if(weightChange<-0.5)parts.push(`Ottimo: −${Math.abs(weightChange)} kg questa settimana.`);
+    else if(weightChange>0.3)parts.push(`Peso in risalita di +${weightChange} kg: controlla ritenzione e aderenza.`);
+    else parts.push(`Peso stabile (${weightChange>=0?'+':''}${weightChange} kg): metabolismo in adattamento.`);
+  }
+  if(avgEnergy!==null&&avgEnergy<=4)parts.push(`Energia media bassa (${avgEnergy}/10): aumenta i carb peri-workout.`);
+  if(avgHunger!==null&&avgHunger>=7)parts.push(`Fame elevata (${avgHunger}/10): considera +100–150 kcal da carboidrati.`);
+  if(avgAdher!==null&&avgAdher>=8)parts.push(`Aderenza eccellente (${avgAdher}/10): continua così.`);
+  if(ciDays>=5)parts.push(`${ciDays}/7 check-in: consistenza di alto livello.`);
+  else if(ciDays>0&&ciDays<3)parts.push(`Solo ${ciDays}/7 check-in: registra ogni giorno per analisi più precise.`);
+  return parts.join(' ')||'Settimana regolare. Mantieni la costanza.';
+}
+function renderWeeklyReport(){
+  const card=document.getElementById('weekly-report-card');
+  const cont=document.getElementById('weekly-report-content');
+  if(!card||!cont)return;
+  const log=getLog();
+  if(!dietData&&!log.length){card.style.display='none';return;}
+  card.style.display='block';
+  const rep=generateWeeklyReport();
+  const insight=generateReportInsight(rep);
+  const pct=rep.mealsTotal>0?Math.round(rep.mealsDone/rep.mealsTotal*100):0;
+  const wTxt=rep.weightChange!==null?`${rep.weightChange>=0?'+':''}${rep.weightChange} kg`:'—';
+  const wColor=rep.weightChange!=null&&rep.weightChange<0?'var(--p)':'var(--on)';
+  cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+    <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${wColor};margin:0 0 2px;">${wTxt}</p>
+      <span class="t-xxs muted sn">Peso</span></div>
+    <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--on);margin:0 0 2px;">${rep.ciDays}/7</p>
+      <span class="t-xxs muted sn">Check-in</span></div>
+    <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${pct>=80?'var(--p)':pct>=50?'var(--orange)':'var(--red)'};margin:0 0 2px;">${pct}%</p>
+      <span class="t-xxs muted sn">Pasti</span></div>
+  </div>
+  <p class="sn" style="font-size:12px;color:var(--muted);line-height:1.55;">${sanitize(insight)}</p>`;
+}
+function shareWeeklyReport(){
+  hap();
+  const rep=generateWeeklyReport();
+  const insight=generateReportInsight(rep);
+  const wTxt=rep.weightChange!==null?`${rep.weightChange>=0?'+':''}${rep.weightChange} kg`:'—';
+  const pct=rep.mealsTotal>0?Math.round(rep.mealsDone/rep.mealsTotal*100)+'%':'—';
+  const text=`📊 Iron Kinetic — Report Settimanale\n\nPeso: ${wTxt}\nCheck-in: ${rep.ciDays}/7\nPasti: ${pct}\nEnergia: ${rep.avgEnergy||'—'}/10\nAderenza: ${rep.avgAdher||'—'}/10\n\n${insight}`;
+  if(navigator.share){navigator.share({title:'Iron Kinetic Report',text}).catch(()=>{});}
+  else{try{navigator.clipboard.writeText(text);toast('📋 Report copiato!');}catch{toast('⚠️ Condivisione non supportata');}}
 }
 
 /* ═══════════════════════════════════════
@@ -3781,7 +4117,7 @@ function renderMeals(){
   const cont=document.getElementById('meals-list');let done=0;
   /* Update /N counter */
   const totalEl=document.getElementById('meals-total');if(totalEl)totalEl.textContent='/'+mNames.length;
-  cont.innerHTML=mNames.map(n=>{
+  cont.innerHTML=mNames.map((n,mealIdx)=>{
     const meal=day[n];if(!meal)return'';
     const checked=lsR(mk(day.d,n))==='1';if(checked)done++;
     const isHardcodedMeal=n==='Colazione'||n.includes('Spuntino');
@@ -3791,6 +4127,9 @@ function renderMeals(){
     /* Badge shows modifier delta for ALL meal types; carbLine only for computed main meals */
     const badge=(diff!==0&&meal.carbSource)?`<span class="mod-badge">${diff>0?'+':''}${diff}g ${sanitize(carbLabel)}</span>`:'';
     const carbLine=(fa!==null&&!isHardcodedMeal)?`<strong style="color:var(--on);">${fa}g ${sanitize(carbLabel)}</strong>, `:'';
+    const circBadge=getCircadianTips(n,mealIdx,mNames.length);
+    const synergy=calcSynergyScore(meal.rest);
+    const synBadge=synergy?`<span style="font-size:11px;margin-left:3px;" title="${sanitize(synergy.label)}">${synergy.emoji}</span>`:'';
     const bs=checked?'border:1px solid rgba(77,220,198,.22);background:rgba(77,220,198,.03);':'border:1px solid var(--line);background:var(--s1);';
     /* Breakfast/snack use hardcoded string recipes — component swap is meaningless for them.
        Show only the regen button to avoid misleading protein/carb swap labels. */
@@ -3811,7 +4150,7 @@ function renderMeals(){
           ${checked?`<span class="material-symbols-outlined sn" style="font-size:16px;color:var(--p);font-variation-settings:'FILL' 1;">check</span>`:''}
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(n)}</span>${badge}</div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(n)}</span>${badge}${circBadge}${synBadge}</div>
           <p class="meal-desc sn">${carbLine}${sanitize(meal.rest)}</p>
         </div>
       </button>
@@ -4116,8 +4455,15 @@ function switchChart(mode,btn){
     b.style.borderColor=on?'rgba(77,220,198,.22)':'var(--glass-stroke)';b.style.color=on?'var(--p)':'var(--on-v)';
   });
   const lbl=document.getElementById('chart-mode-label');
-  if(lbl)lbl.textContent=mode==='waist'?'Trend Girovita':'Trend Peso';
-  renderChart(getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1));
+  const predSum=document.getElementById('prediction-summary');
+  if(mode==='prediction'){
+    if(lbl)lbl.textContent='Previsione Peso (12 sett)';
+    renderPredictionChart();
+  } else {
+    if(predSum)predSum.style.display='none';
+    if(lbl)lbl.textContent=mode==='waist'?'Trend Girovita':'Trend Peso';
+    renderChart(getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1));
+  }
 }
 
 /* ═══════════════════════════════════════
@@ -4763,7 +5109,7 @@ const TABS=['oggi','prog','set','info'];
 function switchTab(name){
   if(!dietData&&name!=='oggi'&&name!=='info')return;hap();activeTab=name;
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
-  if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();_tabDirty.prog=false;}
+  if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();_tabDirty.prog=false;}
   if(name==='set'&&_tabDirty.set){renderSettings();renderKcalRing();_tabDirty.set=false;}
   if(name==='info'){updateConsentUI();}
 }
@@ -4799,13 +5145,13 @@ function mountApp(){
   requestAnimationFrame(()=>{
     renderCoach?.();renderRefeed?.();renderPersonalInsight?.();
     updateAdherenceCalendar?.();renderCalendar?.();
-    renderCheckinAnalytics?.();
+    renderCheckinAnalytics?.();runAdaptiveEngine?.();
     updateConsentUI?.();updateStreaks?.();updateNotifUI?.();
     migrateTargetKcal?.();
     try{restoreTodayCheckin?.();}catch{}
     requestIdleCallback
-      ?requestIdleCallback(()=>{renderSettings?.();buildDaySelector?.();})
-      :setTimeout(()=>{renderSettings?.();buildDaySelector?.();},80);
+      ?requestIdleCallback(()=>{renderSettings?.();buildDaySelector?.();renderFingerprint?.();renderWeeklyReport?.();})
+      :setTimeout(()=>{renderSettings?.();buildDaySelector?.();renderFingerprint?.();renderWeeklyReport?.();},80);
   });
 }
 
