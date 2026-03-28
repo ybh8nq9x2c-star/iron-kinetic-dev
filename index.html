@@ -830,12 +830,12 @@ body.onboarding-active #onb-screen{
       <div class="check-card" id="daily-check-card">
         <div class="rowb"><span class="sec-label" style="margin-bottom:0;">Check-in giornaliero</span><span class="t-xxs muted">20 sec</span></div>
         <div class="range-row">
-          <div class="range-wrap"><label class="field-label" for="ci-hunger">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10')"/></div>
-          <div class="range-wrap"><label class="field-label" for="ci-energy">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10')"/></div>
+          <div class="range-wrap"><label class="field-label" for="ci-hunger">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-hunger">5</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-energy">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-energy">6</output></div>
         </div>
         <div class="range-row">
-          <div class="range-wrap"><label class="field-label" for="ci-adherence">Aderenza</label><input id="ci-adherence" type="range" min="1" max="10" value="8" aria-label="Aderenza (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10')"/></div>
-          <div class="range-wrap"><label class="field-label" for="ci-digestion">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10')"/></div>
+          <div class="range-wrap"><label class="field-label" for="ci-adherence">Aderenza</label><input id="ci-adherence" type="range" min="1" max="10" value="8" aria-label="Aderenza (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-adherence">8</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-digestion">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-digestion">8</output></div>
         </div>
         <div>
           <label class="field-label">Contesto giornata</label>
@@ -866,6 +866,19 @@ body.onboarding-active #onb-screen{
         <div class="macro-card"><span class="t-xxs muted sn">Proteine</span><div class="macro-val sn" id="m-pro">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-pro" style="width:0%;"></div></div></div>
         <div class="macro-card"><span class="t-xxs muted sn">Carbs</span><div class="macro-val sn" id="m-carbs">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-carbs" style="width:0%;"></div></div></div>
         <div class="macro-card"><span class="t-xxs muted sn">Grassi</span><div class="macro-val sn" id="m-fat">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-fat" style="width:0%;"></div></div></div>
+      </div>
+
+      <!-- Kcal progress widget -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--s1);border-radius:var(--rbox);margin-bottom:8px">
+        <div>
+          <p class="t-xxs muted sn" style="margin-bottom:4px;text-transform:uppercase;letter-spacing:.14em">Kcal consumate</p>
+          <p id="oggi-kcal-done" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--p);margin:0">0</p>
+          <p id="oggi-kcal-target" class="t-xxs muted sn" style="margin-top:2px">di 0 kcal</p>
+        </div>
+        <svg width="64" height="64" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true">
+          <circle cx="22" cy="22" r="17" class="ring-track"/>
+          <circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring-oggi" stroke="var(--p)" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4))"/>
+        </svg>
       </div>
 
       <!-- Water -->
@@ -1074,6 +1087,10 @@ body.onboarding-active #onb-screen{
       <div class="card" style="padding:16px;">
         <span class="sec-label">Il Tuo Profilo</span>
         <p id="set-profile-text" class="sn" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;">—</p>
+        <div id="weight-update-row" style="display:flex;gap:8px;margin-top:10px;align-items:center">
+          <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="width:80px">
+          <button onclick="updateWeight()" class="btn btn-neon-o btn-xs" style="flex:1" id="btn-weight-upd">Aggiorna peso</button>
+        </div>
         <div id="set-prefs-text" style="margin-top:10px;display:none;">
           <div class="divider" style="margin-bottom:10px;"></div>
           <p id="set-prefs-content" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;"></p>
@@ -1108,11 +1125,12 @@ body.onboarding-active #onb-screen{
         <span class="sec-label">Modificatore AI</span>
         <div class="rowb" style="margin-top:10px;">
           <p id="mod-status" class="t-xxs muted sn">Base invariata</p>
-          <div class="mod-stepper">
+          <div id="mod-stepper" class="mod-stepper">
             <button onclick="applyMod(-1)" class="mod-stepper-btn sn" aria-label="−100 kcal">−</button>
             <span id="mod-display" class="mod-stepper-val sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;min-width:72px;text-align:center;">0 kcal</span>
             <button onclick="applyMod(1)" class="mod-stepper-btn pos sn" aria-label="+100 kcal">+</button>
           </div>
+          <p id="mod-units-label" class="t-xxs muted sn" style="text-align:center;margin-top:4px"></p>
         </div>
         <button onclick="applyMod(0)" class="btn btn-ghost btn-xs sn" style="margin-top:10px;padding:0 14px;width:100%;">Reset modificatore</button>
       </div>
@@ -1123,8 +1141,13 @@ body.onboarding-active #onb-screen{
           <button onclick="exportData()" class="btn btn-ghost w100 sn">📦 Esporta Backup</button>
           <button onclick="document.getElementById('imp-inp').click()" class="btn btn-ghost w100 sn">📥 Importa Backup</button>
           <input type="file" id="imp-inp" accept=".json" style="display:none;" onchange="importBackup(event)"/>
-          <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">🗑 Ricomincia da capo</button>
         </div>
+      </div>
+      <!-- Zona Pericolosa -->
+      <div class="card" style="padding:16px;border:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.04)">
+        <span class="sec-label" style="color:var(--red);margin-bottom:8px;display:block">Zona Pericolosa</span>
+        <p class="sn t-xxs muted" style="margin-bottom:10px;line-height:1.5">Queste azioni sono irreversibili senza un backup.</p>
+        <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
       </div>
       <!-- Lingua / Language switcher -->
       <div class="card" style="padding:14px 16px;">
@@ -1332,7 +1355,7 @@ it:{
   'oggi.checkin.aderenza':'Aderenza','oggi.checkin.digestione':'Digestione',
   'oggi.checkin.contesto':'Contesto giornata',
   'oggi.checkin.routine':'Routine','oggi.checkin.sociale':'Sociale','oggi.checkin.stress':'Stress','oggi.checkin.workout':'Workout',
-  'oggi.checkin.salva':'Salva check-in',
+  'oggi.checkin.salva':'Salva check-in','oggi.checkin.aggiorna':'Aggiorna check-in',
   'oggi.checkin.feedback_default':'Dopo il primo check-in riceverai un supporto contestuale.',
   'oggi.mod.badge':'MOD',
   'prog.title':'Progresso','prog.registra':'Registra',
@@ -1431,7 +1454,7 @@ it:{
   'toast.refeedOn':'🔥 Refeed Day attivato!','toast.refeedOff':'Refeed disattivato',
   'toast.wkCompletato':'🏋️ Sessione completata!','toast.wkRimosso':'Allenamento rimosso',
   'toast.acquaLimite':'Limite {max}L raggiunto 💧','toast.saleLimite':'Limite 6g raggiunto 🧂',
-  'toast.azzerato':'{tipo} azzerato','toast.mealMarcato':'{n} segnato ✓','toast.storageQuota':'⚠️ Spazio esaurito — esporta il backup',
+  'toast.azzerato':'{tipo} azzerato','toast.mealMarcato':'{n} segnato ✓','toast.storageQuota':'⚠️ Spazio esaurito — esporta il backup','toast.undo':'Annulla','toast.stepsCap':'⚠️ Max 30.000 passi','toast.pesoAggiornato':'✓ Peso aggiornato',
   'toast.notifOn':'✅ Promemoria attivato!',
   'toast.notifDenied':'🔕 Permesso negato — abilita nelle impostazioni del browser',
   'toast.notifNoChange':'Nessun cambiamento','toast.notifErr':'Errore richiesta notifiche',
@@ -1440,7 +1463,7 @@ it:{
   'toast.swapNoFood':'Nessun alimento disponibile per questo componente',
   'toast.swapNoAlt':'Nessuna alternativa disponibile',
   'toast.rigenMeal':'{meal} rigenerato',
-  'confirm.ricomincia':'Ricominciare da capo? Tornerai all\'onboarding e rigenererai il piano.',
+  'confirm.ricomincia':'Ricominciare da capo? Tornerai all\'onboarding e rigenererai il piano.','set.confirmReset':'Eliminare profilo e ricominciare?',
   'confirm.eliminaPiano':'Eliminare il piano attuale e ricominciare?',
   'confirm.eliminaVoce':'Eliminare?',
   'confirm.revocaConsenso':'Revocare il consenso? I tuoi dati locali non vengono cancellati automaticamente, ma non potrai usare l\'app senza consenso.',
@@ -1578,7 +1601,7 @@ en:{
   'oggi.checkin.aderenza':'Adherence','oggi.checkin.digestione':'Digestion',
   'oggi.checkin.contesto':'Day context',
   'oggi.checkin.routine':'Routine','oggi.checkin.sociale':'Social','oggi.checkin.stress':'Stress','oggi.checkin.workout':'Workout',
-  'oggi.checkin.salva':'Save check-in',
+  'oggi.checkin.salva':'Save check-in','oggi.checkin.aggiorna':'Update check-in',
   'oggi.checkin.feedback_default':'After your first check-in you\'ll receive contextual coaching.',
   'oggi.mod.badge':'MOD',
   'prog.title':'Progress','prog.registra':'Record',
@@ -1677,7 +1700,7 @@ en:{
   'toast.refeedOn':'🔥 Refeed Day activated!','toast.refeedOff':'Refeed deactivated',
   'toast.wkCompletato':'🏋️ Session completed!','toast.wkRimosso':'Workout removed',
   'toast.acquaLimite':'{max}L limit reached 💧','toast.saleLimite':'6g salt limit reached 🧂',
-  'toast.azzerato':'{tipo} reset','toast.mealMarcato':'{n} marked ✓','toast.storageQuota':'⚠️ Storage full — export your backup',
+  'toast.azzerato':'{tipo} reset','toast.mealMarcato':'{n} marked ✓','toast.storageQuota':'⚠️ Storage full — export your backup','toast.undo':'Undo','toast.stepsCap':'⚠️ Max 30,000 steps','toast.pesoAggiornato':'✓ Weight updated',
   'toast.notifOn':'✅ Reminder enabled!',
   'toast.notifDenied':'🔕 Permission denied — enable in browser settings',
   'toast.notifNoChange':'No changes','toast.notifErr':'Notification request error',
@@ -1686,7 +1709,7 @@ en:{
   'toast.swapNoFood':'No food available for this component',
   'toast.swapNoAlt':'No alternative available',
   'toast.rigenMeal':'{meal} regenerated',
-  'confirm.ricomincia':'Start over? You\'ll go back to onboarding and regenerate your plan.',
+  'confirm.ricomincia':'Start over? You\'ll go back to onboarding and regenerate your plan.','set.confirmReset':'Delete profile and start over?',
   'confirm.eliminaPiano':'Delete the current plan and start over?',
   'confirm.eliminaVoce':'Delete this entry?',
   'confirm.revocaConsenso':'Revoke consent? Your local data won\'t be deleted automatically, but you won\'t be able to use the app without consent.',
@@ -3452,6 +3475,8 @@ function restoreTodayCheckin(){
   Object.entries(map).forEach(([id,val])=>{const el=document.getElementById(id);if(el&&val!=null)el.value=val;});
   const btn=[...document.querySelectorAll('.micro-chip')].find(b=>b.textContent.trim().toLowerCase()===String(today.tag||'').toLowerCase());
   if(btn)setCheckTag(btn,today.tag);
+  const ciBtn=document.querySelector('#daily-check-card .btn-primary');
+  if(ciBtn)ciBtn.textContent=t('oggi.checkin.aggiorna')||'Aggiorna check-in';
 }
 function renderCheckinAnalytics(){
   let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch{}
@@ -3528,11 +3553,11 @@ function renderMacros(){
   getEl('m-pro').textContent=m.pro+'g';
   getEl('m-carbs').textContent=m.carbs+'g';
   getEl('m-fat').textContent=m.fat+'g';
-  const bk=baseKcal()+400;
-  getEl('b-kcal').style.width=`${Math.min(100,Math.round(m.kcal/bk*100))}%`;
-  getEl('b-pro').style.width=`${Math.min(100,Math.round(m.pro/250*100))}%`;
-  getEl('b-carbs').style.width=`${Math.min(100,Math.round(m.carbs/350*100))}%`;
-  getEl('b-fat').style.width=`${Math.min(100,Math.round(m.fat/100*100))}%`;
+  const bKcal=m.kcal*1.2,bPro=m.pro*1.2,bCarbs=m.carbs*1.2,bFat=m.fat*1.2;
+  getEl('b-kcal').style.width=Math.min(100,m.kcal/bKcal*100)+'%';
+  getEl('b-pro').style.width=Math.min(100,m.pro/bPro*100)+'%';
+  getEl('b-carbs').style.width=Math.min(100,m.carbs/bCarbs*100)+'%';
+  getEl('b-fat').style.width=Math.min(100,m.fat/bFat*100)+'%';
   getEl('m-kcal').style.color=m.modified?'#FFB800':'var(--p)';
   getEl('m-carbs').style.color=m.modified?'#FFB800':'var(--on)';
   const mb=getEl('m-mod-badge');if(mb)mb.style.display=m.modified?'block':'none';
@@ -3579,15 +3604,19 @@ function renderTrackers(){
 }
 function addWater(a){hap();const mx=getWMAX();const c=gT('water');if(c>=mx){toast(t('toast.acquaLimite',{max:mx}));hap('error');return;}const n=Math.min(mx,parseFloat((c+a).toFixed(2)));sT('water',n);renderTrackers();renderCoach();toast(`+${a}L → ${n.toFixed(1)}L`);}
 function addSalt(a){hap();const c=gT('salt');if(c>=SMAX){toast(t('toast.saleLimite'));hap('error');return;}const n=Math.min(SMAX,parseFloat((c+a).toFixed(1)));sT('salt',n);renderTrackers();renderCoach();toast(`+${a}g → ${n.toFixed(1)}g`);}
-function addSteps(a){hap();const n=parseInt(lsR(dk('steps'))||'0')+a;lsW(dk('steps'),n.toString());renderTrackers();toast(`+${a.toLocaleString()} → ${n.toLocaleString()}`);}
+function addSteps(a){hap();const n=parseInt(lsR(dk('steps'))||'0')+a;const capped=Math.min(30000,n);lsW(dk('steps'),capped.toString());if(n>30000)toast(t('toast.stepsCap')||'⚠️ Max 30.000 passi');renderTrackers();toast(`+${a.toLocaleString()} → ${capped.toLocaleString()}`);}
 function toggleWk(){hap('medium');const n=gT('workout')>=1?0:1;sT('workout',n);renderTrackers();toast(t(n?'toast.wkCompletato':'toast.wkRimosso'));}
-function resetT(tp){hap();lsW(dk(tp),'0');renderTrackers();renderCoach();toast(t('toast.azzerato',{tipo:tp}));}
+function resetT(tp){hap();const prev=gT(tp);sT(tp,0);renderTrackers();showToast((t('toast.azzerato')||'Azzerato')+' — '+'<button onclick="sT(\''+tp+'\','+prev+');renderTrackers();closeToast()" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:inherit">'+(t('toast.undo')||'Annulla')+'</button>',4000);}
 
 /* ═══════════════════════════════════════
    MEALS — dynamic meal count from plan
 ═══════════════════════════════════════ */
 function buildDaySelector(){
   const el=document.getElementById('day-sel');el.innerHTML='';
+  const progStartMs=parseInt(lsR(SK.progStart)||0);
+  const daysSinceStart=progStartMs?Math.floor((Date.now()-progStartMs)/86400000)+1:1;
+  const autoDay=dietData.days.find(d=>d.d===daysSinceStart)?daysSinceStart:1;
+  if(selDay===1)selDay=autoDay;
   (dietData.days||[]).forEach(day=>{
     const b=document.createElement('button');b.textContent=`G${day.d}`;b.className='day-chip sn';
     if(day.d===selDay)b.classList.add('on');
@@ -3599,6 +3628,7 @@ function getMealNames(){
   return dietData?.metadata?.mealNames||['Pranzo','Merenda','Cena'];
 }
 function renderMeals(){
+  document.querySelectorAll('button[onclick="openShoppingList()"]').forEach(b=>b.style.display=dietData?'':'none');
   if(!dietData)return;
   const day=(dietData.days||[]).find(d=>d.d===selDay)||(dietData.days||[])[0];if(!day)return;
   const mNames=getMealNames();
@@ -3643,7 +3673,7 @@ function renderMeals(){
     </div>`;
   }).join('');
   document.getElementById('meals-done').textContent=done;
-  if(activeTab==='set')renderKcalRing();
+  renderKcalRing();
 }
 function toggleMeal(d,n){hap();const k=mk(d,n);const c=lsR(k)==='1';lsW(k,c?'0':'1');if(!c)toast(t('toast.mealMarcato',{n}));_tabDirty.oggi=true;renderMeals();}
 
@@ -3700,6 +3730,12 @@ function renderKcalRing(){
   ring.style.strokeDashoffset=`${KCAL_CIRC*(1-pct/100)}`;
   ring.style.stroke=pct>=99.5?'#22c55e':'var(--p)';
   ring.style.opacity=pct>0?'1':'0.35';
+  const KCAL_CIRC2=106.8;
+  const r2=getEl('kcal-ring-oggi');
+  if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct/100);r2.style.stroke=pct>=99.5?'#22c55e':'var(--p)';}
+  const done=getEl('oggi-kcal-done');const tgt=getEl('oggi-kcal-target');
+  if(done)done.textContent=completedKcal;
+  if(tgt)tgt.textContent='di '+targetKcal+' kcal';
 }
 
 /* ═══════════════════════════════════════
@@ -3790,28 +3826,52 @@ function renderModDisplay(){
   document.getElementById('mod-status').textContent=m<0?t('set.mod.taglio',{kcal:Math.abs(kc)}):m>0?t('set.mod.boost',{kcal:kc}):t('set.mod.base');
 }
 function applyMod(u){
+  const MAX_UNITS=5,MIN_UNITS=-5;
   hap();if(u===0){lsW(SK.mod,'0');toast(t('toast.modAzzerato'));}
-  else{const n=Math.max(-5,Math.min(5,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
+  else{const n=Math.max(MIN_UNITS,Math.min(MAX_UNITS,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
   renderModDisplay();renderMacros();renderCoach();renderMeals();
+  const cur=getMod();
+  const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_UNITS;
+  const stepper=getEl('mod-stepper');
+  if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
 }
 const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
 function clearAppData(){Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
+let _confirmCb=null;
+function showConfirm(msg,cb){getEl('confirm-msg').textContent=msg;_confirmCb=cb;getEl('modal-confirm').style.display='flex';}
+function closeConfirm(){getEl('modal-confirm').style.display='none';_confirmCb=null;}
+document.addEventListener('DOMContentLoaded',()=>{const okBtn=getEl('confirm-ok-btn');if(okBtn)okBtn.onclick=()=>{closeConfirm();_confirmCb&&_confirmCb();};},{once:true});
+function updateWeight(){
+  const v=parseFloat(getEl('inp-weight-upd').value);
+  if(!v||v<40||v>250)return toast(t('toast.errore')||'Valore non valido');
+  const p=getProfile()||{};
+  p.weight=v;lsS(SK.profile,p);
+  const m=calculateUserMacros(p);
+  p.targetKcal=m.targetKcal;p.pro=m.pro;p.carbs=m.carbs;p.fat=m.fat;p.tdee=m.tdee;
+  lsS(SK.profile,p);
+  _tabDirty.oggi=true;_tabDirty.set=true;
+  renderSettings();renderMacros();renderTrackers();
+  getEl('inp-weight-upd').value='';
+  toast(t('toast.pesoAggiornato')||'✓ Peso aggiornato');
+}
 function resetProfile(){
-  if(!confirm(t('confirm.ricomincia')))return;
-  try{clearAppData();}catch{}
-  if(bodyChart){bodyChart.destroy();bodyChart=null;}
-  dietData=null;
-  profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
-  prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
-  curStep=0;
-  for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot)dot.classList.toggle('on',i===0);}
-  document.getElementById('result-card').classList.remove('on');
-  showOnb();toast(t('toast.profiloEl'));
+  showConfirm(t('set.confirmReset')||'Eliminare il profilo e rigenerare da zero?',()=>{
+    try{clearAppData();}catch{}
+    if(bodyChart){bodyChart.destroy();bodyChart=null;}
+    dietData=null;
+    profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
+    prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
+    curStep=0;
+    for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot)dot.classList.toggle('on',i===0);}
+    document.getElementById('result-card').classList.remove('on');
+    showOnb();toast(t('toast.profiloEl'));
+  });return;
 }
 function changeDiet(){
-  if(!confirm(t('confirm.eliminaPiano')))return;
-  [SK.diet,SK.phase,SK.mod,SK.refeed,SK.progStart,SK.p4Start].forEach(k=>{try{localStorage.removeItem(k);}catch{}});
-  if(bodyChart){bodyChart.destroy();bodyChart=null;}dietData=null;showOnb();toast(t('toast.pianoEl'));
+  showConfirm(t('confirm.eliminaPiano')||'Eliminare il piano?',()=>{
+    [SK.diet,SK.phase,SK.mod,SK.refeed,SK.progStart,SK.p4Start].forEach(k=>{try{localStorage.removeItem(k);}catch{}});
+    if(bodyChart){bodyChart.destroy();bodyChart=null;}dietData=null;showOnb();toast(t('toast.pianoEl'));
+  });return;
 }
 
 /* ═══════════════════════════════════════
@@ -4612,6 +4672,8 @@ document.addEventListener('touchend',e=>{
 },{passive:true});
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600);}
+function showToast(html,dur){const t=document.getElementById('toast');t.innerHTML=html;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),dur||2600);}
+function closeToast(){const t=document.getElementById('toast');t.classList.remove('on');clearTimeout(t._t);}
 
 
 /* ═══════════════════════════════════════
@@ -4790,6 +4852,19 @@ function acknowledgedPWA(){
   _bootAfterGates();
 })();
 </script>
+
+<!-- ══════════════════════════════════════
+     MODAL CONFIRM
+══════════════════════════════════════ -->
+<div id="modal-confirm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--rbox);padding:24px;max-width:320px;width:90%;display:flex;flex-direction:column;gap:16px">
+    <p id="confirm-msg" class="sn" style="font-size:14px;font-weight:600;color:var(--on);margin:0;line-height:1.5"></p>
+    <div style="display:flex;gap:8px">
+      <button onclick="closeConfirm()" class="btn btn-ghost" style="flex:1">Annulla</button>
+      <button id="confirm-ok-btn" class="btn btn-danger-o" style="flex:1">Conferma</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════
      MODAL PRIVACY
