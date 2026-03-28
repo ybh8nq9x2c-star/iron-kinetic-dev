@@ -28,7 +28,7 @@
   --muted:rgba(199,196,216,.55); --dim:rgba(199,196,216,.28);
   --red:#FF3B30; --orange:#FF9F0A; --blue:#0A84FF; --purple:#BF5AF2;
   --line:rgba(255,255,255,.06); --line-hi:rgba(255,255,255,.10);
-  --r:16px; --r2:12px; --r3:8px; --r-pill:999px;
+  --r:16px; --r2:12px; --r3:8px; --r-pill:999px; --rbox:var(--r);
   --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
   --sal:env(safe-area-inset-left,0px); --sar:env(safe-area-inset-right,0px);
   --hdr:52px; --hdr-top:max(8px,var(--sat));
@@ -166,6 +166,7 @@ body.onboarding-active #onb-screen{
 .ring-svg{transform:rotate(-90deg);}
 .ring-track{fill:none;stroke:rgba(255,255,255,.06);stroke-width:4;}
 .ring-fill{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1);}
+#kcal-ring{transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1),stroke .3s,opacity .3s;}
 #wChart-wrap{position:relative;width:100%;height:165px;overflow:hidden;}
 #wChart{display:block;width:100%!important;height:165px!important;touch-action:pan-x;}
 @keyframes teal-pulse{0%,100%{box-shadow:0 0 8px rgba(77,220,198,.18);}50%{box-shadow:0 0 28px rgba(77,220,198,.5);}}
@@ -804,7 +805,7 @@ body.onboarding-active #onb-screen{
   <div id="scr-oggi" class="scr">
     <div class="pg">
 
-      <!-- AI Coach personalizzato -->
+      <!-- [A] AI Coach personalizzato -->
       <div id="coach-card" class="card-neon" style="padding:16px;position:relative;overflow:hidden;">
         <div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:200px;height:80px;background:rgba(77,220,198,.08);filter:blur(40px);pointer-events:none;border-radius:50%;"></div>
         <div class="row g3" style="position:relative;">
@@ -819,22 +820,133 @@ body.onboarding-active #onb-screen{
         <div id="coach-streak-badge"></div>
       </div>
 
-      <!-- Personal insight card — shown when user has data -->
-      <div id="personal-insight-card" class="plan-insight" style="display:none;">
-        <p class="sec-label" style="margin-bottom:8px;">Il Tuo Profilo</p>
-        <div id="personal-insight-content" style="font-size:12px;color:var(--muted);line-height:1.6;font-weight:500;"></div>
+      <!-- [B] Date label -->
+      <p id="oggi-date-label" class="t-xxs muted sn" style="text-align:center;letter-spacing:.14em;"></p>
+
+      <!-- [C] Macro + Kcal block -->
+      <div class="card" style="padding:16px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+              <span class="t-xxs muted sn">KCAL TARGET</span>
+              <span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span>
+            </div>
+            <p class="sn" id="m-kcal" style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--p);line-height:1;margin:0;">—</p>
+            <div style="height:0;overflow:hidden;"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
+            <p id="oggi-kcal-pct" class="t-xxs muted sn" style="margin-top:6px;">0% consumato</p>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;">
+            <svg width="56" height="56" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true">
+              <circle cx="22" cy="22" r="17" class="ring-track"/>
+              <circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring-oggi" stroke="var(--p)" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4))"/>
+            </svg>
+            <span class="t-xxs muted sn" style="font-size:8px;letter-spacing:.1em;">consumato</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1;background:var(--s2);border-radius:var(--r3);padding:10px 8px;">
+            <p class="t-xxs muted sn" style="margin-bottom:4px;">Pro</p>
+            <p class="sn" id="m-pro" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--on);margin:0 0 6px;">—</p>
+            <div class="bar-track"><div class="bar-fill bfw" id="b-pro" style="width:0%;"></div></div>
+          </div>
+          <div style="flex:1;background:var(--s2);border-radius:var(--r3);padding:10px 8px;">
+            <p class="t-xxs muted sn" style="margin-bottom:4px;">Carbs</p>
+            <p class="sn" id="m-carbs" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--on);margin:0 0 6px;">—</p>
+            <div class="bar-track"><div class="bar-fill bfw" id="b-carbs" style="width:0%;"></div></div>
+          </div>
+          <div style="flex:1;background:var(--s2);border-radius:var(--r3);padding:10px 8px;">
+            <p class="t-xxs muted sn" style="margin-bottom:4px;">Grassi</p>
+            <p class="sn" id="m-fat" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--on);margin:0 0 6px;">—</p>
+            <div class="bar-track"><div class="bar-fill bfw" id="b-fat" style="width:0%;"></div></div>
+          </div>
+        </div>
       </div>
 
-      <!-- Check-in -->
+      <!-- [D] Pasti section -->
+      <div class="card" style="overflow:hidden;">
+        <div class="bar-track" style="border-radius:0;height:3px;margin:0;background:var(--s3);"><div id="oggi-pasti-bar" class="bar-fill bfn" style="width:0%;border-radius:0;transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
+        <div style="padding:14px;">
+          <div class="rowb" style="margin-bottom:10px;">
+            <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);">Pasti</p>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="color:var(--p);font-size:11px;font-weight:700;" class="sn" id="meals-done">0</span><span class="muted sn" style="font-size:11px;font-weight:600;" id="meals-total">/3</span>
+            </div>
+          </div>
+          <div class="rowb" style="margin-bottom:12px;">
+            <span class="t-xxs muted sn">Giorno</span>
+            <div id="day-sel" style="display:flex;gap:5px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;max-width:200px;"></div>
+          </div>
+          <div class="maintain-card" id="maintain-card" style="margin-bottom:10px;">
+            <div class="rowb" style="margin-bottom:10px;"><span class="sec-label" style="margin-bottom:0;color:#0A84FF;">Mantenimento</span><span class="t-xxs" style="color:#8ec5ff;">LONG TERM</span></div>
+            <p id="maintain-msg" class="sn" style="font-size:13px;line-height:1.6;font-weight:600;color:var(--on);">Sei in fase di mantenimento. Focus su routine sostenibile e stabilità del peso.</p>
+          </div>
+          <div id="refeed-card" style="display:none;margin-bottom:10px;" class="card">
+            <div class="rowb" style="padding:13px 15px;">
+              <div><p class="t-xxs sn" style="color:var(--p);">Refeed Day</p><p style="font-size:12px;font-weight:500;color:var(--muted);margin-top:2px;" class="sn">+400 kcal · +50g carbs</p></div>
+              <button id="refeed-oggi-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 12px;">OFF</button>
+            </div>
+          </div>
+          <div id="meals-list" style="display:flex;flex-direction:column;gap:8px;">
+            <div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Genera il tuo piano dall'onboarding —</span></div>
+          </div>
+          <button onclick="openShoppingList()" class="btn btn-primary w100" style="margin-top:12px;display:none;">🛒 Lista della Spesa</button>
+        </div>
+      </div>
+
+      <!-- [E] Trackers section -->
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:16px;border-bottom:1px solid var(--line);">
+          <div class="rowb" style="margin-bottom:10px;">
+            <div><p class="t-xxs muted sn">Acqua</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span style="color:var(--p);" id="water-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ <span id="water-target">4.5</span>L</span></p></div>
+            <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="water-ring" stroke="var(--p)" stroke-dasharray="138.2" stroke-dashoffset="138.2" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4));"/></svg>
+          </div>
+          <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill bfn" id="water-bar" style="width:0%;"></div></div>
+          <div class="row g2">
+            <button onclick="addWater(.5)" class="btn btn-neon-o btn-sm f1 sn">+0.5L</button>
+            <button onclick="addWater(.25)" class="btn btn-ghost btn-sm f1 sn">+250ml</button>
+            <button onclick="resetT('water')" class="btn-icon sn" aria-label="Azzera acqua"><span class="material-symbols-outlined" style="font-size:15px;">refresh</span></button>
+          </div>
+        </div>
+        <div style="padding:16px;border-bottom:1px solid var(--line);">
+          <div class="rowb" style="margin-bottom:10px;">
+            <div><p class="t-xxs muted sn">Sale</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span id="salt-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ 6g</span></p></div>
+            <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="salt-ring" stroke="rgba(199,196,216,.4)" stroke-dasharray="138.2" stroke-dashoffset="138.2"/></svg>
+          </div>
+          <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill" id="salt-bar" style="width:0%;background:rgba(199,196,216,.35);transition:width .5s cubic-bezier(.4,0,.2,1),background .3s;"></div></div>
+          <div class="row g2">
+            <button onclick="addSalt(1)" class="btn btn-ghost btn-sm f1 sn">+1g</button>
+            <button onclick="addSalt(.5)" class="btn btn-ghost btn-sm f1 sn">+0.5g</button>
+            <button onclick="resetT('salt')" class="btn-icon sn" aria-label="Azzera sale"><span class="material-symbols-outlined" style="font-size:15px;">refresh</span></button>
+          </div>
+        </div>
+        <div class="grid2" style="padding:14px;gap:0;">
+          <div style="padding-right:10px;border-right:1px solid var(--line);">
+            <p class="t-xxs muted sn">Passi</p>
+            <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--p);margin:4px 0;" class="sn" id="steps-val">0</p>
+            <p class="t-xxs sn" style="color:var(--dim);">/ <span id="steps-tgt">8.000</span></p>
+            <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill bfn" id="steps-bar" style="width:0%;"></div></div>
+            <div class="row g2"><button onclick="addSteps(1000)" class="btn btn-neon-o btn-xs f1 sn">+1k</button><button onclick="addSteps(2500)" class="btn btn-ghost btn-xs f1 sn">+2.5k</button></div>
+          </div>
+          <div style="padding-left:10px;">
+            <p class="t-xxs muted sn">Workout</p>
+            <p id="wk-ratio" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--on);margin:4px 0;" class="sn">0/1</p>
+            <p id="wk-status" class="t-xxs sn" style="color:var(--dim);">Non fatto</p>
+            <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill" id="wk-bar" style="width:0%;background:rgba(199,196,216,.25);transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
+            <button id="wk-btn" onclick="toggleWk()" class="btn btn-ghost btn-xs w100 sn">Fatto ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- [F] Check-in Card -->
       <div class="check-card" id="daily-check-card">
         <div class="rowb"><span class="sec-label" style="margin-bottom:0;">Check-in giornaliero</span><span class="t-xxs muted">20 sec</span></div>
         <div class="range-row">
-          <div class="range-wrap"><label class="field-label" for="ci-hunger">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10')"/></div>
-          <div class="range-wrap"><label class="field-label" for="ci-energy">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10')"/></div>
+          <div class="range-wrap"><label class="field-label" for="ci-hunger">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-hunger">5</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-energy">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-energy">6</output></div>
         </div>
         <div class="range-row">
-          <div class="range-wrap"><label class="field-label" for="ci-adherence">Aderenza</label><input id="ci-adherence" type="range" min="1" max="10" value="8" aria-label="Aderenza (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10')"/></div>
-          <div class="range-wrap"><label class="field-label" for="ci-digestion">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10')"/></div>
+          <div class="range-wrap"><label class="field-label" for="ci-adherence">Aderenza</label><input id="ci-adherence" type="range" min="1" max="10" value="8" aria-label="Aderenza (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-adherence">8</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-digestion">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-digestion">8</output></div>
         </div>
         <div>
           <label class="field-label">Contesto giornata</label>
@@ -849,101 +961,15 @@ body.onboarding-active #onb-screen{
         <div class="note-box" id="checkin-feedback">Dopo il primo check-in riceverai un supporto contestuale.</div>
       </div>
 
-      <!-- Maintain -->
-      <div class="maintain-card" id="maintain-card">
-        <div class="rowb" style="margin-bottom:10px;"><span class="sec-label" style="margin-bottom:0;color:#0A84FF;">Mantenimento</span><span class="t-xxs" style="color:#8ec5ff;">LONG TERM</span></div>
-        <p id="maintain-msg" class="sn" style="font-size:13px;line-height:1.6;font-weight:600;color:var(--on);">Sei in fase di mantenimento. Focus su routine sostenibile e stabilità del peso.</p>
-      </div>
-
-      <!-- Macros -->
-      <div class="macro-grid">
-        <div class="macro-card">
-          <div class="rowb" style="margin-bottom:2px;"><span class="t-xxs muted sn">Kcal</span><span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-            <div class="macro-val neon sn" id="m-kcal" style="margin:0;">—</div>
-            <svg width="40" height="40" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true"><circle cx="22" cy="22" r="17" class="ring-track" style="stroke:rgba(255,255,255,.12);"/><circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="stroke-width:3.5;opacity:.35;filter:drop-shadow(0 0 4px rgba(77,220,198,.5));transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1),stroke .3s,opacity .3s;"/></svg>
-          </div>
-          <div class="bar-track md"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
+      <!-- [G] Profilo Card (collapsible) -->
+      <div class="card" style="overflow:hidden;">
+        <button onclick="toggleInsight()" id="insight-toggle-btn" aria-expanded="false" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;background:transparent;border:none;cursor:pointer;text-align:left;touch-action:manipulation;">
+          <span class="sec-label sn" style="margin:0;">Il Tuo Profilo</span>
+          <span class="material-symbols-outlined sn" id="insight-chevron" style="font-size:18px;color:var(--muted);transition:transform .2s;">expand_more</span>
+        </button>
+        <div id="personal-insight-card" style="display:none;padding:0 16px 14px;">
+          <div id="personal-insight-content" style="font-size:12px;color:var(--muted);line-height:1.6;font-weight:500;"></div>
         </div>
-        <div class="macro-card"><span class="t-xxs muted sn">Proteine</span><div class="macro-val sn" id="m-pro">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-pro" style="width:0%;"></div></div></div>
-        <div class="macro-card"><span class="t-xxs muted sn">Carbs</span><div class="macro-val sn" id="m-carbs">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-carbs" style="width:0%;"></div></div></div>
-        <div class="macro-card"><span class="t-xxs muted sn">Grassi</span><div class="macro-val sn" id="m-fat">—</div><div class="bar-track md"><div class="bar-fill bfw" id="b-fat" style="width:0%;"></div></div></div>
-      </div>
-
-      <!-- Water -->
-      <div class="card-ghost" style="padding:16px;">
-        <div class="rowb" style="margin-bottom:10px;">
-          <div><p class="t-xxs muted sn">Acqua</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span style="color:var(--p);" id="water-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ <span id="water-target">4.5</span>L</span></p></div>
-          <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="water-ring" stroke="var(--p)" stroke-dasharray="138.2" stroke-dashoffset="138.2" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4));"/></svg>
-        </div>
-        <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill bfn" id="water-bar" style="width:0%;"></div></div>
-        <div class="row g2">
-          <button onclick="addWater(.5)" class="btn btn-neon-o btn-sm f1 sn">+0.5L</button>
-          <button onclick="addWater(.25)" class="btn btn-ghost btn-sm f1 sn">+250ml</button>
-          <button onclick="resetT('water')" class="btn-icon sn" aria-label="Azzera acqua"><span class="material-symbols-outlined" style="font-size:15px;">refresh</span></button>
-        </div>
-      </div>
-
-      <!-- Salt -->
-      <div class="card-ghost" style="padding:16px;">
-        <div class="rowb" style="margin-bottom:10px;">
-          <div><p class="t-xxs muted sn">Sale</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span id="salt-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ 6g</span></p></div>
-          <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="salt-ring" stroke="rgba(199,196,216,.4)" stroke-dasharray="138.2" stroke-dashoffset="138.2"/></svg>
-        </div>
-        <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill" id="salt-bar" style="width:0%;background:rgba(199,196,216,.35);transition:width .5s cubic-bezier(.4,0,.2,1),background .3s;"></div></div>
-        <div class="row g2">
-          <button onclick="addSalt(1)" class="btn btn-ghost btn-sm f1 sn">+1g</button>
-          <button onclick="addSalt(.5)" class="btn btn-ghost btn-sm f1 sn">+0.5g</button>
-          <button onclick="resetT('salt')" class="btn-icon sn" aria-label="Azzera sale"><span class="material-symbols-outlined" style="font-size:15px;">refresh</span></button>
-        </div>
-      </div>
-
-      <!-- Steps + Workout -->
-      <div class="grid2">
-        <div class="card-ghost" style="padding:14px;">
-          <p class="t-xxs muted sn">Passi</p>
-          <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--p);margin:4px 0;" class="sn" id="steps-val">0</p>
-          <p class="t-xxs sn" style="color:var(--dim);">/ <span id="steps-tgt">8.000</span></p>
-          <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill bfn" id="steps-bar" style="width:0%;"></div></div>
-          <div class="row g2"><button onclick="addSteps(1000)" class="btn btn-neon-o btn-xs f1 sn">+1k</button><button onclick="addSteps(2500)" class="btn btn-ghost btn-xs f1 sn">+2.5k</button></div>
-        </div>
-        <div class="card-ghost" style="padding:14px;">
-          <p class="t-xxs muted sn">Workout</p>
-          <p id="wk-ratio" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--on);margin:4px 0;" class="sn">0/1</p>
-          <p id="wk-status" class="t-xxs sn" style="color:var(--dim);">Non fatto</p>
-          <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill" id="wk-bar" style="width:0%;background:rgba(199,196,216,.25);transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
-          <button id="wk-btn" onclick="toggleWk()" class="btn btn-ghost btn-xs w100 sn">Fatto ✓</button>
-        </div>
-      </div>
-
-      <!-- Day selector -->
-      <div class="rowb">
-        <span class="t-xxs muted sn">Giorno</span>
-        <div id="day-sel" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;"></div>
-      </div>
-
-      <!-- Refeed -->
-      <div id="refeed-card" style="display:none;" class="card">
-        <div class="rowb" style="padding:13px 15px;">
-          <div><p class="t-xxs sn" style="color:var(--p);">Refeed Day</p><p style="font-size:12px;font-weight:500;color:var(--muted);margin-top:2px;" class="sn">+400 kcal · +50g carbs</p></div>
-          <button id="refeed-oggi-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 12px;">OFF</button>
-        </div>
-      </div>
-
-      <!-- Meals -->
-      <div>
-        <div class="rowb" style="margin-bottom:10px;">
-          <p style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);" class="sn">Pasti</p>
-          <div style="display:flex;align-items:center;gap:0;"><span style="color:var(--p);font-size:11px;font-weight:700;" class="sn" id="meals-done">0</span><span class="muted sn" style="font-size:11px;font-weight:600;" id="meals-total">/3</span></div>
-        </div>
-        <div id="meals-list" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Genera il tuo piano dall'onboarding —</span></div>
-        </div>
-      </div>
-
-      <!-- Shopping List -->
-      <div>
-        <button onclick="openShoppingList()" class="btn btn-primary w100" style="margin-top:8px;">🛒 Lista della Spesa</button>
       </div>
 
     </div>
@@ -1050,11 +1076,21 @@ body.onboarding-active #onb-screen{
   <div id="scr-set" class="scr" style="display:none;">
     <div class="pg">
       <p class="sec-title">Profilo</p>
-      <!-- Hero Metrics: Target TDEE + Base BMR -->
+      <!-- Hero Metrics: Target TDEE with kcal progress ring + Base BMR -->
       <div class="prof-hero">
         <div>
-          <p class="t-xxs muted sn" style="text-transform:uppercase;letter-spacing:.14em;margin-bottom:2px;">Target TDEE</p>
-          <p id="set-hero-tdee" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;line-height:1;color:var(--p);">—</p>
+          <p class="t-xxs muted sn" style="text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;">Target TDEE</p>
+          <!-- Kcal progress ring: shows completed meal kcal vs daily target -->
+          <div style="position:relative;width:190px;height:190px;margin:0 auto;">
+            <svg width="190" height="190" viewBox="0 0 200 200" class="ring-svg" aria-hidden="true" style="position:absolute;top:0;left:0;">
+              <circle cx="100" cy="100" r="88" class="ring-track" style="stroke:rgba(255,255,255,.15);stroke-width:6;"/>
+              <circle cx="100" cy="100" r="88" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="6" stroke-dasharray="552.9" stroke-dashoffset="552.9" style="opacity:.35;filter:drop-shadow(0 0 8px rgba(77,220,198,.6));"/>
+            </svg>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:140px;">
+              <p id="set-hero-tdee" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:700;line-height:1;color:var(--p);margin:0;">—</p>
+              <p class="t-xxs muted sn" style="margin-top:6px;letter-spacing:.14em;">KCAL</p>
+            </div>
+          </div>
         </div>
         <div class="prof-hero-divider"></div>
         <div>
@@ -1066,6 +1102,10 @@ body.onboarding-active #onb-screen{
       <div class="card" style="padding:16px;">
         <span class="sec-label">Il Tuo Profilo</span>
         <p id="set-profile-text" class="sn" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;">—</p>
+        <div id="weight-update-row" style="display:flex;gap:8px;margin-top:10px;align-items:center">
+          <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="width:80px">
+          <button onclick="updateWeight()" class="btn btn-neon-o btn-xs" style="flex:1" id="btn-weight-upd">Aggiorna peso</button>
+        </div>
         <div id="set-prefs-text" style="margin-top:10px;display:none;">
           <div class="divider" style="margin-bottom:10px;"></div>
           <p id="set-prefs-content" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;"></p>
@@ -1100,11 +1140,12 @@ body.onboarding-active #onb-screen{
         <span class="sec-label">Modificatore AI</span>
         <div class="rowb" style="margin-top:10px;">
           <p id="mod-status" class="t-xxs muted sn">Base invariata</p>
-          <div class="mod-stepper">
+          <div id="mod-stepper" class="mod-stepper">
             <button onclick="applyMod(-1)" class="mod-stepper-btn sn" aria-label="−100 kcal">−</button>
             <span id="mod-display" class="mod-stepper-val sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;min-width:72px;text-align:center;">0 kcal</span>
             <button onclick="applyMod(1)" class="mod-stepper-btn pos sn" aria-label="+100 kcal">+</button>
           </div>
+          <p id="mod-units-label" class="t-xxs muted sn" style="text-align:center;margin-top:4px"></p>
         </div>
         <button onclick="applyMod(0)" class="btn btn-ghost btn-xs sn" style="margin-top:10px;padding:0 14px;width:100%;">Reset modificatore</button>
       </div>
@@ -1115,8 +1156,13 @@ body.onboarding-active #onb-screen{
           <button onclick="exportData()" class="btn btn-ghost w100 sn">📦 Esporta Backup</button>
           <button onclick="document.getElementById('imp-inp').click()" class="btn btn-ghost w100 sn">📥 Importa Backup</button>
           <input type="file" id="imp-inp" accept=".json" style="display:none;" onchange="importBackup(event)"/>
-          <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">🗑 Ricomincia da capo</button>
         </div>
+      </div>
+      <!-- Zona Pericolosa -->
+      <div class="card" style="padding:16px;border:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.04)">
+        <span class="sec-label" style="color:var(--red);margin-bottom:8px;display:block">Zona Pericolosa</span>
+        <p class="sn t-xxs muted" style="margin-bottom:10px;line-height:1.5">Queste azioni sono irreversibili senza un backup.</p>
+        <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
       </div>
       <!-- Lingua / Language switcher -->
       <div class="card" style="padding:14px 16px;">
@@ -1254,6 +1300,17 @@ body.onboarding-active #onb-screen{
 
 <script>
 'use strict';
+/* ── FIX 5: global error handler ── */
+window.addEventListener('unhandledrejection',e=>{
+  console.error('Unhandled:',e.reason);
+  try{showToast(t('toast.errore')||'Errore inatteso');}catch{}
+});
+window.onerror=(msg,src,line)=>{
+  console.error('Error:',msg,src,line);
+  return false;
+};
+/* ── FIX 1: sanitize helper ── */
+function sanitize(s){const d=document.createElement('div');d.textContent=String(s??'');return d.innerHTML;}
 /* ═══════════════════════════════════════
    KEYS
 ═══════════════════════════════════════ */
@@ -1313,7 +1370,7 @@ it:{
   'oggi.checkin.aderenza':'Aderenza','oggi.checkin.digestione':'Digestione',
   'oggi.checkin.contesto':'Contesto giornata',
   'oggi.checkin.routine':'Routine','oggi.checkin.sociale':'Sociale','oggi.checkin.stress':'Stress','oggi.checkin.workout':'Workout',
-  'oggi.checkin.salva':'Salva check-in',
+  'oggi.checkin.salva':'Salva check-in','oggi.checkin.aggiorna':'Aggiorna check-in',
   'oggi.checkin.feedback_default':'Dopo il primo check-in riceverai un supporto contestuale.',
   'oggi.mod.badge':'MOD',
   'prog.title':'Progresso','prog.registra':'Registra',
@@ -1412,7 +1469,7 @@ it:{
   'toast.refeedOn':'🔥 Refeed Day attivato!','toast.refeedOff':'Refeed disattivato',
   'toast.wkCompletato':'🏋️ Sessione completata!','toast.wkRimosso':'Allenamento rimosso',
   'toast.acquaLimite':'Limite {max}L raggiunto 💧','toast.saleLimite':'Limite 6g raggiunto 🧂',
-  'toast.azzerato':'{tipo} azzerato','toast.mealMarcato':'{n} segnato ✓',
+  'toast.azzerato':'{tipo} azzerato','toast.mealMarcato':'{n} segnato ✓','toast.storageQuota':'⚠️ Spazio esaurito — esporta il backup','toast.undo':'Annulla','toast.stepsCap':'⚠️ Max 30.000 passi','toast.pesoAggiornato':'✓ Peso aggiornato',
   'toast.notifOn':'✅ Promemoria attivato!',
   'toast.notifDenied':'🔕 Permesso negato — abilita nelle impostazioni del browser',
   'toast.notifNoChange':'Nessun cambiamento','toast.notifErr':'Errore richiesta notifiche',
@@ -1421,7 +1478,7 @@ it:{
   'toast.swapNoFood':'Nessun alimento disponibile per questo componente',
   'toast.swapNoAlt':'Nessuna alternativa disponibile',
   'toast.rigenMeal':'{meal} rigenerato',
-  'confirm.ricomincia':'Ricominciare da capo? Tornerai all\'onboarding e rigenererai il piano.',
+  'confirm.ricomincia':'Ricominciare da capo? Tornerai all\'onboarding e rigenererai il piano.','set.confirmReset':'Eliminare profilo e ricominciare?',
   'confirm.eliminaPiano':'Eliminare il piano attuale e ricominciare?',
   'confirm.eliminaVoce':'Eliminare?',
   'confirm.revocaConsenso':'Revocare il consenso? I tuoi dati locali non vengono cancellati automaticamente, ma non potrai usare l\'app senza consenso.',
@@ -1559,7 +1616,7 @@ en:{
   'oggi.checkin.aderenza':'Adherence','oggi.checkin.digestione':'Digestion',
   'oggi.checkin.contesto':'Day context',
   'oggi.checkin.routine':'Routine','oggi.checkin.sociale':'Social','oggi.checkin.stress':'Stress','oggi.checkin.workout':'Workout',
-  'oggi.checkin.salva':'Save check-in',
+  'oggi.checkin.salva':'Save check-in','oggi.checkin.aggiorna':'Update check-in',
   'oggi.checkin.feedback_default':'After your first check-in you\'ll receive contextual coaching.',
   'oggi.mod.badge':'MOD',
   'prog.title':'Progress','prog.registra':'Record',
@@ -1658,7 +1715,7 @@ en:{
   'toast.refeedOn':'🔥 Refeed Day activated!','toast.refeedOff':'Refeed deactivated',
   'toast.wkCompletato':'🏋️ Session completed!','toast.wkRimosso':'Workout removed',
   'toast.acquaLimite':'{max}L limit reached 💧','toast.saleLimite':'6g salt limit reached 🧂',
-  'toast.azzerato':'{tipo} reset','toast.mealMarcato':'{n} marked ✓',
+  'toast.azzerato':'{tipo} reset','toast.mealMarcato':'{n} marked ✓','toast.storageQuota':'⚠️ Storage full — export your backup','toast.undo':'Undo','toast.stepsCap':'⚠️ Max 30,000 steps','toast.pesoAggiornato':'✓ Weight updated',
   'toast.notifOn':'✅ Reminder enabled!',
   'toast.notifDenied':'🔕 Permission denied — enable in browser settings',
   'toast.notifNoChange':'No changes','toast.notifErr':'Notification request error',
@@ -1667,7 +1724,7 @@ en:{
   'toast.swapNoFood':'No food available for this component',
   'toast.swapNoAlt':'No alternative available',
   'toast.rigenMeal':'{meal} regenerated',
-  'confirm.ricomincia':'Start over? You\'ll go back to onboarding and regenerate your plan.',
+  'confirm.ricomincia':'Start over? You\'ll go back to onboarding and regenerate your plan.','set.confirmReset':'Delete profile and start over?',
   'confirm.eliminaPiano':'Delete the current plan and start over?',
   'confirm.eliminaVoce':'Delete this entry?',
   'confirm.revocaConsenso':'Revoke consent? Your local data won\'t be deleted automatically, but you won\'t be able to use the app without consent.',
@@ -1768,6 +1825,7 @@ function setLang(lang){
   _lang=(lang==='en')?'en':'it';
   try{localStorage.setItem('ik_lang',_lang);}catch{}
   document.documentElement.lang=_lang;
+  _trApplied=false;
   applyTranslations();
   /* Update lang switcher buttons */
   document.getElementById('lang-btn-it')?.classList.toggle('seg-on',_lang==='it');
@@ -1777,7 +1835,8 @@ function initLang(){
   try{const s=localStorage.getItem('ik_lang');if(s==='en'||s==='it')_lang=s;}catch{}
   document.documentElement.lang=_lang;
 }
-function applyTranslations(){
+function applyTranslations(deferOffscreen){
+  if(_trApplied)return;_trApplied=true;
   /* Helper shortcuts */
   const txt=(id,key)=>{const e=document.getElementById(id);if(e)e.textContent=t(key);};
   const nlTxt=(sel,key)=>document.querySelectorAll(sel).forEach(e=>e.textContent=t(key));
@@ -1859,6 +1918,8 @@ function applyTranslations(){
   document.querySelectorAll('#scr-oggi .t-xxs.muted').forEach(e=>{
     if(e.textContent.trim()==='Giorno'||e.textContent.trim()==='Day')e.textContent=t('oggi.giorno');
   });
+  /* ── OFF-SCREEN TABS: defer when called from boot, run immediately otherwise ── */
+  const _offscreen=()=>{
   /* ── PROGRESS ── */
   const progTitle=document.querySelector('#scr-prog .sec-title');
   if(progTitle)progTitle.textContent=t('prog.title');
@@ -2036,6 +2097,9 @@ function applyTranslations(){
   if(gdprAccBtn)gdprAccBtn.textContent=t('gdpr.btn.accetta');
   const gdprReadBtn=document.querySelector('button[onclick="openModal(\'privacy\')"].btn-ghost.w100');
   if(gdprReadBtn)gdprReadBtn.textContent=t('gdpr.btn.leggi');
+  }; /* end _offscreen */
+  if(deferOffscreen)(window.requestIdleCallback||window.setTimeout)(_offscreen,{timeout:300});
+  else _offscreen();
 }
 
 const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
@@ -2053,6 +2117,9 @@ let profState={sex:'M',age:null,height:null,weight:null,bf:null,
 let prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',
                intolerances:'',foods:[],extraFoods:''};
 let curStep=0;
+let _trApplied=false;
+const _tabDirty={oggi:true,prog:true,set:true,info:true};
+const EL={};function getEl(id){return EL[id]||(EL[id]=document.getElementById(id));}
 
 /* ═══════════════════════════════════════
    UTILITIES
@@ -2065,7 +2132,7 @@ const mk=(d,n)=>`ik_ml_${toISO()}_d${d}_${n}`;
 
 /* Storage */
 const lsG=(k,fb=null)=>{try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):fb;}catch{return fb;}};
-const lsS=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}};
+const lsS=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));_tabDirty.oggi=true;_tabDirty.prog=true;_tabDirty.set=true;}catch(e){if(e.name==='QuotaExceededError'||e.code===22||e.code===1014){try{showToast(t('toast.storageQuota')||'⚠️ Spazio esaurito — esporta backup');}catch{}}}};
 const lsR=k=>{try{return localStorage.getItem(k);}catch{return null;}};
 const lsW=(k,v)=>{try{localStorage.setItem(k,v);}catch{}};
 const getLog=()=>lsG(SK.wLog,[]);
@@ -3423,6 +3490,8 @@ function restoreTodayCheckin(){
   Object.entries(map).forEach(([id,val])=>{const el=document.getElementById(id);if(el&&val!=null)el.value=val;});
   const btn=[...document.querySelectorAll('.micro-chip')].find(b=>b.textContent.trim().toLowerCase()===String(today.tag||'').toLowerCase());
   if(btn)setCheckTag(btn,today.tag);
+  const ciBtn=document.querySelector('#daily-check-card .btn-primary');
+  if(ciBtn)ciBtn.textContent=t('oggi.checkin.aggiorna')||'Aggiorna check-in';
 }
 function renderCheckinAnalytics(){
   let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch{}
@@ -3468,25 +3537,35 @@ function renderCoach(){
   const sbEl=document.getElementById('coach-streak-badge');
   if(sbEl){
     if(streakCount>=1){
-      sbEl.innerHTML=`<span class="streak-badge"><span class="fire">🔥</span> ${streakCount}</span>`;
+      sbEl.innerHTML=`<span class="streak-badge"><span class="fire">🔥</span> ${sanitize(streakCount)}</span>`;
     }else{
       sbEl.innerHTML='';
     }
   }
 }
 
+function toggleInsight(){
+  const card=getEl('personal-insight-card');
+  const chev=getEl('insight-chevron');
+  const btn=getEl('insight-toggle-btn');
+  if(!card)return;
+  const open=card.style.display!=='none';
+  card.style.display=open?'none':'block';
+  if(chev)chev.style.transform=open?'':'rotate(180deg)';
+  if(btn)btn.setAttribute('aria-expanded',String(!open));
+  if(!open)renderPersonalInsight();
+}
 function renderPersonalInsight(){
   const p=getProfile();const prefs=getPrefs()||prefState;
   const card=document.getElementById('personal-insight-card');
   const content=document.getElementById('personal-insight-content');
-  if(!p||!card||!content)return;
-  card.style.display='block';
+  if(!p||!content)return;
   const foodsList=prefs.foods?.length>0?prefs.foods.join(', '):t('misc.noData');
   const die=t('prof.die');
-  content.innerHTML=`<p style="margin:0 0 4px;"><strong style="color:var(--on);">${p.sex==='M'?'♂':'♀'} ${p.age}${t('prof.anni')} · ${p.weight}kg${p.bf?` · ${p.bf}% ${t('prof.grassi').toLowerCase()}`:''}</strong></p>`+
-    `<p style="margin:0 0 4px;">${t('prof.obiettivo')}: <strong style="color:var(--p);">${p.goal?t('goal.label.'+p.goal)||'—':'—'}</strong> · ${t('prof.target')}: <strong style="color:var(--p);">${p.targetKcal} kcal${die}</strong></p>`+
-    `<p style="margin:0 0 4px;">${prefs.mealsCount||3} ${t('prefs.pasti')} · ${t('prefs.gusto')}: ${prefs.taste||'—'} · ${prefs.dietStyle||'—'}</p>`+
-    `<p style="margin:0;">${t('prefs.cibiScelti')}: ${foodsList}${prefs.intolerances?` · ${t('prefs.esclusi')}: ${prefs.intolerances}`:''}</p>`;
+  content.innerHTML=`<p style="margin:0 0 4px;"><strong style="color:var(--on);">${p.sex==='M'?'♂':'♀'} ${sanitize(p.age)}${t('prof.anni')} · ${sanitize(p.weight)}kg${p.bf?` · ${sanitize(p.bf)}% ${t('prof.grassi').toLowerCase()}`:''}</strong></p>`+
+    `<p style="margin:0 0 4px;">${t('prof.obiettivo')}: <strong style="color:var(--p);">${p.goal?t('goal.label.'+p.goal)||'—':'—'}</strong> · ${t('prof.target')}: <strong style="color:var(--p);">${sanitize(p.targetKcal)} kcal${die}</strong></p>`+
+    `<p style="margin:0 0 4px;">${sanitize(prefs.mealsCount||3)} ${t('prefs.pasti')} · ${t('prefs.gusto')}: ${sanitize(prefs.taste||'—')} · ${sanitize(prefs.dietStyle||'—')}</p>`+
+    `<p style="margin:0;">${t('prefs.cibiScelti')}: ${sanitize(foodsList)}${prefs.intolerances?` · ${t('prefs.esclusi')}: ${sanitize(prefs.intolerances)}`:''}</p>`;
 }
 
 /* ═══════════════════════════════════════
@@ -3495,19 +3574,18 @@ function renderPersonalInsight(){
 function renderMacros(){
   if(!dietData)return;
   const m=calcMacros();
-  document.getElementById('m-kcal').textContent=m.kcal;
-  document.getElementById('m-pro').textContent=m.pro+'g';
-  document.getElementById('m-carbs').textContent=m.carbs+'g';
-  document.getElementById('m-fat').textContent=m.fat+'g';
-  const bk=baseKcal()+400;
-  document.getElementById('b-kcal').style.width=`${Math.min(100,Math.round(m.kcal/bk*100))}%`;
-  document.getElementById('b-pro').style.width=`${Math.min(100,Math.round(m.pro/250*100))}%`;
-  document.getElementById('b-carbs').style.width=`${Math.min(100,Math.round(m.carbs/350*100))}%`;
-  document.getElementById('b-fat').style.width=`${Math.min(100,Math.round(m.fat/100*100))}%`;
-  document.getElementById('m-kcal').style.color=m.modified?'#FFB800':'var(--p)';
-  document.getElementById('m-carbs').style.color=m.modified?'#FFB800':'var(--on)';
-  const mb=document.getElementById('m-mod-badge');if(mb)mb.style.display=m.modified?'block':'none';
-  renderKcalRing();
+  getEl('m-kcal').textContent=m.kcal;
+  getEl('m-pro').textContent=m.pro+'g';
+  getEl('m-carbs').textContent=m.carbs+'g';
+  getEl('m-fat').textContent=m.fat+'g';
+  const bKcal=m.kcal*1.2,bPro=m.pro*1.2,bCarbs=m.carbs*1.2,bFat=m.fat*1.2;
+  getEl('b-kcal').style.width=Math.min(100,m.kcal/bKcal*100)+'%';
+  getEl('b-pro').style.width=Math.min(100,m.pro/bPro*100)+'%';
+  getEl('b-carbs').style.width=Math.min(100,m.carbs/bCarbs*100)+'%';
+  getEl('b-fat').style.width=Math.min(100,m.fat/bFat*100)+'%';
+  getEl('m-kcal').style.color=m.modified?'#FFB800':'var(--p)';
+  getEl('m-carbs').style.color=m.modified?'#FFB800':'var(--on)';
+  const mb=getEl('m-mod-badge');if(mb)mb.style.display=m.modified?'block':'none';
 }
 
 /* ═══════════════════════════════════════
@@ -3526,26 +3604,24 @@ const sT=(t,v)=>lsW(dk(t),v.toString());
 const CIRC=138.2;
 function renderTrackers(){
   const WMAX=getWMAX();const w=gT('water'),wp=Math.min(100,w/WMAX*100);
-  document.getElementById('water-val').textContent=w.toFixed(1);
-  const wtEl=document.getElementById('water-target');if(wtEl)wtEl.textContent=WMAX.toFixed(1);
-  document.getElementById('water-bar').style.width=`${wp}%`;
-  document.getElementById('water-ring').style.strokeDashoffset=`${CIRC*(1-wp/100)}`;
+  getEl('water-val').textContent=w.toFixed(1);
+  const wtEl=getEl('water-target');if(wtEl)wtEl.textContent=WMAX.toFixed(1);
+  getEl('water-bar').style.width=`${wp}%`;
+  getEl('water-ring').style.strokeDashoffset=`${CIRC*(1-wp/100)}`;
   const s=gT('salt'),sp=Math.min(100,s/SMAX*100);
-  document.getElementById('salt-val').textContent=s.toFixed(1);
-  document.getElementById('salt-val').style.color=sp>=100?'var(--red)':sp>=70?'var(--orange)':'var(--on)';
-  const sb=document.getElementById('salt-bar');sb.style.width=`${sp}%`;sb.style.background=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.35)';
-  const sr=document.getElementById('salt-ring');sr.style.strokeDashoffset=`${CIRC*(1-sp/100)}`;sr.style.stroke=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.4)';
+  const sv=getEl('salt-val');sv.textContent=s.toFixed(1);
+  sv.style.color=sp>=100?'var(--red)':sp>=70?'var(--orange)':'var(--on)';
+  const sb=getEl('salt-bar');sb.style.width=`${sp}%`;sb.style.background=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.35)';
+  const sr=getEl('salt-ring');sr.style.strokeDashoffset=`${CIRC*(1-sp/100)}`;sr.style.stroke=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.4)';
   const st=parseInt(lsR(dk('steps'))||'0'),tgt=(getPhase()===3&&detectStall())?11000:STBASE;
-  document.getElementById('steps-val').textContent=st.toLocaleString('it-IT');
-  document.getElementById('steps-tgt').textContent=tgt.toLocaleString('it-IT');
-  document.getElementById('steps-bar').style.width=`${Math.min(100,st/tgt*100)}%`;
+  getEl('steps-val').textContent=st.toLocaleString('it-IT');
+  getEl('steps-tgt').textContent=tgt.toLocaleString('it-IT');
+  getEl('steps-bar').style.width=`${Math.min(100,st/tgt*100)}%`;
   const wd=gT('workout')>=1;
-  document.getElementById('wk-ratio').textContent=wd?'1/1':'0/1';
-  document.getElementById('wk-status').textContent=wd?t('oggi.workout.completato'):t('oggi.workout.nonFatto');
-  document.getElementById('wk-status').style.color=wd?'var(--p)':'var(--dim)';
-  document.getElementById('wk-bar').style.width=wd?'100%':'0%';
-  document.getElementById('wk-bar').style.background=wd?'var(--p)':'rgba(199,196,216,.18)';
-  const wb=document.getElementById('wk-btn');
+  getEl('wk-ratio').textContent=wd?'1/1':'0/1';
+  const wks=getEl('wk-status');wks.textContent=wd?t('oggi.workout.completato'):t('oggi.workout.nonFatto');wks.style.color=wd?'var(--p)':'var(--dim)';
+  const wkb=getEl('wk-bar');wkb.style.width=wd?'100%':'0%';wkb.style.background=wd?'var(--p)':'rgba(199,196,216,.18)';
+  const wb=getEl('wk-btn');
   wb.textContent=wd?t('oggi.workout.completato'):t('oggi.workout.fatto');
   wb.style.background=wd?'rgba(77,220,198,.12)':'rgba(255,255,255,.05)';
   wb.style.borderColor=wd?'rgba(77,220,198,.22)':'var(--glass-stroke)';
@@ -3553,15 +3629,19 @@ function renderTrackers(){
 }
 function addWater(a){hap();const mx=getWMAX();const c=gT('water');if(c>=mx){toast(t('toast.acquaLimite',{max:mx}));hap('error');return;}const n=Math.min(mx,parseFloat((c+a).toFixed(2)));sT('water',n);renderTrackers();renderCoach();toast(`+${a}L → ${n.toFixed(1)}L`);}
 function addSalt(a){hap();const c=gT('salt');if(c>=SMAX){toast(t('toast.saleLimite'));hap('error');return;}const n=Math.min(SMAX,parseFloat((c+a).toFixed(1)));sT('salt',n);renderTrackers();renderCoach();toast(`+${a}g → ${n.toFixed(1)}g`);}
-function addSteps(a){hap();const n=parseInt(lsR(dk('steps'))||'0')+a;lsW(dk('steps'),n.toString());renderTrackers();toast(`+${a.toLocaleString()} → ${n.toLocaleString()}`);}
+function addSteps(a){hap();const n=parseInt(lsR(dk('steps'))||'0')+a;const capped=Math.min(30000,n);lsW(dk('steps'),capped.toString());if(n>30000)toast(t('toast.stepsCap')||'⚠️ Max 30.000 passi');renderTrackers();toast(`+${a.toLocaleString()} → ${capped.toLocaleString()}`);}
 function toggleWk(){hap('medium');const n=gT('workout')>=1?0:1;sT('workout',n);renderTrackers();toast(t(n?'toast.wkCompletato':'toast.wkRimosso'));}
-function resetT(tp){hap();lsW(dk(tp),'0');renderTrackers();renderCoach();toast(t('toast.azzerato',{tipo:tp}));}
+function resetT(tp){hap();const prev=gT(tp);sT(tp,0);renderTrackers();showToast((t('toast.azzerato')||'Azzerato')+' — '+'<button onclick="sT(\''+tp+'\','+prev+');renderTrackers();closeToast()" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:inherit">'+(t('toast.undo')||'Annulla')+'</button>',4000);}
 
 /* ═══════════════════════════════════════
    MEALS — dynamic meal count from plan
 ═══════════════════════════════════════ */
 function buildDaySelector(){
   const el=document.getElementById('day-sel');el.innerHTML='';
+  const progStartMs=parseInt(lsR(SK.progStart)||0);
+  const daysSinceStart=progStartMs?Math.floor((Date.now()-progStartMs)/86400000)+1:1;
+  const autoDay=dietData.days.find(d=>d.d===daysSinceStart)?daysSinceStart:1;
+  if(selDay===1)selDay=autoDay;
   (dietData.days||[]).forEach(day=>{
     const b=document.createElement('button');b.textContent=`G${day.d}`;b.className='day-chip sn';
     if(day.d===selDay)b.classList.add('on');
@@ -3573,6 +3653,7 @@ function getMealNames(){
   return dietData?.metadata?.mealNames||['Pranzo','Merenda','Cena'];
 }
 function renderMeals(){
+  document.querySelectorAll('button[onclick="openShoppingList()"]').forEach(b=>b.style.display=dietData?'':'none');
   if(!dietData)return;
   const day=(dietData.days||[]).find(d=>d.d===selDay)||(dietData.days||[])[0];if(!day)return;
   const mNames=getMealNames();
@@ -3587,39 +3668,43 @@ function renderMeals(){
     const diff=fa!==null?fa-meal.baseAmount:0;
     const carbLabel=meal.carbSource?(FOOD_DB[meal.carbSource]?.label||meal.carbSource):'';
     /* Badge shows modifier delta for ALL meal types; carbLine only for computed main meals */
-    const badge=(diff!==0&&meal.carbSource)?`<span class="mod-badge">${diff>0?'+':''}${diff}g ${carbLabel}</span>`:'';
-    const carbLine=(fa!==null&&!isHardcodedMeal)?`<strong style="color:var(--on);">${fa}g ${carbLabel}</strong>, `:'';
+    const badge=(diff!==0&&meal.carbSource)?`<span class="mod-badge">${diff>0?'+':''}${diff}g ${sanitize(carbLabel)}</span>`:'';
+    const carbLine=(fa!==null&&!isHardcodedMeal)?`<strong style="color:var(--on);">${fa}g ${sanitize(carbLabel)}</strong>, `:'';
     const bs=checked?'border:1px solid rgba(77,220,198,.22);background:rgba(77,220,198,.03);':'border:1px solid var(--line);background:var(--s1);';
     /* Breakfast/snack use hardcoded string recipes — component swap is meaningless for them.
        Show only the regen button to avoid misleading protein/carb swap labels. */
     const actionsHtml=isHardcodedMeal
       ?`<div class="meal-actions">
-          <button onclick="regenSingleMeal(${day.d},'${n}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
+          <button onclick="regenSingleMeal(${day.d},'${sanitize(n)}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
         </div>`
       :`<div class="meal-actions">
-          <button onclick="swapMealComponent(${day.d},'${n}','protein')" class="btn-xs-swap">${t('meal.swap.pro')}</button>
-          <button onclick="swapMealComponent(${day.d},'${n}','carb')" class="btn-xs-swap">${t('meal.swap.carb')}</button>
-          <button onclick="regenSingleMeal(${day.d},'${n}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
+          <button onclick="swapMealComponent(${day.d},'${sanitize(n)}','protein')" class="btn-xs-swap">${t('meal.swap.pro')}</button>
+          <button onclick="swapMealComponent(${day.d},'${sanitize(n)}','carb')" class="btn-xs-swap">${t('meal.swap.carb')}</button>
+          <button onclick="regenSingleMeal(${day.d},'${sanitize(n)}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
         </div>`;
     return `<div style="width:100%;">
-      <button class="meal-row${checked?' done':''}" onclick="toggleMeal(${day.d},'${n}')"
-        aria-pressed="${checked}" aria-label="${n}${checked?' '+t('meal.completed'):''}"
+      <button class="meal-row${checked?' done':''}" onclick="toggleMeal(${day.d},'${sanitize(n)}')"
+        aria-pressed="${checked}" aria-label="${sanitize(n)}${checked?' '+t('meal.completed'):''}"
         style="${bs}border-radius:var(--r);display:flex;align-items:flex-start;gap:12px;padding:13px;touch-action:manipulation;cursor:pointer;width:100%;text-align:left;">
         <div style="width:32px;height:32px;border-radius:var(--r2);border:1.5px solid ${checked?'var(--p)':'var(--line)'};background:${checked?'rgba(77,220,198,.10)':'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
           ${checked?`<span class="material-symbols-outlined sn" style="font-size:16px;color:var(--p);font-variation-settings:'FILL' 1;">check</span>`:''}
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${n}</span>${badge}</div>
-          <p class="meal-desc sn">${carbLine}${meal.rest}</p>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(n)}</span>${badge}</div>
+          <p class="meal-desc sn">${carbLine}${sanitize(meal.rest)}</p>
         </div>
       </button>
       ${actionsHtml}
     </div>`;
   }).join('');
   document.getElementById('meals-done').textContent=done;
+  const dateEl=document.getElementById('oggi-date-label');
+  if(dateEl)dateEl.textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
+  const pastiBar=document.getElementById('oggi-pasti-bar');
+  if(pastiBar)pastiBar.style.width=(mNames.length>0?Math.round(done/mNames.length*100):0)+'%';
   renderKcalRing();
 }
-function toggleMeal(d,n){hap();const k=mk(d,n);const c=lsR(k)==='1';lsW(k,c?'0':'1');if(!c)toast(t('toast.mealMarcato',{n}));renderMeals();}
+function toggleMeal(d,n){hap();const k=mk(d,n);const c=lsR(k)==='1';lsW(k,c?'0':'1');if(!c)toast(t('toast.mealMarcato',{n}));_tabDirty.oggi=true;renderMeals();}
 
 /* ── Kcal ring: back-fill targetKcal for plans saved before this feature ──
    Called once in mountApp(). Uses base kcal (no modifier) to approximate
@@ -3642,16 +3727,21 @@ function migrateTargetKcal(){
   if(changed)try{lsW(SK.diet,JSON.stringify(dietData));}catch{}
 }
 
-/* ── Sum kcal from checked meals for the given day ── */
+/* ── Sum kcal from checked meals for the given day ──
+   Falls back to dist-based estimate when targetKcal is missing (old plans). */
 function getCompletedMealKcal(dayNum){
   if(!dietData)return 0;
   const day=(dietData.days||[]).find(d=>d.d===dayNum);
   if(!day)return 0;
+  const mNames=getMealNames();
+  const total=calcMacros().kcal||baseKcal();
+  const dist={2:[0.45,0.55],3:[0.25,0.40,0.35],4:[0.20,0.35,0.10,0.35],5:[0.20,0.30,0.10,0.30,0.10]}[mNames.length]||[0.25,0.40,0.35];
   let sum=0;
-  getMealNames().forEach(n=>{
+  mNames.forEach((n,mi)=>{
     if(lsR(mk(dayNum,n))==='1'){
-      const kcal=day[n]?.targetKcal;
-      if(typeof kcal==='number'&&kcal>0)sum+=kcal;
+      const stored=day[n]?.targetKcal;
+      const kcal=(typeof stored==='number'&&stored>0)?stored:Math.round(total*dist[mi]);
+      sum+=kcal;
     }
   });
   return sum;
@@ -3662,16 +3752,18 @@ function getCompletedMealKcal(dayNum){
 function renderKcalRing(){
   const ring=document.getElementById('kcal-ring');
   if(!ring||!dietData)return;
-  const KCAL_CIRC=106.8;
+  const KCAL_CIRC=552.9; // 2π×88, profile ring r=88
   const targetKcal=calcMacros().kcal;
   const completedKcal=getCompletedMealKcal(selDay);
   const pct=targetKcal>0?Math.min(100,completedKcal/targetKcal*100):0;
-  const offset=KCAL_CIRC*(1-pct/100);
-  ring.style.strokeDasharray=String(KCAL_CIRC);
-  ring.style.strokeDashoffset=String(offset);
-  /* Green at 100%, teal below */
+  ring.style.strokeDashoffset=`${KCAL_CIRC*(1-pct/100)}`;
   ring.style.stroke=pct>=99.5?'#22c55e':'var(--p)';
   ring.style.opacity=pct>0?'1':'0.35';
+  const KCAL_CIRC2=106.8;
+  const r2=getEl('kcal-ring-oggi');
+  if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct/100);r2.style.stroke=pct>=99.5?'#22c55e':'var(--p)';}
+  const pctEl=getEl('oggi-kcal-pct');
+  if(pctEl)pctEl.textContent=Math.round(pct)+'% consumato';
 }
 
 /* ═══════════════════════════════════════
@@ -3712,6 +3804,7 @@ function renderSettings(){
     if(getPhase()===p)b.classList.add('on');b.onclick=()=>{hap();setPhase(p);};el.appendChild(b);
   });
   renderRefeed();renderModDisplay();
+  {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_U;const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}
   const prof=getProfile();if(prof)_renderProfileCard(prof);
   _renderPrefsCard();
   if(document.getElementById('hdr-plan')){document.getElementById('hdr-plan').textContent=m.name||'';document.getElementById('hdr-plan').style.display=m.name?'block':'none';}
@@ -3720,8 +3813,8 @@ function _renderProfileCard(prof){
   /* Hero metrics */
   const heroTdee=document.getElementById('set-hero-tdee');
   const heroBmr=document.getElementById('set-hero-bmr');
-  if(heroTdee)heroTdee.innerHTML=prof.targetKcal?`${prof.targetKcal}<span style="font-size:20px;color:var(--on);opacity:.4;margin-left:5px;font-weight:500;">kcal</span>`:'—';
-  if(heroBmr)heroBmr.innerHTML=prof.bmr?`${prof.bmr}<span style="font-size:14px;opacity:.5;margin-left:4px;font-weight:500;">kcal</span>`:'—';
+  if(heroTdee)heroTdee.textContent=prof.targetKcal?String(prof.targetKcal):'—';
+  if(heroBmr)heroBmr.innerHTML=prof.bmr?`${sanitize(prof.bmr)}<span style="font-size:14px;opacity:.5;margin-left:4px;font-weight:500;">kcal</span>`:'—';
   const el=document.getElementById('set-profile-text');if(!el)return;
   const proRateDisplay=prof.proRate?`${prof.proRate}g/kg`:'2.0g/kg';
   const waterDisplay=prof.waterTarget?`${prof.waterTarget}L`:`${Math.round(parseFloat(prof.weight||70)*0.035*10)/10}L`;
@@ -3762,26 +3855,52 @@ function renderModDisplay(){
   document.getElementById('mod-status').textContent=m<0?t('set.mod.taglio',{kcal:Math.abs(kc)}):m>0?t('set.mod.boost',{kcal:kc}):t('set.mod.base');
 }
 function applyMod(u){
+  const MAX_UNITS=5,MIN_UNITS=-5;
   hap();if(u===0){lsW(SK.mod,'0');toast(t('toast.modAzzerato'));}
-  else{const n=Math.max(-5,Math.min(5,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
+  else{const n=Math.max(MIN_UNITS,Math.min(MAX_UNITS,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
   renderModDisplay();renderMacros();renderCoach();renderMeals();
+  const cur=getMod();
+  const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_UNITS;
+  const stepper=getEl('mod-stepper');
+  if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
+}
+const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
+function clearAppData(){Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
+let _confirmCb=null;
+function showConfirm(msg,cb){getEl('confirm-msg').textContent=msg;_confirmCb=cb;getEl('modal-confirm').style.display='flex';}
+function closeConfirm(){getEl('modal-confirm').style.display='none';_confirmCb=null;}
+document.addEventListener('DOMContentLoaded',()=>{const okBtn=getEl('confirm-ok-btn');if(okBtn)okBtn.onclick=()=>{closeConfirm();_confirmCb&&_confirmCb();};},{once:true});
+function updateWeight(){
+  const v=parseFloat(getEl('inp-weight-upd').value);
+  if(!v||v<40||v>250)return toast(t('toast.errore')||'Valore non valido');
+  const p=getProfile()||{};
+  p.weight=v;lsS(SK.profile,p);
+  const m=calculateUserMacros(p);
+  p.targetKcal=m.targetKcal;p.pro=m.pro;p.carbs=m.carbs;p.fat=m.fat;p.tdee=m.tdee;
+  lsS(SK.profile,p);
+  _tabDirty.oggi=true;_tabDirty.set=true;
+  renderSettings();renderMacros();renderTrackers();
+  getEl('inp-weight-upd').value='';
+  toast(t('toast.pesoAggiornato')||'✓ Peso aggiornato');
 }
 function resetProfile(){
-  if(!confirm(t('confirm.ricomincia')))return;
-  try{localStorage.clear();}catch{}
-  if(bodyChart){bodyChart.destroy();bodyChart=null;}
-  dietData=null;
-  profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
-  prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
-  curStep=0;
-  for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot)dot.classList.toggle('on',i===0);}
-  document.getElementById('result-card').classList.remove('on');
-  showOnb();toast(t('toast.profiloEl'));
+  showConfirm(t('set.confirmReset')||'Eliminare il profilo e rigenerare da zero?',()=>{
+    try{clearAppData();}catch{}
+    if(bodyChart){bodyChart.destroy();bodyChart=null;}
+    dietData=null;
+    profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
+    prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
+    curStep=0;
+    for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot)dot.classList.toggle('on',i===0);}
+    document.getElementById('result-card').classList.remove('on');
+    showOnb();toast(t('toast.profiloEl'));
+  });return;
 }
 function changeDiet(){
-  if(!confirm(t('confirm.eliminaPiano')))return;
-  [SK.diet,SK.phase,SK.mod,SK.refeed,SK.progStart,SK.p4Start].forEach(k=>{try{localStorage.removeItem(k);}catch{}});
-  if(bodyChart){bodyChart.destroy();bodyChart=null;}dietData=null;showOnb();toast(t('toast.pianoEl'));
+  showConfirm(t('confirm.eliminaPiano')||'Eliminare il piano?',()=>{
+    [SK.diet,SK.phase,SK.mod,SK.refeed,SK.progStart,SK.p4Start].forEach(k=>{try{localStorage.removeItem(k);}catch{}});
+    if(bodyChart){bodyChart.destroy();bodyChart=null;}dietData=null;showOnb();toast(t('toast.pianoEl'));
+  });return;
 }
 
 /* ═══════════════════════════════════════
@@ -3796,7 +3915,7 @@ function logMetric(){
   const log=getLog();const idx=log.findIndex(e=>e.isoDate===iso);
   const entry={date:isoDisp(iso),isoDate:iso,weight:wv,waist:wst,ts:idx>=0?log[idx].ts:Date.now()};
   if(idx>=0){log[idx]=entry;toast(t('toast.aggiornato'));}else{log.push(entry);toast(t(wst?'toast.pesoGirovita':'toast.pesolog'));}
-  saveLog(log);
+  saveLog(log);_tabDirty.prog=true;
   document.getElementById('log-w').value='';document.getElementById('log-wst').value='';
   document.getElementById('log-w').blur();document.getElementById('log-wst').blur();
   renderProgress();renderCoach();renderMacros();
@@ -3824,7 +3943,7 @@ function renderHistList(){
   const log=getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1).reverse();
   const el=document.getElementById('hist-list');
   if(!log.length){el.innerHTML=`<div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">${t('prog.storico.empty')}</span></div>`;return;}
-  el.innerHTML=log.map(e=>`<div class="hist-row"><span style="font-size:12px;font-weight:600;color:var(--muted);" class="sn">${e.date}</span><div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--p);" class="sn">${e.weight}<span style="font-size:9px;color:var(--muted);font-weight:600;margin-left:2px;">kg</span></span>${e.waist?`<span style="font-size:12px;font-weight:600;color:var(--on);" class="sn">⌀${e.waist}<span style="font-size:9px;color:var(--muted);">cm</span></span>`:''}<button onclick="deleteEntry(${e.ts})" style="font-size:11px;font-weight:600;color:var(--dim);background:none;border:none;padding:4px 8px;touch-action:manipulation;" class="sn" aria-label="Elimina">del</button></div></div>`).join('');
+  el.innerHTML=log.map(e=>`<div class="hist-row"><span style="font-size:12px;font-weight:600;color:var(--muted);" class="sn">${sanitize(e.date)}</span><div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--p);" class="sn">${sanitize(e.weight)}<span style="font-size:9px;color:var(--muted);font-weight:600;margin-left:2px;">kg</span></span>${e.waist?`<span style="font-size:12px;font-weight:600;color:var(--on);" class="sn">⌀${sanitize(e.waist)}<span style="font-size:9px;color:var(--muted);">cm</span></span>`:''}<button onclick="deleteEntry(${e.ts})" style="font-size:11px;font-weight:600;color:var(--dim);background:none;border:none;padding:4px 8px;touch-action:manipulation;" class="sn" aria-label="Elimina">del</button></div></div>`).join('');
 }
 function renderChart(data){
   const cv=document.getElementById('wChart');const wrap=document.getElementById('wChart-wrap');const em=document.getElementById('chart-empty');
@@ -4486,9 +4605,22 @@ function updateAdherenceCalendar(){
 
   const mNames=getMealNames();
   let done=0;
+  /* Use selDay (plan day 1-7) not the calendar day-of-month */
   mNames.forEach(n=>{
-    if(lsR(mk(parseInt(dd),n))==='1')done++;
+    if(lsR(mk(selDay,n))==='1')done++;
   });
+
+  /* Backfill: also count meals from the plan day matching today's weekday
+     in case selDay differs (defensive, handles edge-case date mismatches) */
+  if(done===0&&dietData){
+    const dow=new Date().getDay();
+    const todayPlanDay=(dow===0?7:dow);
+    if(todayPlanDay!==selDay){
+      mNames.forEach(n=>{
+        if(lsR(mk(todayPlanDay,n))==='1')done++;
+      });
+    }
+  }
 
   let hasCheckin=false;try{const _ci=JSON.parse(localStorage.getItem('ik_checkins')||'[]');hasCheckin=_ci.some(c=>c.iso===iso);}catch{}
 
@@ -4510,7 +4642,9 @@ const TABS=['oggi','prog','set','info'];
 function switchTab(name){
   if(!dietData&&name!=='oggi'&&name!=='info')return;hap();activeTab=name;
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
-  if(name==='prog'){renderProgress();renderCalendar();updateNotifUI();}if(name==='set')renderSettings();if(name==='info'){updateConsentUI();}
+  if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();_tabDirty.prog=false;}
+  if(name==='set'&&_tabDirty.set){renderSettings();renderKcalRing();_tabDirty.set=false;}
+  if(name==='info'){updateConsentUI();}
 }
 
 /* ═══════════════════════════════════════
@@ -4527,24 +4661,31 @@ function showOnb(){
   applyTranslations();
 }
 function mountApp(){
-  migrateTargetKcal();
   document.body.classList.remove('onboarding-active');
   document.getElementById('onb-screen').classList.remove('on');document.getElementById('app-shell').classList.add('on');
   document.getElementById('log-date').value=toISO();
   const dow=new Date().getDay();const days=dietData.days||[];const match=days.find(d=>d.d===(dow===0?7:dow));
-  selDay=(match||days[0]).d;buildDaySelector();
-  applyTranslations();
-  renderMacros();renderTrackers();renderCoach();renderMeals();renderRefeed();renderPersonalInsight();
-  renderCalendar();
-  setTimeout(()=>{try{renderSettings();}catch{}},0);
+  selDay=(match||days[0]).d;
+  /* Hide non-oggi screens before any render */
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t==='oggi'?'block':'none';});
   document.getElementById('nav-oggi').classList.add('on');
   ['nav-prog','nav-set','nav-info'].forEach(id=>{const b=document.getElementById(id);if(b){b.classList.remove('on');b.classList.add('inactive');}});
-  updateConsentUI();
-  updateStreaks();
-  updateNotifUI();
-  setTimeout(()=>{try{restoreTodayCheckin();}catch{}},80);
-  setTimeout(()=>{try{renderCheckinAnalytics();}catch{}},120);
+  /* Critical path — runs before first paint */
+  initLang();
+  applyTranslations();
+  renderMacros();renderTrackers();renderMeals();renderKcalRing();
+  /* Deferred — runs after first paint */
+  requestAnimationFrame(()=>{
+    renderCoach?.();renderRefeed?.();renderPersonalInsight?.();
+    updateAdherenceCalendar?.();renderCalendar?.();
+    renderCheckinAnalytics?.();
+    updateConsentUI?.();updateStreaks?.();updateNotifUI?.();
+    migrateTargetKcal?.();
+    try{restoreTodayCheckin?.();}catch{}
+    requestIdleCallback
+      ?requestIdleCallback(()=>{renderSettings?.();buildDaySelector?.();})
+      :setTimeout(()=>{renderSettings?.();buildDaySelector?.();},80);
+  });
 }
 
 /* Touch handlers */
@@ -4560,6 +4701,8 @@ document.addEventListener('touchend',e=>{
 },{passive:true});
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600);}
+function showToast(html,dur){const t=document.getElementById('toast');t.innerHTML=html;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),dur||2600);}
+function closeToast(){const t=document.getElementById('toast');t.classList.remove('on');clearTimeout(t._t);}
 
 
 /* ═══════════════════════════════════════
@@ -4738,6 +4881,19 @@ function acknowledgedPWA(){
   _bootAfterGates();
 })();
 </script>
+
+<!-- ══════════════════════════════════════
+     MODAL CONFIRM
+══════════════════════════════════════ -->
+<div id="modal-confirm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--rbox);padding:24px;max-width:320px;width:90%;display:flex;flex-direction:column;gap:16px">
+    <p id="confirm-msg" class="sn" style="font-size:14px;font-weight:600;color:var(--on);margin:0;line-height:1.5"></p>
+    <div style="display:flex;gap:8px">
+      <button onclick="closeConfirm()" class="btn btn-ghost" style="flex:1">Annulla</button>
+      <button id="confirm-ok-btn" class="btn btn-danger-o" style="flex:1">Conferma</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════
      MODAL PRIVACY
