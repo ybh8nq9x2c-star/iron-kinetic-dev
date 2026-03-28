@@ -1787,6 +1787,7 @@ function setLang(lang){
   _lang=(lang==='en')?'en':'it';
   try{localStorage.setItem('ik_lang',_lang);}catch{}
   document.documentElement.lang=_lang;
+  _trApplied=false;
   applyTranslations();
   /* Update lang switcher buttons */
   document.getElementById('lang-btn-it')?.classList.toggle('seg-on',_lang==='it');
@@ -1797,6 +1798,7 @@ function initLang(){
   document.documentElement.lang=_lang;
 }
 function applyTranslations(deferOffscreen){
+  if(_trApplied)return;_trApplied=true;
   /* Helper shortcuts */
   const txt=(id,key)=>{const e=document.getElementById(id);if(e)e.textContent=t(key);};
   const nlTxt=(sel,key)=>document.querySelectorAll(sel).forEach(e=>e.textContent=t(key));
@@ -2077,6 +2079,9 @@ let profState={sex:'M',age:null,height:null,weight:null,bf:null,
 let prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',
                intolerances:'',foods:[],extraFoods:''};
 let curStep=0;
+let _trApplied=false;
+const _tabDirty={oggi:true,prog:true,set:true,info:true};
+const EL={};function getEl(id){return EL[id]||(EL[id]=document.getElementById(id));}
 
 /* ═══════════════════════════════════════
    UTILITIES
@@ -2089,7 +2094,7 @@ const mk=(d,n)=>`ik_ml_${toISO()}_d${d}_${n}`;
 
 /* Storage */
 const lsG=(k,fb=null)=>{try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):fb;}catch{return fb;}};
-const lsS=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){if(e.name==='QuotaExceededError'||e.code===22||e.code===1014){try{showToast(t('toast.storageQuota')||'⚠️ Spazio esaurito — esporta backup');}catch{}}}};
+const lsS=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));_tabDirty.oggi=true;_tabDirty.prog=true;_tabDirty.set=true;}catch(e){if(e.name==='QuotaExceededError'||e.code===22||e.code===1014){try{showToast(t('toast.storageQuota')||'⚠️ Spazio esaurito — esporta backup');}catch{}}}};
 const lsR=k=>{try{return localStorage.getItem(k);}catch{return null;}};
 const lsW=(k,v)=>{try{localStorage.setItem(k,v);}catch{}};
 const getLog=()=>lsG(SK.wLog,[]);
@@ -3519,18 +3524,18 @@ function renderPersonalInsight(){
 function renderMacros(){
   if(!dietData)return;
   const m=calcMacros();
-  document.getElementById('m-kcal').textContent=m.kcal;
-  document.getElementById('m-pro').textContent=m.pro+'g';
-  document.getElementById('m-carbs').textContent=m.carbs+'g';
-  document.getElementById('m-fat').textContent=m.fat+'g';
+  getEl('m-kcal').textContent=m.kcal;
+  getEl('m-pro').textContent=m.pro+'g';
+  getEl('m-carbs').textContent=m.carbs+'g';
+  getEl('m-fat').textContent=m.fat+'g';
   const bk=baseKcal()+400;
-  document.getElementById('b-kcal').style.width=`${Math.min(100,Math.round(m.kcal/bk*100))}%`;
-  document.getElementById('b-pro').style.width=`${Math.min(100,Math.round(m.pro/250*100))}%`;
-  document.getElementById('b-carbs').style.width=`${Math.min(100,Math.round(m.carbs/350*100))}%`;
-  document.getElementById('b-fat').style.width=`${Math.min(100,Math.round(m.fat/100*100))}%`;
-  document.getElementById('m-kcal').style.color=m.modified?'#FFB800':'var(--p)';
-  document.getElementById('m-carbs').style.color=m.modified?'#FFB800':'var(--on)';
-  const mb=document.getElementById('m-mod-badge');if(mb)mb.style.display=m.modified?'block':'none';
+  getEl('b-kcal').style.width=`${Math.min(100,Math.round(m.kcal/bk*100))}%`;
+  getEl('b-pro').style.width=`${Math.min(100,Math.round(m.pro/250*100))}%`;
+  getEl('b-carbs').style.width=`${Math.min(100,Math.round(m.carbs/350*100))}%`;
+  getEl('b-fat').style.width=`${Math.min(100,Math.round(m.fat/100*100))}%`;
+  getEl('m-kcal').style.color=m.modified?'#FFB800':'var(--p)';
+  getEl('m-carbs').style.color=m.modified?'#FFB800':'var(--on)';
+  const mb=getEl('m-mod-badge');if(mb)mb.style.display=m.modified?'block':'none';
 }
 
 /* ═══════════════════════════════════════
@@ -3549,26 +3554,24 @@ const sT=(t,v)=>lsW(dk(t),v.toString());
 const CIRC=138.2;
 function renderTrackers(){
   const WMAX=getWMAX();const w=gT('water'),wp=Math.min(100,w/WMAX*100);
-  document.getElementById('water-val').textContent=w.toFixed(1);
-  const wtEl=document.getElementById('water-target');if(wtEl)wtEl.textContent=WMAX.toFixed(1);
-  document.getElementById('water-bar').style.width=`${wp}%`;
-  document.getElementById('water-ring').style.strokeDashoffset=`${CIRC*(1-wp/100)}`;
+  getEl('water-val').textContent=w.toFixed(1);
+  const wtEl=getEl('water-target');if(wtEl)wtEl.textContent=WMAX.toFixed(1);
+  getEl('water-bar').style.width=`${wp}%`;
+  getEl('water-ring').style.strokeDashoffset=`${CIRC*(1-wp/100)}`;
   const s=gT('salt'),sp=Math.min(100,s/SMAX*100);
-  document.getElementById('salt-val').textContent=s.toFixed(1);
-  document.getElementById('salt-val').style.color=sp>=100?'var(--red)':sp>=70?'var(--orange)':'var(--on)';
-  const sb=document.getElementById('salt-bar');sb.style.width=`${sp}%`;sb.style.background=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.35)';
-  const sr=document.getElementById('salt-ring');sr.style.strokeDashoffset=`${CIRC*(1-sp/100)}`;sr.style.stroke=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.4)';
+  const sv=getEl('salt-val');sv.textContent=s.toFixed(1);
+  sv.style.color=sp>=100?'var(--red)':sp>=70?'var(--orange)':'var(--on)';
+  const sb=getEl('salt-bar');sb.style.width=`${sp}%`;sb.style.background=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.35)';
+  const sr=getEl('salt-ring');sr.style.strokeDashoffset=`${CIRC*(1-sp/100)}`;sr.style.stroke=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.4)';
   const st=parseInt(lsR(dk('steps'))||'0'),tgt=(getPhase()===3&&detectStall())?11000:STBASE;
-  document.getElementById('steps-val').textContent=st.toLocaleString('it-IT');
-  document.getElementById('steps-tgt').textContent=tgt.toLocaleString('it-IT');
-  document.getElementById('steps-bar').style.width=`${Math.min(100,st/tgt*100)}%`;
+  getEl('steps-val').textContent=st.toLocaleString('it-IT');
+  getEl('steps-tgt').textContent=tgt.toLocaleString('it-IT');
+  getEl('steps-bar').style.width=`${Math.min(100,st/tgt*100)}%`;
   const wd=gT('workout')>=1;
-  document.getElementById('wk-ratio').textContent=wd?'1/1':'0/1';
-  document.getElementById('wk-status').textContent=wd?t('oggi.workout.completato'):t('oggi.workout.nonFatto');
-  document.getElementById('wk-status').style.color=wd?'var(--p)':'var(--dim)';
-  document.getElementById('wk-bar').style.width=wd?'100%':'0%';
-  document.getElementById('wk-bar').style.background=wd?'var(--p)':'rgba(199,196,216,.18)';
-  const wb=document.getElementById('wk-btn');
+  getEl('wk-ratio').textContent=wd?'1/1':'0/1';
+  const wks=getEl('wk-status');wks.textContent=wd?t('oggi.workout.completato'):t('oggi.workout.nonFatto');wks.style.color=wd?'var(--p)':'var(--dim)';
+  const wkb=getEl('wk-bar');wkb.style.width=wd?'100%':'0%';wkb.style.background=wd?'var(--p)':'rgba(199,196,216,.18)';
+  const wb=getEl('wk-btn');
   wb.textContent=wd?t('oggi.workout.completato'):t('oggi.workout.fatto');
   wb.style.background=wd?'rgba(77,220,198,.12)':'rgba(255,255,255,.05)';
   wb.style.borderColor=wd?'rgba(77,220,198,.22)':'var(--glass-stroke)';
@@ -3642,7 +3645,7 @@ function renderMeals(){
   document.getElementById('meals-done').textContent=done;
   if(activeTab==='set')renderKcalRing();
 }
-function toggleMeal(d,n){hap();const k=mk(d,n);const c=lsR(k)==='1';lsW(k,c?'0':'1');if(!c)toast(t('toast.mealMarcato',{n}));renderMeals();}
+function toggleMeal(d,n){hap();const k=mk(d,n);const c=lsR(k)==='1';lsW(k,c?'0':'1');if(!c)toast(t('toast.mealMarcato',{n}));_tabDirty.oggi=true;renderMeals();}
 
 /* ── Kcal ring: back-fill targetKcal for plans saved before this feature ──
    Called once in mountApp(). Uses base kcal (no modifier) to approximate
@@ -3823,7 +3826,7 @@ function logMetric(){
   const log=getLog();const idx=log.findIndex(e=>e.isoDate===iso);
   const entry={date:isoDisp(iso),isoDate:iso,weight:wv,waist:wst,ts:idx>=0?log[idx].ts:Date.now()};
   if(idx>=0){log[idx]=entry;toast(t('toast.aggiornato'));}else{log.push(entry);toast(t(wst?'toast.pesoGirovita':'toast.pesolog'));}
-  saveLog(log);
+  saveLog(log);_tabDirty.prog=true;
   document.getElementById('log-w').value='';document.getElementById('log-wst').value='';
   document.getElementById('log-w').blur();document.getElementById('log-wst').blur();
   renderProgress();renderCoach();renderMacros();
@@ -4550,7 +4553,9 @@ const TABS=['oggi','prog','set','info'];
 function switchTab(name){
   if(!dietData&&name!=='oggi'&&name!=='info')return;hap();activeTab=name;
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
-  if(name==='prog'){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();}if(name==='set'){renderSettings();renderKcalRing();}if(name==='info'){updateConsentUI();}
+  if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();_tabDirty.prog=false;}
+  if(name==='set'&&_tabDirty.set){renderSettings();renderKcalRing();_tabDirty.set=false;}
+  if(name==='info'){updateConsentUI();}
 }
 
 /* ═══════════════════════════════════════
@@ -4567,28 +4572,30 @@ function showOnb(){
   applyTranslations();
 }
 function mountApp(){
-  migrateTargetKcal();
   document.body.classList.remove('onboarding-active');
   document.getElementById('onb-screen').classList.remove('on');document.getElementById('app-shell').classList.add('on');
   document.getElementById('log-date').value=toISO();
   const dow=new Date().getDay();const days=dietData.days||[];const match=days.find(d=>d.d===(dow===0?7:dow));
-  selDay=(match||days[0]).d;buildDaySelector();
-  /* Hide non-oggi screens immediately — before any render work */
+  selDay=(match||days[0]).d;
+  /* Hide non-oggi screens before any render */
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t==='oggi'?'block':'none';});
   document.getElementById('nav-oggi').classList.add('on');
   ['nav-prog','nav-set','nav-info'].forEach(id=>{const b=document.getElementById(id);if(b){b.classList.remove('on');b.classList.add('inactive');}});
-  /* Translate oggi+nav sync; off-screen tabs deferred via requestIdleCallback */
-  applyTranslations(true);
-  /* Critical oggi-tab path only — paint these synchronously */
-  renderMacros();renderTrackers();renderMeals();
-  /* Defer everything non-visible to next frame */
+  /* Critical path — runs before first paint */
+  initLang();
+  applyTranslations();
+  renderMacros();renderTrackers();renderMeals();renderKcalRing();
+  /* Deferred — runs after first paint */
   requestAnimationFrame(()=>{
-    renderCoach();renderRefeed();renderPersonalInsight();
-    updateAdherenceCalendar();renderCalendar();
-    updateConsentUI();updateStreaks();updateNotifUI();
-    setTimeout(()=>{try{renderSettings();}catch{}},0);
-    setTimeout(()=>{try{restoreTodayCheckin();}catch{}},80);
-    setTimeout(()=>{try{renderCheckinAnalytics();}catch{}},120);
+    renderCoach?.();renderRefeed?.();renderPersonalInsight?.();
+    updateAdherenceCalendar?.();renderCalendar?.();
+    renderCheckinAnalytics?.();
+    updateConsentUI?.();updateStreaks?.();updateNotifUI?.();
+    migrateTargetKcal?.();
+    try{restoreTodayCheckin?.();}catch{}
+    requestIdleCallback
+      ?requestIdleCallback(()=>{renderSettings?.();buildDaySelector?.();})
+      :setTimeout(()=>{renderSettings?.();buildDaySelector?.();},80);
   });
 }
 
