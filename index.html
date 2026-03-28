@@ -3776,6 +3776,7 @@ function renderSettings(){
     if(getPhase()===p)b.classList.add('on');b.onclick=()=>{hap();setPhase(p);};el.appendChild(b);
   });
   renderRefeed();renderModDisplay();
+  {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_U;const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}
   const prof=getProfile();if(prof)_renderProfileCard(prof);
   _renderPrefsCard();
   if(document.getElementById('hdr-plan')){document.getElementById('hdr-plan').textContent=m.name||'';document.getElementById('hdr-plan').style.display=m.name?'block':'none';}
