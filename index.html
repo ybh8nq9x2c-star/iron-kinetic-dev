@@ -1159,59 +1159,106 @@ body.onboarding-active #onb-screen{
         <p id="set-plan-name" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);">—</p>
         <p id="set-plan-meta" class="t-xxs muted sn" style="margin-top:4px;">— fasi · — giorni</p>
       </div>
-      <!-- Protocollo Dieta: Fase + Refeed -->
-      <div class="card" style="padding:0;overflow:hidden;">
-        <div style="padding:14px 16px;">
-          <span class="sec-label" style="display:block;margin-bottom:10px;">Fase Corrente</span>
-          <div id="set-phases" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
-        </div>
-        <div id="set-refeed-card" style="display:none;padding:14px 16px;border-top:1px solid var(--line);">
-          <div class="rowb">
-            <div>
-              <span class="sec-label" style="display:block;margin-bottom:3px;">Refeed Day</span>
-              <p class="sn" style="font-size:13px;font-weight:600;color:var(--on);margin:0;">+400 kcal · +50g carbs</p>
-              <p class="t-xxs muted sn" style="margin-top:2px;">Solo Fase 2</p>
+      <!-- Accordion Menu -->
+      <div style="background:var(--s1);border:1px solid var(--line);border-radius:var(--rbox);overflow:hidden;">
+
+        <!-- A: Fase Corrente -->
+        <div style="border-bottom:1px solid var(--line);">
+          <button onclick="toggleAccordion('fase')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
+            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">timeline</span>
+            <span class="sn" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Fase Corrente</span>
+            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
+          </button>
+          <div id="acc-fase" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
+            <div style="padding:0 16px 16px;border-top:1px solid var(--line);">
+              <div id="set-phases" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;"></div>
+              <div id="set-refeed-card" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);">
+                <div class="rowb">
+                  <div>
+                    <span class="sec-label" style="display:block;margin-bottom:3px;">Refeed Day</span>
+                    <p class="sn" style="font-size:13px;font-weight:600;color:var(--on);margin:0;">+400 kcal · +50g carbs</p>
+                    <p class="t-xxs muted sn" style="margin-top:2px;">Solo Fase 2</p>
+                  </div>
+                  <button id="set-refeed-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 16px;">DISATTIVO</button>
+                </div>
+              </div>
             </div>
-            <button id="set-refeed-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 16px;">DISATTIVO</button>
           </div>
         </div>
-      </div>
-      <!-- Modificatore AI - stepper -->
-      <div class="card" style="padding:16px;">
-        <span class="sec-label">Modificatore AI</span>
-        <div class="rowb" style="margin-top:10px;">
-          <p id="mod-status" class="t-xxs muted sn">Base invariata</p>
-          <div id="mod-stepper" class="mod-stepper">
-            <button onclick="applyMod(-1)" class="mod-stepper-btn sn" aria-label="−100 kcal">−</button>
-            <span id="mod-display" class="mod-stepper-val sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;min-width:72px;text-align:center;">0 kcal</span>
-            <button onclick="applyMod(1)" class="mod-stepper-btn pos sn" aria-label="+100 kcal">+</button>
+
+        <!-- B: Modificatore AI -->
+        <div style="border-bottom:1px solid var(--line);">
+          <button onclick="toggleAccordion('mod')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
+            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">tune</span>
+            <span class="sn" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Modificatore AI</span>
+            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
+          </button>
+          <div id="acc-mod" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
+            <div style="padding:0 16px 16px;border-top:1px solid var(--line);">
+              <div class="rowb" style="margin-top:14px;">
+                <p id="mod-status" class="t-xxs muted sn">Base invariata</p>
+                <div id="mod-stepper" class="mod-stepper">
+                  <button onclick="applyMod(-1)" class="mod-stepper-btn sn" aria-label="−100 kcal">−</button>
+                  <span id="mod-display" class="mod-stepper-val sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;min-width:72px;text-align:center;">0 kcal</span>
+                  <button onclick="applyMod(1)" class="mod-stepper-btn pos sn" aria-label="+100 kcal">+</button>
+                </div>
+              </div>
+              <p id="mod-units-label" class="t-xxs muted sn" style="text-align:center;margin-top:4px;"></p>
+              <button onclick="applyMod(0)" class="btn btn-ghost btn-xs sn" style="margin-top:10px;width:100%;">Reset modificatore</button>
+            </div>
           </div>
-          <p id="mod-units-label" class="t-xxs muted sn" style="text-align:center;margin-top:4px"></p>
         </div>
-        <button onclick="applyMod(0)" class="btn btn-ghost btn-xs sn" style="margin-top:10px;padding:0 14px;width:100%;">Reset modificatore</button>
-      </div>
-      <!-- Dati -->
-      <div class="card" style="padding:16px;">
-        <span class="sec-label">Dati</span>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
-          <button onclick="exportData()" class="btn btn-ghost w100 sn">📦 Esporta Backup</button>
-          <button onclick="document.getElementById('imp-inp').click()" class="btn btn-ghost w100 sn">📥 Importa Backup</button>
-          <input type="file" id="imp-inp" accept=".json" style="display:none;" onchange="importBackup(event)"/>
+
+        <!-- C: Dati -->
+        <div style="border-bottom:1px solid var(--line);">
+          <button onclick="toggleAccordion('dati')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
+            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">database</span>
+            <span class="sn" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Dati</span>
+            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
+          </button>
+          <div id="acc-dati" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
+            <div style="padding:0 16px 16px;border-top:1px solid var(--line);">
+              <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+                <button onclick="exportData()" class="btn btn-ghost w100 sn">📦 Esporta Backup</button>
+                <button onclick="document.getElementById('imp-inp').click()" class="btn btn-ghost w100 sn">📥 Importa Backup</button>
+                <input type="file" id="imp-inp" accept=".json" style="display:none;" onchange="importBackup(event)"/>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <!-- Zona Pericolosa -->
-      <div class="card" style="padding:16px;border:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.04)">
-        <span class="sec-label" style="color:var(--red);margin-bottom:8px;display:block">Zona Pericolosa</span>
-        <p class="sn t-xxs muted" style="margin-bottom:10px;line-height:1.5">Queste azioni sono irreversibili senza un backup.</p>
-        <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
-      </div>
-      <!-- Lingua / Language switcher -->
-      <div class="card" style="padding:14px 16px;">
-        <span class="sec-label" id="lang-label-txt">Lingua / Language</span>
-        <div class="seg-wrap" style="margin-top:10px;display:flex;gap:6px;">
-          <button id="lang-btn-it" class="seg-btn sn seg-on" onclick="setLang('it')" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇮🇹 IT</button>
-          <button id="lang-btn-en" class="seg-btn sn" onclick="setLang('en')" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇬🇧 EN</button>
+
+        <!-- D: Zona Pericolosa -->
+        <div style="border-bottom:1px solid var(--line);">
+          <button onclick="toggleAccordion('danger')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
+            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--red);">warning</span>
+            <span class="sn" style="font-size:13px;font-weight:700;color:var(--red);flex:1;">Zona Pericolosa</span>
+            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--red);transition:transform .2s;">chevron_right</span>
+          </button>
+          <div id="acc-danger" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
+            <div style="padding:0 16px 16px;border-top:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.03);">
+              <p class="sn t-xxs muted" style="margin:14px 0 10px;line-height:1.5;">Queste azioni sono irreversibili senza un backup.</p>
+              <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
+            </div>
+          </div>
         </div>
+
+        <!-- E: Lingua -->
+        <div>
+          <button onclick="toggleAccordion('lingua')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
+            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">language</span>
+            <span class="sn" style="font-size:13px;font-weight:700;color:var(--on);flex:1;" id="lang-label-txt">Lingua / Language</span>
+            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
+          </button>
+          <div id="acc-lingua" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
+            <div style="padding:0 16px 16px;border-top:1px solid var(--line);">
+              <div class="seg-wrap" style="margin-top:14px;display:flex;gap:6px;">
+                <button id="lang-btn-it" class="seg-btn sn seg-on" onclick="setLang('it')" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇮🇹 IT</button>
+                <button id="lang-btn-en" class="seg-btn sn" onclick="setLang('en')" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇬🇧 EN</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
       <!-- Quick links to info tab -->
       <div style="display:flex;gap:8px;">
@@ -3585,6 +3632,21 @@ function renderCoach(){
   }
 }
 
+function toggleAccordion(id){
+  const items=document.querySelectorAll('.acc-body');
+  const chevrons=document.querySelectorAll('.acc-chevron');
+  items.forEach((b,i)=>{
+    const isTarget=b.id==='acc-'+id;
+    const open=b.style.maxHeight&&b.style.maxHeight!=='0px';
+    if(isTarget){
+      b.style.maxHeight=open?'0':'600px';
+      chevrons[i].style.transform=open?'':'rotate(90deg)';
+    } else {
+      b.style.maxHeight='0';
+      chevrons[i].style.transform='';
+    }
+  });
+}
 function toggleTrackers(){
   const b=getEl('trackers-body');
   const c=getEl('trackers-chevron');
