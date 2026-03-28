@@ -1431,7 +1431,7 @@ it:{
   'toast.refeedOn':'🔥 Refeed Day attivato!','toast.refeedOff':'Refeed disattivato',
   'toast.wkCompletato':'🏋️ Sessione completata!','toast.wkRimosso':'Allenamento rimosso',
   'toast.acquaLimite':'Limite {max}L raggiunto 💧','toast.saleLimite':'Limite 6g raggiunto 🧂',
-  'toast.azzerato':'{tipo} azzerato','toast.mealMarcato':'{n} segnato ✓',
+  'toast.azzerato':'{tipo} azzerato','toast.mealMarcato':'{n} segnato ✓','toast.storageQuota':'⚠️ Spazio esaurito — esporta il backup',
   'toast.notifOn':'✅ Promemoria attivato!',
   'toast.notifDenied':'🔕 Permesso negato — abilita nelle impostazioni del browser',
   'toast.notifNoChange':'Nessun cambiamento','toast.notifErr':'Errore richiesta notifiche',
@@ -1677,7 +1677,7 @@ en:{
   'toast.refeedOn':'🔥 Refeed Day activated!','toast.refeedOff':'Refeed deactivated',
   'toast.wkCompletato':'🏋️ Session completed!','toast.wkRimosso':'Workout removed',
   'toast.acquaLimite':'{max}L limit reached 💧','toast.saleLimite':'6g salt limit reached 🧂',
-  'toast.azzerato':'{tipo} reset','toast.mealMarcato':'{n} marked ✓',
+  'toast.azzerato':'{tipo} reset','toast.mealMarcato':'{n} marked ✓','toast.storageQuota':'⚠️ Storage full — export your backup',
   'toast.notifOn':'✅ Reminder enabled!',
   'toast.notifDenied':'🔕 Permission denied — enable in browser settings',
   'toast.notifNoChange':'No changes','toast.notifErr':'Notification request error',
@@ -2089,7 +2089,7 @@ const mk=(d,n)=>`ik_ml_${toISO()}_d${d}_${n}`;
 
 /* Storage */
 const lsG=(k,fb=null)=>{try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):fb;}catch{return fb;}};
-const lsS=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}};
+const lsS=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){if(e.name==='QuotaExceededError'||e.code===22||e.code===1014){try{showToast(t('toast.storageQuota')||'⚠️ Spazio esaurito — esporta backup');}catch{}}}};
 const lsR=k=>{try{return localStorage.getItem(k);}catch{return null;}};
 const lsW=(k,v)=>{try{localStorage.setItem(k,v);}catch{}};
 const getLog=()=>lsG(SK.wLog,[]);
