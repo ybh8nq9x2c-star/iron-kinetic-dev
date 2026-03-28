@@ -2242,7 +2242,7 @@ function applyTranslations(deferOffscreen){
 const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
   refeed:'ik_refeed_date',wLog:'ik_weight_log',
   progStart:'ik_prog_start',p4Start:'ik_p4_start',profile:'ik_user_profile',
-  prefs:'ik_user_prefs'};
+  prefs:'ik_user_prefs',checkins:'ik_checkins'};
 
 /* ═══════════════════════════════════════
    STATE
@@ -2367,17 +2367,17 @@ function avg(arr){return arr.length?arr.reduce((a,v)=>a+v,0)/arr.length:0;}
 /* ── Feature 1: Adaptive Macro Engine ── */
 function runAdaptiveEngine(){
   if(lsR(SK_ADAPTIVE)===toISO())return;
-  let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch{}
+  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
   if(arr.length<3)return;
   const recent=arr.slice(0,5);
   const avgE=avg(recent.map(c=>+(c.energy||5)));
   const avgH=avg(recent.map(c=>+(c.hunger||5)));
   const avgA=avg(recent.map(c=>+(c.adherence||5)));
   let rule=null;
-  if(avgE<=3){rule={key:'adaptive.rule.lowEnergy',delta:100};}
-  else if(avgE>=8&&avgH<=3&&avgA>=8){rule={key:'adaptive.rule.canIntensify',delta:-100};}
-  else if(detectStall()&&!isRefeed()){rule={key:'adaptive.rule.stallingRefeed',delta:200};}
-  else if(avgH>=7&&avgA<=4){rule={key:'adaptive.rule.hungerAdher',delta:150};}
+  if(avgE<5){rule={key:'adaptive.rule.lowEnergy',delta:100};}
+  else if(avgE>=7&&avgH<=4&&avgA>=8){rule={key:'adaptive.rule.canIntensify',delta:-100};}
+  else if(detectStall()&&avgA>=7){rule={key:'adaptive.rule.stallingRefeed',delta:200};}
+  else if(avgH>7&&avgA<6){rule={key:'adaptive.rule.hungerAdher',delta:150};}
   if(rule)showAdaptiveBanner(rule);
 }
 function showAdaptiveBanner(rule){
@@ -2575,7 +2575,7 @@ function generateWeeklyReport(){
   const now=new Date();
   const isoWeekAgo=new Date(now-7*24*3600*1000).toISOString().slice(0,10);
   const log=getLog().filter(e=>e.isoDate&&e.isoDate>=isoWeekAgo&&Number(e.weight)>0).sort((a,b)=>a.isoDate<b.isoDate?-1:1);
-  let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch{}
+  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
   const ciWeek=arr.filter(c=>c.iso>=isoWeekAgo);
   const weightChange=log.length>=2?Math.round((Number(log[log.length-1].weight)-Number(log[0].weight))*10)/10:null;
   const avgF=(k)=>ciWeek.length?Math.round(avg(ciWeek.map(c=>+(c[k]||5)))*10)/10:null;
@@ -3502,7 +3502,7 @@ function analyzeState(){
 
   /* ── Check-in medi + TREND (ultimi 7) — COM-B model ── */
   let checkins=[];
-  try{checkins=JSON.parse(localStorage.getItem('ik_checkins')||'[]').slice(0,7);}catch{}
+  try{checkins=JSON.parse(localStorage.getItem(SK.checkins)||'[]').slice(0,7);}catch{}
   /* Reverse so oldest first for regression */
   const ci7=[...checkins].reverse();
   const avg7=k=>checkins.length>=2?checkins.reduce((a,v)=>a+(+v[k]||0),0)/checkins.length:null;
@@ -3868,9 +3868,8 @@ let selectedCheckTag='routine';
 function setCheckTag(btn,tag){selectedCheckTag=tag;document.querySelectorAll('.micro-chip').forEach(b=>b.classList.remove('active-chip'));if(btn)btn.classList.add('active-chip');}
 function saveDailyCheckin(){
   const entry={iso:toISO(),hunger:parseInt(document.getElementById('ci-hunger')?.value||'5',10),energy:parseInt(document.getElementById('ci-energy')?.value||'6',10),adherence:parseInt(document.getElementById('ci-adherence')?.value||'8',10),digestion:parseInt(document.getElementById('ci-digestion')?.value||'8',10),tag:selectedCheckTag};
-  let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch{}
-  arr=[entry,...arr.filter(x=>x.iso!==entry.iso)].slice(0,30);
-  try{localStorage.setItem('ik_checkins',JSON.stringify(arr));}catch{}
+  const arr=[entry,...lsG(SK.checkins,[]).filter(x=>x.iso!==entry.iso)].slice(0,30);
+  lsS(SK.checkins,arr);
   updateStreaks();
   updateAdherenceCalendar();
   if(activeTab==='prog')renderCalendar();
@@ -3908,7 +3907,7 @@ function saveDailyCheckin(){
   toast(t('toast.ciSalvato'));
 }
 function restoreTodayCheckin(){
-  let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch{}
+  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
   const today=arr.find(x=>x.iso===toISO());if(!today)return;
   const map={'ci-hunger':today.hunger,'ci-energy':today.energy,'ci-adherence':today.adherence,'ci-digestion':today.digestion};
   Object.entries(map).forEach(([id,val])=>{const el=document.getElementById(id);if(el&&val!=null)el.value=val;});
@@ -3918,7 +3917,7 @@ function restoreTodayCheckin(){
   if(ciBtn)ciBtn.textContent=t('oggi.checkin.aggiorna')||'Aggiorna check-in';
 }
 function renderCheckinAnalytics(){
-  let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch{}
+  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
   const last7=arr.slice(0,7);
   const avg=(k)=>last7.length?last7.reduce((a,v)=>a+(+v[k]||0),0)/last7.length:null;
   ['hunger','energy','adherence','digestion'].forEach(k=>{
@@ -4518,14 +4517,14 @@ function importBackup(evt){
 
       /* ik_checkins: ensure array of objects with required fields */
       try{
-        const raw=localStorage.getItem('ik_checkins');
+        const raw=localStorage.getItem(SK.checkins);
         if(raw){
           const arr=JSON.parse(raw);
           if(!Array.isArray(arr))throw new Error();
           const clean=arr.filter(c=>c&&typeof c==='object'&&c.iso);
-          if(clean.length!==arr.length)localStorage.setItem('ik_checkins',JSON.stringify(clean));
+          if(clean.length!==arr.length)localStorage.setItem(SK.checkins,JSON.stringify(clean));
         }
-      }catch{localStorage.removeItem('ik_checkins');}
+      }catch{localStorage.removeItem(SK.checkins);}
 
       /* ik_notif_schedule: ensure valid structure */
       try{
@@ -4854,7 +4853,7 @@ function updateStreaks(){
   const iso=toISO();
   const checkins=[];
   try{
-    const arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');
+    const arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');
     checkins.push(...arr);
   }catch{}
 
@@ -5089,7 +5088,7 @@ function updateAdherenceCalendar(){
     }
   }
 
-  let hasCheckin=false;try{const _ci=JSON.parse(localStorage.getItem('ik_checkins')||'[]');hasCheckin=_ci.some(c=>c.iso===iso);}catch{}
+  let hasCheckin=false;try{const _ci=JSON.parse(localStorage.getItem(SK.checkins)||'[]');hasCheckin=_ci.some(c=>c.iso===iso);}catch{}
 
   calData[dd]={
     meals:done,
