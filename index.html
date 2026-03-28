@@ -232,7 +232,7 @@ body.onboarding-active #onb-screen{
 .streak-badge .fire{font-size:12px;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}.rfon{animation:none;}.bar-fill,.result-card{transition:none;}}
 /* ── Trackers collapsible ── */
-#trackers-body{max-height:800px;overflow:hidden;transition:max-height .35s ease;}
+#trackers-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
 #trackers-chevron{transition:transform .25s ease;color:var(--muted);font-size:18px;}
 /* ── Tracker blocks ── */
 .tracker-block{padding:14px 16px;border-top:1px solid var(--line);}
@@ -935,12 +935,12 @@ body.onboarding-active #onb-screen{
 
       <!-- 5. Trackers Card (collapsible, open by default) -->
       <div class="card" style="overflow:hidden;">
-        <button onclick="toggleTrackers()" id="trackers-toggle-btn" aria-expanded="true" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;background:transparent;border:none;cursor:pointer;text-align:left;touch-action:manipulation;">
+        <button onclick="toggleTrackers()" id="trackers-toggle-btn" aria-expanded="false" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;background:transparent;border:none;cursor:pointer;text-align:left;touch-action:manipulation;">
           <div style="display:flex;align-items:center;gap:8px;">
             <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);font-variation-settings:'FILL' 0;">monitoring</span>
             <span class="t-xxs muted sn">Attività e Trackers</span>
           </div>
-          <span class="material-symbols-outlined sn" id="trackers-chevron">expand_more</span>
+          <span class="material-symbols-outlined sn" id="trackers-chevron" style="transform:rotate(180deg)">expand_more</span>
         </button>
         <div id="trackers-body">
           <!-- Acqua -->
