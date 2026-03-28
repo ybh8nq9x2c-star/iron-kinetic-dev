@@ -4128,7 +4128,7 @@ function renderMeals(){
     const badge=(diff!==0&&meal.carbSource)?`<span class="mod-badge">${diff>0?'+':''}${diff}g ${sanitize(carbLabel)}</span>`:'';
     const carbLine=(fa!==null&&!isHardcodedMeal)?`<strong style="color:var(--on);">${fa}g ${sanitize(carbLabel)}</strong>, `:'';
     const circBadge=getCircadianTips(n,mealIdx,mNames.length);
-    const synergy=calcSynergyScore(meal.rest);
+    const synergy=!checked?calcSynergyScore(meal.rest):null;
     const synBadge=synergy?`<span style="font-size:11px;margin-left:3px;" title="${sanitize(synergy.label)}">${synergy.emoji}</span>`:'';
     const bs=checked?'border:1px solid rgba(77,220,198,.22);background:rgba(77,220,198,.03);':'border:1px solid var(--line);background:var(--s1);';
     /* Breakfast/snack use hardcoded string recipes — component swap is meaningless for them.
