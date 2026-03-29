@@ -645,7 +645,7 @@ body.onboarding-active #onb-screen{
     </div>
     <div class="row g2" id="back-from-2">
       <button class="btn btn-ghost sn" onclick="goStep(1)" style="flex:1;">← Indietro</button>
-      <button class="btn btn-primary sn" id="to-step3-btn" onclick="goStep(3)" style="flex:2;display:none;">Continua →</button>
+      <button class="btn btn-primary sn" id="to-step3-btn" onclick="goStep(3)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled>Continua →</button>
     </div>
   </div>
 
@@ -1619,6 +1619,7 @@ it:{
   'toast.rigenMeal':'{meal} rigenerato',
   'confirm.ricomincia':'Ricominciare da capo? Tornerai all\'onboarding e rigenererai il piano.','set.confirmReset':'Eliminare profilo e ricominciare?',
   'confirm.eliminaPiano':'Eliminare il piano attuale e ricominciare?',
+  'confirm.deleteAll':'⚠️ Stai per cancellare tutti i tuoi dati (peso, check-in, piano). Questa azione è irreversibile. Continuare?',
   'confirm.eliminaVoce':'Eliminare?',
   'confirm.revocaConsenso':'Revocare il consenso? I tuoi dati locali non vengono cancellati automaticamente, ma non potrai usare l\'app senza consenso.',
   'confirm.importa':'Importare {n} voci? I dati attuali verranno sostituiti.',
@@ -1881,6 +1882,7 @@ en:{
   'toast.rigenMeal':'{meal} regenerated',
   'confirm.ricomincia':'Start over? You\'ll go back to onboarding and regenerate your plan.','set.confirmReset':'Delete profile and start over?',
   'confirm.eliminaPiano':'Delete the current plan and start over?',
+  'confirm.deleteAll':'⚠️ You are about to delete all your data (weight, check-ins, plan). This action is irreversible. Continue?',
   'confirm.eliminaVoce':'Delete this entry?',
   'confirm.revocaConsenso':'Revoke consent? Your local data won\'t be deleted automatically, but you won\'t be able to use the app without consent.',
   'confirm.importa':'Import {n} items? Current data will be replaced.',
@@ -3757,7 +3759,8 @@ function setSt(n){profState.stepsDay=n;document.getElementById('st-label').textC
 function setGoal(btn){
   profState.goal=btn.dataset.goal;profState.goalMod=parseInt(btn.dataset.mod);
   document.querySelectorAll('#goal-wrap button').forEach(b=>b.classList.toggle('seg-on',b===btn));
-  document.getElementById('to-step3-btn').style.display='flex';
+  const s3btn=document.getElementById('to-step3-btn');
+  s3btn.disabled=false;s3btn.style.opacity='1';s3btn.style.cursor='pointer';
 }
 function setMealsCount(n){
   prefState.mealsCount=n;
@@ -3821,6 +3824,7 @@ function goStep(n){
     const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===n);
     const dot=document.getElementById('dot-'+i);if(dot)dot.classList.toggle('on',i===n);
   }
+  if(n===2){const s3btn=document.getElementById('to-step3-btn');const hasGoal=!!profState.goal;s3btn.disabled=!hasGoal;s3btn.style.opacity=hasGoal?'1':'0.5';s3btn.style.cursor=hasGoal?'pointer':'not-allowed';}
   document.getElementById('onb-screen').scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -4378,7 +4382,7 @@ function updateWeight(){
   toast(t('toast.pesoAggiornato')||'✓ Peso aggiornato');
 }
 function resetProfile(){
-  showConfirm(t('set.confirmReset')||'Eliminare il profilo e rigenerare da zero?',()=>{
+  showConfirm(t('confirm.deleteAll'),()=>{
     try{clearAppData();}catch{}
     if(bodyChart){bodyChart.destroy();bodyChart=null;}
     dietData=null;
@@ -4391,7 +4395,7 @@ function resetProfile(){
   });return;
 }
 function changeDiet(){
-  showConfirm(t('confirm.eliminaPiano')||'Eliminare il piano?',()=>{
+  showConfirm(t('confirm.deleteAll'),()=>{
     [SK.diet,SK.phase,SK.mod,SK.refeed,SK.progStart,SK.p4Start].forEach(k=>{try{localStorage.removeItem(k);}catch{}});
     if(bodyChart){bodyChart.destroy();bodyChart=null;}dietData=null;showOnb();toast(t('toast.pianoEl'));
   });return;
