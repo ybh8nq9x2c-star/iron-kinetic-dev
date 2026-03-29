@@ -92,7 +92,7 @@ button:focus-visible{outline:2px solid var(--p);outline-offset:2px;}
 .inp{width:100%;height:52px;background:var(--s1);border:1px solid var(--line);border-radius:var(--r2);padding:0 14px;font-size:16px !important;font-family:'Manrope',sans-serif;font-weight:600;color:var(--on);-webkit-appearance:none;appearance:none;-webkit-box-shadow:none;box-shadow:none;outline:none;transition:border-color .15s,background .15s;}
 .inp::placeholder{color:var(--dim);font-weight:400;}
 .inp:focus{border-color:rgba(77,220,198,.38);background:var(--s2);}
-.inp:focus-visible{outline:2px solid rgba(77,220,198,.4);outline-offset:0;}
+.inp:focus-visible{outline:3px solid var(--p);outline-offset:4px;}
 input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
 input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.3);}
 textarea.inp{height:auto;padding:12px 14px;resize:none;line-height:1.5;}
@@ -593,7 +593,7 @@ body.onboarding-active #onb-screen{
       <div>
         <label class="field-label" for="f-bf">Grasso corporeo (%)</label>
         <input class="inp" id="f-bf" type="number" inputmode="decimal" step="0.5" placeholder="16" min="4" max="50"/>
-        <p style="font-size:9px;color:var(--dim);margin-top:4px;font-weight:500;" class="sn">Opzionale — Mifflin se vuoto</p>
+        <p style="font-size:9px;color:var(--dim);margin-top:4px;font-weight:500;" class="sn">Opzionale. Se inserito, il calcolo diventa più preciso.</p>
       </div>
     </div>
     <button class="btn btn-primary w100 sn" onclick="goStep(1)">Continua →</button>
@@ -1023,6 +1023,7 @@ body.onboarding-active #onb-screen{
         </div>
         <button class="btn btn-primary w100 sn" onclick="saveDailyCheckin()">Salva check-in</button>
         <div class="note-box" id="checkin-feedback">Dopo il primo check-in riceverai un supporto contestuale.</div>
+        <button id="ci-edit-btn" class="btn btn-ghost w100" onclick="editDailyCheckin()" style="display:none;font-size:13px;margin-top:4px;"></button>
       </div>
 
       <!-- 7. Maintain Card (hidden, preserve) -->
@@ -1469,11 +1470,12 @@ it:{
   'onb.field.altezza':'Altezza (cm)','onb.field.altezza.ph':'es. 178',
   'onb.field.peso':'Peso attuale (kg)','onb.field.peso.ph':'es. 80',
   'onb.field.bf':'% Grasso corporeo (opzionale)','onb.field.bf.ph':'es. 18',
-  'onb.field.bf.hint':'Inserisci solo se misurato con BIA/DEXA/calibro. Abilita la formula Katch-McArdle.',
+  'onb.field.bf.hint':'Opzionale. Se inserito, il calcolo diventa più preciso.',
   'onb.btn.avanti':'Avanti →',
   'onb.step1.title':'Attività','onb.step1.sub':'Quante volte ti alleni a settimana e quanti passi cammini mediamente al giorno?',
   'onb.field.allenamenti':'Sessioni di allenamento / settimana','onb.field.passi':'Passi medi al giorno',
   'onb.wk.selected':'Selezionato: {n} volte/settimana','onb.st.selected':'Selezionato: {n} passi/die',
+  'onb.wk.cap6':'6+ sessioni: calcolo capped a 6 per accuratezza TDEE',
   'onb.step2.title':'Obiettivo',
   'goal.cut_extreme':'🔥 Definizione aggressiva','goal.cut_extreme.sub':'Deficit −500 kcal · Perdita grasso massima · Proteine alte per preservare muscolo',
   'goal.recomp':'🔁 Ricomposizione','goal.recomp.sub':'Deficit lieve −200 kcal · Perde grasso e costruisce muscolo simultaneamente',
@@ -1510,6 +1512,7 @@ it:{
   'oggi.checkin.contesto':'Contesto giornata',
   'oggi.checkin.routine':'Routine','oggi.checkin.sociale':'Sociale','oggi.checkin.stress':'Stress','oggi.checkin.workout':'Workout',
   'oggi.checkin.salva':'Salva check-in','oggi.checkin.aggiorna':'Aggiorna check-in',
+  'ci.edit.btn':'✏️ Modifica check-in',
   'oggi.checkin.feedback_default':'Dopo il primo check-in riceverai un supporto contestuale.',
   'oggi.mod.badge':'MOD',
   'prog.title':'Progresso','prog.registra':'Registra',
@@ -1732,11 +1735,12 @@ en:{
   'onb.field.altezza':'Height (cm)','onb.field.altezza.ph':'e.g. 178',
   'onb.field.peso':'Current weight (kg)','onb.field.peso.ph':'e.g. 80',
   'onb.field.bf':'Body fat % (optional)','onb.field.bf.ph':'e.g. 18',
-  'onb.field.bf.hint':'Only enter if measured with BIA/DEXA/calipers. Enables Katch-McArdle formula.',
+  'onb.field.bf.hint':'Optional. Improves calculation accuracy if provided.',
   'onb.btn.avanti':'Next →',
   'onb.step1.title':'Activity','onb.step1.sub':'How many times a week do you train, and what\'s your average daily step count?',
   'onb.field.allenamenti':'Training sessions / week','onb.field.passi':'Average daily steps',
   'onb.wk.selected':'Selected: {n} sessions/week','onb.st.selected':'Selected: {n} steps/day',
+  'onb.wk.cap6':'6+ sessions: calculation capped at 6 for TDEE accuracy',
   'onb.step2.title':'Goal',
   'goal.cut_extreme':'🔥 Aggressive cut','goal.cut_extreme.sub':'−500 kcal deficit · Maximum fat loss · High protein to preserve muscle',
   'goal.recomp':'🔁 Recomposition','goal.recomp.sub':'Mild −200 kcal deficit · Lose fat and build muscle simultaneously',
@@ -1773,6 +1777,7 @@ en:{
   'oggi.checkin.contesto':'Day context',
   'oggi.checkin.routine':'Routine','oggi.checkin.sociale':'Social','oggi.checkin.stress':'Stress','oggi.checkin.workout':'Workout',
   'oggi.checkin.salva':'Save check-in','oggi.checkin.aggiorna':'Update check-in',
+  'ci.edit.btn':'✏️ Edit check-in',
   'oggi.checkin.feedback_default':'After your first check-in you\'ll receive contextual coaching.',
   'oggi.mod.badge':'MOD',
   'prog.title':'Progress','prog.registra':'Record',
@@ -3754,7 +3759,7 @@ function analyzeState(){
    ONBOARDING — new 5-step flow
 ═══════════════════════════════════════ */
 function setSex(s){profState.sex=s;document.getElementById('sex-m').classList.toggle('seg-on',s==='M');document.getElementById('sex-f').classList.toggle('seg-on',s==='F');}
-function setWk(n){profState.workoutsWk=n;document.getElementById('wk-label').textContent=t('onb.wk.selected',{n});document.querySelectorAll('#wk-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});}
+function setWk(n){profState.workoutsWk=n;document.getElementById('wk-label').textContent=t('onb.wk.selected',{n});document.querySelectorAll('#wk-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});if(n===6)toast(t('onb.wk.cap6'));}
 function setSt(n){profState.stepsDay=n;document.getElementById('st-label').textContent=t('onb.st.selected',{n:n.toLocaleString(_lang==='en'?'en-US':'it-IT')});document.querySelectorAll('#st-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});}
 function setGoal(btn){
   profState.goal=btn.dataset.goal;profState.goalMod=parseInt(btn.dataset.mod);
@@ -3904,6 +3909,7 @@ function activateGeneratedPlan(){
    CHECK-IN
 ═══════════════════════════════════════ */
 let selectedCheckTag='routine';
+let _ciEditTimer=null,_ciEditDeadline=0;
 function setCheckTag(btn,tag){selectedCheckTag=tag;document.querySelectorAll('.micro-chip').forEach(b=>b.classList.remove('active-chip'));if(btn)btn.classList.add('active-chip');}
 function saveDailyCheckin(){
   const entry={iso:toISO(),hunger:parseInt(document.getElementById('ci-hunger')?.value||'5',10),energy:parseInt(document.getElementById('ci-energy')?.value||'6',10),adherence:parseInt(document.getElementById('ci-adherence')?.value||'8',10),digestion:parseInt(document.getElementById('ci-digestion')?.value||'8',10),tag:selectedCheckTag};
@@ -3944,6 +3950,37 @@ function saveDailyCheckin(){
   if(maintain&&profState.goal==='maintain')maintain.classList.add('on');
   renderCheckinAnalytics();
   toast(t('toast.ciSalvato'));
+  /* Show edit button for 5 minutes */
+  const editBtn=document.getElementById('ci-edit-btn');
+  if(editBtn){
+    editBtn.textContent=t('ci.edit.btn');
+    editBtn.style.display='';
+    _ciEditDeadline=Date.now()+300000;
+    clearTimeout(_ciEditTimer);
+    _ciEditTimer=setTimeout(()=>{editBtn.style.display='none';},300000);
+  }
+}
+function editDailyCheckin(){
+  if(Date.now()>_ciEditDeadline)return;
+  const arr=lsG(SK.checkins,[]);
+  const today=arr.find(x=>x.iso===toISO());
+  if(!today)return;
+  /* Reload values into form */
+  const map={'ci-hunger':today.hunger,'ci-energy':today.energy,'ci-adherence':today.adherence,'ci-digestion':today.digestion};
+  Object.entries(map).forEach(([id,val])=>{
+    const el=document.getElementById(id);if(!el||val==null)return;
+    el.value=val;if(el.nextElementSibling)el.nextElementSibling.value=val;
+  });
+  const tagBtn=[...document.querySelectorAll('.micro-chip')].find(b=>b.textContent.trim().toLowerCase()===(today.tag||'').toLowerCase());
+  if(tagBtn)setCheckTag(tagBtn,today.tag);
+  /* Remove today's entry so user can re-save */
+  lsS(SK.checkins,arr.filter(x=>x.iso!==toISO()));
+  /* Hide edit button */
+  clearTimeout(_ciEditTimer);_ciEditDeadline=0;
+  const editBtn=document.getElementById('ci-edit-btn');if(editBtn)editBtn.style.display='none';
+  /* Reset save button label */
+  const saveBtn=document.querySelector('#daily-check-card .btn-primary');
+  if(saveBtn)saveBtn.textContent=t('oggi.checkin.salva');
 }
 function restoreTodayCheckin(){
   let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
