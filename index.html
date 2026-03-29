@@ -156,6 +156,7 @@ body.onboarding-active #onb-screen{
 .stepper{display:flex;align-items:center;gap:6px;min-height:20px;}
 .step-dot{width:6px;height:6px;border-radius:50%;background:var(--s3);transition:all .25s;}
 .step-dot.on{width:20px;border-radius:3px;background:var(--p);}
+.step-dot.completed{background:var(--p);opacity:0.5;}
 .result-card{background:var(--s1);border:1px solid rgba(77,220,198,.22);border-radius:var(--r);padding:18px;overflow:hidden;max-height:0;opacity:0;transition:max-height .5s cubic-bezier(.4,0,.2,1),opacity .4s ease .1s;}
 .result-card.on{max-height:1400px;opacity:1;}
 .result-big{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;letter-spacing:-.05em;line-height:1;color:var(--p);}
@@ -965,7 +966,7 @@ body.onboarding-active #onb-screen{
             <div class="row g2">
               <button onclick="addWater(.5)" class="btn btn-neon-o btn-sm f1 sn">+0.5L</button>
               <button onclick="addWater(.25)" class="btn btn-ghost btn-sm f1 sn">+250ml</button>
-              <button onclick="resetT('water')" class="btn-icon sn" aria-label="Azzera acqua"><span class="material-symbols-outlined" style="font-size:15px;">refresh</span></button>
+              <button onclick="resetT('water')" class="btn btn-ghost btn-sm sn" style="height:36px;padding:0 12px;font-size:12px;" aria-label="Azzera acqua">↺ Reset</button>
             </div>
           </div>
           <!-- Sale -->
@@ -978,7 +979,7 @@ body.onboarding-active #onb-screen{
             <div class="row g2">
               <button onclick="addSalt(1)" class="btn btn-ghost btn-sm f1 sn">+1g</button>
               <button onclick="addSalt(.5)" class="btn btn-ghost btn-sm f1 sn">+0.5g</button>
-              <button onclick="resetT('salt')" class="btn-icon sn" aria-label="Azzera sale"><span class="material-symbols-outlined" style="font-size:15px;">refresh</span></button>
+              <button onclick="resetT('salt')" class="btn btn-ghost btn-sm sn" style="height:36px;padding:0 12px;font-size:12px;" aria-label="Azzera sale">↺ Reset</button>
             </div>
           </div>
           <!-- Passi + Workout -->
@@ -3827,7 +3828,7 @@ function goStep(n){
   const totalSteps=5;
   for(let i=0;i<totalSteps;i++){
     const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===n);
-    const dot=document.getElementById('dot-'+i);if(dot)dot.classList.toggle('on',i===n);
+    const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===n);dot.classList.toggle('completed',i<n);}
   }
   if(n===2){const s3btn=document.getElementById('to-step3-btn');const hasGoal=!!profState.goal;s3btn.disabled=!hasGoal;s3btn.style.opacity=hasGoal?'1':'0.5';s3btn.style.cursor=hasGoal?'pointer':'not-allowed';}
   document.getElementById('onb-screen').scrollTo({top:0,behavior:'smooth'});
@@ -3835,6 +3836,9 @@ function goStep(n){
 
 function runCalcAndGenerate(){
   hap('medium');
+  const _genBtn=document.querySelector('button[onclick="runCalcAndGenerate()"]');
+  const _genBtnTxt=_genBtn?.textContent;
+  if(_genBtn){_genBtn.disabled=true;_genBtn.textContent='⟳ Generazione...';}
   prefState.extraFoods=document.getElementById('f-extra-foods').value||'';
   prefState.intolerances=document.getElementById('f-intolerances').value||'';
 
@@ -3878,6 +3882,7 @@ function runCalcAndGenerate(){
   window._pendingPlan=plan;
   window._pendingRes=res;
   toast(t('toast.pianoGen'));
+  if(_genBtn){_genBtn.disabled=false;_genBtn.textContent=_genBtnTxt||'⚡ Genera il Mio Piano';}
 }
 
 function activateGeneratedPlan(){
@@ -4426,7 +4431,7 @@ function resetProfile(){
     profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
     prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
     curStep=0;
-    for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot)dot.classList.toggle('on',i===0);}
+    for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===0);dot.classList.remove('completed');}}
     document.getElementById('result-card').classList.remove('on');
     showOnb();toast(t('toast.profiloEl'));
   });return;
