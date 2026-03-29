@@ -234,6 +234,18 @@ body.onboarding-active #onb-screen{
 /* ── Trackers collapsible ── */
 #trackers-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
 #trackers-chevron{transition:transform .25s ease;color:var(--muted);font-size:18px;}
+/* ── Onboarding slideshow ── */
+#onboarding-overlay{position:fixed;inset:0;background:var(--bg);z-index:10000;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;gap:28px;}
+#onboarding-slides-wrap{width:100%;max-width:360px;overflow:hidden;}
+#onboarding-slides{display:flex;transition:transform .35s ease;}
+.onboarding-slide{min-width:100%;flex-shrink:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding:8px 4px;}
+.onb-emoji{font-size:60px;line-height:1.1;}
+.onb-title{font-size:22px;font-weight:700;color:var(--on);line-height:1.3;margin:0;}
+.onb-body{font-size:14px;color:var(--muted);line-height:1.65;max-width:300px;margin:0;}
+.onb-dots{display:flex;gap:8px;}
+.onb-dot{width:8px;height:8px;border-radius:50%;background:var(--dim);transition:background .2s,transform .2s;}
+.onb-dot.active{background:var(--p);transform:scale(1.3);}
+.onb-nav{display:flex;align-items:center;gap:12px;width:100%;max-width:360px;}
 /* ── Tracker blocks ── */
 .tracker-block{padding:14px 16px;border-top:1px solid var(--line);}
 .tracker-block:first-child{border-top:none;}
@@ -1699,6 +1711,17 @@ it:{
   'adaptive.rule.stallingRefeed':'Plateau rilevato: +{delta} kcal temporanee per reset della leptina ({kcal} → {newKcal} kcal).',
   'adaptive.rule.hungerAdher':'Fame alta + aderenza bassa: aggiungere +{delta} kcal ({kcal} → {newKcal} kcal) per sostenibilità.',
   'adaptive.toast.applied':'{delta} kcal applicati dal motore adattivo.',
+  'onb2.skip':'Salta','onb2.next':'Avanti →','onb2.prev':'← Indietro','onb2.start':'Inizia ora →',
+  'onb2.slide1.title':'Finalmente un\'app che ti ascolta',
+  'onb2.slide1.body':'Iron Kinetic impara dai tuoi check-in quotidiani e adatta il piano al tuo corpo, non a un modello generico.',
+  'onb2.slide2.title':'30 secondi al giorno. Risultati reali.',
+  'onb2.slide2.body':'Un check-in veloce ogni giorno. Il motore adattivo fa il resto: kcal, macro, timing circadiano.',
+  'onb2.slide3.title':'Il piano che cambia quando cambi tu',
+  'onb2.slide3.body':'Plateau? Fame alta? L\'algoritmo rileva i segnali e suggerisce aggiustamenti mirati in tempo reale.',
+  'onb2.slide4.title':'Sai già dove sarai tra 30 giorni',
+  'onb2.slide4.body':'La curva predittiva calcola il tuo peso futuro in base all\'andamento reale, non a promesse.',
+  'onb2.slide5.title':'Inizia oggi. Il tuo corpo non aspetta.',
+  'onb2.slide5.body':'Inserisci i tuoi dati, scegli il piano e parti. Tutto offline, tutto tuo.',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -1950,6 +1973,17 @@ en:{
   'adaptive.rule.stallingRefeed':'Plateau detected: +{delta} kcal temporary leptin reset ({kcal} → {newKcal} kcal).',
   'adaptive.rule.hungerAdher':'High hunger + low adherence: add +{delta} kcal ({kcal} → {newKcal} kcal) for sustainability.',
   'adaptive.toast.applied':'{delta} kcal applied by adaptive engine.',
+  'onb2.skip':'Skip','onb2.next':'Next →','onb2.prev':'← Back','onb2.start':'Start now →',
+  'onb2.slide1.title':'Finally an app that listens to you',
+  'onb2.slide1.body':'Iron Kinetic learns from your daily check-ins and adapts the plan to your body, not a generic template.',
+  'onb2.slide2.title':'30 seconds a day. Real results.',
+  'onb2.slide2.body':'A quick daily check-in. The adaptive engine does the rest: kcal, macros, circadian timing.',
+  'onb2.slide3.title':'The plan that changes when you do',
+  'onb2.slide3.body':'Plateau? High hunger? The algorithm detects signals and suggests targeted adjustments in real time.',
+  'onb2.slide4.title':'You already know where you\'ll be in 30 days',
+  'onb2.slide4.body':'The predictive curve calculates your future weight based on real progress, not promises.',
+  'onb2.slide5.title':'Start today. Your body won\'t wait.',
+  'onb2.slide5.body':'Enter your data, pick a plan, and go. Fully offline, fully yours.',
 }
 };
 let _lang='it';
@@ -2242,7 +2276,8 @@ function applyTranslations(deferOffscreen){
 const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
   refeed:'ik_refeed_date',wLog:'ik_weight_log',
   progStart:'ik_prog_start',p4Start:'ik_p4_start',profile:'ik_user_profile',
-  prefs:'ik_user_prefs',checkins:'ik_checkins'};
+  prefs:'ik_user_prefs',checkins:'ik_checkins',
+  onboardingDone:'ik_onboarding_done'};
 
 /* ═══════════════════════════════════════
    STATE
@@ -5330,6 +5365,58 @@ function acknowledgedPWA(){
   _bootAfterGates();
 }
 
+/* ═══════════════════════════════════════
+   ONBOARDING SLIDESHOW
+═══════════════════════════════════════ */
+let _onbCur=0;
+const _ONB=[
+  {tk:'onb2.slide1'},{tk:'onb2.slide2'},{tk:'onb2.slide3'},
+  {tk:'onb2.slide4'},{tk:'onb2.slide5'},
+];
+function showOnboarding(){
+  const el=document.getElementById('onboarding-overlay');
+  if(!el) return;
+  _ONB.forEach((_,i)=>{
+    const tt=document.getElementById(`onb-t${i}`);
+    const tb=document.getElementById(`onb-b${i}`);
+    if(tt) tt.textContent=t(`onb2.slide${i+1}.title`);
+    if(tb) tb.textContent=t(`onb2.slide${i+1}.body`);
+  });
+  const startBtn=document.getElementById('onb-start-btn');
+  if(startBtn) startBtn.textContent=t('onb2.start');
+  const skipBtn=document.getElementById('onb-skip-btn');
+  if(skipBtn) skipBtn.textContent=t('onb2.skip');
+  const nextBtn=document.getElementById('onb-next-btn');
+  if(nextBtn) nextBtn.textContent=t('onb2.next');
+  const prevBtn=document.getElementById('onb-prev-btn');
+  if(prevBtn) prevBtn.textContent=t('onb2.prev');
+  el.style.display='flex';
+  _onbRender(0);
+}
+function _onbRender(idx){
+  _onbCur=idx;
+  const slides=document.getElementById('onboarding-slides');
+  if(slides) slides.style.transform=`translateX(-${idx*100}%)`;
+  document.querySelectorAll('.onb-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  const last=idx===_ONB.length-1;
+  const skipBtn=document.getElementById('onb-skip-btn');
+  const prevBtn=document.getElementById('onb-prev-btn');
+  const nextBtn=document.getElementById('onb-next-btn');
+  if(skipBtn) skipBtn.style.display=last?'none':'';
+  if(prevBtn) prevBtn.style.visibility=idx===0?'hidden':'visible';
+  if(nextBtn) nextBtn.style.display=last?'none':'';
+}
+function onbNext(){if(_onbCur<_ONB.length-1)_onbRender(_onbCur+1);}
+function onbPrev(){if(_onbCur>0)_onbRender(_onbCur-1);}
+function onbSkip(){_onbFinish();}
+function onbFinish(){_onbFinish();}
+function _onbFinish(){
+  lsS(SK.onboardingDone,true);
+  const el=document.getElementById('onboarding-overlay');
+  if(el) el.remove();
+  _bootAfterGates();
+}
+
 /* ENTRY POINT */
 (()=>{
   initLang(); /* read ik_lang from localStorage, set _lang + html lang attr */
@@ -5344,9 +5431,64 @@ function acknowledgedPWA(){
     return; /* acknowledgedPWA() continues the boot flow */
   }
 
+  /* Onboarding slideshow: shown once on first launch */
+  if(lsG(SK.onboardingDone)!==true){
+    showOnboarding();
+    return;
+  }
+
   _bootAfterGates();
 })();
 </script>
+
+<!-- ══════════════════════════════════════
+     ONBOARDING SLIDESHOW
+══════════════════════════════════════ -->
+<div id="onboarding-overlay" style="display:none;">
+  <div id="onboarding-slides-wrap">
+    <div id="onboarding-slides">
+      <div class="onboarding-slide">
+        <div class="onb-emoji">🏋️‍♂️</div>
+        <p class="onb-title" id="onb-t0"></p>
+        <p class="onb-body" id="onb-b0"></p>
+      </div>
+      <div class="onboarding-slide">
+        <div class="onb-emoji">✅</div>
+        <p class="onb-title" id="onb-t1"></p>
+        <p class="onb-body" id="onb-b1"></p>
+      </div>
+      <div class="onboarding-slide">
+        <div class="onb-emoji">⚡</div>
+        <p class="onb-title" id="onb-t2"></p>
+        <p class="onb-body" id="onb-b2"></p>
+      </div>
+      <div class="onboarding-slide">
+        <div class="onb-emoji">📈</div>
+        <p class="onb-title" id="onb-t3"></p>
+        <p class="onb-body" id="onb-b3"></p>
+      </div>
+      <div class="onboarding-slide">
+        <div class="onb-emoji">🎯</div>
+        <p class="onb-title" id="onb-t4"></p>
+        <p class="onb-body" id="onb-b4"></p>
+        <button id="onb-start-btn" class="btn btn-neon" onclick="onbFinish()" style="width:100%;margin-top:8px;font-size:15px;font-weight:700;"></button>
+      </div>
+    </div>
+  </div>
+  <div class="onb-dots">
+    <span class="onb-dot active"></span>
+    <span class="onb-dot"></span>
+    <span class="onb-dot"></span>
+    <span class="onb-dot"></span>
+    <span class="onb-dot"></span>
+  </div>
+  <div class="onb-nav">
+    <button id="onb-skip-btn" class="btn btn-ghost" onclick="onbSkip()" style="font-size:13px;padding:8px 14px;"></button>
+    <div style="flex:1;"></div>
+    <button id="onb-prev-btn" class="btn btn-ghost" onclick="onbPrev()" style="font-size:13px;padding:8px 14px;visibility:hidden;"></button>
+    <button id="onb-next-btn" class="btn btn-neon-o" onclick="onbNext()" style="font-size:13px;padding:8px 16px;"></button>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════
      MODAL CONFIRM
