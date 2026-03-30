@@ -1767,6 +1767,20 @@ it:{
   'shop.cat.proteine':'Proteine','shop.cat.carboidrati':'Carboidrati',
   'shop.cat.grassi':'Grassi','shop.cat.latticini':'Latticini',
   'shop.cat.verdure':'Verdure','shop.cat.altro':'Altro',
+  'oggi.trackers':'Attività e Trackers',
+  'oggi.kcal.target':'Target Giorno','oggi.kcal.totali':'Kcal totali','oggi.kcal.consumato':'consumato',
+  'acc.danger':'Zona Pericolosa',
+  'weekly.sett':'Report Settimanale','weekly.condividi':'Condividi','weekly.peso':'Peso','weekly.pasti':'Pasti',
+  'weekly.insight.noData':'Registra pesate e check-in per ricevere analisi personalizzata.',
+  'weekly.insight.calo':'Ottimo: −{val} kg questa settimana.',
+  'weekly.insight.pesoSu':'Peso in risalita di +{val} kg: controlla ritenzione e aderenza.',
+  'weekly.insight.stabile':'Peso stabile ({val} kg): metabolismo in adattamento.',
+  'weekly.insight.energia':'Energia media bassa ({e}/10): aumenta i carb peri-workout.',
+  'weekly.insight.fame':'Fame elevata ({h}/10): considera +100–150 kcal da carboidrati.',
+  'weekly.insight.aderenza':'Aderenza eccellente ({a}/10): continua così.',
+  'weekly.insight.ciAlto':'{n}/7 check-in: consistenza di alto livello.',
+  'weekly.insight.ciPoco':'Solo {n}/7 check-in: registra ogni giorno per analisi più precise.',
+  'weekly.insight.default':'Settimana regolare. Mantieni la costanza.',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -2071,8 +2085,21 @@ en:{
   'syn.limitata':'Limited synergy','syn.neutro':'Neutral',
   'shop.cat.proteine':'Protein','shop.cat.carboidrati':'Carbohydrates',
   'shop.cat.grassi':'Fats','shop.cat.latticini':'Dairy',
-  'shop.cat.verdure':'Vegetables',  'oggi.kcal.target':'Daily Target','oggi.kcal.totali':'Total kcal','oggi.trackers':'Activity & Trackers',
-'shop.cat.altro':'Other',
+  'shop.cat.verdure':'Vegetables','shop.cat.altro':'Other',
+  'oggi.kcal.target':'Daily Target','oggi.kcal.totali':'Total kcal','oggi.trackers':'Activity & Trackers',
+  'oggi.kcal.consumato':'consumed',
+  'acc.danger':'Danger Zone',
+  'weekly.sett':'Weekly Report','weekly.condividi':'Share','weekly.peso':'Weight','weekly.pasti':'Meals',
+  'weekly.insight.noData':'Log weigh-ins and check-ins to receive personalised analysis.',
+  'weekly.insight.calo':'Great: −{val} kg this week.',
+  'weekly.insight.pesoSu':'Weight up +{val} kg: check retention and adherence.',
+  'weekly.insight.stabile':'Stable weight ({val} kg): metabolic adaptation.',
+  'weekly.insight.energia':'Low average energy ({e}/10): increase peri-workout carbs.',
+  'weekly.insight.fame':'High hunger ({h}/10): consider +100–150 kcal from carbs.',
+  'weekly.insight.aderenza':'Excellent adherence ({a}/10): keep going.',
+  'weekly.insight.ciAlto':'{n}/7 check-ins: high-level consistency.',
+  'weekly.insight.ciPoco':'Only {n}/7 check-ins: log daily for more accurate analysis.',
+  'weekly.insight.default':'Steady week. Keep the consistency.',
 }
 };
 let _lang='en';
@@ -2112,6 +2139,7 @@ function applyTranslations(deferOffscreen){
     else if(v==='Attività e Trackers'||v==='Activity & Trackers')el.textContent=t('oggi.trackers');
     else if(v==='Target Giorno'||v==='Daily Target')el.textContent=t('oggi.kcal.target');
     else if(v==='Kcal totali'||v==='Total kcal')el.textContent=t('oggi.kcal.totali');
+    else if(v==='GRASSI'||v==='FAT')el.textContent=t('onb.result.grassi').toUpperCase();
     else if(v==='Ultimo peso'||v==='Last weight')el.textContent=t('prog.stat.ultimoPeso');
     else if(v==='Variazione'||v==='Change')el.textContent=t('prog.stat.variazione');
     else if(v==='Girovita'||v==='Waist')el.textContent=t('prog.stat.girovita');
@@ -2190,6 +2218,7 @@ function applyTranslations(deferOffscreen){
     if(v==='Fase Corrente'||v==='Current Phase')el.textContent=t('set.fase.title');
     else if(v==='Modificatore AI'||v==='AI Modifier')el.textContent=t('set.mod.title');
     else if(v==='Dati'||v==='Data')el.textContent=t('set.dati.title');
+    else if(v==='Zona Pericolosa'||v==='Danger Zone')el.textContent=t('acc.danger');
   });
   document.querySelectorAll('[onclick="applyMod(0)"]').forEach(b=>{if(b.textContent.includes('Reset')||b.textContent.includes('reset'))b.textContent=t('set.mod.reset');});
   document.querySelectorAll('[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
@@ -2202,6 +2231,12 @@ function applyTranslations(deferOffscreen){
     else if(v==='Cookie'||v==='Cookies')lbl.textContent=t('info.app.cookie');
     else if(v==='Tracking')lbl.textContent=t('info.app.tracking');
   });
+  const _weeklyLbl=document.querySelector('#weekly-report-card .sec-label');
+  if(_weeklyLbl)_weeklyLbl.textContent=t('weekly.sett');
+  const _weeklyShareBtn=document.querySelector('button[onclick="shareWeeklyReport()"]');
+  if(_weeklyShareBtn)_weeklyShareBtn.textContent=t('weekly.condividi');
+  const _last7=document.querySelector('#checkin-analytics-card .rowb .t-xxs.muted');
+  if(_last7)_last7.textContent=t('prog.checkin.ultimi7');
   /* ── end i18n static patch ── */
 
   if(_trApplied)return;_trApplied=true;
@@ -2981,19 +3016,19 @@ function generateWeeklyReport(){
 }
 function generateReportInsight(rep){
   const{weightChange,avgEnergy,avgHunger,avgAdher,ciDays}=rep;
-  if(!ciDays&&weightChange===null)return'Registra pesate e check-in per ricevere analisi personalizzata.';
+  if(!ciDays&&weightChange===null)return t('weekly.insight.noData');
   const parts=[];
   if(weightChange!==null){
-    if(weightChange<-0.5)parts.push(`Ottimo: −${Math.abs(weightChange)} kg questa settimana.`);
-    else if(weightChange>0.3)parts.push(`Peso in risalita di +${weightChange} kg: controlla ritenzione e aderenza.`);
-    else parts.push(`Peso stabile (${weightChange>=0?'+':''}${weightChange} kg): metabolismo in adattamento.`);
+    if(weightChange<-0.5)parts.push(t('weekly.insight.calo',{val:Math.abs(weightChange)}));
+    else if(weightChange>0.3)parts.push(t('weekly.insight.pesoSu',{val:weightChange}));
+    else parts.push(t('weekly.insight.stabile',{val:(weightChange>=0?'+':'')+weightChange}));
   }
-  if(avgEnergy!==null&&avgEnergy<=4)parts.push(`Energia media bassa (${avgEnergy}/10): aumenta i carb peri-workout.`);
-  if(avgHunger!==null&&avgHunger>=7)parts.push(`Fame elevata (${avgHunger}/10): considera +100–150 kcal da carboidrati.`);
-  if(avgAdher!==null&&avgAdher>=8)parts.push(`Aderenza eccellente (${avgAdher}/10): continua così.`);
-  if(ciDays>=5)parts.push(`${ciDays}/7 check-in: consistenza di alto livello.`);
-  else if(ciDays>0&&ciDays<3)parts.push(`Solo ${ciDays}/7 check-in: registra ogni giorno per analisi più precise.`);
-  return parts.join(' ')||'Settimana regolare. Mantieni la costanza.';
+  if(avgEnergy!==null&&avgEnergy<=4)parts.push(t('weekly.insight.energia',{e:avgEnergy}));
+  if(avgHunger!==null&&avgHunger>=7)parts.push(t('weekly.insight.fame',{h:avgHunger}));
+  if(avgAdher!==null&&avgAdher>=8)parts.push(t('weekly.insight.aderenza',{a:avgAdher}));
+  if(ciDays>=5)parts.push(t('weekly.insight.ciAlto',{n:ciDays}));
+  else if(ciDays>0&&ciDays<3)parts.push(t('weekly.insight.ciPoco',{n:ciDays}));
+  return parts.join(' ')||t('weekly.insight.default');
 }
 function renderWeeklyReport(){
   const card=document.getElementById('weekly-report-card');
@@ -3010,13 +3045,13 @@ function renderWeeklyReport(){
   cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${wColor};margin:0 0 2px;">${wTxt}</p>
-      <span class="t-xxs muted sn">Peso</span></div>
+      <span class="t-xxs muted sn">${t('weekly.peso')}</span></div>
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--on);margin:0 0 2px;">${rep.ciDays}/7</p>
       <span class="t-xxs muted sn">Check-in</span></div>
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${pct>=80?'var(--p)':pct>=50?'var(--orange)':'var(--red)'};margin:0 0 2px;">${pct}%</p>
-      <span class="t-xxs muted sn">Pasti</span></div>
+      <span class="t-xxs muted sn">${t('weekly.pasti')}</span></div>
   </div>
   <p class="sn" style="font-size:12px;color:var(--muted);line-height:1.55;">${sanitize(insight)}</p>`;
 }
@@ -3026,7 +3061,7 @@ function shareWeeklyReport(){
   const insight=generateReportInsight(rep);
   const wTxt=rep.weightChange!==null?`${rep.weightChange>=0?'+':''}${rep.weightChange} kg`:'—';
   const pct=rep.mealsTotal>0?Math.round(rep.mealsDone/rep.mealsTotal*100)+'%':'—';
-  const text=`📊 Iron Kinetic — Report Settimanale\n\nPeso: ${wTxt}\nCheck-in: ${rep.ciDays}/7\nPasti: ${pct}\nEnergia: ${rep.avgEnergy||'—'}/10\nAderenza: ${rep.avgAdher||'—'}/10\n\n${insight}`;
+  const text=`📊 Iron Kinetic — ${t('weekly.sett')}\n\n${t('weekly.peso')}: ${wTxt}\nCheck-in: ${rep.ciDays}/7\n${t('weekly.pasti')}: ${pct}\n${t('oggi.checkin.energia')}: ${rep.avgEnergy||'—'}/10\n${t('oggi.checkin.aderenza')}: ${rep.avgAdher||'—'}/10\n\n${insight}`;
   if(navigator.share){navigator.share({title:'Iron Kinetic Report',text}).catch(()=>{});}
   else{try{navigator.clipboard.writeText(text);toast('📋 Report copiato!');}catch{toast('⚠️ Condivisione non supportata');}}
 }
@@ -4445,7 +4480,7 @@ function renderPersonalInsight(){
   const die=t('prof.die');
   content.innerHTML=`<p style="margin:0 0 4px;"><strong style="color:var(--on);">${p.sex==='M'?'♂':'♀'} ${sanitize(p.age)}${t('prof.anni')} · ${sanitize(p.weight)}kg${p.bf?` · ${sanitize(p.bf)}% ${t('prof.grassi').toLowerCase()}`:''}</strong></p>`+
     `<p style="margin:0 0 4px;">${t('prof.obiettivo')}: <strong style="color:var(--p);">${p.goal?t('goal.label.'+p.goal)||'—':'—'}</strong> · ${t('prof.target')}: <strong style="color:var(--p);">${sanitize(p.targetKcal)} kcal${die}</strong></p>`+
-    `<p style="margin:0 0 4px;">${sanitize(prefs.mealsCount||3)} ${t('prefs.pasti')} · ${t('prefs.gusto')}: ${sanitize(prefs.taste||'—')} · ${sanitize(prefs.dietStyle||'—')}</p>`+
+    `<p style="margin:0 0 4px;">${sanitize(prefs.mealsCount||3)} ${t('prefs.pasti')} · ${t('prefs.gusto')}: ${prefs.taste?t('taste.'+prefs.taste):'—'} · ${prefs.dietStyle?t('style.'+prefs.dietStyle):'—'}</p>`+
     `<p style="margin:0;">${t('prefs.cibiScelti')}: ${sanitize(foodsList)}${prefs.intolerances?` · ${t('prefs.esclusi')}: ${sanitize(prefs.intolerances)}`:''}</p>`;
 }
 
@@ -4583,7 +4618,7 @@ function renderMeals(){
   }).join('');
   document.getElementById('meals-done').textContent=done;
   const dateEl=document.getElementById('oggi-date-label');
-  if(dateEl)dateEl.textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
+  if(dateEl)dateEl.textContent=new Date().toLocaleDateString(_lang==='en'?'en-US':'it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
   const pastiBar=document.getElementById('oggi-pasti-bar');
   if(pastiBar)pastiBar.style.width=(mNames.length>0?Math.round(done/mNames.length*100):0)+'%';
   renderKcalRing();
@@ -4647,7 +4682,7 @@ function renderKcalRing(){
   const r2=getEl('kcal-ring-oggi');
   if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct/100);r2.style.stroke=pct>=99.5?'#22c55e':'var(--p)';}
   const pctEl=getEl('oggi-kcal-pct');
-  if(pctEl)pctEl.textContent=Math.round(pct)+'% consumato';
+  if(pctEl)pctEl.textContent=Math.round(pct)+'% '+t('oggi.kcal.consumato');
 }
 
 /* ═══════════════════════════════════════
@@ -4722,7 +4757,7 @@ function _renderPrefsCard(){
   if(!prefs||!wrap||!cont)return;
   wrap.style.display='block';
   const foodsList=prefs.foods?.length>0?prefs.foods.join(', '):'—';
-  cont.textContent=`${prefs.mealsCount||3} ${t('prefs.pastiDie')} · ${t('prefs.gusto')}: ${prefs.taste||'—'} · ${t('prefs.stile')}: ${prefs.dietStyle||'—'}\n`+
+  cont.textContent=`${prefs.mealsCount||3} ${t('prefs.pastiDie')} · ${t('prefs.gusto')}: ${prefs.taste?t('taste.'+prefs.taste):'—'} · ${t('prefs.stile')}: ${prefs.dietStyle?t('style.'+prefs.dietStyle):'—'}\n`+
     `${t('prefs.cibiScelti')}: ${foodsList}\n`+
     `${prefs.extraFoods?`${t('prefs.extra')}: ${prefs.extraFoods}\n`:''}`+
     `${prefs.intolerances?`${t('prefs.esclusi')}: ${prefs.intolerances}`:''}`;
