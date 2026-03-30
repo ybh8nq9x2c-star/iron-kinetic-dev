@@ -1421,19 +1421,19 @@ body.onboarding-active #onb-screen{
 <nav id="nav">
   <button id="nav-oggi" class="nb on" onclick="switchTab('oggi')" aria-label="Oggi">
     <span class="material-symbols-outlined ni sn" style="font-variation-settings:'FILL' 1;">home</span>
-    <span class="nl sn">Oggi</span>
+    <span class="nl sn" id="nav-lbl-oggi">Oggi</span>
   </button>
   <button id="nav-prog" class="nb" onclick="switchTab('prog')" aria-label="Progresso">
     <span class="material-symbols-outlined ni sn">insights</span>
-    <span class="nl sn">Trend</span>
+    <span class="nl sn" id="nav-lbl-trend">Trend</span>
   </button>
   <button id="nav-set" class="nb" onclick="switchTab('set')" aria-label="Config">
     <span class="material-symbols-outlined ni sn">person</span>
-    <span class="nl sn">Profilo</span>
+    <span class="nl sn" id="nav-lbl-profilo">Profilo</span>
   </button>
   <button id="nav-info" class="nb" onclick="switchTab('info')" aria-label="Aiuto">
     <span class="material-symbols-outlined ni sn">help</span>
-    <span class="nl sn">Aiuto</span>
+    <span class="nl sn" id="nav-lbl-aiuto">Aiuto</span>
   </button>
 </nav>
 
@@ -2071,7 +2071,8 @@ en:{
   'syn.limitata':'Limited synergy','syn.neutro':'Neutral',
   'shop.cat.proteine':'Protein','shop.cat.carboidrati':'Carbohydrates',
   'shop.cat.grassi':'Fats','shop.cat.latticini':'Dairy',
-  'shop.cat.verdure':'Vegetables','shop.cat.altro':'Other',
+  'shop.cat.verdure':'Vegetables',  'oggi.kcal.target':'Daily Target','oggi.kcal.totali':'Total kcal','oggi.trackers':'Activity & Trackers',
+'shop.cat.altro':'Other',
 }
 };
 let _lang='en';
@@ -2099,6 +2100,110 @@ function initLang(){
   document.documentElement.lang=_lang;
 }
 function applyTranslations(deferOffscreen){
+  /* ── i18n static patch ── */
+  const _nm={'nav-lbl-oggi':'nav.oggi','nav-lbl-trend':'nav.trend','nav-lbl-profilo':'nav.profilo','nav-lbl-aiuto':'nav.aiuto'};
+  Object.entries(_nm).forEach(([id,k])=>{const el=document.getElementById(id);if(el)el.textContent=t(k);});
+  document.querySelectorAll('.t-xxs.muted').forEach(el=>{
+    const v=el.textContent.trim();
+    if(v==='Acqua'||v==='Water')el.textContent=t('oggi.acqua');
+    else if(v==='Sale'||v==='Salt')el.textContent=t('oggi.sale');
+    else if(v==='Passi'||v==='Steps')el.textContent=t('oggi.passi');
+    else if(v==='Workout')el.textContent=t('oggi.workout');
+    else if(v==='Attività e Trackers'||v==='Activity & Trackers')el.textContent=t('oggi.trackers');
+    else if(v==='Target Giorno'||v==='Daily Target')el.textContent=t('oggi.kcal.target');
+    else if(v==='Kcal totali'||v==='Total kcal')el.textContent=t('oggi.kcal.totali');
+    else if(v==='Ultimo peso'||v==='Last weight')el.textContent=t('prog.stat.ultimoPeso');
+    else if(v==='Variazione'||v==='Change')el.textContent=t('prog.stat.variazione');
+    else if(v==='Girovita'||v==='Waist')el.textContent=t('prog.stat.girovita');
+    else if(v==='Var. girovita'||v==='Waist change')el.textContent=t('prog.stat.varGirovita');
+    else if(v==='Base BMR')el.textContent=t('set.hero.bmr');
+    else if(v==='Target TDEE')el.textContent=t('set.hero.tdee');
+  });
+  document.querySelectorAll('.sec-label').forEach(el=>{
+    const v=el.textContent.trim();
+    if(v==='Registra'||v==='Log')el.textContent=t('prog.registra');
+    else if(v==='Storico'||v==='History')el.textContent=t('prog.storico.title');
+    else if(v==='Calendario Aderenza'||v==='Adherence Calendar')el.textContent=t('prog.calendar.title');
+    else if(v==='Promemoria Check-in'||v==='Check-in Reminder')el.textContent=t('prog.notif.title');
+    else if(v==='Trend check-in'||v==='Check-in trend')el.textContent=t('prog.checkin.title');
+    else if(v==='Il Tuo Profilo'||v==='Your Profile')el.textContent=t('set.profilo.title');
+    else if(v==='Piano Attivo'||v==='Active Plan')el.textContent=t('set.piano.title');
+    else if(v==='Stato consenso'||v==='Consent status')el.textContent=t('info.consenso.title');
+    else if(v==='Applicazione'||v==='Application')el.textContent=t('info.app.title');
+    else if(v==='Check-in giornaliero'||v==='Daily check-in')el.textContent=t('oggi.checkin.title');
+  });
+  document.querySelectorAll('.sec-title').forEach(el=>{
+    const v=el.textContent.trim();
+    if(v==='Progresso'||v==='Progress')el.textContent=t('prog.title');
+    else if(v==='Profilo'||v==='Profile')el.textContent=t('set.title');
+    else if(v==='Info')el.textContent=t('info.title');
+  });
+  document.querySelectorAll('.pasti-header p').forEach(el=>{
+    if(el.textContent.trim()==='Pasti'||el.textContent.trim()==='Meals')el.textContent=t('oggi.pasti');
+  });
+  ['ci-hunger','ci-energy','ci-adherence','ci-digestion'].forEach((id,i)=>{
+    const keys=['oggi.checkin.fame','oggi.checkin.energia','oggi.checkin.aderenza','oggi.checkin.digestione'];
+    const el=document.querySelector('label[for="'+id+'"]');if(el)el.textContent=t(keys[i]);
+  });
+  document.querySelectorAll('.check-card .field-label').forEach(el=>{
+    if(el.textContent.trim()==='Contesto giornata'||el.textContent.trim()==='Day context')el.textContent=t('oggi.checkin.contesto');
+  });
+  document.querySelectorAll('.micro-chip').forEach(b=>{
+    const oc=b.getAttribute('onclick')||'';
+    if(oc.includes("'routine'"))b.textContent=t('oggi.checkin.routine');
+    else if(oc.includes("'sociale'"))b.textContent=t('oggi.checkin.sociale');
+    else if(oc.includes("'stress'"))b.textContent=t('oggi.checkin.stress');
+    else if(oc.includes("'workout'"))b.textContent=t('oggi.checkin.workout');
+  });
+  const _saveCi=document.querySelector('.check-card .btn-primary[onclick="saveDailyCheckin()"]');
+  if(_saveCi)_saveCi.textContent=t('oggi.checkin.salva');
+  const _ciFb=document.getElementById('checkin-feedback');
+  if(_ciFb&&!_ciFb.classList.contains('has-feedback'))_ciFb.textContent=t('oggi.checkin.feedback_default');
+  const _wkS=document.getElementById('wk-status');
+  if(_wkS&&(_wkS.textContent==='Non fatto'||_wkS.textContent==='Not done'))_wkS.textContent=t('oggi.workout.nonFatto');
+  const _wkB=document.getElementById('wk-btn');
+  if(_wkB&&(_wkB.textContent.trim()==='Fatto ✓'||_wkB.textContent.trim()==='Done ✓'))_wkB.textContent=t('oggi.workout.fatto');
+  ['log-w','log-wst','log-date'].forEach((id,i)=>{
+    const keys=['prog.peso','prog.girovita','prog.data'];
+    const el=document.querySelector('label[for="'+id+'"]');if(el)el.textContent=t(keys[i]);
+  });
+  const _addBtn=document.querySelector('[onclick="logMetric()"]');if(_addBtn)_addBtn.textContent=t('prog.btn.aggiungi');
+  const _ce=document.getElementById('chart-empty');if(_ce)_ce.textContent=t('prog.chart.noData');
+  const _anN=document.getElementById('checkin-analytics-note');
+  if(_anN&&!_anN.classList.contains('has-feedback'))_anN.textContent=t('prog.checkin.note_default');
+  const _nTxt=document.getElementById('notif-status-txt');if(_nTxt)_nTxt.textContent=t('prog.notif.subtitle');
+  const _nBtn=document.getElementById('notif-perm-btn');if(_nBtn&&!_nBtn.dataset.active)_nBtn.textContent=t('prog.notif.btn');
+  const _wU=document.getElementById('btn-weight-upd');
+  if(_wU)_wU.textContent=_lang==='it'?'Aggiorna peso':'Update weight';
+  const _pT=document.getElementById('set-btn-privacy-txt');if(_pT)_pT.textContent=t('set.btn.privacy');
+  const _aT=document.getElementById('set-btn-aiuto-txt');if(_aT)_aT.textContent=t('set.btn.aiuto');
+  const _lL=document.getElementById('lang-label-txt');if(_lL)_lL.textContent=t('set.lang.label');
+  const _mS=document.getElementById('mod-status');
+  if(_mS&&(_mS.textContent.trim()==='Base invariata'||_mS.textContent.trim()==='Unchanged'))_mS.textContent=t('set.mod.base');
+  document.querySelectorAll('[onclick="exportData()"]').forEach(b=>b.textContent=t('set.dati.esporta'));
+  document.querySelectorAll('[onclick*="imp-inp"]').forEach(b=>b.textContent=t('set.dati.importa'));
+  document.querySelectorAll('[onclick="resetProfile()"]').forEach(b=>b.textContent=t('set.rigenera'));
+  document.querySelectorAll('[onclick="changeDiet()"]').forEach(b=>{if(b.textContent)b.textContent=t('set.dati.ricomincia')||b.textContent;});
+  document.querySelectorAll('button[onclick*="toggleAccordion"]').forEach(btn=>{
+    const sp=btn.querySelectorAll('span');if(sp.length<2)return;
+    const el=sp[1];const v=el.textContent.trim();
+    if(v==='Fase Corrente'||v==='Current Phase')el.textContent=t('set.fase.title');
+    else if(v==='Modificatore AI'||v==='AI Modifier')el.textContent=t('set.mod.title');
+    else if(v==='Dati'||v==='Data')el.textContent=t('set.dati.title');
+  });
+  document.querySelectorAll('[onclick="applyMod(0)"]').forEach(b=>{if(b.textContent.includes('Reset')||b.textContent.includes('reset'))b.textContent=t('set.mod.reset');});
+  document.querySelectorAll('[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
+  document.querySelectorAll('#scr-info .rowb').forEach(row=>{
+    const lbl=row.querySelector('span:first-child');if(!lbl)return;
+    const v=lbl.textContent.trim();
+    if(v==='Versione'||v==='Version')lbl.textContent=t('info.app.versione');
+    else if(v==='Storage')lbl.textContent=t('info.app.storage');
+    else if(v==='Dati su server'||v==='Server data')lbl.textContent=t('info.app.server');
+    else if(v==='Cookie'||v==='Cookies')lbl.textContent=t('info.app.cookie');
+    else if(v==='Tracking')lbl.textContent=t('info.app.tracking');
+  });
+  /* ── end i18n static patch ── */
+
   if(_trApplied)return;_trApplied=true;
   /* Helper shortcuts */
   const txt=(id,key)=>{const e=document.getElementById(id);if(e)e.textContent=t(key);};
