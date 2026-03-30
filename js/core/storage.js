@@ -14,6 +14,7 @@ export const SK = {
   prefs:    'ik_user_prefs',
   checkins:      'ik_checkins',
   onboardingDone:'ik_onboarding_done',
+  lang:          'ik_lang',
 };
 
 export const SK_ADAPTIVE = 'ikadaptive';

@@ -1305,8 +1305,8 @@ body.onboarding-active #onb-screen{
           <div id="acc-lingua" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
             <div style="padding:0 16px 16px;border-top:1px solid var(--line);">
               <div class="seg-wrap" style="margin-top:14px;display:flex;gap:6px;">
-                <button id="lang-btn-it" class="seg-btn sn seg-on" onclick="setLang('it')" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇮🇹 IT</button>
-                <button id="lang-btn-en" class="seg-btn sn" onclick="setLang('en')" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇬🇧 EN</button>
+                <button id="lang-btn-en" class="seg-btn sn seg-on" onclick="setLang('en')" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇬🇧 English</button>
+                <button id="lang-btn-it" class="seg-btn sn" onclick="setLang('it')" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇮🇹 Italiano</button>
               </div>
             </div>
           </div>
@@ -1716,6 +1716,16 @@ it:{
   'adaptive.rule.stallingRefeed':'Plateau rilevato: +{delta} kcal temporanee per reset della leptina ({kcal} → {newKcal} kcal).',
   'adaptive.rule.hungerAdher':'Fame alta + aderenza bassa: aggiungere +{delta} kcal ({kcal} → {newKcal} kcal) per sostenibilità.',
   'adaptive.toast.applied':'{delta} kcal applicati dal motore adattivo.',
+  'onb.sub.hero':'Il tuo piano nutrizionale personalizzato.',
+  'onb.step0.passo':'Passo 1 — Corpo','onb.step1.passo':'Passo 2 — Attività',
+  'onb.step2.passo':'Passo 3 — Obiettivo','onb.step3.passo':'Passo 4 — Le Tue Preferenze',
+  'onb.step4.passo':'Passo 5 — I Tuoi Cibi Preferiti',
+  'onb.field.sesso':'Sesso biologico','onb.sex.m.label':'♂ Uomo','onb.sex.f.label':'♀ Donna',
+  'onb.field.obiettivo':'Obiettivo primario','onb.sel.none':'Selezionato: —',
+  'onb.clinical.sub':'Solo se hai una diagnosi medica specifica. Adatta proteine, sodio e selezione cibi.',
+  'onb.cibi.sub':'Seleziona i cibi che ami o scrivili tu. L\'app costruirà il piano perfetto per te.',
+  'adaptive.btn.apply':'Applica','adaptive.btn.dismiss':'Ignora',
+  'coach.msg.loading':'— Analisi in corso...',
   'onb2.skip':'Salta','onb2.next':'Avanti →','onb2.prev':'← Indietro','onb2.start':'Inizia ora →',
   'onb2.slide1.title':'Finalmente un\'app che ti ascolta',
   'onb2.slide1.body':'Iron Kinetic impara dai tuoi check-in quotidiani e adatta il piano al tuo corpo, non a un modello generico.',
@@ -1877,7 +1887,7 @@ en:{
   'toast.refeedOn':'🔥 Refeed Day activated!','toast.refeedOff':'Refeed deactivated',
   'toast.wkCompletato':'🏋️ Session completed!','toast.wkRimosso':'Workout removed',
   'toast.acquaLimite':'{max}L limit reached 💧','toast.saleLimite':'6g salt limit reached 🧂',
-  'toast.azzerato':'{tipo} reset','toast.mealMarcato':'{n} marked ✓','toast.storageQuota':'⚠️ Storage full — export your backup','toast.undo':'Undo','toast.stepsCap':'⚠️ Max 30,000 steps','toast.pesoAggiornato':'✓ Weight updated',
+  'toast.azzerato':'Reset','toast.mealMarcato':'{n} marked ✓','toast.storageQuota':'⚠️ Storage full — export your backup','toast.undo':'Undo','toast.stepsCap':'⚠️ Max 30,000 steps','toast.pesoAggiornato':'✓ Weight updated',
   'toast.notifOn':'✅ Reminder enabled!',
   'toast.notifDenied':'🔕 Permission denied — enable in browser settings',
   'toast.notifNoChange':'No changes','toast.notifErr':'Notification request error',
@@ -1981,6 +1991,16 @@ en:{
   'adaptive.rule.stallingRefeed':'Plateau detected: +{delta} kcal temporary leptin reset ({kcal} → {newKcal} kcal).',
   'adaptive.rule.hungerAdher':'High hunger + low adherence: add +{delta} kcal ({kcal} → {newKcal} kcal) for sustainability.',
   'adaptive.toast.applied':'{delta} kcal applied by adaptive engine.',
+  'onb.sub.hero':'Your personalised nutrition plan.',
+  'onb.step0.passo':'Step 1 — Body','onb.step1.passo':'Step 2 — Activity',
+  'onb.step2.passo':'Step 3 — Goal','onb.step3.passo':'Step 4 — Preferences',
+  'onb.step4.passo':'Step 5 — Your Favourite Foods',
+  'onb.field.sesso':'Biological sex','onb.sex.m.label':'♂ Male','onb.sex.f.label':'♀ Female',
+  'onb.field.obiettivo':'Primary goal','onb.sel.none':'Selected: —',
+  'onb.clinical.sub':'Only select if you have a specific medical diagnosis. Adjusts protein, sodium and food choices.',
+  'onb.cibi.sub':'Select the foods you enjoy or type your own. The app will build the perfect plan for you.',
+  'adaptive.btn.apply':'Apply','adaptive.btn.dismiss':'Dismiss',
+  'coach.msg.loading':'— Analysing...',
   'onb2.skip':'Skip','onb2.next':'Next →','onb2.prev':'← Back','onb2.start':'Start now →',
   'onb2.slide1.title':'Finally an app that listens to you',
   'onb2.slide1.body':'Iron Kinetic learns from your daily check-ins and adapts the plan to your body, not a generic template.',
@@ -1994,7 +2014,7 @@ en:{
   'onb2.slide5.body':'Enter your data, pick a plan, and go. Fully offline, fully yours.',
 }
 };
-let _lang='it';
+let _lang='en';
 let _regenSeed=0; /* incremented on every regenSingleMeal call to vary breakfast/snack picks */
 function t(key,vars={}){
   const s=LANG[_lang]?.[key]??LANG.it?.[key]??key;
@@ -2002,7 +2022,7 @@ function t(key,vars={}){
 }
 function setLang(lang){
   _lang=(lang==='en')?'en':'it';
-  try{localStorage.setItem('ik_lang',_lang);}catch{}
+  lsW(SK.lang,_lang);
   document.documentElement.lang=_lang;
   _trApplied=false;
   applyTranslations();
@@ -2011,7 +2031,7 @@ function setLang(lang){
   document.getElementById('lang-btn-en')?.classList.toggle('seg-on',_lang==='en');
 }
 function initLang(){
-  try{const s=localStorage.getItem('ik_lang');if(s==='en'||s==='it')_lang=s;}catch{}
+  const s=lsR(SK.lang);if(s==='en'||s==='it')_lang=s;
   document.documentElement.lang=_lang;
 }
 function applyTranslations(deferOffscreen){
@@ -2097,6 +2117,112 @@ function applyTranslations(deferOffscreen){
   document.querySelectorAll('#scr-oggi .t-xxs.muted').forEach(e=>{
     if(e.textContent.trim()==='Giorno'||e.textContent.trim()==='Day')e.textContent=t('oggi.giorno');
   });
+  /* ── ONBOARDING ── */
+  const onbHeroSub=document.querySelector('#onb-screen>div>div:first-child>p.sn');
+  if(onbHeroSub)onbHeroSub.textContent=t('onb.sub.hero');
+  /* Step sec-labels */
+  document.querySelectorAll('#onb-screen .onb-step>.sec-label').forEach(el=>{
+    const v=el.textContent.trim();
+    if(/^(Passo|Step) 1/.test(v))el.textContent=t('onb.step0.passo');
+    else if(/^(Passo|Step) 2/.test(v))el.textContent=t('onb.step1.passo');
+    else if(/^(Passo|Step) 3/.test(v))el.textContent=t('onb.step2.passo');
+    else if(/^(Passo|Step) 4/.test(v))el.textContent=t('onb.step3.passo');
+    else if(/^(Passo|Step) 5/.test(v))el.textContent=t('onb.step4.passo');
+  });
+  /* Field labels (<label> and <p class="field-label">) */
+  document.querySelectorAll('#onb-screen .field-label').forEach(lbl=>{
+    const f=lbl.getAttribute('for')||'';const v=lbl.textContent.trim();
+    if(f==='sex-m'||v==='Sesso biologico'||v==='Biological sex')lbl.textContent=t('onb.field.sesso');
+    else if(f==='f-age'||v==='Età (anni)'||v==='Age (years)')lbl.textContent=t('onb.field.eta');
+    else if(f==='f-height'||v==='Altezza (cm)'||v==='Height (cm)')lbl.textContent=t('onb.field.altezza');
+    else if(f==='f-weight'||v==='Peso (kg)'||v==='Weight (kg)')lbl.textContent=t('onb.field.peso');
+    else if(f==='f-bf'||v.includes('Grasso corporeo')||v.includes('Body fat'))lbl.textContent=t('onb.field.bf');
+    else if(v==='Allenamenti / settimana'||v==='Training sessions / week')lbl.textContent=t('onb.field.allenamenti');
+    else if(v==='Passi giornalieri medi'||v==='Average daily steps')lbl.textContent=t('onb.field.passi');
+    else if(v==='Obiettivo primario'||v==='Primary goal')lbl.textContent=t('onb.field.obiettivo');
+    else if(v.includes('pasti al giorno')||v==='Number of meals per day')lbl.textContent=t('onb.field.pasti');
+    else if(v==='Gusto prevalente'||v==='Taste preference')lbl.textContent=t('onb.field.gusto');
+    else if(v==='Stile alimentare'||v==='Dietary style')lbl.textContent=t('onb.field.stile');
+    else if(v.includes('Intolleranze')||v.includes('Intolerances'))lbl.textContent=t('onb.field.intolleranze');
+    else if(v.includes('Protocollo clinico')||v.includes('Clinical condition'))lbl.textContent=t('onb.field.clinical');
+    else if(v==='Proteine preferite'||v==='Preferred proteins')lbl.textContent=t('onb.cibi.proteine');
+    else if(v==='Carboidrati preferiti'||v==='Preferred carbs')lbl.textContent=t('onb.cibi.carb');
+    else if(v==='Grassi preferiti'||v==='Preferred fats')lbl.textContent=t('onb.cibi.grassi');
+    else if(v.includes('altri cibi')||v.includes('other foods'))lbl.textContent=t('onb.cibi.extra');
+  });
+  /* Placeholders */
+  ph('f-age','onb.field.eta.ph');ph('f-height','onb.field.altezza.ph');
+  ph('f-weight','onb.field.peso.ph');ph('f-bf','onb.field.bf.ph');
+  ph('f-intolerances','onb.field.intolleranze.ph');ph('f-extra-foods','onb.cibi.extra.ph');
+  /* Sex buttons */
+  const _sexM=document.getElementById('sex-m');if(_sexM)_sexM.textContent=t('onb.sex.m.label');
+  const _sexF=document.getElementById('sex-f');if(_sexF)_sexF.textContent=t('onb.sex.f.label');
+  /* BF hint */
+  const _bfHint=document.querySelector('#step-0 .inp~p.sn');
+  if(_bfHint)_bfHint.textContent=t('onb.field.bf.hint');
+  /* wk/st labels */
+  const _wkLbl=document.getElementById('wk-label');
+  if(_wkLbl)_wkLbl.textContent=profState.workoutsWk!==null?t('onb.wk.selected',{n:profState.workoutsWk}):t('onb.sel.none');
+  const _stLbl=document.getElementById('st-label');
+  if(_stLbl)_stLbl.textContent=profState.stepsDay!==null?t('onb.st.selected',{n:profState.stepsDay}):t('onb.sel.none');
+  /* Goal buttons */
+  document.querySelectorAll('#goal-wrap button[data-goal]').forEach(btn=>{
+    const g=btn.dataset.goal;if(g)btn.textContent=t('goal.'+g);
+  });
+  /* Taste buttons */
+  ['salato','dolce','misto'].forEach(k=>{const b=document.getElementById('taste-'+k);if(b)b.textContent=t('taste.'+k);});
+  /* Diet style buttons */
+  document.querySelectorAll('#diet-style-seg .seg-btn').forEach(btn=>{
+    const m=(btn.getAttribute('onclick')||'').match(/'(\w+)'/);if(m)btn.textContent=t('style.'+m[1]);
+  });
+  /* Clinical chips */
+  const _clinMap={'cp-none':'clinical.none','cp-CKD':'clinical.ckd','cp-DASH':'clinical.dash',
+    'cp-IBS':'clinical.ibs','cp-T2D':'clinical.t2d','cp-IBD_acute':'clinical.ibd_acute','cp-IBD_remiss':'clinical.ibd_remiss'};
+  Object.entries(_clinMap).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=t(key);});
+  /* Clinical sub */
+  const _clinSub=document.querySelector('#clinical-section>p.sn:first-of-type');
+  if(_clinSub)_clinSub.textContent=t('onb.clinical.sub');
+  /* Cibi sub */
+  const _cibiSub=document.querySelector('#step-4>.sn');
+  if(_cibiSub)_cibiSub.textContent=t('onb.cibi.sub');
+  /* Onb nav buttons */
+  document.querySelectorAll('#onb-screen .onb-step .btn-ghost[onclick*="goStep"]').forEach(btn=>btn.textContent=t('onb.btn.indietro'));
+  document.querySelectorAll('#onb-screen .onb-step .btn-primary').forEach(btn=>{
+    const oc=btn.getAttribute('onclick')||'';
+    if(oc.includes('runCalcAndGenerate'))btn.textContent=t('onb.btn.genera');
+    else if(oc.includes('activateGeneratedPlan'))btn.textContent=t('onb.btn.attiva');
+    else if(btn.id==='to-step3-btn'||oc.includes('goStep'))btn.textContent=t('onb.btn.avanti');
+  });
+  /* Result card labels */
+  document.querySelectorAll('#result-card .t-xxs.muted.sn').forEach(el=>{
+    const v=el.textContent.trim();
+    if(v==='IL TUO TDEE'||v==='YOUR TDEE')el.textContent=t('onb.result.tdee');
+    else if(v==='Dettaglio calcolo'||v==='Calculation detail')el.textContent=t('onb.result.detail');
+  });
+  document.querySelectorAll('#result-card .rl.sn').forEach(el=>{
+    const v=el.textContent.trim();
+    if(v==='Proteine'||v==='Protein')el.textContent=t('onb.result.proteine');
+    else if(v==='Grassi'||v==='Fat')el.textContent=t('onb.result.grassi');
+  });
+  const _previewLbl=document.querySelector('#plan-preview .sec-label');
+  if(_previewLbl)_previewLbl.textContent=t('onb.result.preview');
+  /* Result kcal/day suffix */
+  const _rTgtEl=document.getElementById('r-tgt');
+  if(_rTgtEl){
+    const _nodes=[..._rTgtEl.parentElement.childNodes].filter(n=>n.nodeType===3);
+    const _sfx=_nodes.find(n=>n.textContent.includes('giorno')||n.textContent.includes('/day'));
+    if(_sfx)_sfx.textContent=_lang==='en'?' kcal/day':' kcal/giorno';
+  }
+  /* Coach loading msg */
+  const _coachMsg=document.getElementById('coach-msg');
+  if(_coachMsg&&(_coachMsg.textContent.trim()==='— Analisi in corso...'||_coachMsg.textContent.trim()==='— Analysing...'))
+    _coachMsg.textContent=t('coach.msg.loading');
+  /* Adaptive banner buttons */
+  document.querySelectorAll('button[onclick="applyAdaptiveSuggestion()"]').forEach(b=>b.textContent=t('adaptive.btn.apply'));
+  document.querySelectorAll('button[onclick="dismissAdaptive()"]').forEach(b=>b.textContent=t('adaptive.btn.dismiss'));
+  /* Lang buttons */
+  document.getElementById('lang-btn-it')?.classList.toggle('seg-on',_lang==='it');
+  document.getElementById('lang-btn-en')?.classList.toggle('seg-on',_lang==='en');
   /* ── OFF-SCREEN TABS: defer when called from boot, run immediately otherwise ── */
   const _offscreen=()=>{
   /* ── PROGRESS ── */
@@ -2285,7 +2411,7 @@ const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
   refeed:'ik_refeed_date',wLog:'ik_weight_log',
   progStart:'ik_prog_start',p4Start:'ik_p4_start',profile:'ik_user_profile',
   prefs:'ik_user_prefs',checkins:'ik_checkins',
-  onboardingDone:'ik_onboarding_done'};
+  onboardingDone:'ik_onboarding_done',lang:'ik_lang'};
 
 /* ═══════════════════════════════════════
    STATE
