@@ -1737,6 +1737,20 @@ it:{
   'onb2.slide4.body':'La curva predittiva calcola il tuo peso futuro in base all\'andamento reale, non a promesse.',
   'onb2.slide5.title':'Inizia oggi. Il tuo corpo non aspetta.',
   'onb2.slide5.body':'Inserisci i tuoi dati, scegli il piano e parti. Tutto offline, tutto tuo.',
+  'confirm.cancel':'Annulla','confirm.ok':'Conferma',
+  'oggi.trackers.title':'Attività e Trackers',
+  'aria.day.prev':'Giorno precedente','aria.day.next':'Giorno successivo',
+  'aria.checkin.hunger':'Fame (1–10)','aria.checkin.energy':'Energia (1–10)',
+  'aria.checkin.adherence':'Aderenza (1–10)','aria.checkin.digestion':'Digestione (1–10)',
+  'aria.reset.water':'Azzera acqua','aria.reset.salt':'Azzera sale',
+  'aria.delete.entry':'Elimina',
+  'modal.close.shopping':'Chiudi lista','modal.close.help':'Chiudi aiuto','modal.close.privacy':'Chiudi privacy',
+  'pwa.ios.step1':'Tocca il pulsante <strong style="color:var(--p);">Condividi</strong> (rettangolo con freccia in su) nella barra di Safari',
+  'pwa.ios.step2':'Scorri in basso e tocca <strong style="color:var(--p);">Aggiungi a schermata Home</strong>',
+  'pwa.ios.step3':'Tocca <strong style="color:var(--p);">Aggiungi</strong> in alto a destra',
+  'pwa.android.step1':'Tocca il menu <strong style="color:var(--p);">⋮</strong> in alto a destra nel browser',
+  'pwa.android.step2':'Seleziona <strong style="color:var(--p);">Aggiungi a schermata Home</strong> o <strong style="color:var(--p);">Installa app</strong>',
+  'pwa.android.step3':'Conferma toccando <strong style="color:var(--p);">Installa</strong>',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -2012,6 +2026,20 @@ en:{
   'onb2.slide4.body':'The predictive curve calculates your future weight based on real progress, not promises.',
   'onb2.slide5.title':'Start today. Your body won\'t wait.',
   'onb2.slide5.body':'Enter your data, pick a plan, and go. Fully offline, fully yours.',
+  'confirm.cancel':'Cancel','confirm.ok':'Confirm',
+  'oggi.trackers.title':'Activity & Trackers',
+  'aria.day.prev':'Previous day','aria.day.next':'Next day',
+  'aria.checkin.hunger':'Hunger (1–10)','aria.checkin.energy':'Energy (1–10)',
+  'aria.checkin.adherence':'Adherence (1–10)','aria.checkin.digestion':'Digestion (1–10)',
+  'aria.reset.water':'Reset water','aria.reset.salt':'Reset salt',
+  'aria.delete.entry':'Delete',
+  'modal.close.shopping':'Close list','modal.close.help':'Close help','modal.close.privacy':'Close privacy',
+  'pwa.ios.step1':'Tap the <strong style="color:var(--p);">Share</strong> button (rectangle with arrow pointing up) in the Safari bar',
+  'pwa.ios.step2':'Scroll down and tap <strong style="color:var(--p);">Add to Home Screen</strong>',
+  'pwa.ios.step3':'Tap <strong style="color:var(--p);">Add</strong> in the top right',
+  'pwa.android.step1':'Tap the <strong style="color:var(--p);">⋮</strong> menu at the top right of your browser',
+  'pwa.android.step2':'Select <strong style="color:var(--p);">Add to Home Screen</strong> or <strong style="color:var(--p);">Install App</strong>',
+  'pwa.android.step3':'Confirm by tapping <strong style="color:var(--p);">Install</strong>',
 }
 };
 let _lang='en';
@@ -2083,6 +2111,11 @@ function applyTranslations(deferOffscreen){
     else if(forAttr==='ci-digestion'||forAttr.includes('diges'))lbl.textContent=t('oggi.checkin.digestione');
     else if(forAttr.includes('contesto')||forAttr.includes('context'))lbl.textContent=t('oggi.checkin.contesto');
   });
+  /* check-in range aria-labels */
+  document.getElementById('ci-hunger')?.setAttribute('aria-label',t('aria.checkin.hunger'));
+  document.getElementById('ci-energy')?.setAttribute('aria-label',t('aria.checkin.energy'));
+  document.getElementById('ci-adherence')?.setAttribute('aria-label',t('aria.checkin.adherence'));
+  document.getElementById('ci-digestion')?.setAttribute('aria-label',t('aria.checkin.digestion'));
   /* check-in section label */
   document.querySelectorAll('#daily-check-card .sec-label').forEach(e=>e.textContent=t('oggi.checkin.title'));
   const ciFeedback=document.getElementById('checkin-feedback');
@@ -2105,6 +2138,17 @@ function applyTranslations(deferOffscreen){
     maintMsg.textContent=t('oggi.mantenimento.msg');
   /* mod badge */
   const modBadge=document.getElementById('m-mod-badge');if(modBadge)modBadge.textContent=t('oggi.mod.badge');
+  /* trackers toggle label */
+  document.querySelectorAll('#trackers-toggle-btn .t-xxs.muted').forEach(e=>{
+    if(e.textContent.trim()==='Attività e Trackers'||e.textContent.trim()==='Activity & Trackers')
+      e.textContent=t('oggi.trackers.title');
+  });
+  /* day nav aria-labels */
+  document.querySelector('button[onclick="shiftDay(-1)"]')?.setAttribute('aria-label',t('aria.day.prev'));
+  document.querySelector('button[onclick="shiftDay(1)"]')?.setAttribute('aria-label',t('aria.day.next'));
+  /* reset buttons aria-labels */
+  document.querySelector('button[onclick="resetT(\'water\')"]')?.setAttribute('aria-label',t('aria.reset.water'));
+  document.querySelector('button[onclick="resetT(\'salt\')"]')?.setAttribute('aria-label',t('aria.reset.salt'));
   /* refeed card */
   const rfTitle=document.querySelector('#refeed-card .t-xxs');
   if(rfTitle)rfTitle.textContent=t('oggi.refeed.title');
@@ -2367,11 +2411,11 @@ function applyTranslations(deferOffscreen){
   /* shopping modal title */
   const shTitle=document.getElementById('shopping-title');if(shTitle)shTitle.textContent=t('shopping.title');
   const shCloseBtn=document.querySelector('#modal-shopping .modal-close');
-  if(shCloseBtn)shCloseBtn.setAttribute('aria-label',_lang==='en'?'Close list':'Chiudi lista');
+  if(shCloseBtn)shCloseBtn.setAttribute('aria-label',t('modal.close.shopping'));
   /* help modal title */
   const helpTitle=document.getElementById('help-title');if(helpTitle)helpTitle.textContent=t('help.title');
   const helpCloseBtn=document.querySelector('#modal-help .modal-close');
-  if(helpCloseBtn)helpCloseBtn.setAttribute('aria-label',_lang==='en'?'Close help':'Chiudi aiuto');
+  if(helpCloseBtn)helpCloseBtn.setAttribute('aria-label',t('modal.close.help'));
   const helpOfflineEl=document.querySelector('#modal-help .row.g3 p');
   if(helpOfflineEl)helpOfflineEl.textContent=t('help.offline');
   /* help contact */
@@ -2382,7 +2426,7 @@ function applyTranslations(deferOffscreen){
   /* privacy modal */
   const prvTitle=document.getElementById('prv-title');if(prvTitle)prvTitle.textContent=t('privacy.title');
   const prvCloseBtn=document.querySelector('#modal-privacy .modal-close');
-  if(prvCloseBtn)prvCloseBtn.setAttribute('aria-label',_lang==='en'?'Close privacy':'Chiudi privacy');
+  if(prvCloseBtn)prvCloseBtn.setAttribute('aria-label',t('modal.close.privacy'));
   const prvConsTitle=document.querySelector('#modal-privacy [style*="background:var(--s2)"] .prv-h2');
   if(prvConsTitle)prvConsTitle.textContent=t('privacy.consenso.title');
   document.querySelectorAll('button[onclick="gdprAccept();closeModal(\'modal-privacy\')"]').forEach(b=>b.textContent=t('privacy.consenso.rinnova'));
@@ -2399,6 +2443,19 @@ function applyTranslations(deferOffscreen){
   const pwaSkip=document.querySelector('#pwa-gate .pwa-step~p,.skip-pwa');
   if(pwaSkip)pwaSkip.textContent=t('pwa.skip');
   const pwaBtn=document.querySelector('button[onclick="acknowledgedPWA()"]');if(pwaBtn)pwaBtn.textContent=t('pwa.btn');
+  /* PWA step texts (innerHTML: dev-defined LANG strings, no user input) */
+  const _pwaTexts=document.querySelectorAll('#pwa-gate .pwa-step > div:not(.pwa-step-num)');
+  if(_pwaTexts[0])_pwaTexts[0].innerHTML=t('pwa.ios.step1');
+  if(_pwaTexts[1])_pwaTexts[1].innerHTML=t('pwa.ios.step2');
+  if(_pwaTexts[2])_pwaTexts[2].innerHTML=t('pwa.ios.step3');
+  if(_pwaTexts[3])_pwaTexts[3].innerHTML=t('pwa.android.step1');
+  if(_pwaTexts[4])_pwaTexts[4].innerHTML=t('pwa.android.step2');
+  if(_pwaTexts[5])_pwaTexts[5].innerHTML=t('pwa.android.step3');
+  /* confirm modal buttons */
+  const _cfCancelBtn=document.querySelector('#modal-confirm button[onclick="closeConfirm()"]');
+  if(_cfCancelBtn)_cfCancelBtn.textContent=t('confirm.cancel');
+  const _cfOkBtn=document.getElementById('confirm-ok-btn');
+  if(_cfOkBtn)_cfOkBtn.textContent=t('confirm.ok');
   /* GDPR gate */
   const gdprTitle=document.querySelector('#gdpr-gate h2');if(gdprTitle)gdprTitle.textContent=t('gdpr.title');
   const gdprSub=document.querySelector('#gdpr-gate h2+p');if(gdprSub)gdprSub.textContent=t('gdpr.sub');
@@ -4298,7 +4355,7 @@ function addWater(a){hap();const mx=getWMAX();const c=gT('water');if(c>=mx){toas
 function addSalt(a){hap();const c=gT('salt');if(c>=SMAX){toast(t('toast.saleLimite'));hap('error');return;}const n=Math.min(SMAX,parseFloat((c+a).toFixed(1)));sT('salt',n);renderTrackers();renderCoach();toast(`+${a}g → ${n.toFixed(1)}g`);}
 function addSteps(a){hap();const n=parseInt(lsR(dk('steps'))||'0')+a;const capped=Math.min(30000,n);lsW(dk('steps'),capped.toString());if(n>30000)toast(t('toast.stepsCap')||'⚠️ Max 30.000 passi');renderTrackers();toast(`+${a.toLocaleString()} → ${capped.toLocaleString()}`);}
 function toggleWk(){hap('medium');const n=gT('workout')>=1?0:1;sT('workout',n);renderTrackers();toast(t(n?'toast.wkCompletato':'toast.wkRimosso'));}
-function resetT(tp){hap();const prev=gT(tp);sT(tp,0);renderTrackers();showToast((t('toast.azzerato')||'Azzerato')+' — '+'<button onclick="sT(\''+tp+'\','+prev+');renderTrackers();closeToast()" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:inherit">'+(t('toast.undo')||'Annulla')+'</button>',4000);}
+function resetT(tp){hap();const prev=gT(tp);sT(tp,0);renderTrackers();showToast(t('toast.azzerato')+' — '+'<button onclick="sT(\''+tp+'\','+prev+');renderTrackers();closeToast()" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:inherit">'+t('toast.undo')+'</button>',4000);}
 
 /* ═══════════════════════════════════════
    MEALS — dynamic meal count from plan
@@ -4613,7 +4670,7 @@ function renderHistList(){
   const log=getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1).reverse();
   const el=document.getElementById('hist-list');
   if(!log.length){el.innerHTML=`<div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">${t('prog.storico.empty')}</span></div>`;return;}
-  el.innerHTML=log.map(e=>`<div class="hist-row"><span style="font-size:12px;font-weight:600;color:var(--muted);" class="sn">${sanitize(e.date)}</span><div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--p);" class="sn">${sanitize(e.weight)}<span style="font-size:9px;color:var(--muted);font-weight:600;margin-left:2px;">kg</span></span>${e.waist?`<span style="font-size:12px;font-weight:600;color:var(--on);" class="sn">⌀${sanitize(e.waist)}<span style="font-size:9px;color:var(--muted);">cm</span></span>`:''}<button onclick="deleteEntry(${e.ts})" style="font-size:11px;font-weight:600;color:var(--dim);background:none;border:none;padding:4px 8px;touch-action:manipulation;" class="sn" aria-label="Elimina">del</button></div></div>`).join('');
+  el.innerHTML=log.map(e=>`<div class="hist-row"><span style="font-size:12px;font-weight:600;color:var(--muted);" class="sn">${sanitize(e.date)}</span><div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--p);" class="sn">${sanitize(e.weight)}<span style="font-size:9px;color:var(--muted);font-weight:600;margin-left:2px;">kg</span></span>${e.waist?`<span style="font-size:12px;font-weight:600;color:var(--on);" class="sn">⌀${sanitize(e.waist)}<span style="font-size:9px;color:var(--muted);">cm</span></span>`:''}<button onclick="deleteEntry(${e.ts})" style="font-size:11px;font-weight:600;color:var(--dim);background:none;border:none;padding:4px 8px;touch-action:manipulation;" class="sn" aria-label="${t('aria.delete.entry')}">del</button></div></div>`).join('');
 }
 function renderChart(data){
   const cv=document.getElementById('wChart');const wrap=document.getElementById('wChart-wrap');const em=document.getElementById('chart-empty');
