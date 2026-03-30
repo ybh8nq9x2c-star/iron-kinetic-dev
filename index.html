@@ -2020,18 +2020,22 @@ function t(key,vars={}){
   const s=LANG[_lang]?.[key]??LANG.it?.[key]??key;
   return Object.entries(vars).reduce((r,[k,v])=>r.replace(new RegExp(`\\{${k}\\}`,'g'),String(v)),s);
 }
+function applyLang(){
+  _trApplied=false;
+  applyTranslations();
+  renderMacros?.();renderTrackers?.();renderMeals?.();renderKcalRing?.();
+  renderCoach?.();renderSettings?.();
+}
 function setLang(lang){
   _lang=(lang==='en')?'en':'it';
   lsW(SK.lang,_lang);
   document.documentElement.lang=_lang;
-  _trApplied=false;
-  applyTranslations();
-  /* Update lang switcher buttons */
-  document.getElementById('lang-btn-it')?.classList.toggle('seg-on',_lang==='it');
-  document.getElementById('lang-btn-en')?.classList.toggle('seg-on',_lang==='en');
+  applyLang();
 }
 function initLang(){
-  const s=lsR(SK.lang);if(s==='en'||s==='it')_lang=s;
+  const s=lsR(SK.lang);
+  if(s==='en'||s==='it')_lang=s;
+  else lsW(SK.lang,'en'); /* first visit: persist EN default */
   document.documentElement.lang=_lang;
 }
 function applyTranslations(deferOffscreen){
