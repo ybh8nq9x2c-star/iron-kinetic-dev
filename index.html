@@ -5543,7 +5543,11 @@ const _ONB=[
 ];
 function showOnboarding(){
   const el=document.getElementById('onboarding-overlay');
-  if(!el) return;
+  if(!el){
+    /* Element is after this <script> block — DOM not yet parsed. Defer and retry. */
+    document.addEventListener('DOMContentLoaded',()=>{try{showOnboarding();}catch{try{_bootAfterGates();}catch{}}},{once:true});
+    return;
+  }
   _ONB.forEach((_,i)=>{
     const tt=document.getElementById(`onb-t${i}`);
     const tb=document.getElementById(`onb-b${i}`);
@@ -5587,6 +5591,22 @@ function _onbFinish(){
 
 /* ENTRY POINT */
 (()=>{
+  /* Emergency watchdog — if nothing is visible after 900ms, force a safe screen */
+  setTimeout(()=>{
+    try{
+      const visible=
+        document.getElementById('pwa-gate')?.classList.contains('on')||
+        document.getElementById('gdpr-gate')?.classList.contains('on')||
+        document.getElementById('onb-screen')?.classList.contains('on')||
+        document.getElementById('app-shell')?.classList.contains('on')||
+        (document.getElementById('onboarding-overlay')?.style.display==='flex');
+      if(!visible){
+        if(gdprStatus&&gdprStatus()?.accepted){try{showOnb();}catch{document.getElementById('onb-screen').classList.add('on');}}
+        else{document.getElementById('gdpr-gate').classList.add('on');}
+      }
+    }catch{}
+  },900);
+
   try{
     initLang(); /* read ik_lang from localStorage, set _lang + html lang attr */
     /* Apply translations to gate screens immediately */
