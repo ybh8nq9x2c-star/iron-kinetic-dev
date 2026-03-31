@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="dark" lang="it">
+<html class="dark" lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,user-scalable=no"/>
@@ -534,8 +534,8 @@ body.onboarding-active #onb-screen{
     <button onclick="gdprAccept()" data-i18n="gdpr.btn.accetta" class="btn btn-primary w100 sn" style="height:52px;font-size:13px;">✓ Accetta e Continua</button>
     <button onclick="openModal('privacy')" data-i18n="gdpr.btn.leggi" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;">Leggi l'Informativa Privacy completa</button>
     <p style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;" class="sn">
-      Non accettando non potrai utilizzare l'app, in quanto il trattamento dei dati è necessario per erogare il servizio.<br>
-      Titolare: Iron Kinetic · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
+      Without accepting you won't be able to use the app, as data processing is necessary to provide the service.<br>
+      Controller: Iron Kinetic · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
     </p>
   </div>
 </div>
@@ -722,65 +722,62 @@ body.onboarding-active #onb-screen{
     <div>
       <p data-i18n="onb.cibi.proteine" class="field-label" style="margin-bottom:8px;">Proteine preferite</p>
       <div class="chip-row" id="food-proteins">
-        <button class="food-tag" onclick="toggleFood(this,'pollo')">🍗 Pollo</button>
-        <button class="food-tag" onclick="toggleFood(this,'coscia pollo')">🍗 Coscia pollo</button>
-        <button class="food-tag" onclick="toggleFood(this,'tacchino')">🦃 Tacchino</button>
-        <button class="food-tag" onclick="toggleFood(this,'manzo')">🥩 Manzo</button>
-        <button class="food-tag" onclick="toggleFood(this,'salmone')">🐟 Salmone</button>
-        <button class="food-tag" onclick="toggleFood(this,'tonno')">🐠 Tonno</button>
-        <button class="food-tag" onclick="toggleFood(this,'merluzzo')">🐡 Merluzzo</button>
-        <button class="food-tag" onclick="toggleFood(this,'branzino')">🐟 Branzino</button>
-        <button class="food-tag" onclick="toggleFood(this,'platessa')">🐠 Platessa</button>
-        <button class="food-tag" onclick="toggleFood(this,'sgombro')">🐟 Sgombro</button>
-        <button class="food-tag" onclick="toggleFood(this,'trota')">🐡 Trota</button>
-        <button class="food-tag" onclick="toggleFood(this,'gamberetti')">🦐 Gamberetti</button>
-        <button class="food-tag" onclick="toggleFood(this,'uova')">🥚 Uova</button>
-        <button class="food-tag" onclick="toggleFood(this,'albume')">⬜ Albume</button>
-        <button class="food-tag" onclick="toggleFood(this,'tofu')">🧊 Tofu</button>
-        <button class="food-tag" onclick="toggleFood(this,'legumi')">🫘 Legumi</button>
+        <button class="food-tag" onclick="toggleFood(this,'pollo')">🍗 Chicken</button>
+        <button class="food-tag" onclick="toggleFood(this,'coscia pollo')">🍗 Chicken thigh</button>
+        <button class="food-tag" onclick="toggleFood(this,'tacchino')">🦃 Turkey</button>
+        <button class="food-tag" onclick="toggleFood(this,'manzo')">🥩 Beef</button>
+        <button class="food-tag" onclick="toggleFood(this,'salmone')">🐟 Salmon</button>
+        <button class="food-tag" onclick="toggleFood(this,'tonno')">🐠 Tuna</button>
+        <button class="food-tag" onclick="toggleFood(this,'merluzzo')">🐡 Cod</button>
+        <button class="food-tag" onclick="toggleFood(this,'branzino')">🐟 Sea bass</button>
+        <button class="food-tag" onclick="toggleFood(this,'platessa')">🐠 Plaice</button>
+        <button class="food-tag" onclick="toggleFood(this,'sgombro')">🐟 Mackerel</button>
+        <button class="food-tag" onclick="toggleFood(this,'trota')">🐡 Trout</button>
+        <button class="food-tag" onclick="toggleFood(this,'gamberetti')">🦐 Prawns</button>
+        <button class="food-tag" onclick="toggleFood(this,'uova')">🥚 Eggs</button>
+        <button class="food-tag" onclick="toggleFood(this,'albume')">⬜ Egg white</button>        <button class="food-tag" onclick="toggleFood(this,'tofu')">🧊 Tofu</button>
+        <button class="food-tag" onclick="toggleFood(this,'legumi')">🫘 Legumes</button>
       </div>
     </div>
 
     <div>
       <p class="field-label" style="margin-bottom:8px;">Carboidrati preferiti</p>
       <div class="chip-row" id="food-carbs">
-        <button class="food-tag" onclick="toggleFood(this,'riso')">🍚 Riso</button>
-        <button class="food-tag" onclick="toggleFood(this,'riso basmati')">🍚 Riso basmati</button>
-        <button class="food-tag" onclick="toggleFood(this,'riso integrale')">🌾 Riso integrale</button>
+        <button class="food-tag" onclick="toggleFood(this,'riso')">🍚 Rice</button>
+        <button class="food-tag" onclick="toggleFood(this,'riso basmati')">🍚 Basmati rice</button>
+        <button class="food-tag" onclick="toggleFood(this,'riso integrale')">🌾 Brown rice</button>
         <button class="food-tag" onclick="toggleFood(this,'pasta')">🍝 Pasta</button>
-        <button class="food-tag" onclick="toggleFood(this,'patate')">🥔 Patate</button>
-        <button class="food-tag" onclick="toggleFood(this,'patate dolci')">🍠 Patate dolci</button>
-        <button class="food-tag" onclick="toggleFood(this,'pane')">🍞 Pane</button>
-        <button class="food-tag" onclick="toggleFood(this,'avena')">🌾 Avena</button>
+        <button class="food-tag" onclick="toggleFood(this,'patate')">🥔 Potatoes</button>
+        <button class="food-tag" onclick="toggleFood(this,'patate dolci')">🍠 Sweet potatoes</button>
+        <button class="food-tag" onclick="toggleFood(this,'pane')">🍞 Bread</button>
+        <button class="food-tag" onclick="toggleFood(this,'avena')">🌾 Oats</button>
         <button class="food-tag" onclick="toggleFood(this,'quinoa')">🌿 Quinoa</button>
-        <button class="food-tag" onclick="toggleFood(this,'farro')">🌾 Farro</button>
+        <button class="food-tag" onclick="toggleFood(this,'farro')">🌾 Spelt</button>
         <button class="food-tag" onclick="toggleFood(this,'couscous')">🌾 Couscous</button>
-        <button class="food-tag" onclick="toggleFood(this,'orzo')">🌾 Orzo</button>
-        <button class="food-tag" onclick="toggleFood(this,'mais')">🌽 Mais</button>
+        <button class="food-tag" onclick="toggleFood(this,'orzo')">🌾 Barley</button>
+        <button class="food-tag" onclick="toggleFood(this,'mais')">🌽 Corn</button>
         <button class="food-tag" onclick="toggleFood(this,'polenta')">🟡 Polenta</button>
-        <button class="food-tag" onclick="toggleFood(this,'frutta')">🍎 Frutta</button>
-      </div>
+        <button class="food-tag" onclick="toggleFood(this,'frutta')">🍎 Fruit</button>      </div>
     </div>
 
     <div>
       <p class="field-label" style="margin-bottom:8px;">Grassi e altro</p>
       <div class="chip-row" id="food-fats">
         <button class="food-tag" onclick="toggleFood(this,'avocado')">🥑 Avocado</button>
-        <button class="food-tag" onclick="toggleFood(this,'olio oliva')">🫒 Olio EVO</button>
-        <button class="food-tag" onclick="toggleFood(this,'mandorle')">🌰 Mandorle</button>
-        <button class="food-tag" onclick="toggleFood(this,'noci')">🥜 Noci</button>
-        <button class="food-tag" onclick="toggleFood(this,'nocciole')">🌰 Nocciole</button>
-        <button class="food-tag" onclick="toggleFood(this,'pistacchi')">🟢 Pistacchi</button>
-        <button class="food-tag" onclick="toggleFood(this,'burro arachidi')">🥜 Burro arachidi</button>
+        <button class="food-tag" onclick="toggleFood(this,'olio oliva')">🫒 EVO oil</button>
+        <button class="food-tag" onclick="toggleFood(this,'mandorle')">🌰 Almonds</button>
+        <button class="food-tag" onclick="toggleFood(this,'noci')">🥜 Walnuts</button>
+        <button class="food-tag" onclick="toggleFood(this,'nocciole')">🌰 Hazelnuts</button>
+        <button class="food-tag" onclick="toggleFood(this,'pistacchi')">🟢 Pistachios</button>
+        <button class="food-tag" onclick="toggleFood(this,'burro arachidi')">🥜 Peanut butter</button>
         <button class="food-tag" onclick="toggleFood(this,'tahini')">🫙 Tahini</button>
-        <button class="food-tag" onclick="toggleFood(this,'semi chia')">🌱 Semi chia</button>
-        <button class="food-tag" onclick="toggleFood(this,'semi lino')">🌱 Semi lino</button>
-        <button class="food-tag" onclick="toggleFood(this,'olive')">🫒 Olive</button>
-        <button class="food-tag" onclick="toggleFood(this,'yogurt greco')">🍶 Yogurt greco</button>
+        <button class="food-tag" onclick="toggleFood(this,'semi chia')">🌱 Chia seeds</button>
+        <button class="food-tag" onclick="toggleFood(this,'semi lino')">🌱 Flax seeds</button>
+        <button class="food-tag" onclick="toggleFood(this,'olive')">🫒 Olives</button>
+        <button class="food-tag" onclick="toggleFood(this,'yogurt greco')">🍶 Greek yogurt</button>
         <button class="food-tag" onclick="toggleFood(this,'ricotta')">🧀 Ricotta</button>
-        <button class="food-tag" onclick="toggleFood(this,'fiocchi latte')">🥛 Fiocchi latte</button>
-        <button class="food-tag" onclick="toggleFood(this,'cioccolato fondente')">🍫 Cioccolato</button>
-      </div>
+        <button class="food-tag" onclick="toggleFood(this,'fiocchi latte')">🥛 Cottage cheese</button>
+        <button class="food-tag" onclick="toggleFood(this,'cioccolato fondente')">🍫 Dark chocolate</button>      </div>
     </div>
 
     <div>
@@ -1086,7 +1083,7 @@ body.onboarding-active #onb-screen{
       <div class="card" style="padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
           <div>
-            <p id="chart-mode-label" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin:0 0 5px;">Trend Peso</p>
+            <p id="chart-mode-label" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin:0 0 5px;">Weight Trend</p>
             <div style="display:flex;align-items:center;gap:6px;">
               <span style="width:7px;height:7px;border-radius:50%;background:var(--p);display:inline-block;flex-shrink:0;"></span>
               <span class="t-xxs muted sn">Reale</span>
@@ -1131,9 +1128,8 @@ body.onboarding-active #onb-screen{
       <!-- Weekly Metabolic Report -->
       <div class="card" id="weekly-report-card" style="padding:14px;display:none;">
         <div class="rowb" style="margin-bottom:10px;">
-          <span class="sec-label" style="margin-bottom:0;">Report Settimanale</span>
-          <button onclick="shareWeeklyReport()" class="btn btn-xs sn" style="background:rgba(77,220,198,.1);border:1px solid rgba(77,220,198,.2);color:var(--p);font-size:10px;font-weight:700;height:26px;border-radius:var(--r3);padding:0 10px;">Condividi</button>
-        </div>
+          <span class="sec-label" style="margin-bottom:0;">Weekly Report</span>
+          <button onclick="shareWeeklyReport()" class="btn btn-xs sn" style="background:rgba(77,220,198,.1);border:1px solid rgba(77,220,198,.2);color:var(--p);font-size:10px;font-weight:700;height:26px;border-radius:var(--r3);padding:0 10px;">Share</button>        </div>
         <div id="weekly-report-content"></div>
       </div>
 
@@ -1284,13 +1280,11 @@ body.onboarding-active #onb-screen{
         <div style="border-bottom:1px solid var(--line);">
           <button onclick="toggleAccordion('danger')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
             <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--red);">warning</span>
-            <span class="sn" style="font-size:13px;font-weight:700;color:var(--red);flex:1;">Zona Pericolosa</span>
-            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--red);transition:transform .2s;">chevron_right</span>
+            <span class="sn" style="font-size:13px;font-weight:700;color:var(--red);flex:1;">Danger Zone</span>            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--red);transition:transform .2s;">chevron_right</span>
           </button>
           <div id="acc-danger" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
             <div style="padding:0 16px 16px;border-top:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.03);">
-              <p class="sn t-xxs muted" style="margin:14px 0 10px;line-height:1.5;">Queste azioni sono irreversibili senza un backup.</p>
-              <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
+              <p class="sn t-xxs muted" style="margin:14px 0 10px;line-height:1.5;">These actions are irreversible without a backup.</p>              <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
             </div>
           </div>
         </div>
@@ -1423,11 +1417,11 @@ body.onboarding-active #onb-screen{
     <span class="material-symbols-outlined ni sn" style="font-variation-settings:'FILL' 1;">home</span>
     <span class="nl sn" id="nav-lbl-oggi">Oggi</span>
   </button>
-  <button id="nav-prog" class="nb" onclick="switchTab('prog')" aria-label="Progresso">
+  <button id="nav-prog" class="nb" onclick="switchTab('prog')" aria-label="Trend">
     <span class="material-symbols-outlined ni sn">insights</span>
     <span class="nl sn" id="nav-lbl-trend">Trend</span>
   </button>
-  <button id="nav-set" class="nb" onclick="switchTab('set')" aria-label="Config">
+  <button id="nav-set" class="nb" onclick="switchTab('set')" aria-label="Profile">
     <span class="material-symbols-outlined ni sn">person</span>
     <span class="nl sn" id="nav-lbl-profilo">Profilo</span>
   </button>
@@ -1539,6 +1533,7 @@ it:{
   'set.refeed.off':'DISATTIVO','set.refeed.on':'ON 🔥',
   'set.mod.title':'Modificatore AI','set.mod.base':'Base invariata',
   'set.mod.taglio':'Taglio −{kcal} kcal','set.mod.boost':'Boost +{kcal} kcal','set.mod.reset':'Reset modificatore',
+  'set.mod.units':'Unità: {cur}/{max}',
   'set.dati.title':'Dati','set.dati.esporta':'📦 Esporta Backup',
   'set.dati.importa':'📥 Importa Backup','set.dati.ricomincia':'🗑 Ricomincia da capo',
   'set.btn.privacy':'Privacy','set.btn.aiuto':'Aiuto','set.lang.label':'Lingua / Language',
@@ -1564,27 +1559,6 @@ it:{
   'gdpr.p3.title':'Zero cookie di terze parti',
   'gdpr.p3.sub':'Nessun cookie di tracking, analytics o advertising. Nessuna condivisione con terzi.',
   'gdpr.btn.accetta':'✓ Accetta e Continua','gdpr.btn.leggi':'Leggi l\'Informativa Privacy completa',
-  'gdpr.p3.title':'Zero cookie di terze parti',
-  'gdpr.p3.sub':'Nessun cookie di tracking, analytics o advertising. Nessuna condivisione con terzi.',
-  'pwa.ios.step1':'Tocca Share (rettangolo con freccia) in Safari',
-  'pwa.ios.step2':'Scorri in basso e tocca Aggiungi a schermata Home',
-  'pwa.ios.step3':'Tocca Aggiungi in alto a destra',
-  'pwa.and.step1':'Tocca menu ⋮ in alto a destra nel browser',
-  'pwa.and.step2':'Seleziona Aggiungi a schermata Home o Installa app',
-  'pwa.and.step3':'Conferma toccando Installa',
-  'onb.field.sesso':'Sesso biologico','onb.sex.m_full':'♂ Uomo','onb.sex.f_full':'♀ Donna',
-  'onb.step0.passo':'Passo 1 — Corpo','onb.step2.passo':'Passo 3 — Obiettivo','onb.step4.passo':'Passo 5 — I Tuoi Cibi Preferiti',
-  'onb.field.obiettivo':'Obiettivo primario','onb.field.clinical.hint':'Solo se hai una diagnosi medica specifica.',
-  'onb.step4.sub':'Seleziona i cibi che ami o scrivili tu.',
-  'coach.msg.loading':'— Analisi in corso...','adaptive.btn.applica':'Applica','adaptive.btn.ignora':'Ignora',
-  'oggi.target.label':'Target Giorno','oggi.kcal.totali':'Kcal totali',
-  'macro.prot':'PROT','macro.carb':'CARB','macro.grassi':'GRASSI',
-  'oggi.trackers.title':'Attività e Trackers','oggi.refeed.off':'OFF',
-  'set.peso.aggiorna':'Aggiorna peso','set.danger.title':'Zona Pericolosa',
-  'set.danger.hint':'Queste azioni sono irreversibili senza un backup.',
-  'prog.chart.tab.peso':'Peso','prog.chart.tab.girovita':'Girovita','prog.chart.tab.previsione':'Previsione',
-  'prog.fingerprint.title':'Impronta Metabolica','prog.fingerprint.sub':'PROFILO UNICO',
-  'prog.report.title':'Report Settimanale','prog.report.condividi':'Condividi',
   'gdpr.footer':'Cliccando <strong>Accetta e Continua</strong> acconsenti al trattamento dei dati come descritto nell\'<span onclick>Informativa Privacy</span>.<br>Puoi revocare il consenso in qualsiasi momento da <em>Profilo › Privacy</em>.',
   'pwa.title':'Aggiungi alla Schermata Home',
   'pwa.sub':'Per la migliore esperienza, installa Iron Kinetic come app sul tuo dispositivo. Funziona offline, si apre come una vera app e non occupa spazio.',
@@ -1777,7 +1751,7 @@ it:{
   'fp.adattamento':'ADATTAMENTO','fp.riduzione':'riduzione metabolica',
   'fp.risposta':'RISPOSTA','fp.segnale':'per segnale affidabile',
   'fp.perditaReale':'PERDITA REALE','fp.mediaSettimanaleFP':'media settimanale',
-  'pred.text':'Tra 12 settimane {last} kg {diff} kg. Proiezione con correzione adattamento metabolico.',
+  'pred.label':'Previsione Peso (12 sett)',  'pred.text':'Tra 12 settimane {last} kg {diff} kg. Proiezione con correzione adattamento metabolico.',
   'pred.noData':'Registra almeno 5 pesate per attivare la previsione.',
   'chart.reale':'Reale','chart.previsione':'Previsione',
   'circ.serale':'Finestra serale — privilegia proteine e verdure, riduci carboidrati semplici',
@@ -1788,21 +1762,28 @@ it:{
   'shop.cat.proteine':'Proteine','shop.cat.carboidrati':'Carboidrati',
   'shop.cat.grassi':'Grassi','shop.cat.latticini':'Latticini',
   'shop.cat.verdure':'Verdure','shop.cat.altro':'Altro',
-  'oggi.trackers':'Attività e Trackers',
-  'oggi.kcal.target':'Target Giorno','oggi.kcal.totali':'Kcal totali','oggi.kcal.consumato':'consumato',
-  'acc.danger':'Zona Pericolosa',
-  'weekly.sett':'Report Settimanale','weekly.condividi':'Condividi','weekly.peso':'Peso','weekly.pasti':'Pasti',
-  'weekly.insight.noData':'Registra pesate e check-in per ricevere analisi personalizzata.',
-  'weekly.insight.calo':'Ottimo: −{val} kg questa settimana.',
-  'weekly.insight.pesoSu':'Peso in risalita di +{val} kg: controlla ritenzione e aderenza.',
-  'weekly.insight.stabile':'Peso stabile ({val} kg): metabolismo in adattamento.',
-  'weekly.insight.energia':'Energia media bassa ({e}/10): aumenta i carb peri-workout.',
-  'weekly.insight.fame':'Fame elevata ({h}/10): considera +100–150 kcal da carboidrati.',
-  'weekly.insight.aderenza':'Aderenza eccellente ({a}/10): continua così.',
-  'weekly.insight.ciAlto':'{n}/7 check-in: consistenza di alto livello.',
-  'weekly.insight.ciPoco':'Solo {n}/7 check-in: registra ogni giorno per analisi più precise.',
-  'weekly.insight.default':'Settimana regolare. Mantieni la costanza.',
-},
+  'oggi.kcal.pct':'consumato',
+  'rep.noData':'Registra pesate e check-in per ricevere analisi personalizzata.',
+  'rep.weightLoss':'Ottimo: −{kg} kg questa settimana.',
+  'rep.weightGain':'Peso in risalita di +{kg} kg: controlla ritenzione e aderenza.',
+  'rep.weightStable':'Peso stabile ({kg} kg): metabolismo in adattamento.',
+  'rep.energyLow':'Energia media bassa ({v}/10): aumenta i carb peri-workout.',
+  'rep.hungerHigh':'Fame elevata ({v}/10): considera +100–150 kcal da carboidrati.',
+  'rep.adherenceGreat':'Aderenza eccellente ({v}/10): continua così.',
+  'rep.ciHigh':'{n}/7 check-in: consistenza di alto livello.',
+  'rep.ciLow':'Solo {n}/7 check-in: registra ogni giorno per analisi più precise.',
+  'rep.steady':'Settimana regolare. Mantieni la costanza.',
+  'rep.copied':'📋 Report copiato!',
+  'rep.shareUnsup':'⚠️ Condivisione non supportata',
+  'notif.checkin.body':'Momento del check-in! Come ti senti oggi?',
+  'notif.logging.body':'Ricorda di registrare il peso stamattina.',
+  'notif.action.open':'Apri App',
+  'phase.adapt':'Fase adattamento — {goal}.',
+  'phase.optim':'Ottimizzazione progressiva (±100 kcal modulatore AI).',
+  'phase.consol':'Consolidamento: fibra ≥25g/die, sodio <2g/die.',
+  'phase.dash1':'DASH fase 1: riduzione sodio <1500mg/die, potassio ≥4700mg.',
+  'phase.dash2':'DASH fase 2: consolidamento, 5 porzioni frutta-verdura/die.',
+  'phase.dash3':'Mantenimento DASH: monitoraggio PA e profilo lipidico.',},
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
   'onb.step0.title':'Your Body','onb.step0.sub':'Enter your physical data to calculate your personalised TDEE.',
@@ -1879,6 +1860,7 @@ en:{
   'set.refeed.off':'INACTIVE','set.refeed.on':'ON 🔥',
   'set.mod.title':'AI Modifier','set.mod.base':'Unchanged',
   'set.mod.taglio':'Cut −{kcal} kcal','set.mod.boost':'Boost +{kcal} kcal','set.mod.reset':'Reset modifier',
+  'set.mod.units':'Units: {cur}/{max}',
   'set.dati.title':'Data','set.dati.esporta':'📦 Export Backup',
   'set.dati.importa':'📥 Import Backup','set.dati.ricomincia':'🗑 Start over',
   'set.btn.privacy':'Privacy','set.btn.aiuto':'Help','set.lang.label':'Lingua / Language',
@@ -2115,7 +2097,7 @@ en:{
   'fp.adattamento':'ADAPTATION','fp.riduzione':'metabolic reduction',
   'fp.risposta':'RESPONSE','fp.segnale':'for reliable signal',
   'fp.perditaReale':'ACTUAL LOSS','fp.mediaSettimanaleFP':'weekly average',
-  'pred.text':'In 12 weeks {last} kg {diff} kg. Projection with metabolic adaptation correction.',
+  'pred.label':'Weight Forecast (12 wks)',  'pred.text':'In 12 weeks {last} kg {diff} kg. Projection with metabolic adaptation correction.',
   'pred.noData':'Log at least 5 weigh-ins to activate the prediction.',
   'chart.reale':'Actual','chart.previsione':'Prediction',
   'circ.serale':'Evening window — favour protein & vegetables, reduce simple carbs',
@@ -2125,22 +2107,30 @@ en:{
   'syn.limitata':'Limited synergy','syn.neutro':'Neutral',
   'shop.cat.proteine':'Protein','shop.cat.carboidrati':'Carbohydrates',
   'shop.cat.grassi':'Fats','shop.cat.latticini':'Dairy',
-  'shop.cat.verdure':'Vegetables','shop.cat.altro':'Other',
-  'oggi.kcal.target':'Daily Target','oggi.kcal.totali':'Total kcal','oggi.trackers':'Activity & Trackers',
-  'oggi.kcal.consumato':'consumed',
-  'acc.danger':'Danger Zone',
-  'weekly.sett':'Weekly Report','weekly.condividi':'Share','weekly.peso':'Weight','weekly.pasti':'Meals',
-  'weekly.insight.noData':'Log weigh-ins and check-ins to receive personalised analysis.',
-  'weekly.insight.calo':'Great: −{val} kg this week.',
-  'weekly.insight.pesoSu':'Weight up +{val} kg: check retention and adherence.',
-  'weekly.insight.stabile':'Stable weight ({val} kg): metabolic adaptation.',
-  'weekly.insight.energia':'Low average energy ({e}/10): increase peri-workout carbs.',
-  'weekly.insight.fame':'High hunger ({h}/10): consider +100–150 kcal from carbs.',
-  'weekly.insight.aderenza':'Excellent adherence ({a}/10): keep going.',
-  'weekly.insight.ciAlto':'{n}/7 check-ins: high-level consistency.',
-  'weekly.insight.ciPoco':'Only {n}/7 check-ins: log daily for more accurate analysis.',
-  'weekly.insight.default':'Steady week. Keep the consistency.',
-}
+  'shop.cat.verdure':'Vegetables','oggi.kcal.target':'Daily Target','oggi.kcal.totali':'Total kcal','oggi.trackers':'Activity & Trackers',
+  'shop.cat.altro':'Other',
+  'oggi.kcal.pct':'used',
+  'rep.noData':'Log weigh-ins and check-ins to receive personalised analysis.',
+  'rep.weightLoss':'Great: −{kg} kg this week.',
+  'rep.weightGain':'Weight up +{kg} kg: check retention and adherence.',
+  'rep.weightStable':'Weight stable ({kg} kg): metabolism adapting.',
+  'rep.energyLow':'Average energy low ({v}/10): increase peri-workout carbs.',
+  'rep.hungerHigh':'High hunger ({v}/10): consider +100–150 kcal from carbs.',
+  'rep.adherenceGreat':'Excellent adherence ({v}/10): keep it up.',
+  'rep.ciHigh':'{n}/7 check-ins: top-level consistency.',
+  'rep.ciLow':'Only {n}/7 check-ins: log every day for more precise analysis.',
+  'rep.steady':'Steady week. Keep the consistency.',
+  'rep.copied':'📋 Report copied!',
+  'rep.shareUnsup':'⚠️ Sharing not supported',
+  'notif.checkin.body':'Check-in time! How are you feeling today?',
+  'notif.logging.body':'Remember to log your weight this morning.',
+  'notif.action.open':'Open App',
+  'phase.adapt':'Adaptation phase — {goal}.',
+  'phase.optim':'Progressive optimisation (±100 kcal AI modifier).',
+  'phase.consol':'Consolidation: fibre ≥25g/day, sodium <2g/day.',
+  'phase.dash1':'DASH phase 1: sodium reduction <1500mg/day, potassium ≥4700mg.',
+  'phase.dash2':'DASH phase 2: consolidation, 5 servings fruit-veg/day.',
+  'phase.dash3':'DASH maintenance: monitoring BP and lipid profile.',}
 };
 let _lang='en';
 let _regenSeed=0; /* incremented on every regenSingleMeal call to vary breakfast/snack picks */
@@ -2751,20 +2741,19 @@ function generateWeeklyReport(){
 }
 function generateReportInsight(rep){
   const{weightChange,avgEnergy,avgHunger,avgAdher,ciDays}=rep;
-  if(!ciDays&&weightChange===null)return t('weekly.insight.noData');
+  if(!ciDays&&weightChange===null)return t('rep.noData');
   const parts=[];
   if(weightChange!==null){
-    if(weightChange<-0.5)parts.push(t('weekly.insight.calo',{val:Math.abs(weightChange)}));
-    else if(weightChange>0.3)parts.push(t('weekly.insight.pesoSu',{val:weightChange}));
-    else parts.push(t('weekly.insight.stabile',{val:(weightChange>=0?'+':'')+weightChange}));
+    if(weightChange<-0.5)parts.push(t('rep.weightLoss',{kg:Math.abs(weightChange)}));
+    else if(weightChange>0.3)parts.push(t('rep.weightGain',{kg:weightChange}));
+    else parts.push(t('rep.weightStable',{kg:(weightChange>=0?'+':'')+weightChange}));
   }
-  if(avgEnergy!==null&&avgEnergy<=4)parts.push(t('weekly.insight.energia',{e:avgEnergy}));
-  if(avgHunger!==null&&avgHunger>=7)parts.push(t('weekly.insight.fame',{h:avgHunger}));
-  if(avgAdher!==null&&avgAdher>=8)parts.push(t('weekly.insight.aderenza',{a:avgAdher}));
-  if(ciDays>=5)parts.push(t('weekly.insight.ciAlto',{n:ciDays}));
-  else if(ciDays>0&&ciDays<3)parts.push(t('weekly.insight.ciPoco',{n:ciDays}));
-  return parts.join(' ')||t('weekly.insight.default');
-}
+  if(avgEnergy!==null&&avgEnergy<=4)parts.push(t('rep.energyLow',{v:avgEnergy}));
+  if(avgHunger!==null&&avgHunger>=7)parts.push(t('rep.hungerHigh',{v:avgHunger}));
+  if(avgAdher!==null&&avgAdher>=8)parts.push(t('rep.adherenceGreat',{v:avgAdher}));
+  if(ciDays>=5)parts.push(t('rep.ciHigh',{n:ciDays}));
+  else if(ciDays>0&&ciDays<3)parts.push(t('rep.ciLow',{n:ciDays}));
+  return parts.join(' ')||t('rep.steady');}
 function renderWeeklyReport(){
   const card=document.getElementById('weekly-report-card');
   const cont=document.getElementById('weekly-report-content');
@@ -2780,14 +2769,12 @@ function renderWeeklyReport(){
   cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${wColor};margin:0 0 2px;">${wTxt}</p>
-      <span class="t-xxs muted sn">${t('weekly.peso')}</span></div>
-    <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
+      <span class="t-xxs muted sn">${t('prog.peso')}</span></div>    <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--on);margin:0 0 2px;">${rep.ciDays}/7</p>
       <span class="t-xxs muted sn">Check-in</span></div>
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${pct>=80?'var(--p)':pct>=50?'var(--orange)':'var(--red)'};margin:0 0 2px;">${pct}%</p>
-      <span class="t-xxs muted sn">${t('weekly.pasti')}</span></div>
-  </div>
+      <span class="t-xxs muted sn">${t('oggi.pasti')}</span></div>  </div>
   <p class="sn" style="font-size:12px;color:var(--muted);line-height:1.55;">${sanitize(insight)}</p>`;
 }
 function shareWeeklyReport(){
@@ -2796,10 +2783,9 @@ function shareWeeklyReport(){
   const insight=generateReportInsight(rep);
   const wTxt=rep.weightChange!==null?`${rep.weightChange>=0?'+':''}${rep.weightChange} kg`:'—';
   const pct=rep.mealsTotal>0?Math.round(rep.mealsDone/rep.mealsTotal*100)+'%':'—';
-  const text=`📊 Iron Kinetic — ${t('weekly.sett')}\n\n${t('weekly.peso')}: ${wTxt}\nCheck-in: ${rep.ciDays}/7\n${t('weekly.pasti')}: ${pct}\n${t('oggi.checkin.energia')}: ${rep.avgEnergy||'—'}/10\n${t('oggi.checkin.aderenza')}: ${rep.avgAdher||'—'}/10\n\n${insight}`;
+  const text=`📊 Iron Kinetic — Weekly Report\n\n${t('prog.peso')}: ${wTxt}\nCheck-in: ${rep.ciDays}/7\n${t('oggi.pasti')}: ${pct}\nEnergy: ${rep.avgEnergy||'—'}/10\nAdherence: ${rep.avgAdher||'—'}/10\n\n${insight}`;
   if(navigator.share){navigator.share({title:'Iron Kinetic Report',text}).catch(()=>{});}
-  else{try{navigator.clipboard.writeText(text);toast('📋 Report copiato!');}catch{toast('⚠️ Condivisione non supportata');}}
-}
+  else{try{navigator.clipboard.writeText(text);toast(t('rep.copied'));}catch{toast(t('rep.shareUnsup'));}}}
 
 /* ═══════════════════════════════════════
    visualViewport keyboard handler
@@ -3373,12 +3359,12 @@ function generatePersonalizedPlan(prof, prefs, macros){
 
   /* ── FASI del piano (adattate al protocollo) ── */
   const phases=isDASH
-    ?[{weeks:'1-4',cal:`${macros.targetKcal} kcal`,desc:'DASH fase 1: riduzione sodio <1500mg/die, potassio ≥4700mg.'},
-      {weeks:'5-8',cal:`${macros.targetKcal} kcal`,desc:'DASH fase 2: consolidamento, 5 porzioni frutta-verdura/die.'},
-      {weeks:'9+',  cal:`${macros.targetKcal} kcal`,desc:'Mantenimento DASH: monitoraggio PA e profilo lipidico.'}]
-    :[{weeks:'1-4',  cal:`${macros.targetKcal} kcal`,desc:`Fase adattamento — ${goalNameForPlan}.`},
-      {weeks:'5-8',  cal:`${macros.targetKcal-100}–${macros.targetKcal} kcal`,desc:'Ottimizzazione progressiva (±100 kcal modulatore AI).'},
-      {weeks:'9-15', cal:`${macros.targetKcal} kcal`,desc:'Consolidamento: fibra ≥25g/die, sodio <2g/die.'}];
+    ?[{weeks:'1-4',cal:`${macros.targetKcal} kcal`,desc:t('phase.dash1')},
+      {weeks:'5-8',cal:`${macros.targetKcal} kcal`,desc:t('phase.dash2')},
+      {weeks:'9+',  cal:`${macros.targetKcal} kcal`,desc:t('phase.dash3')}]
+    :[{weeks:'1-4',  cal:`${macros.targetKcal} kcal`,desc:t('phase.adapt',{goal:goalNameForPlan})},
+      {weeks:'5-8',  cal:`${macros.targetKcal-100}–${macros.targetKcal} kcal`,desc:t('phase.optim')},
+      {weeks:'9-15', cal:`${macros.targetKcal} kcal`,desc:t('phase.consol')}];
 
   return{
     metadata:{
@@ -4215,8 +4201,7 @@ function renderPersonalInsight(){
   const die=t('prof.die');
   content.innerHTML=`<p style="margin:0 0 4px;"><strong style="color:var(--on);">${p.sex==='M'?'♂':'♀'} ${sanitize(p.age)}${t('prof.anni')} · ${sanitize(p.weight)}kg${p.bf?` · ${sanitize(p.bf)}% ${t('prof.grassi').toLowerCase()}`:''}</strong></p>`+
     `<p style="margin:0 0 4px;">${t('prof.obiettivo')}: <strong style="color:var(--p);">${p.goal?t('goal.label.'+p.goal)||'—':'—'}</strong> · ${t('prof.target')}: <strong style="color:var(--p);">${sanitize(p.targetKcal)} kcal${die}</strong></p>`+
-    `<p style="margin:0 0 4px;">${sanitize(prefs.mealsCount||3)} ${t('prefs.pasti')} · ${t('prefs.gusto')}: ${prefs.taste?t('taste.'+prefs.taste):'—'} · ${prefs.dietStyle?t('style.'+prefs.dietStyle):'—'}</p>`+
-    `<p style="margin:0;">${t('prefs.cibiScelti')}: ${sanitize(foodsList)}${prefs.intolerances?` · ${t('prefs.esclusi')}: ${sanitize(prefs.intolerances)}`:''}</p>`;
+    `<p style="margin:0 0 4px;">${sanitize(prefs.mealsCount||3)} ${t('prefs.pasti')} · ${t('prefs.gusto')}: ${sanitize(prefs.taste||'—')} · ${sanitize(prefs.dietStyle||'—')}</p>`+    `<p style="margin:0;">${t('prefs.cibiScelti')}: ${sanitize(foodsList)}${prefs.intolerances?` · ${t('prefs.esclusi')}: ${sanitize(prefs.intolerances)}`:''}</p>`;
 }
 
 /* ═══════════════════════════════════════
@@ -4353,8 +4338,7 @@ function renderMeals(){
   }).join('');
   document.getElementById('meals-done').textContent=done;
   const dateEl=document.getElementById('oggi-date-label');
-  if(dateEl)dateEl.textContent=new Date().toLocaleDateString(_lang==='en'?'en-US':'it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
-  const pastiBar=document.getElementById('oggi-pasti-bar');
+  if(dateEl)dateEl.textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();  const pastiBar=document.getElementById('oggi-pasti-bar');
   if(pastiBar)pastiBar.style.width=(mNames.length>0?Math.round(done/mNames.length*100):0)+'%';
   renderKcalRing();
 }
@@ -4417,8 +4401,7 @@ function renderKcalRing(){
   const r2=getEl('kcal-ring-oggi');
   if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct/100);r2.style.stroke=pct>=99.5?'#22c55e':'var(--p)';}
   const pctEl=getEl('oggi-kcal-pct');
-  if(pctEl)pctEl.textContent=Math.round(pct)+'% '+t('oggi.kcal.consumato');
-}
+  if(pctEl)pctEl.textContent=Math.round(pct)+'% '+t('oggi.kcal.pct');}
 
 /* ═══════════════════════════════════════
    REFEED
@@ -4458,8 +4441,7 @@ function renderSettings(){
     if(getPhase()===p)b.classList.add('on');b.onclick=()=>{hap();setPhase(p);};el.appendChild(b);
   });
   renderRefeed();renderModDisplay();
-  {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_U;const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}
-  const prof=getProfile();if(prof)_renderProfileCard(prof);
+  {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent=t('set.mod.units',{cur,max:MAX_U});const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}  const prof=getProfile();if(prof)_renderProfileCard(prof);
   _renderPrefsCard();
   if(document.getElementById('hdr-plan')){document.getElementById('hdr-plan').textContent=m.name||'';document.getElementById('hdr-plan').style.display=m.name?'block':'none';}
 }
@@ -4514,8 +4496,7 @@ function applyMod(u){
   else{const n=Math.max(MIN_UNITS,Math.min(MAX_UNITS,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
   renderModDisplay();renderMacros();renderCoach();renderMeals();
   const cur=getMod();
-  const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_UNITS;
-  const stepper=getEl('mod-stepper');
+  const lbl=getEl('mod-units-label');if(lbl)lbl.textContent=t('set.mod.units',{cur,max:MAX_UNITS});  const stepper=getEl('mod-stepper');
   if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
 }
 const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
@@ -4526,8 +4507,7 @@ function closeConfirm(){getEl('modal-confirm').style.display='none';_confirmCb=n
 document.addEventListener('DOMContentLoaded',()=>{const okBtn=getEl('confirm-ok-btn');if(okBtn)okBtn.onclick=()=>{closeConfirm();_confirmCb&&_confirmCb();};},{once:true});
 function updateWeight(){
   const v=parseFloat(getEl('inp-weight-upd').value);
-  if(!v||v<40||v>250)return toast(t('toast.errore')||'Valore non valido');
-  const p=getProfile()||{};
+  if(!v||v<40||v>250)return toast(t('toast.pesoInvalido'));  const p=getProfile()||{};
   p.weight=v;lsS(SK.profile,p);
   const m=calculateUserMacros(p);
   p.targetKcal=m.targetKcal;p.pro=m.pro;p.carbs=m.carbs;p.fat=m.fat;p.tdee=m.tdee;
@@ -4539,11 +4519,7 @@ function updateWeight(){
 }
 function resetProfile(){
   showConfirm(t('confirm.deleteAll'),()=>{
-    /* Preserve GDPR consent — KEEP_PREFIX misses ik_gdpr_consent */
-    const _gdpr=lsR(GDPR_KEY);
-    try{clearAppData();}catch{}
-    if(_gdpr)try{localStorage.setItem(GDPR_KEY,_gdpr);}catch{}
-    if(bodyChart){bodyChart.destroy();bodyChart=null;}
+    try{clearAppData();}catch{}    if(bodyChart){bodyChart.destroy();bodyChart=null;}
     dietData=null;
     profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
     prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
@@ -4654,12 +4630,11 @@ function switchChart(mode,btn){
   const lbl=document.getElementById('chart-mode-label');
   const predSum=document.getElementById('prediction-summary');
   if(mode==='prediction'){
-    if(lbl)lbl.textContent='Previsione Peso (12 sett)';
+    if(lbl)lbl.textContent=t('pred.label');
     renderPredictionChart();
   } else {
     if(predSum)predSum.style.display='none';
-    if(lbl)lbl.textContent=mode==='waist'?'Trend Girovita':'Trend Peso';
-    renderChart(getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1));
+    if(lbl)lbl.textContent=mode==='waist'?t('prog.chart.girovita'):t('prog.chart.peso');    renderChart(getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1));
   }
 }
 
@@ -5153,8 +5128,8 @@ function scheduleLocalReminder(type,hour){
   if(next<=now) next.setDate(next.getDate()+1);
   const delay=next.getTime()-now.getTime();
   const labels={
-    checkin:{title:'Iron Kinetic ⚡',body:'Momento del check-in! Come ti senti oggi?'},
-    logging:{title:'Iron Kinetic 📊',body:'Ricorda di registrare il peso stamattina.'},
+    checkin:{title:'Iron Kinetic ⚡',body:t('notif.checkin.body')},
+    logging:{title:'Iron Kinetic 📊',body:t('notif.logging.body')},
   };
   const lbl=labels[type]||labels.checkin;
   setTimeout(()=>{
@@ -5163,7 +5138,7 @@ function scheduleLocalReminder(type,hour){
       reg.showNotification(lbl.title,{
         body:lbl.body,icon:'/icon-192.png',badge:'/icon-192.png',
         tag:type,renotify:true,
-        actions:[{action:'open',title:'Apri App'}]
+        actions:[{action:'open',title:t('notif.action.open')}]
       }).catch(()=>{
         /* SW showNotification failed — fallback to basic Notification API */
         try{new Notification(lbl.title,{body:lbl.body});}catch{}
@@ -5724,134 +5699,134 @@ function _onbFinish(){
   </div>
   <div class="modal-body">
 
-    <div class="prv-badge">Aggiornata: Gennaio 2025 · Conforme GDPR (Reg. UE 2016/679)</div>
+    <div class="prv-badge">Updated: January 2025 · GDPR compliant (EU Reg. 2016/679)</div>
 
     <div class="prv-section">
       <div class="prv-highlight">
-        <p class="prv-h2" style="margin-bottom:6px;">📱 In sintesi: i tuoi dati restano sul tuo dispositivo</p>
-        <p class="prv-p">Iron Kinetic è un'app offline-first. Tutti i tuoi dati (peso, misure, piano alimentare, check-in) vengono salvati <strong>esclusivamente nel localStorage del tuo browser</strong>. Non esistono account utente, non esistono server dove vengono inviati i tuoi dati, non viene effettuato nessun tracking.</p>
+        <p class="prv-h2" style="margin-bottom:6px;">📱 In short: your data stays on your device</p>
+        <p class="prv-p">Iron Kinetic is an offline-first app. All your data (weight, measurements, meal plan, check-ins) is stored <strong>exclusively in your browser's localStorage</strong>. There are no user accounts, no servers where your data is sent, and no tracking of any kind.</p>
       </div>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">1. Titolare del trattamento</p>
-      <p class="prv-p"><strong>Iron Kinetic</strong><br>Email: privacy&#64;ironkinetic.app<br>Per qualsiasi richiesta relativa ai tuoi dati, contattaci all'indirizzo sopra indicato.</p>
+      <p class="prv-h2">1. Data controller</p>
+      <p class="prv-p"><strong>Iron Kinetic</strong><br>Email: privacy&#64;ironkinetic.app<br>For any request relating to your data, contact us at the address above.</p>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">2. Dati trattati e finalità</p>
-      <p class="prv-p">L'app tratta, <em>localmente sul tuo dispositivo</em>, le seguenti categorie di dati:</p>
+      <p class="prv-h2">2. Data processed and purposes</p>
+      <p class="prv-p">The app processes, <em>locally on your device</em>, the following categories of data:</p>
       <ul class="prv-list">
-        <li><strong>Dati anagrafici e fisici</strong> (età, altezza, peso, sesso biologico, grasso corporeo): necessari per il calcolo del TDEE e dei macronutrienti personalizzati.</li>
-        <li><strong>Dati relativi alla salute</strong> ex art. 9 GDPR (peso corporeo, percentuale di grasso, girovita): trattati sulla base del tuo consenso esplicito, esclusivamente per fornirti il servizio di coaching nutrizionale.</li>
-        <li><strong>Dati sulle abitudini alimentari</strong> (preferenze alimentari, intolleranze, numero di pasti): utilizzati per generare il piano nutrizionale personalizzato.</li>
-        <li><strong>Dati di attività quotidiana</strong> (passi, workout): utilizzati per il coaching giornaliero.</li>
-        <li><strong>Check-in giornalieri</strong> (fame, energia, aderenza, digestione): utilizzati per l'analisi dei trend e i suggerimenti contestuali.</li>
+        <li><strong>Personal and physical data</strong> (age, height, weight, biological sex, body fat): required to calculate your personalised TDEE and macronutrients.</li>
+        <li><strong>Health-related data</strong> under GDPR Art. 9 (body weight, body fat percentage, waist): processed on the basis of your explicit consent, solely to provide the nutritional coaching service.</li>
+        <li><strong>Dietary habit data</strong> (food preferences, intolerances, number of meals): used to generate your personalised nutrition plan.</li>
+        <li><strong>Daily activity data</strong> (steps, workouts): used for daily coaching.</li>
+        <li><strong>Daily check-ins</strong> (hunger, energy, adherence, digestion): used for trend analysis and contextual suggestions.</li>
       </ul>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">3. Base giuridica del trattamento</p>
-      <p class="prv-p">Il trattamento dei dati ordinari è basato sul <strong>contratto</strong> (art. 6 par. 1 lett. b GDPR): i dati sono necessari per erogare il servizio richiesto.</p>
-      <p class="prv-p">Il trattamento dei <strong>dati relativi alla salute</strong> (art. 9 GDPR) è basato sul <strong>tuo consenso esplicito</strong> (art. 9 par. 2 lett. a GDPR), prestato al primo avvio dell'app e sempre revocabile.</p>
+      <p class="prv-h2">3. Legal basis for processing</p>
+      <p class="prv-p">Processing of ordinary data is based on <strong>contract</strong> (GDPR Art. 6(1)(b)): the data is necessary to deliver the requested service.</p>
+      <p class="prv-p">Processing of <strong>health-related data</strong> (GDPR Art. 9) is based on your <strong>explicit consent</strong> (GDPR Art. 9(2)(a)), given at first launch and always revocable.</p>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">4. Archiviazione e sicurezza</p>
-      <p class="prv-p"><strong>Nessun dato viene trasmesso a server esterni.</strong> Tutti i dati sono conservati nel localStorage del tuo dispositivo tramite l'API Web Storage standard.</p>
-      <p class="prv-p">La sicurezza dei dati dipende dalla protezione del tuo dispositivo (codice di sblocco, cifratura). Ti consigliamo di:</p>
+      <p class="prv-h2">4. Storage and security</p>
+      <p class="prv-p"><strong>No data is transmitted to external servers.</strong> All data is stored in your device's localStorage via the standard Web Storage API.</p>
+      <p class="prv-p">Data security depends on your device's own protection (lock screen, encryption). We recommend:</p>
       <ul class="prv-list">
-        <li>Mantenere il dispositivo protetto da accessi non autorizzati.</li>
-        <li>Usare la funzione <em>Esporta Backup</em> per conservare una copia sicura dei tuoi dati.</li>
-        <li>Non utilizzare l'app su dispositivi condivisi senza cancellare i dati dopo l'uso.</li>
+        <li>Keep your device protected from unauthorised access.</li>
+        <li>Use the <em>Export Backup</em> feature to keep a safe copy of your data.</li>
+        <li>Do not use the app on shared devices without clearing the data after use.</li>
       </ul>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">5. Conservazione dei dati</p>
-      <p class="prv-p">I dati rimangono sul tuo dispositivo finché non li elimini tu. Puoi cancellare tutti i tuoi dati in qualsiasi momento tramite <em>Profilo → Ricomincia da capo</em> oppure svuotando i dati del sito nelle impostazioni del tuo browser.</p>
+      <p class="prv-h2">5. Data retention</p>
+      <p class="prv-p">Data remains on your device until you delete it. You can erase all your data at any time via <em>Profile → Start over</em> or by clearing site data in your browser settings.</p>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">6. Condivisione con terze parti</p>
-      <p class="prv-p">I tuoi dati personali <strong>non vengono condivisi con nessuna terza parte</strong>.</p>
-      <p class="prv-p">L'app utilizza le seguenti risorse esterne, senza trasmissione di dati personali:</p>
+      <p class="prv-h2">6. Third-party sharing</p>
+      <p class="prv-p">Your personal data is <strong>never shared with any third party</strong>.</p>
+      <p class="prv-p">The app uses the following external resources without transmitting personal data:</p>
       <ul class="prv-list">
-        <li><strong>Google Fonts</strong> (fonts.googleapis.com): caricamento dei font Space Grotesk e Manrope. Google potrebbe registrare l'indirizzo IP richiedente.</li>
-        <li><strong>Chart.js via jsDelivr</strong> (cdn.jsdelivr.net): libreria grafica. Nessun dato personale trasmesso.</li>
-        <li><strong>Material Symbols</strong> (Google): icone vettoriali. Stesse condizioni di Google Fonts.</li>
+        <li><strong>Google Fonts</strong> (fonts.googleapis.com): loads the Space Grotesk and Manrope fonts. Google may log the requesting IP address.</li>
+        <li><strong>Chart.js via jsDelivr</strong> (cdn.jsdelivr.net): charting library. No personal data transmitted.</li>
+        <li><strong>Material Symbols</strong> (Google): vector icons. Same conditions as Google Fonts.</li>
       </ul>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">7. Trasferimento verso paesi terzi</p>
-      <p class="prv-p">I dati personali conservati localmente non sono soggetti a trasferimento verso paesi terzi. Le richieste verso Google Fonts potrebbero coinvolgere server al di fuori dello Spazio Economico Europeo; tali trasferimenti sono regolati dalle Clausole Contrattuali Standard della Commissione UE.</p>
+      <p class="prv-h2">7. International transfers</p>
+      <p class="prv-p">Locally stored personal data is not subject to international transfers. Requests to Google Fonts may involve servers outside the European Economic Area; such transfers are governed by the EU Commission's Standard Contractual Clauses.</p>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">8. I tuoi diritti (artt. 15–22 GDPR)</p>
+      <p class="prv-h2">8. Your rights (GDPR Arts. 15–22)</p>
       <div class="prv-rights-grid">
         <div class="prv-right-item">
           <span class="prv-right-ico">👁</span>
-          <span class="prv-right-label">Accesso</span>
-          <span class="prv-right-desc">Puoi vedere tutti i tuoi dati direttamente nell'app (sezione Profilo).</span>
+          <span class="prv-right-label">Access</span>
+          <span class="prv-right-desc">View all your data directly in the app (Profile section).</span>
         </div>
         <div class="prv-right-item">
           <span class="prv-right-ico">✏️</span>
-          <span class="prv-right-label">Rettifica</span>
-          <span class="prv-right-desc">Puoi modificare i tuoi dati in qualsiasi momento dall'app.</span>
+          <span class="prv-right-label">Rectification</span>
+          <span class="prv-right-desc">Edit your data at any time from within the app.</span>
         </div>
         <div class="prv-right-item">
           <span class="prv-right-ico">🗑</span>
-          <span class="prv-right-label">Cancellazione</span>
-          <span class="prv-right-desc">Usa "Ricomincia da capo" per cancellare tutti i dati.</span>
+          <span class="prv-right-label">Erasure</span>
+          <span class="prv-right-desc">Use "Start over" to delete all your data.</span>
         </div>
         <div class="prv-right-item">
           <span class="prv-right-ico">📦</span>
-          <span class="prv-right-label">Portabilità</span>
-          <span class="prv-right-desc">Esporta i tuoi dati in formato JSON leggibile.</span>
+          <span class="prv-right-label">Portability</span>
+          <span class="prv-right-desc">Export your data as a readable JSON file.</span>
         </div>
         <div class="prv-right-item">
           <span class="prv-right-ico">🚫</span>
-          <span class="prv-right-label">Revoca consenso</span>
-          <span class="prv-right-desc">Revoca consenso da Profilo → Privacy.</span>
+          <span class="prv-right-label">Revoke consent</span>
+          <span class="prv-right-desc">Revoke consent from Profile → Privacy.</span>
         </div>
         <div class="prv-right-item">
           <span class="prv-right-ico">⚖️</span>
-          <span class="prv-right-label">Reclamo</span>
-          <span class="prv-right-desc">Puoi proporre reclamo al Garante Privacy italiano (gpdp.it).</span>
+          <span class="prv-right-label">Complaint</span>
+          <span class="prv-right-desc">You may lodge a complaint with your national data protection authority.</span>
         </div>
       </div>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">9. Cookie e tecnologie di tracciamento</p>
-      <p class="prv-p"><strong>Iron Kinetic non utilizza cookie.</strong> I dati sono conservati tramite Web Storage API (localStorage), che non è soggetta alla Direttiva Cookie 2002/58/CE ma rientra nel perimetro del GDPR per i dati personali in essa contenuti.</p>
+      <p class="prv-h2">9. Cookies and tracking technologies</p>
+      <p class="prv-p"><strong>Iron Kinetic does not use cookies.</strong> Data is stored via the Web Storage API (localStorage), which is not subject to the Cookie Directive 2002/58/EC but falls within the scope of the GDPR for the personal data it contains.</p>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">10. Avviso per i minori</p>
-      <p class="prv-p">Il servizio è destinato a persone di età non inferiore a 16 anni. L'app non raccoglie consapevolmente dati di minori di 16 anni. Se sei un genitore e ritieni che tuo figlio abbia utilizzato il servizio, contattaci per la cancellazione dei dati.</p>
+      <p class="prv-h2">10. Minors</p>
+      <p class="prv-p">This service is intended for persons aged 16 or over. The app does not knowingly collect data from minors under 16. If you are a parent and believe your child has used the service, contact us for data deletion.</p>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">11. Modifiche alla presente informativa</p>
-      <p class="prv-p">Eventuali modifiche saranno comunicate tramite aggiornamento dell'app. La data di ultimo aggiornamento è indicata in cima a questo documento.</p>
+      <p class="prv-h2">11. Changes to this policy</p>
+      <p class="prv-p">Any changes will be communicated via an app update. The date of last update is shown at the top of this document.</p>
     </div>
 
     <div class="prv-section">
-      <p class="prv-h2">Contatti e reclami</p>
-      <p class="prv-p">Per esercitare i tuoi diritti o per qualsiasi domanda: <strong>privacy&#64;ironkinetic.app</strong></p>
-      <p class="prv-p">Autorità di controllo: <strong>Garante per la protezione dei dati personali</strong><br>Piazza Venezia 11 — 00187 Roma · <a href="https://gpdp.it" style="color:var(--p);">gpdp.it</a></p>
+      <p class="prv-h2">Contact and complaints</p>
+      <p class="prv-p">To exercise your rights or for any question: <strong>privacy&#64;ironkinetic.app</strong></p>
+      <p class="prv-p">Supervisory authority: <strong>your national data protection authority</strong> · <a href="https://gpdp.it" style="color:var(--p);">gpdp.it</a> (Italy)</p>
     </div>
 
     <!-- Consent management -->
     <div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:14px;margin-top:4px;">
-      <p class="prv-h2" style="margin-bottom:8px;">Gestione consenso</p>
+      <p class="prv-h2" style="margin-bottom:8px;">Consent management</p>
       <p class="prv-p" style="margin-bottom:12px;" id="gdpr-status-text">—</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button onclick="gdprWithdraw()" class="btn btn-danger-o btn-xs sn" style="padding:0 14px;">Revoca consenso</button>
-        <button onclick="gdprAccept();closeModal('modal-privacy')" class="btn btn-neon-o btn-xs sn" style="padding:0 14px;">Rinnova consenso</button>
+        <button onclick="gdprWithdraw()" class="btn btn-danger-o btn-xs sn" style="padding:0 14px;">Revoke consent</button>
+        <button onclick="gdprAccept();closeModal('modal-privacy')" class="btn btn-neon-o btn-xs sn" style="padding:0 14px;">Renew consent</button>
       </div>
     </div>
 
@@ -5897,82 +5872,82 @@ function _onbFinish(){
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Come funziona il calcolo del TDEE?</span>
+          <span class="faq-q-text">How does the TDEE calculation work?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Se inserisci la percentuale di grasso corporeo, viene usata la formula <strong>Katch-McArdle</strong> basata sulla massa magra. Altrimenti viene usata la formula <strong>Mifflin-St Jeor</strong>. Il TDEE finale viene moltiplicato per un fattore di attività calcolato da allenamenti settimanali e passi giornalieri.</div>
+        <div class="faq-answer">If you enter your body fat percentage, the <strong>Katch-McArdle</strong> formula based on lean mass is used. Otherwise the <strong>Mifflin-St Jeor</strong> formula is used. The final TDEE is multiplied by an activity factor derived from weekly training sessions and daily steps.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Come viene generato il piano alimentare?</span>
+          <span class="faq-q-text">How is the meal plan generated?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Il piano viene generato automaticamente in base ai tuoi cibi preferiti, al numero di pasti scelto, al gusto (dolce/salato/misto) e allo stile alimentare (onnivoro/vegetariano/vegano). Le porzioni sono calcolate per raggiungere il tuo target proteico e calorico personale. Nessun JSON esterno necessario.</div>
+        <div class="faq-answer">The plan is generated automatically based on your preferred foods, chosen number of meals, taste preference (sweet/savoury/mixed) and dietary style (omnivore/vegetarian/vegan). Portions are calculated to hit your personal protein and calorie target. No external JSON required.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Cosa fa il Modificatore AI?</span>
+          <span class="faq-q-text">What does the AI Modifier do?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Il modificatore aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall'inizio.</div>
+        <div class="faq-answer">The modifier increases or decreases your target calories by 100 kcal per unit (±25g carbs). Use it for micro-adjustments when you notice a weight stall, excessive hunger or low energy — without having to redo your profile from scratch.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Cos'è il Refeed Day?</span>
+          <span class="faq-q-text">What is a Refeed Day?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Un refeed è un giorno di aumento calorico controllato (+400 kcal, +50g carbs) usato in Fase 2 per stimolare la leptina e prevenire il calo metabolico durante la fase di definizione. Va pianificato 1 volta ogni 7-10 giorni.</div>
+        <div class="faq-answer">A refeed is a day of controlled caloric increase (+400 kcal, +50g carbs) used in Phase 2 to stimulate leptin and prevent metabolic slowdown during a cut. It should be planned once every 7–10 days.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Come funziona il Coach AI?</span>
+          <span class="faq-q-text">How does the AI Coach work?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Il coach analizza: la tua curva di peso (ultimi 7 giorni), la variazione del girovita, l'assunzione di acqua e sale, i giorni dall'ultimo refeed, e la fase attiva. Sulla base di questi dati mostra un'analisi contestuale: stallo metabolico, rischio catabolico, ricomposizione, ritenzione idrica o progressione ottimale. Tutto avviene localmente, senza AI esterna.</div>
+        <div class="faq-answer">The coach analyses: your weight curve (last 7 days), waist change, water and salt intake, days since last refeed, and the active phase. Based on this data it shows a contextual analysis: metabolic stall, catabolism risk, recomposition, water retention or optimal progression. Everything runs locally — no external AI.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Come faccio il backup e ripristino?</span>
+          <span class="faq-q-text">How do I back up and restore my data?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Da <em>Profilo → Dati</em> puoi esportare un file JSON con tutti i tuoi dati. Per ripristinare, usa <em>Importa Backup</em>. Il file contiene profilo, piano, log del peso, check-in e impostazioni. Conservalo in un posto sicuro — è l'unico modo per recuperare i dati se cambi dispositivo o svuoti il browser.</div>
+        <div class="faq-answer">From <em>Profile → Data</em> you can export a JSON file with all your data. To restore, use <em>Import Backup</em>. The file contains your profile, plan, weight log, check-ins and settings. Keep it somewhere safe — it's the only way to recover your data if you change device or clear your browser.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Perché il peso varia molto giornalmente?</span>
+          <span class="faq-q-text">Why does my weight fluctuate so much day to day?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Fluttuazioni di 1-2 kg al giorno sono normali e dipendono da: acqua corporea, glicogeno muscolare, contenuto intestinale, ciclo ormonale (donne). Il Coach riconosce la ritenzione idrica (sale alto + acqua bassa) e ti avvisa quando il peso è "falsato". Analizza sempre il trend su 7+ giorni, non il singolo pesata.</div>
+        <div class="faq-answer">Fluctuations of 1–2 kg per day are normal and depend on: body water, muscle glycogen, gut content, hormonal cycle (women). The Coach recognises water retention (high salt + low water) and warns you when your weight reading is "skewed". Always analyse the trend over 7+ days, not a single weigh-in.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">L'app è adatta a tutti?</span>
+          <span class="faq-q-text">Is the app suitable for everyone?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Iron Kinetic è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.</div>
+        <div class="faq-answer">Iron Kinetic is a nutritional coaching support tool for healthy adults (16+). It is not a medical device and does not replace the advice of a doctor, nutritionist or dietitian. If you have any medical conditions, eating disorders or special health requirements, always consult a qualified healthcare professional before following any nutrition plan.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Posso installare l'app sul telefono?</span>
+          <span class="faq-q-text">Can I install the app on my phone?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Sì. Iron Kinetic è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un'app nativa, anche offline.</div>
+        <div class="faq-answer">Yes. Iron Kinetic is a Progressive Web App (PWA). On iPhone/iPad: open in Safari → Share → "Add to Home Screen". On Android: open in Chrome → "⋮" menu → "Add to Home Screen". It will work like a native app, even offline.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">I miei dati vengono inviati da qualche parte?</span>
+          <span class="faq-q-text">Is my data sent anywhere?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server, account o sincronizzazione cloud. L'unica eccezione sono le richieste di font e icone a Google (Google Fonts/Material Symbols) che non trasmettono i tuoi dati personali.</div>
+        <div class="faq-answer">No. All data (weight, plan, check-ins, preferences) stays in your device's localStorage. There are no servers, accounts or cloud sync. The only exception are font and icon requests to Google (Google Fonts/Material Symbols), which do not transmit your personal data.</div>
       </div>
 
     </div>
@@ -5982,7 +5957,7 @@ function _onbFinish(){
       <span class="material-symbols-outlined" style="color:var(--p);font-size:24px;flex-shrink:0;font-variation-settings:'FILL' 1;">mail</span>
       <div>
         <p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 3px;" class="sn">Hai altre domande?</p>
-        <p style="font-size:11px;color:var(--muted);margin:0;" class="sn">Scrivici a <strong style="color:var(--p);">support&#64;ironkinetic.app</strong></p>
+        <p style="font-size:11px;color:var(--muted);margin:0;" class="sn">Write to us at <strong style="color:var(--p);">support&#64;ironkinetic.app</strong></p>
       </div>
     </div>
 
