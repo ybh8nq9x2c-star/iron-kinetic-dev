@@ -5545,8 +5545,12 @@ const _ONB=[
 function showOnboarding(){
   const el=document.getElementById('onboarding-overlay');
   if(!el){
-    /* Element is after this <script> block — DOM not yet parsed. Defer and retry. */
-    document.addEventListener('DOMContentLoaded',()=>{try{showOnboarding();}catch{try{_bootAfterGates();}catch{}}},{once:true});
+    /* Element is after this <script> block — show placeholder so screen is never black, then retry. */
+    try{showOnb();}catch{}
+    document.addEventListener('DOMContentLoaded',()=>{
+      try{showOnboarding();document.getElementById('onb-screen')?.classList.remove('on');}
+      catch{try{_bootAfterGates();}catch{}}
+    },{once:true});
     return;
   }
   el.style.display='flex';
