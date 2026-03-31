@@ -5506,6 +5506,7 @@ function _bootAfterGates(){
   try{
     const consent=gdprStatus();
     if(!consent||!consent.accepted){
+      document.body.classList.remove('onboarding-active');
       document.getElementById('gdpr-gate').classList.add('on');
       return;
     }
@@ -5548,6 +5549,7 @@ function showOnboarding(){
     document.addEventListener('DOMContentLoaded',()=>{try{showOnboarding();}catch{try{_bootAfterGates();}catch{}}},{once:true});
     return;
   }
+  el.style.display='flex';
   _ONB.forEach((_,i)=>{
     const tt=document.getElementById(`onb-t${i}`);
     const tb=document.getElementById(`onb-b${i}`);
@@ -5622,6 +5624,12 @@ function _onbFinish(){
     if(!isStandalone&&!localStorage.getItem('ik_pwa_seen')){
       document.getElementById('pwa-gate').classList.add('on');
       return; /* acknowledgedPWA() continues the boot flow */
+    }
+    const _gdpr=gdprStatus();
+    if(!_gdpr||!_gdpr.accepted){
+      document.body.classList.remove('onboarding-active');
+      document.getElementById('gdpr-gate')?.classList.add('on');
+      return;
     }
 
     /* Onboarding slideshow: shown once on first launch */
