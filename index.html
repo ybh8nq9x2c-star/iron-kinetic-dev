@@ -3602,7 +3602,10 @@ function applyMod(u){
 }
 function resetProfile(){
   if(!confirm(t('confirm.ricomincia')))return;
+  /* Preserve GDPR consent so user isn't sent back through the consent gate after reset */
+  const _gdpr=lsR(GDPR_KEY);
   try{localStorage.clear();}catch{}
+  if(_gdpr)try{localStorage.setItem(GDPR_KEY,_gdpr);}catch{}
   if(bodyChart){bodyChart.destroy();bodyChart=null;}
   dietData=null;
   profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
@@ -4352,7 +4355,7 @@ function mountApp(){
   document.getElementById('onb-screen').classList.remove('on');document.getElementById('app-shell').classList.add('on');
   document.getElementById('log-date').value=toISO();
   const dow=new Date().getDay();const days=dietData.days||[];const match=days.find(d=>d.d===(dow===0?7:dow));
-  selDay=(match||days[0]).d;buildDaySelector();
+  selDay=(match||(days[0])||{d:1}).d;buildDaySelector();
   applyTranslations();
   renderMacros();renderTrackers();renderCoach();renderMeals();renderRefeed();renderPersonalInsight();
   renderCalendar();
@@ -4516,20 +4519,25 @@ function toggleFaq(item){
 
 /* ── Shared boot sequence (after all gates are cleared) ── */
 function _bootAfterGates(){
-  const consent=gdprStatus();
-  if(!consent||!consent.accepted){
-    document.getElementById('gdpr-gate').classList.add('on');
-    return;
-  }
-  const raw=localStorage.getItem(SK.diet);
-  if(raw){
-    try{
-      const parsed=JSON.parse(raw);validateSchema(parsed);
-      const p=getProfile();if(p?.targetKcal){parsed.metadata.baseKcal=p.targetKcal;parsed.metadata.basePro=p.pro;parsed.metadata.baseCarbs=p.carbs;parsed.metadata.baseFat=p.fat;}
-      dietData=parsed;mountApp();
-    }catch{try{localStorage.removeItem(SK.diet);}catch{}showOnb();toast(t('toast.pianoCorrotto'));}
-  }else{
-    showOnb();
+  try{
+    const consent=gdprStatus();
+    if(!consent||!consent.accepted){
+      document.getElementById('gdpr-gate').classList.add('on');
+      return;
+    }
+    const raw=localStorage.getItem(SK.diet);
+    if(raw){
+      try{
+        const parsed=JSON.parse(raw);validateSchema(parsed);
+        const p=getProfile();if(p?.targetKcal){parsed.metadata.baseKcal=p.targetKcal;parsed.metadata.basePro=p.pro;parsed.metadata.baseCarbs=p.carbs;parsed.metadata.baseFat=p.fat;}
+        dietData=parsed;mountApp();
+      }catch{try{localStorage.removeItem(SK.diet);}catch{}try{showOnb();}catch{}try{toast(t('toast.pianoCorrotto'));}catch{}}
+    }else{
+      showOnb();
+    }
+  }catch{
+    /* Last-resort fallback: try to show onboarding, else show gdpr gate */
+    try{showOnb();}catch{try{document.getElementById('onb-screen').classList.add('on');}catch{}}
   }
 }
 
@@ -4543,19 +4551,31 @@ function acknowledgedPWA(){
 
 /* ENTRY POINT */
 (()=>{
-  initLang(); /* read ik_lang from localStorage, set _lang + html lang attr */
-  /* Apply translations to gate screens immediately */
-  applyTranslations();
-  const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);
-  const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);
+  try{
+    initLang(); /* read ik_lang from localStorage, set _lang + html lang attr */
+    /* Apply translations to gate screens immediately */
+    try{applyTranslations();}catch(e){}
+    try{const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);}catch(e){}
+    try{const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);}catch(e){}
 
-  /* PWA gate: force install-awareness on very first open */
-  if(!localStorage.getItem('ik_pwa_seen')){
-    document.getElementById('pwa-gate').classList.add('on');
-    return; /* acknowledgedPWA() continues the boot flow */
+    /* Detect installed PWA (iOS standalone or W3C display-mode) — skip PWA gate if already installed */
+    const isStandalone=(()=>{try{return window.navigator.standalone===true||window.matchMedia('(display-mode:standalone)').matches;}catch{return false;}})();
+    if(isStandalone){try{localStorage.setItem('ik_pwa_seen','1');}catch{}}
+
+    /* PWA gate: force install-awareness on very first open (browser only, not installed PWA) */
+    if(!isStandalone&&!localStorage.getItem('ik_pwa_seen')){
+      document.getElementById('pwa-gate').classList.add('on');
+      return; /* acknowledgedPWA() continues the boot flow */
+    }
+
+    _bootAfterGates();
+  }catch(e){
+    /* Fatal boot error — show safest available screen */
+    try{
+      if(gdprStatus&&gdprStatus()?.accepted){document.getElementById('onb-screen').classList.add('on');}
+      else{document.getElementById('gdpr-gate').classList.add('on');}
+    }catch{}
   }
-
-  _bootAfterGates();
 })();
 </script>
 
