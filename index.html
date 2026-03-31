@@ -446,8 +446,8 @@ body.onboarding-active #onb-screen{
       <div style="width:72px;height:72px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.30);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
         <span class="material-symbols-outlined sn" style="color:var(--p);font-size:36px;font-variation-settings:'FILL' 1;">add_to_home_screen</span>
       </div>
-      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Aggiungi alla Schermata Home</h2>
-      <p style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">Per la migliore esperienza, installa Iron Kinetic come app sul tuo dispositivo. Funziona offline, si apre come una vera app e non occupa spazio.</p>
+      <h2 data-i18n="pwa.title" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Aggiungi alla Schermata Home</h2>
+      <p data-i18n="pwa.sub" style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">Per la migliore esperienza, installa Iron Kinetic come app sul tuo dispositivo. Funziona offline, si apre come una vera app e non occupa spazio.</p>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:12px;">
@@ -485,11 +485,11 @@ body.onboarding-active #onb-screen{
       </div>
     </div>
 
-    <p style="font-size:11px;color:var(--muted);text-align:center;line-height:1.55;" class="sn">Puoi continuare senza installare, ma l'esperienza sarà ottimale solo come app installata.</p>
+    <p data-i18n="pwa.skip" style="font-size:11px;color:var(--muted);text-align:center;line-height:1.55;" class="sn">Puoi continuare senza installare, ma l'esperienza sarà ottimale solo come app installata.</p>
   </div>
 
   <div style="padding-top:16px;">
-    <button onclick="acknowledgedPWA()" style="width:100%;height:52px;border-radius:var(--r-pill);background:var(--p);color:#003730;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:none;cursor:pointer;touch-action:manipulation;" class="sn">Ho capito, Continua →</button>
+    <button onclick="acknowledgedPWA()" data-i18n="pwa.btn" style="width:100%;height:52px;border-radius:var(--r-pill);background:var(--p);color:#003730;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:none;cursor:pointer;touch-action:manipulation;" class="sn">Ho capito, Continua →</button>
   </div>
 </div>
 </div>
@@ -504,23 +504,23 @@ body.onboarding-active #onb-screen{
       <div style="width:64px;height:64px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.28);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
         <span class="material-symbols-outlined sn" style="color:var(--p);font-size:32px;font-variation-settings:'FILL' 1;">shield</span>
       </div>
-      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Privacy &amp; Consenso</h2>
-      <p style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">Prima di iniziare, ti informiamo su come trattiamo i tuoi dati.</p>
+      <h2 data-i18n="gdpr.title" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Privacy &amp; Consenso</h2>
+      <p data-i18n="gdpr.sub" style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">Prima di iniziare, ti informiamo su come trattiamo i tuoi dati.</p>
     </div>
 
     <!-- Highlights box -->
     <div style="background:rgba(77,220,198,.06);border:1px solid rgba(77,220,198,.16);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;">
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">smartphone</span>
-        <div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Dati solo sul tuo dispositivo</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Peso, misure e piano alimentare rimangono nel tuo browser locale (localStorage). Nessun dato inviato a server esterni.</p></div>
+        <div><p data-i18n="gdpr.p1.title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Dati solo sul tuo dispositivo</p><p data-i18n="gdpr.p1.sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Peso, misure e piano alimentare rimangono nel tuo browser locale (localStorage). Nessun dato inviato a server esterni.</p></div>
       </div>
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">healing</span>
-        <div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Dati sanitari — art. 9 GDPR</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Peso e grasso corporeo sono dati relativi alla salute. Il trattamento avviene <em>esclusivamente</em> per fornirti il servizio richiesto, con tuo esplicito consenso.</p></div>
+        <div><p data-i18n="gdpr.p2.title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Dati sanitari — art. 9 GDPR</p><p data-i18n="gdpr.p2.sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Peso e grasso corporeo sono dati relativi alla salute. Il trattamento avviene <em>esclusivamente</em> per fornirti il servizio richiesto, con tuo esplicito consenso.</p></div>
       </div>
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">block</span>
-        <div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Zero cookie di terze parti</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Nessun cookie di tracking, analytics o advertising. Nessuna condivisione con terzi.</p></div>
+        <div><p data-i18n="gdpr.p3.title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Zero cookie di terze parti</p><p data-i18n="gdpr.p3.sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Nessun cookie di tracking, analytics o advertising. Nessuna condivisione con terzi.</p></div>
       </div>
     </div>
 
@@ -531,8 +531,8 @@ body.onboarding-active #onb-screen{
   </div>
 
   <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
-    <button onclick="gdprAccept()" class="btn btn-primary w100 sn" style="height:52px;font-size:13px;">✓ Accetta e Continua</button>
-    <button onclick="openModal('privacy')" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;">Leggi l'Informativa Privacy completa</button>
+    <button onclick="gdprAccept()" data-i18n="gdpr.btn.accetta" class="btn btn-primary w100 sn" style="height:52px;font-size:13px;">✓ Accetta e Continua</button>
+    <button onclick="openModal('privacy')" data-i18n="gdpr.btn.leggi" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;">Leggi l'Informativa Privacy completa</button>
     <p style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;" class="sn">
       Without accepting you won't be able to use the app, as data processing is necessary to provide the service.<br>
       Controller: Iron Kinetic · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
@@ -577,12 +577,12 @@ body.onboarding-active #onb-screen{
 
   <!-- STEP 0 — Corpo -->
   <div class="onb-step on" id="step-0" style="gap:14px;">
-    <p class="sec-label" style="margin-bottom:0;">Passo 1 — Corpo</p>
+    <p data-i18n="onb.step0.passo" class="sec-label" style="margin-bottom:0;">Passo 1 — Corpo</p>
     <div>
-      <label class="field-label" for="sex-m">Sesso biologico</label>
+      <label data-i18n="onb.field.sesso" class="field-label" for="sex-m">Sesso biologico</label>
       <div class="seg-wrap">
-        <button class="seg-btn seg-on sn" id="sex-m" onclick="setSex('M')">♂ Uomo</button>
-        <button class="seg-btn sn" id="sex-f" onclick="setSex('F')">♀ Donna</button>
+        <button class="seg-btn seg-on sn" id="sex-m" data-i18n="onb.sex.m_full" onclick="setSex('M')">♂ Uomo</button>
+        <button class="seg-btn sn" id="sex-f" data-i18n="onb.sex.f_full" onclick="setSex('F')">♀ Donna</button>
       </div>
     </div>
     <div class="grid2">
@@ -597,7 +597,7 @@ body.onboarding-active #onb-screen{
         <p style="font-size:9px;color:var(--dim);margin-top:4px;font-weight:500;" class="sn">Opzionale. Se inserito, il calcolo diventa più preciso.</p>
       </div>
     </div>
-    <button class="btn btn-primary w100 sn" onclick="goStep(1)">Continua →</button>
+    <button class="btn btn-primary w100 sn" onclick="goStep(1)" data-i18n="onb.btn.avanti">Continua →</button>
   </div>
 
   <!-- STEP 1 — Attività -->
@@ -634,9 +634,9 @@ body.onboarding-active #onb-screen{
 
   <!-- STEP 2 — Obiettivo -->
   <div class="onb-step" id="step-2" style="gap:14px;">
-    <p class="sec-label" style="margin-bottom:0;">Passo 3 — Obiettivo</p>
+    <p data-i18n="onb.step2.passo" class="sec-label" style="margin-bottom:0;">Passo 3 — Obiettivo</p>
     <div>
-      <label class="field-label">Obiettivo primario</label>
+      <label data-i18n="onb.field.obiettivo" class="field-label">Obiettivo primario</label>
       <div style="display:flex;flex-direction:column;gap:8px;" id="goal-wrap">
         <button class="seg-btn sn" data-goal="cut_extreme" data-mod="-500" style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">🔥 Definizione Estrema — −500 kcal</button>
         <button class="seg-btn sn" data-goal="recomp"      data-mod="-200" style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">🔁 Ricomposizione — −200 kcal</button>
@@ -645,8 +645,8 @@ body.onboarding-active #onb-screen{
       </div>
     </div>
     <div class="row g2" id="back-from-2">
-      <button class="btn btn-ghost sn" onclick="goStep(1)" style="flex:1;">← Indietro</button>
-      <button class="btn btn-primary sn" id="to-step3-btn" onclick="goStep(3)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled>Continua →</button>
+      <button class="btn btn-ghost sn" onclick="goStep(1)" style="flex:1;" data-i18n="onb.btn.indietro">← Indietro</button>
+      <button class="btn btn-primary sn" id="to-step3-btn" onclick="goStep(3)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled data-i18n="onb.btn.avanti">Continua →</button>
     </div>
   </div>
 
@@ -687,14 +687,14 @@ body.onboarding-active #onb-screen{
 
     <!-- Intolleranze/allergie -->
     <div>
-      <label class="field-label">Intolleranze / alimenti da escludere</label>
-      <input class="inp" id="f-intolerances" type="text" placeholder="es. lattosio, glutine, frutta secca…" style="font-size:16px !important;"/>
+      <label data-i18n="onb.field.intolleranze" class="field-label">Intolleranze / alimenti da escludere</label>
+      <input class="inp" id="f-intolerances" type="text" data-i18n-placeholder="onb.field.intolleranze.ph" placeholder="es. lattosio, glutine, frutta secca…" style="font-size:16px !important;"/>
     </div>
 
     <!-- Protocollo clinico opzionale -->
     <div id="clinical-section">
-      <label class="field-label">Protocollo clinico (opzionale)</label>
-      <p style="font-size:10px;color:var(--dim);margin-bottom:8px;font-weight:500;" class="sn">Solo se hai una diagnosi medica specifica. Adatta proteine, sodio e selezione cibi.</p>
+      <label data-i18n="onb.field.clinical" class="field-label">Protocollo clinico (opzionale)</label>
+      <p data-i18n="onb.field.clinical.hint" style="font-size:10px;color:var(--dim);margin-bottom:8px;font-weight:500;" class="sn">Solo se hai una diagnosi medica specifica. Adatta proteine, sodio e selezione cibi.</p>
       <div style="display:flex;flex-wrap:wrap;gap:6px;" id="clinical-chips">
         <button class="food-tag" id="cp-none"    onclick="setClinical(null,this)"      style="background:rgba(77,220,198,.14);border-color:rgba(77,220,198,.32);color:var(--p);">✓ Nessuno</button>
         <button class="food-tag" id="cp-CKD"     onclick="setClinical('CKD',this)">🫁 CKD / Renale</button>
@@ -715,12 +715,12 @@ body.onboarding-active #onb-screen{
 
   <!-- STEP 4 — Cibi preferiti + genera piano -->
   <div class="onb-step" id="step-4" style="gap:16px;">
-    <p class="sec-label" style="margin-bottom:0;">Passo 5 — I Tuoi Cibi Preferiti</p>
-    <p style="font-size:12px;color:var(--muted);line-height:1.55;font-weight:500;" class="sn">Seleziona i cibi che ami o scrivili tu. L'app costruirà il piano perfetto per te.</p>
+    <p data-i18n="onb.step4.passo" class="sec-label" style="margin-bottom:0;">Passo 5 — I Tuoi Cibi Preferiti</p>
+    <p data-i18n="onb.step4.sub" style="font-size:12px;color:var(--muted);line-height:1.55;font-weight:500;" class="sn">Seleziona i cibi che ami o scrivili tu. L'app costruirà il piano perfetto per te.</p>
 
     <!-- Food quick-select chips by category -->
     <div>
-      <p class="field-label" style="margin-bottom:8px;">Proteine preferite</p>
+      <p data-i18n="onb.cibi.proteine" class="field-label" style="margin-bottom:8px;">Proteine preferite</p>
       <div class="chip-row" id="food-proteins">
         <button class="food-tag" onclick="toggleFood(this,'pollo')">🍗 Chicken</button>
         <button class="food-tag" onclick="toggleFood(this,'coscia pollo')">🍗 Chicken thigh</button>
@@ -735,8 +735,7 @@ body.onboarding-active #onb-screen{
         <button class="food-tag" onclick="toggleFood(this,'trota')">🐡 Trout</button>
         <button class="food-tag" onclick="toggleFood(this,'gamberetti')">🦐 Prawns</button>
         <button class="food-tag" onclick="toggleFood(this,'uova')">🥚 Eggs</button>
-        <button class="food-tag" onclick="toggleFood(this,'albume')">⬜ Egg white</button>
-        <button class="food-tag" onclick="toggleFood(this,'tofu')">🧊 Tofu</button>
+        <button class="food-tag" onclick="toggleFood(this,'albume')">⬜ Egg white</button>        <button class="food-tag" onclick="toggleFood(this,'tofu')">🧊 Tofu</button>
         <button class="food-tag" onclick="toggleFood(this,'legumi')">🫘 Legumes</button>
       </div>
     </div>
@@ -758,8 +757,7 @@ body.onboarding-active #onb-screen{
         <button class="food-tag" onclick="toggleFood(this,'orzo')">🌾 Barley</button>
         <button class="food-tag" onclick="toggleFood(this,'mais')">🌽 Corn</button>
         <button class="food-tag" onclick="toggleFood(this,'polenta')">🟡 Polenta</button>
-        <button class="food-tag" onclick="toggleFood(this,'frutta')">🍎 Fruit</button>
-      </div>
+        <button class="food-tag" onclick="toggleFood(this,'frutta')">🍎 Fruit</button>      </div>
     </div>
 
     <div>
@@ -779,12 +777,11 @@ body.onboarding-active #onb-screen{
         <button class="food-tag" onclick="toggleFood(this,'yogurt greco')">🍶 Greek yogurt</button>
         <button class="food-tag" onclick="toggleFood(this,'ricotta')">🧀 Ricotta</button>
         <button class="food-tag" onclick="toggleFood(this,'fiocchi latte')">🥛 Cottage cheese</button>
-        <button class="food-tag" onclick="toggleFood(this,'cioccolato fondente')">🍫 Dark chocolate</button>
-      </div>
+        <button class="food-tag" onclick="toggleFood(this,'cioccolato fondente')">🍫 Dark chocolate</button>      </div>
     </div>
 
     <div>
-      <p class="field-label" style="margin-bottom:8px;">Aggiungi altri cibi che ami</p>
+      <p class="field-label" style="margin-bottom:8px;" data-i18n="onb.cibi.extra">Aggiungi altri cibi che ami</p>
       <input class="inp" id="f-extra-foods" type="text" placeholder="es. broccoli, zucchine, mele, skyr…"/>
     </div>
 
@@ -840,7 +837,7 @@ body.onboarding-active #onb-screen{
           </div>
           <div style="flex:1;min-width:0;">
             <span class="sec-label sn" id="coach-lbl" style="margin-bottom:2px;">KINETIC INSIGHT</span>
-            <p class="sn" id="coach-msg" style="font-size:13px;font-weight:600;color:var(--on);line-height:1.4;">— Analisi in corso...</p>
+            <p id="coach-msg" data-i18n="coach.msg.loading" class="sn" style="font-size:13px;font-weight:600;color:var(--on);line-height:1.4;">— Analisi in corso...</p>
           </div>
         </div>
         <div id="coach-streak-badge" style="position:absolute;top:14px;right:14px;"></div>
@@ -855,8 +852,8 @@ body.onboarding-active #onb-screen{
               <span class="t-xxs sn" style="color:var(--orange);letter-spacing:.1em;font-weight:700;">ADAPTIVE ENGINE</span>
               <p id="adaptive-msg" class="sn" style="font-size:12px;font-weight:600;color:var(--on);line-height:1.45;margin:4px 0 10px;"></p>
               <div style="display:flex;gap:8px;">
-                <button onclick="applyAdaptiveSuggestion()" class="btn btn-xs sn" style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:11px;font-weight:700;height:30px;border-radius:var(--r3);padding:0 12px;">Applica</button>
-                <button onclick="dismissAdaptive()" class="btn btn-xs sn" style="background:transparent;border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:600;height:30px;border-radius:var(--r3);padding:0 12px;">Ignora</button>
+                <button onclick="applyAdaptiveSuggestion()" data-i18n="adaptive.btn.applica" class="btn btn-xs sn" style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:11px;font-weight:700;height:30px;border-radius:var(--r3);padding:0 12px;">Applica</button>
+                <button onclick="dismissAdaptive()" data-i18n="adaptive.btn.ignora" class="btn btn-xs sn" style="background:transparent;border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:600;height:30px;border-radius:var(--r3);padding:0 12px;">Ignora</button>
               </div>
             </div>
           </div>
@@ -872,11 +869,11 @@ body.onboarding-active #onb-screen{
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;">
           <div>
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-              <span class="t-xxs muted sn">Target Giorno</span>
+              <span data-i18n="oggi.target.label" class="t-xxs muted sn">Target Giorno</span>
               <span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span>
             </div>
             <p id="m-kcal" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;color:var(--p);line-height:1;margin:0 0 6px;">—</p>
-            <span class="t-xxs muted sn">Kcal totali</span>
+            <span data-i18n="oggi.kcal.totali" class="t-xxs muted sn">Kcal totali</span>
             <div style="height:0;overflow:hidden;"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
@@ -884,28 +881,28 @@ body.onboarding-active #onb-screen{
               <circle cx="22" cy="22" r="17" class="ring-track"/>
               <circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring-oggi" stroke="var(--p)" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4))"/>
             </svg>
-            <span id="oggi-kcal-pct" class="t-xxs muted sn" style="font-size:9px;">0% used</span>
+            <span id="oggi-kcal-pct" class="t-xxs muted sn" style="font-size:9px;">0% consumato</span>
           </div>
         </div>
         <!-- 3 Macro chips -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
           <div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;">
-              <span class="t-xxs muted sn">PROT</span>
+              <span data-i18n="macro.prot" class="t-xxs muted sn">PROT</span>
               <span id="m-pro" class="sn" style="font-size:11px;font-weight:700;color:var(--on);">—</span>
             </div>
             <div class="bar-track"><div class="bar-fill bfw" id="b-pro" style="width:0%;"></div></div>
           </div>
           <div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;">
-              <span class="t-xxs muted sn">CARB</span>
+              <span data-i18n="macro.carb" class="t-xxs muted sn">CARB</span>
               <span id="m-carbs" class="sn" style="font-size:11px;font-weight:700;color:var(--on);">—</span>
             </div>
             <div class="bar-track"><div class="bar-fill bfw" id="b-carbs" style="width:0%;"></div></div>
           </div>
           <div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;">
-              <span class="t-xxs muted sn">GRASSI</span>
+              <span data-i18n="macro.grassi" class="t-xxs muted sn">GRASSI</span>
               <span id="m-fat" class="sn" style="font-size:11px;font-weight:700;color:var(--on);">—</span>
             </div>
             <div class="bar-track"><div class="bar-fill bfw" id="b-fat" style="width:0%;"></div></div>
@@ -918,7 +915,7 @@ body.onboarding-active #onb-screen{
         <!-- Header -->
         <div class="pasti-header">
           <div style="display:flex;align-items:center;gap:10px;">
-            <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);margin:0;">Pasti</p>
+            <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);margin:0;" data-i18n="oggi.pasti">Pasti</p>
             <div class="bar-track" style="width:44px;flex-shrink:0;"><div id="oggi-pasti-bar" class="bar-fill bfn" style="width:0%;transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
             <span style="color:var(--p);font-size:11px;font-weight:700;" class="sn" id="meals-done">0</span><span class="muted sn" style="font-size:11px;font-weight:600;" id="meals-total">/3</span>
           </div>
@@ -932,13 +929,13 @@ body.onboarding-active #onb-screen{
         <!-- Refeed (shown by renderRefeed when phase=2) -->
         <div id="refeed-card" style="display:none;border-bottom:1px solid var(--line);">
           <div class="rowb" style="padding:13px 15px;">
-            <div><p class="t-xxs sn" style="color:var(--p);">Refeed Day</p><p style="font-size:12px;font-weight:500;color:var(--muted);margin-top:2px;" class="sn">+400 kcal · +50g carbs</p></div>
-            <button id="refeed-oggi-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 12px;">OFF</button>
+            <div><p data-i18n="oggi.refeed.title" class="t-xxs sn" style="color:var(--p);">Refeed Day</p><p data-i18n="oggi.refeed.sub" style="font-size:12px;font-weight:500;color:var(--muted);margin-top:2px;" class="sn">+400 kcal · +50g carbs</p></div>
+            <button id="refeed-oggi-btn" onclick="toggleRefeed()" data-i18n="oggi.refeed.off" class="btn btn-ghost btn-xs sn" style="padding:0 12px;">OFF</button>
           </div>
         </div>
         <!-- Meals list -->
         <div id="meals-list" style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;">
-          <div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Genera il tuo piano dall'onboarding —</span></div>
+          <div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;" data-i18n="oggi.pasto_empty">— Genera il tuo piano dall'onboarding —</span></div>
         </div>
         <!-- Shopping -->
         <div class="pasti-shopping">
@@ -951,7 +948,7 @@ body.onboarding-active #onb-screen{
         <button onclick="toggleTrackers()" id="trackers-toggle-btn" aria-expanded="false" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;background:transparent;border:none;cursor:pointer;text-align:left;touch-action:manipulation;">
           <div style="display:flex;align-items:center;gap:8px;">
             <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);font-variation-settings:'FILL' 0;">monitoring</span>
-            <span class="t-xxs muted sn">Attività e Trackers</span>
+            <span data-i18n="oggi.trackers.title" class="t-xxs muted sn">Attività e Trackers</span>
           </div>
           <span class="material-symbols-outlined sn" id="trackers-chevron" style="transform:rotate(180deg)">expand_more</span>
         </button>
@@ -959,7 +956,7 @@ body.onboarding-active #onb-screen{
           <!-- Acqua -->
           <div class="tracker-block">
             <div class="rowb" style="margin-bottom:10px;">
-              <div><p class="t-xxs muted sn">Acqua</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span style="color:var(--p);" id="water-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ <span id="water-target">4.5</span>L</span></p></div>
+              <div><p class="t-xxs muted sn" data-i18n="oggi.acqua">Acqua</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span style="color:var(--p);" id="water-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ <span id="water-target">4.5</span>L</span></p></div>
               <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="water-ring" stroke="var(--p)" stroke-dasharray="138.2" stroke-dashoffset="138.2" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4));"/></svg>
             </div>
             <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill bfn" id="water-bar" style="width:0%;"></div></div>
@@ -972,7 +969,7 @@ body.onboarding-active #onb-screen{
           <!-- Sale -->
           <div class="tracker-block">
             <div class="rowb" style="margin-bottom:10px;">
-              <div><p class="t-xxs muted sn">Sale</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span id="salt-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ 6g</span></p></div>
+              <div><p class="t-xxs muted sn" data-i18n="oggi.sale">Sale</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span id="salt-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ 6g</span></p></div>
               <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="salt-ring" stroke="rgba(199,196,216,.4)" stroke-dasharray="138.2" stroke-dashoffset="138.2"/></svg>
             </div>
             <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill" id="salt-bar" style="width:0%;background:rgba(199,196,216,.35);transition:width .5s cubic-bezier(.4,0,.2,1),background .3s;"></div></div>
@@ -985,16 +982,16 @@ body.onboarding-active #onb-screen{
           <!-- Passi + Workout -->
           <div class="tracker-2col">
             <div>
-              <p class="t-xxs muted sn">Passi</p>
+              <p class="t-xxs muted sn" data-i18n="oggi.passi">Passi</p>
               <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--p);margin:4px 0;" class="sn" id="steps-val">0</p>
               <p class="t-xxs sn" style="color:var(--dim);">/ <span id="steps-tgt">8.000</span></p>
               <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill bfn" id="steps-bar" style="width:0%;"></div></div>
               <div class="row g2"><button onclick="addSteps(1000)" class="btn btn-neon-o btn-xs f1 sn">+1k</button><button onclick="addSteps(2500)" class="btn btn-ghost btn-xs f1 sn">+2.5k</button></div>
             </div>
             <div>
-              <p class="t-xxs muted sn">Workout</p>
+              <p class="t-xxs muted sn" data-i18n="oggi.workout">Workout</p>
               <p id="wk-ratio" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--on);margin:4px 0;" class="sn">0/1</p>
-              <p id="wk-status" class="t-xxs sn" style="color:var(--dim);">Non fatto</p>
+              <p id="wk-status" class="t-xxs sn" style="color:var(--dim);" data-i18n="oggi.workout.nonFatto">Non fatto</p>
               <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill" id="wk-bar" style="width:0%;background:rgba(199,196,216,.25);transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
               <button id="wk-btn" onclick="toggleWk()" class="btn btn-ghost btn-xs w100 sn">Fatto ✓</button>
             </div>
@@ -1004,17 +1001,17 @@ body.onboarding-active #onb-screen{
 
       <!-- 6. Check-in Card -->
       <div class="check-card" id="daily-check-card">
-        <div class="rowb"><span class="sec-label" style="margin-bottom:0;">Check-in giornaliero</span><span class="t-xxs muted">20 sec</span></div>
+        <div class="rowb"><span data-i18n="oggi.checkin.title" class="sec-label" style="margin-bottom:0;">Check-in giornaliero</span><span class="t-xxs muted">20 sec</span></div>
         <div class="range-row">
-          <div class="range-wrap"><label class="field-label" for="ci-hunger">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-hunger">5</output></div>
-          <div class="range-wrap"><label class="field-label" for="ci-energy">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-energy">6</output></div>
+          <div class="range-wrap"><label data-i18n="oggi.checkin.fame" class="field-label" for="ci-hunger">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-hunger">5</output></div>
+          <div class="range-wrap"><label data-i18n="oggi.checkin.energia" class="field-label" for="ci-energy">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-energy">6</output></div>
         </div>
         <div class="range-row">
-          <div class="range-wrap"><label class="field-label" for="ci-adherence">Aderenza</label><input id="ci-adherence" type="range" min="1" max="10" value="8" aria-label="Aderenza (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-adherence">8</output></div>
-          <div class="range-wrap"><label class="field-label" for="ci-digestion">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-digestion">8</output></div>
+          <div class="range-wrap"><label data-i18n="oggi.checkin.aderenza" class="field-label" for="ci-adherence">Aderenza</label><input id="ci-adherence" type="range" min="1" max="10" value="8" aria-label="Aderenza (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-adherence">8</output></div>
+          <div class="range-wrap"><label data-i18n="oggi.checkin.digestione" class="field-label" for="ci-digestion">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-digestion">8</output></div>
         </div>
         <div>
-          <label class="field-label">Contesto giornata</label>
+          <label data-i18n="oggi.checkin.contesto" class="field-label">Contesto giornata</label>
           <div class="chip-row">
             <button class="micro-chip" type="button" onclick="setCheckTag(this,'routine')">Routine</button>
             <button class="micro-chip" type="button" onclick="setCheckTag(this,'sociale')">Sociale</button>
@@ -1022,21 +1019,21 @@ body.onboarding-active #onb-screen{
             <button class="micro-chip" type="button" onclick="setCheckTag(this,'workout')">Workout</button>
           </div>
         </div>
-        <button class="btn btn-primary w100 sn" onclick="saveDailyCheckin()">Salva check-in</button>
-        <div class="note-box" id="checkin-feedback">Dopo il primo check-in riceverai un supporto contestuale.</div>
+        <button class="btn btn-primary w100 sn" onclick="saveDailyCheckin()" data-i18n="oggi.checkin.salva">Salva check-in</button>
+        <div class="note-box" id="checkin-feedback" data-i18n="oggi.checkin.feedback_default">Dopo il primo check-in riceverai un supporto contestuale.</div>
         <button id="ci-edit-btn" class="btn btn-ghost w100" onclick="editDailyCheckin()" style="display:none;font-size:13px;margin-top:4px;"></button>
       </div>
 
       <!-- 7. Maintain Card (hidden, preserve) -->
       <div class="maintain-card" id="maintain-card">
-        <div class="rowb" style="margin-bottom:10px;"><span class="sec-label" style="margin-bottom:0;color:#0A84FF;">Mantenimento</span><span class="t-xxs" style="color:#8ec5ff;">LONG TERM</span></div>
+        <div class="rowb" style="margin-bottom:10px;"><span data-i18n="oggi.mantenimento.title" class="sec-label" style="margin-bottom:0;color:#0A84FF;">Mantenimento</span><span data-i18n="oggi.mantenimento.sub" class="t-xxs" style="color:#8ec5ff;">LONG TERM</span></div>
         <p id="maintain-msg" class="sn" style="font-size:13px;line-height:1.6;font-weight:600;color:var(--on);">Sei in fase di mantenimento. Focus su routine sostenibile e stabilità del peso.</p>
       </div>
 
       <!-- 8. Profilo Card (collapsible, default closed) -->
       <div class="card" style="overflow:hidden;">
         <button onclick="toggleInsight()" id="insight-toggle-btn" aria-expanded="false" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;background:transparent;border:none;cursor:pointer;text-align:left;touch-action:manipulation;">
-          <span class="sec-label sn" style="margin:0;">Il Tuo Profilo</span>
+          <span data-i18n="set.profilo.title" class="sec-label sn" style="margin:0;">Il Tuo Profilo</span>
           <span class="material-symbols-outlined sn" id="insight-chevron" style="font-size:18px;color:var(--muted);transition:transform .2s;">expand_more</span>
         </button>
         <div id="personal-insight-card" style="display:none;padding:0 16px 14px;">
@@ -1110,20 +1107,20 @@ body.onboarding-active #onb-screen{
       </div>
       <!-- Check-in analytics (unchanged) -->
       <div class="analytics-card" id="checkin-analytics-card">
-        <div class="rowb"><span class="sec-label" style="margin-bottom:0;">Trend check-in</span><span class="t-xxs muted">LAST 7 DAYS</span></div>
+        <div class="rowb"><span class="sec-label" style="margin-bottom:0;">Trend check-in</span><span class="t-xxs muted" data-i18n="prog.checkin.ultimi7">ULTIMI 7 GIORNI</span></div>
         <div class="analytics-bars">
-          <div class="analytics-row"><span class="analytics-lab">Fame</span><div class="analytics-track"><div class="analytics-fill" id="an-hunger"></div></div><span class="analytics-val" id="an-hunger-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab">Energia</span><div class="analytics-track"><div class="analytics-fill" id="an-energy"></div></div><span class="analytics-val" id="an-energy-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab">Aderenza</span><div class="analytics-track"><div class="analytics-fill" id="an-adherence"></div></div><span class="analytics-val" id="an-adherence-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab">Digestione</span><div class="analytics-track"><div class="analytics-fill" id="an-digestion"></div></div><span class="analytics-val" id="an-digestion-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.fame">Fame</span><div class="analytics-track"><div class="analytics-fill" id="an-hunger"></div></div><span class="analytics-val" id="an-hunger-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.energia">Energia</span><div class="analytics-track"><div class="analytics-fill" id="an-energy"></div></div><span class="analytics-val" id="an-energy-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.aderenza">Aderenza</span><div class="analytics-track"><div class="analytics-fill" id="an-adherence"></div></div><span class="analytics-val" id="an-adherence-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.digestione">Digestione</span><div class="analytics-track"><div class="analytics-fill" id="an-digestion"></div></div><span class="analytics-val" id="an-digestion-v">--</span></div>
         </div>
         <div class="note-box" id="checkin-analytics-note">Salva almeno 2-3 check-in per visualizzare trend interpretabili.</div>
       </div>
       <!-- Metabolic Fingerprint -->
       <div class="card" id="fingerprint-card" style="padding:14px;display:none;">
         <div class="rowb" style="margin-bottom:12px;">
-          <span class="sec-label" style="margin-bottom:0;">Metabolic Fingerprint</span>
-          <span class="t-xxs muted">UNIQUE PROFILE</span>
+          <span class="sec-label" style="margin-bottom:0;">Impronta Metabolica</span>
+          <span class="t-xxs muted" data-i18n="prog.fingerprint.sub">PROFILO UNICO</span>
         </div>
         <div id="fingerprint-content"></div>
       </div>
@@ -1132,21 +1129,20 @@ body.onboarding-active #onb-screen{
       <div class="card" id="weekly-report-card" style="padding:14px;display:none;">
         <div class="rowb" style="margin-bottom:10px;">
           <span class="sec-label" style="margin-bottom:0;">Weekly Report</span>
-          <button onclick="shareWeeklyReport()" class="btn btn-xs sn" style="background:rgba(77,220,198,.1);border:1px solid rgba(77,220,198,.2);color:var(--p);font-size:10px;font-weight:700;height:26px;border-radius:var(--r3);padding:0 10px;">Share</button>
-        </div>
+          <button onclick="shareWeeklyReport()" class="btn btn-xs sn" style="background:rgba(77,220,198,.1);border:1px solid rgba(77,220,198,.2);color:var(--p);font-size:10px;font-weight:700;height:26px;border-radius:var(--r3);padding:0 10px;">Share</button>        </div>
         <div id="weekly-report-content"></div>
       </div>
 
       <!-- Calendario aderenza -->
       <div class="card" style="padding:14px;">
-        <span class="sec-label">Calendario Aderenza</span>
+        <span class="sec-label" data-i18n="prog.calendar.title">Calendario Aderenza</span>
         <p class="muted sn" style="font-size:10px;margin-bottom:12px;">Verde: ≥80% · Giallo: 40-80% · Rosso: &lt;40%</p>
         <div id="adherence-calendar"></div>
       </div>
 
       <!-- Promemoria -->
       <div class="card" style="padding:14px;">
-        <span class="sec-label">Promemoria Check-in</span>
+        <span class="sec-label" data-i18n="prog.notif.title">Promemoria Check-in</span>
         <p id="notif-status-txt" class="muted sn" style="font-size:11px;margin-bottom:10px;">Promemoria giornaliero per il check-in</p>
         <div class="row g2" style="margin-bottom:10px;align-items:center;">
           <span class="muted sn" style="font-size:11px;font-weight:600;">Ora:</span>
@@ -1159,9 +1155,9 @@ body.onboarding-active #onb-screen{
       <!-- Storico -->
       <div class="card" style="overflow:hidden;">
         <div style="padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;">
-          <span class="sec-label" style="margin-bottom:0;">Storico</span>
+          <span class="sec-label" style="margin-bottom:0;" data-i18n="prog.storico.title">Storico</span>
         </div>
-        <div id="hist-list"><div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Nessuna voce —</span></div></div>
+        <div id="hist-list"><div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;" data-i18n="prog.storico.empty">— Nessuna voce —</span></div></div>
       </div>
     </div>
   </div><!-- /scr-prog -->
@@ -1230,7 +1226,7 @@ body.onboarding-active #onb-screen{
                   <div>
                     <span class="sec-label" style="display:block;margin-bottom:3px;">Refeed Day</span>
                     <p class="sn" style="font-size:13px;font-weight:600;color:var(--on);margin:0;">+400 kcal · +50g carbs</p>
-                    <p class="t-xxs muted sn" style="margin-top:2px;">Solo Fase 2</p>
+                    <p class="t-xxs muted sn" style="margin-top:2px;" data-i18n="set.refeed.soloFase2">Solo Fase 2</p>
                   </div>
                   <button id="set-refeed-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 16px;">DISATTIVO</button>
                 </div>
@@ -1284,13 +1280,11 @@ body.onboarding-active #onb-screen{
         <div style="border-bottom:1px solid var(--line);">
           <button onclick="toggleAccordion('danger')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
             <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--red);">warning</span>
-            <span class="sn" style="font-size:13px;font-weight:700;color:var(--red);flex:1;">Danger Zone</span>
-            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--red);transition:transform .2s;">chevron_right</span>
+            <span class="sn" style="font-size:13px;font-weight:700;color:var(--red);flex:1;">Danger Zone</span>            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--red);transition:transform .2s;">chevron_right</span>
           </button>
           <div id="acc-danger" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
             <div style="padding:0 16px 16px;border-top:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.03);">
-              <p class="sn t-xxs muted" style="margin:14px 0 10px;line-height:1.5;">These actions are irreversible without a backup.</p>
-              <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
+              <p class="sn t-xxs muted" style="margin:14px 0 10px;line-height:1.5;">These actions are irreversible without a backup.</p>              <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
             </div>
           </div>
         </div>
@@ -1757,8 +1751,7 @@ it:{
   'fp.adattamento':'ADATTAMENTO','fp.riduzione':'riduzione metabolica',
   'fp.risposta':'RISPOSTA','fp.segnale':'per segnale affidabile',
   'fp.perditaReale':'PERDITA REALE','fp.mediaSettimanaleFP':'media settimanale',
-  'pred.label':'Previsione Peso (12 sett)',
-  'pred.text':'Tra 12 settimane {last} kg {diff} kg. Proiezione con correzione adattamento metabolico.',
+  'pred.label':'Previsione Peso (12 sett)',  'pred.text':'Tra 12 settimane {last} kg {diff} kg. Proiezione con correzione adattamento metabolico.',
   'pred.noData':'Registra almeno 5 pesate per attivare la previsione.',
   'chart.reale':'Reale','chart.previsione':'Previsione',
   'circ.serale':'Finestra serale — privilegia proteine e verdure, riduci carboidrati semplici',
@@ -1790,8 +1783,7 @@ it:{
   'phase.consol':'Consolidamento: fibra ≥25g/die, sodio <2g/die.',
   'phase.dash1':'DASH fase 1: riduzione sodio <1500mg/die, potassio ≥4700mg.',
   'phase.dash2':'DASH fase 2: consolidamento, 5 porzioni frutta-verdura/die.',
-  'phase.dash3':'Mantenimento DASH: monitoraggio PA e profilo lipidico.',
-},
+  'phase.dash3':'Mantenimento DASH: monitoraggio PA e profilo lipidico.',},
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
   'onb.step0.title':'Your Body','onb.step0.sub':'Enter your physical data to calculate your personalised TDEE.',
@@ -1893,6 +1885,25 @@ en:{
   'gdpr.p2.sub':'Weight and body fat are health-related data. Processing happens <em>exclusively</em> to deliver the service you requested, with your explicit consent.',
   'gdpr.p3.title':'Zero third-party cookies',
   'gdpr.p3.sub':'No tracking, analytics or advertising cookies. No data sharing with third parties.',
+  'pwa.ios.step1':'Tap Share (rectangle with arrow) in Safari',
+  'pwa.ios.step2':'Scroll down and tap Add to Home Screen',
+  'pwa.ios.step3':'Tap Add in the top right',
+  'pwa.and.step1':'Tap the ⋮ menu in the top right of your browser',
+  'pwa.and.step2':'Select Add to Home Screen or Install app',
+  'pwa.and.step3':'Confirm by tapping Install',
+  'onb.field.sesso':'Biological sex','onb.sex.m_full':'♂ Male','onb.sex.f_full':'♀ Female',
+  'onb.step0.passo':'Step 1 — Body','onb.step2.passo':'Step 3 — Goal','onb.step4.passo':'Step 5 — Your Favourite Foods',
+  'onb.field.obiettivo':'Primary goal','onb.field.clinical.hint':'Only if you have a specific medical diagnosis.',
+  'onb.step4.sub':'Select foods you love or type them in.',
+  'coach.msg.loading':'— Analysis in progress...','adaptive.btn.applica':'Apply','adaptive.btn.ignora':'Dismiss',
+  'oggi.target.label':'Daily Target','oggi.kcal.totali':'Total kcal',
+  'macro.prot':'PROT','macro.carb':'CARB','macro.grassi':'FAT',
+  'oggi.trackers.title':'Activity & Trackers','oggi.refeed.off':'OFF',
+  'set.peso.aggiorna':'Update weight','set.danger.title':'Danger Zone',
+  'set.danger.hint':'These actions are irreversible without a backup.',
+  'prog.chart.tab.peso':'Weight','prog.chart.tab.girovita':'Waist','prog.chart.tab.previsione':'Forecast',
+  'prog.fingerprint.title':'Metabolic Fingerprint','prog.fingerprint.sub':'UNIQUE PROFILE',
+  'prog.report.title':'Weekly Report','prog.report.condividi':'Share',
   'gdpr.btn.accetta':'✓ Accept & Continue','gdpr.btn.leggi':'Read the full Privacy Policy',
   'gdpr.footer':'By clicking <strong>Accept & Continue</strong> you consent to data processing as described in the <span onclick>Privacy Policy</span>.<br>You can revoke consent at any time from <em>Profile › Privacy</em>.',
   'pwa.title':'Add to Home Screen',
@@ -2086,8 +2097,7 @@ en:{
   'fp.adattamento':'ADAPTATION','fp.riduzione':'metabolic reduction',
   'fp.risposta':'RESPONSE','fp.segnale':'for reliable signal',
   'fp.perditaReale':'ACTUAL LOSS','fp.mediaSettimanaleFP':'weekly average',
-  'pred.label':'Weight Forecast (12 wks)',
-  'pred.text':'In 12 weeks {last} kg {diff} kg. Projection with metabolic adaptation correction.',
+  'pred.label':'Weight Forecast (12 wks)',  'pred.text':'In 12 weeks {last} kg {diff} kg. Projection with metabolic adaptation correction.',
   'pred.noData':'Log at least 5 weigh-ins to activate the prediction.',
   'chart.reale':'Actual','chart.previsione':'Prediction',
   'circ.serale':'Evening window — favour protein & vegetables, reduce simple carbs',
@@ -2120,8 +2130,7 @@ en:{
   'phase.consol':'Consolidation: fibre ≥25g/day, sodium <2g/day.',
   'phase.dash1':'DASH phase 1: sodium reduction <1500mg/day, potassium ≥4700mg.',
   'phase.dash2':'DASH phase 2: consolidation, 5 servings fruit-veg/day.',
-  'phase.dash3':'DASH maintenance: monitoring BP and lipid profile.',
-}
+  'phase.dash3':'DASH maintenance: monitoring BP and lipid profile.',}
 };
 let _lang='en';
 let _regenSeed=0; /* incremented on every regenSingleMeal call to vary breakfast/snack picks */
@@ -2148,321 +2157,24 @@ function initLang(){
   document.documentElement.lang=_lang;
 }
 function applyTranslations(deferOffscreen){
-  /* ── i18n static patch ── */
+  /* ── data-i18n attribute handling ── */
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const val = t(key);
+    if (val) el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const val = t(el.dataset.i18nPlaceholder);
+    if (val) el.placeholder = val;
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    const val = t(el.dataset.i18nAria);
+    if (val) el.setAttribute('aria-label', val);
+  });
+  /* Legacy legacy fallback for dynamically generated content */
   const _nm={'nav-lbl-oggi':'nav.oggi','nav-lbl-trend':'nav.trend','nav-lbl-profilo':'nav.profilo','nav-lbl-aiuto':'nav.aiuto'};
   Object.entries(_nm).forEach(([id,k])=>{const el=document.getElementById(id);if(el)el.textContent=t(k);});
-  document.querySelectorAll('.t-xxs.muted').forEach(el=>{
-    const v=el.textContent.trim();
-    if(v==='Acqua'||v==='Water')el.textContent=t('oggi.acqua');
-    else if(v==='Sale'||v==='Salt')el.textContent=t('oggi.sale');
-    else if(v==='Passi'||v==='Steps')el.textContent=t('oggi.passi');
-    else if(v==='Workout')el.textContent=t('oggi.workout');
-    else if(v==='Attività e Trackers'||v==='Activity & Trackers')el.textContent=t('oggi.trackers');
-    else if(v==='Target Giorno'||v==='Daily Target')el.textContent=t('oggi.kcal.target');
-    else if(v==='Kcal totali'||v==='Total kcal')el.textContent=t('oggi.kcal.totali');
-    else if(v==='Ultimo peso'||v==='Last weight')el.textContent=t('prog.stat.ultimoPeso');
-    else if(v==='Variazione'||v==='Change')el.textContent=t('prog.stat.variazione');
-    else if(v==='Girovita'||v==='Waist')el.textContent=t('prog.stat.girovita');
-    else if(v==='Var. girovita'||v==='Waist change')el.textContent=t('prog.stat.varGirovita');
-    else if(v==='Base BMR')el.textContent=t('set.hero.bmr');
-    else if(v==='Target TDEE')el.textContent=t('set.hero.tdee');
-  });
-  document.querySelectorAll('.sec-label').forEach(el=>{
-    const v=el.textContent.trim();
-    if(v==='Registra'||v==='Log')el.textContent=t('prog.registra');
-    else if(v==='Storico'||v==='History')el.textContent=t('prog.storico.title');
-    else if(v==='Calendario Aderenza'||v==='Adherence Calendar')el.textContent=t('prog.calendar.title');
-    else if(v==='Promemoria Check-in'||v==='Check-in Reminder')el.textContent=t('prog.notif.title');
-    else if(v==='Trend check-in'||v==='Check-in trend')el.textContent=t('prog.checkin.title');
-    else if(v==='Il Tuo Profilo'||v==='Your Profile')el.textContent=t('set.profilo.title');
-    else if(v==='Piano Attivo'||v==='Active Plan')el.textContent=t('set.piano.title');
-    else if(v==='Stato consenso'||v==='Consent status')el.textContent=t('info.consenso.title');
-    else if(v==='Applicazione'||v==='Application')el.textContent=t('info.app.title');
-    else if(v==='Check-in giornaliero'||v==='Daily check-in')el.textContent=t('oggi.checkin.title');
-  });
-  document.querySelectorAll('.sec-title').forEach(el=>{
-    const v=el.textContent.trim();
-    if(v==='Progresso'||v==='Progress')el.textContent=t('prog.title');
-    else if(v==='Profilo'||v==='Profile')el.textContent=t('set.title');
-    else if(v==='Info')el.textContent=t('info.title');
-  });
-  document.querySelectorAll('.pasti-header p').forEach(el=>{
-    if(el.textContent.trim()==='Pasti'||el.textContent.trim()==='Meals')el.textContent=t('oggi.pasti');
-  });
-  ['ci-hunger','ci-energy','ci-adherence','ci-digestion'].forEach((id,i)=>{
-    const keys=['oggi.checkin.fame','oggi.checkin.energia','oggi.checkin.aderenza','oggi.checkin.digestione'];
-    const el=document.querySelector('label[for="'+id+'"]');if(el)el.textContent=t(keys[i]);
-  });
-  document.querySelectorAll('.check-card .field-label').forEach(el=>{
-    if(el.textContent.trim()==='Contesto giornata'||el.textContent.trim()==='Day context')el.textContent=t('oggi.checkin.contesto');
-  });
-  document.querySelectorAll('.micro-chip').forEach(b=>{
-    const oc=b.getAttribute('onclick')||'';
-    if(oc.includes("'routine'"))b.textContent=t('oggi.checkin.routine');
-    else if(oc.includes("'sociale'"))b.textContent=t('oggi.checkin.sociale');
-    else if(oc.includes("'stress'"))b.textContent=t('oggi.checkin.stress');
-    else if(oc.includes("'workout'"))b.textContent=t('oggi.checkin.workout');
-  });
-  const _saveCi=document.querySelector('.check-card .btn-primary[onclick="saveDailyCheckin()"]');
-  if(_saveCi)_saveCi.textContent=t('oggi.checkin.salva');
-  const _ciFb=document.getElementById('checkin-feedback');
-  if(_ciFb&&!_ciFb.classList.contains('has-feedback'))_ciFb.textContent=t('oggi.checkin.feedback_default');
-  const _wkS=document.getElementById('wk-status');
-  if(_wkS&&(_wkS.textContent==='Non fatto'||_wkS.textContent==='Not done'))_wkS.textContent=t('oggi.workout.nonFatto');
-  const _wkB=document.getElementById('wk-btn');
-  if(_wkB&&(_wkB.textContent.trim()==='Fatto ✓'||_wkB.textContent.trim()==='Done ✓'))_wkB.textContent=t('oggi.workout.fatto');
-  ['log-w','log-wst','log-date'].forEach((id,i)=>{
-    const keys=['prog.peso','prog.girovita','prog.data'];
-    const el=document.querySelector('label[for="'+id+'"]');if(el)el.textContent=t(keys[i]);
-  });
-  const _addBtn=document.querySelector('[onclick="logMetric()"]');if(_addBtn)_addBtn.textContent=t('prog.btn.aggiungi');
-  const _ce=document.getElementById('chart-empty');if(_ce)_ce.textContent=t('prog.chart.noData');
-  const _anN=document.getElementById('checkin-analytics-note');
-  if(_anN&&!_anN.classList.contains('has-feedback'))_anN.textContent=t('prog.checkin.note_default');
-  const _nTxt=document.getElementById('notif-status-txt');if(_nTxt)_nTxt.textContent=t('prog.notif.subtitle');
-  const _nBtn=document.getElementById('notif-perm-btn');if(_nBtn&&!_nBtn.dataset.active)_nBtn.textContent=t('prog.notif.btn');
-  const _wU=document.getElementById('btn-weight-upd');
-  if(_wU)_wU.textContent=_lang==='it'?'Aggiorna peso':'Update weight';
-  const _pT=document.getElementById('set-btn-privacy-txt');if(_pT)_pT.textContent=t('set.btn.privacy');
-  const _aT=document.getElementById('set-btn-aiuto-txt');if(_aT)_aT.textContent=t('set.btn.aiuto');
-  const _lL=document.getElementById('lang-label-txt');if(_lL)_lL.textContent=t('set.lang.label');
-  const _mS=document.getElementById('mod-status');
-  if(_mS&&(_mS.textContent.trim()==='Base invariata'||_mS.textContent.trim()==='Unchanged'))_mS.textContent=t('set.mod.base');
-  document.querySelectorAll('[onclick="exportData()"]').forEach(b=>b.textContent=t('set.dati.esporta'));
-  document.querySelectorAll('[onclick*="imp-inp"]').forEach(b=>b.textContent=t('set.dati.importa'));
-  document.querySelectorAll('[onclick="resetProfile()"]').forEach(b=>b.textContent=t('set.rigenera'));
-  document.querySelectorAll('[onclick="changeDiet()"]').forEach(b=>{if(b.textContent)b.textContent=t('set.dati.ricomincia')||b.textContent;});
-  document.querySelectorAll('button[onclick*="toggleAccordion"]').forEach(btn=>{
-    const sp=btn.querySelectorAll('span');if(sp.length<2)return;
-    const el=sp[1];const v=el.textContent.trim();
-    if(v==='Fase Corrente'||v==='Current Phase')el.textContent=t('set.fase.title');
-    else if(v==='Modificatore AI'||v==='AI Modifier')el.textContent=t('set.mod.title');
-    else if(v==='Dati'||v==='Data')el.textContent=t('set.dati.title');
-  });
-  document.querySelectorAll('[onclick="applyMod(0)"]').forEach(b=>{if(b.textContent.includes('Reset')||b.textContent.includes('reset'))b.textContent=t('set.mod.reset');});
-  document.querySelectorAll('[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
-  document.querySelectorAll('#scr-info .rowb').forEach(row=>{
-    const lbl=row.querySelector('span:first-child');if(!lbl)return;
-    const v=lbl.textContent.trim();
-    if(v==='Versione'||v==='Version')lbl.textContent=t('info.app.versione');
-    else if(v==='Storage')lbl.textContent=t('info.app.storage');
-    else if(v==='Dati su server'||v==='Server data')lbl.textContent=t('info.app.server');
-    else if(v==='Cookie'||v==='Cookies')lbl.textContent=t('info.app.cookie');
-    else if(v==='Tracking')lbl.textContent=t('info.app.tracking');
-  });
-  /* ── end i18n static patch ── */
-
-  if(_trApplied)return;_trApplied=true;
-  /* Helper shortcuts */
-  const txt=(id,key)=>{const e=document.getElementById(id);if(e)e.textContent=t(key);};
-  const nlTxt=(sel,key)=>document.querySelectorAll(sel).forEach(e=>e.textContent=t(key));
-  const aria=(id,key)=>document.getElementById(id)?.setAttribute('aria-label',t(key));
-  const ph=(id,key)=>{const e=document.getElementById(id);if(e)e.placeholder=t(key);};
-  /* Nav labels + aria */
-  nlTxt('#nav-oggi .nl','nav.oggi'); nlTxt('#nav-prog .nl','nav.trend');
-  nlTxt('#nav-set .nl','nav.profilo'); nlTxt('#nav-info .nl','nav.aiuto');
-  aria('nav-oggi','nav.oggi'); aria('nav-prog','nav.trend');
-  aria('nav-set','nav.profilo'); aria('nav-info','nav.aiuto');
-  /* ── OGGI ── */
-  /* Macros labels */
-  document.querySelectorAll('.macro-card').forEach(c=>{
-    const sp=c.querySelector('.t-xxs.muted');
-    if(!sp)return;
-    const id=c.querySelector('[id]')?.id||'';
-    if(id.includes('kcal'))sp.textContent='Kcal';
-    else if(id.includes('pro'))sp.textContent=t('onb.result.proteine');
-    else if(id.includes('carbs'))sp.textContent=t('onb.result.carbs');
-    else if(id.includes('fat'))sp.textContent=t('onb.result.grassi');
-  });
-  /* water/salt/steps/workout */
-  nlTxt('#scr-oggi .card-ghost:nth-of-type(1) .t-xxs.muted','oggi.acqua');
-  document.querySelectorAll('.card-ghost').forEach(c=>{
-    const lbl=c.querySelector('.t-xxs.muted');if(!lbl)return;
-    const id=c.querySelector('[id^=water-]')?.id;
-    if(id)lbl.textContent=t('oggi.acqua');
-    const sid=c.querySelector('[id^=salt-]')?.id;
-    if(sid)lbl.textContent=t('oggi.sale');
-    const stepsEl=c.querySelector('#steps-val');
-    if(stepsEl)lbl.textContent=t('oggi.passi');
-    const wkEl=c.querySelector('#wk-ratio');
-    if(wkEl)lbl.textContent=t('oggi.workout');
-  });
-  /* check-in card labels */
-  document.querySelectorAll('#daily-check-card .field-label').forEach(lbl=>{
-    const forAttr=lbl.getAttribute('for')||lbl.textContent.trim().toLowerCase();
-    if(forAttr==='ci-hunger'||forAttr.includes('fame'))lbl.textContent=t('oggi.checkin.fame');
-    else if(forAttr==='ci-energy'||forAttr.includes('energ'))lbl.textContent=t('oggi.checkin.energia');
-    else if(forAttr==='ci-adherence'||forAttr.includes('ader'))lbl.textContent=t('oggi.checkin.aderenza');
-    else if(forAttr==='ci-digestion'||forAttr.includes('diges'))lbl.textContent=t('oggi.checkin.digestione');
-    else if(forAttr.includes('contesto')||forAttr.includes('context'))lbl.textContent=t('oggi.checkin.contesto');
-  });
-  /* check-in range aria-labels */
-  document.getElementById('ci-hunger')?.setAttribute('aria-label',t('aria.checkin.hunger'));
-  document.getElementById('ci-energy')?.setAttribute('aria-label',t('aria.checkin.energy'));
-  document.getElementById('ci-adherence')?.setAttribute('aria-label',t('aria.checkin.adherence'));
-  document.getElementById('ci-digestion')?.setAttribute('aria-label',t('aria.checkin.digestion'));
-  /* check-in section label */
-  document.querySelectorAll('#daily-check-card .sec-label').forEach(e=>e.textContent=t('oggi.checkin.title'));
-  const ciFeedback=document.getElementById('checkin-feedback');
-  if(ciFeedback&&ciFeedback.textContent.trim()===LANG.it['oggi.checkin.feedback_default'])
-    ciFeedback.textContent=t('oggi.checkin.feedback_default');
-  const ciSalvaBtn=document.querySelector('#daily-check-card .btn-primary');
-  if(ciSalvaBtn)ciSalvaBtn.textContent=t('oggi.checkin.salva');
-  /* Micro chips (check-in context) */
-  document.querySelectorAll('#daily-check-card .micro-chip').forEach(btn=>{
-    const tag=(btn.getAttribute('onclick')||'').match(/['"](\w+)['"]/)?.[1];
-    if(tag)btn.textContent=t(`oggi.checkin.${tag}`)||btn.textContent;
-  });
-  /* maintain card */
-  const maintTitle=document.querySelector('#maintain-card .sec-label');
-  if(maintTitle)maintTitle.textContent=t('oggi.mantenimento.title');
-  const maintSub=document.querySelector('#maintain-card .t-xxs');
-  if(maintSub)maintSub.textContent=t('oggi.mantenimento.sub');
-  const maintMsg=document.getElementById('maintain-msg');
-  if(maintMsg&&maintMsg.textContent.trim()===LANG.it['oggi.mantenimento.msg'])
-    maintMsg.textContent=t('oggi.mantenimento.msg');
-  /* weight update button */
-  const weightUpdBtn=document.getElementById('btn-weight-upd');
-  if(weightUpdBtn)weightUpdBtn.textContent=t('set.btn.aggiornaPeso');
-  /* wk-status initial text */
-  const _wkStatus=document.getElementById('wk-status');
-  if(_wkStatus&&(_wkStatus.textContent.trim()==='Non fatto'||_wkStatus.textContent.trim()==='Not done'))
-    _wkStatus.textContent=t('oggi.workout.nonFatto');
-  /* mod badge */
-  const modBadge=document.getElementById('m-mod-badge');if(modBadge)modBadge.textContent=t('oggi.mod.badge');
-  /* trackers toggle label */
-  document.querySelectorAll('#trackers-toggle-btn .t-xxs.muted').forEach(e=>{
-    if(e.textContent.trim()==='Attività e Trackers'||e.textContent.trim()==='Activity & Trackers')
-      e.textContent=t('oggi.trackers.title');
-  });
-  /* day nav aria-labels */
-  document.querySelector('button[onclick="shiftDay(-1)"]')?.setAttribute('aria-label',t('aria.day.prev'));
-  document.querySelector('button[onclick="shiftDay(1)"]')?.setAttribute('aria-label',t('aria.day.next'));
-  /* reset buttons aria-labels */
-  document.querySelector('button[onclick="resetT(\'water\')"]')?.setAttribute('aria-label',t('aria.reset.water'));
-  document.querySelector('button[onclick="resetT(\'salt\')"]')?.setAttribute('aria-label',t('aria.reset.salt'));
-  /* refeed card */
-  const rfTitle=document.querySelector('#refeed-card .t-xxs');
-  if(rfTitle)rfTitle.textContent=t('oggi.refeed.title');
-  const rfSub=document.querySelector('#refeed-card p.sn');
-  if(rfSub)rfSub.textContent=t('oggi.refeed.sub');
-  /* Pasti section */
-  document.querySelectorAll('#scr-oggi > .pg > div > p').forEach(p=>{
-    if(p.textContent.trim()==='Pasti'||p.textContent.trim()==='Meals')
-      p.textContent=t('oggi.pasti');
-  });
-  /* Shopping button */
-  document.querySelectorAll('button[onclick="openShoppingList()"]').forEach(b=>b.textContent=t('oggi.shopping'));
-  /* Day label */
-  document.querySelectorAll('#scr-oggi .t-xxs.muted').forEach(e=>{
-    if(e.textContent.trim()==='Giorno'||e.textContent.trim()==='Day')e.textContent=t('oggi.giorno');
-  });
-  /* ── ONBOARDING ── */
-  const onbHeroSub=document.querySelector('#onb-screen>div>div:first-child>p.sn');
-  if(onbHeroSub)onbHeroSub.textContent=t('onb.sub.hero');
-  /* Step sec-labels */
-  document.querySelectorAll('#onb-screen .onb-step>.sec-label').forEach(el=>{
-    const v=el.textContent.trim();
-    if(/^(Passo|Step) 1/.test(v))el.textContent=t('onb.step0.passo');
-    else if(/^(Passo|Step) 2/.test(v))el.textContent=t('onb.step1.passo');
-    else if(/^(Passo|Step) 3/.test(v))el.textContent=t('onb.step2.passo');
-    else if(/^(Passo|Step) 4/.test(v))el.textContent=t('onb.step3.passo');
-    else if(/^(Passo|Step) 5/.test(v))el.textContent=t('onb.step4.passo');
-  });
-  /* Field labels (<label> and <p class="field-label">) */
-  document.querySelectorAll('#onb-screen .field-label').forEach(lbl=>{
-    const f=lbl.getAttribute('for')||'';const v=lbl.textContent.trim();
-    if(f==='sex-m'||v==='Sesso biologico'||v==='Biological sex')lbl.textContent=t('onb.field.sesso');
-    else if(f==='f-age'||v==='Età (anni)'||v==='Age (years)')lbl.textContent=t('onb.field.eta');
-    else if(f==='f-height'||v==='Altezza (cm)'||v==='Height (cm)')lbl.textContent=t('onb.field.altezza');
-    else if(f==='f-weight'||v==='Peso (kg)'||v==='Weight (kg)')lbl.textContent=t('onb.field.peso');
-    else if(f==='f-bf'||v.includes('Grasso corporeo')||v.includes('Body fat'))lbl.textContent=t('onb.field.bf');
-    else if(v==='Allenamenti / settimana'||v==='Training sessions / week')lbl.textContent=t('onb.field.allenamenti');
-    else if(v==='Passi giornalieri medi'||v==='Average daily steps')lbl.textContent=t('onb.field.passi');
-    else if(v==='Obiettivo primario'||v==='Primary goal')lbl.textContent=t('onb.field.obiettivo');
-    else if(v.includes('pasti al giorno')||v==='Number of meals per day')lbl.textContent=t('onb.field.pasti');
-    else if(v==='Gusto prevalente'||v==='Taste preference')lbl.textContent=t('onb.field.gusto');
-    else if(v==='Stile alimentare'||v==='Dietary style')lbl.textContent=t('onb.field.stile');
-    else if(v.includes('Intolleranze')||v.includes('Intolerances'))lbl.textContent=t('onb.field.intolleranze');
-    else if(v.includes('Protocollo clinico')||v.includes('Clinical condition'))lbl.textContent=t('onb.field.clinical');
-    else if(v==='Proteine preferite'||v==='Preferred proteins')lbl.textContent=t('onb.cibi.proteine');
-    else if(v==='Carboidrati preferiti'||v==='Preferred carbs')lbl.textContent=t('onb.cibi.carb');
-    else if(v==='Grassi preferiti'||v==='Preferred fats')lbl.textContent=t('onb.cibi.grassi');
-    else if(v.includes('altri cibi')||v.includes('other foods'))lbl.textContent=t('onb.cibi.extra');
-  });
-  /* Placeholders */
-  ph('f-age','onb.field.eta.ph');ph('f-height','onb.field.altezza.ph');
-  ph('f-weight','onb.field.peso.ph');ph('f-bf','onb.field.bf.ph');
-  ph('f-intolerances','onb.field.intolleranze.ph');ph('f-extra-foods','onb.cibi.extra.ph');
-  /* Sex buttons */
-  const _sexM=document.getElementById('sex-m');if(_sexM)_sexM.textContent=t('onb.sex.m.label');
-  const _sexF=document.getElementById('sex-f');if(_sexF)_sexF.textContent=t('onb.sex.f.label');
-  /* BF hint */
-  const _bfHint=document.querySelector('#step-0 .inp~p.sn');
-  if(_bfHint)_bfHint.textContent=t('onb.field.bf.hint');
-  /* wk/st labels */
-  const _wkLbl=document.getElementById('wk-label');
-  if(_wkLbl)_wkLbl.textContent=profState.workoutsWk!==null?t('onb.wk.selected',{n:profState.workoutsWk}):t('onb.sel.none');
-  const _stLbl=document.getElementById('st-label');
-  if(_stLbl)_stLbl.textContent=profState.stepsDay!==null?t('onb.st.selected',{n:profState.stepsDay}):t('onb.sel.none');
-  /* Goal buttons */
-  document.querySelectorAll('#goal-wrap button[data-goal]').forEach(btn=>{
-    const g=btn.dataset.goal;if(g)btn.textContent=t('goal.'+g);
-  });
-  /* Taste buttons */
-  ['salato','dolce','misto'].forEach(k=>{const b=document.getElementById('taste-'+k);if(b)b.textContent=t('taste.'+k);});
-  /* Diet style buttons */
-  document.querySelectorAll('#diet-style-seg .seg-btn').forEach(btn=>{
-    const m=(btn.getAttribute('onclick')||'').match(/'(\w+)'/);if(m)btn.textContent=t('style.'+m[1]);
-  });
-  /* Clinical chips */
-  const _clinMap={'cp-none':'clinical.none','cp-CKD':'clinical.ckd','cp-DASH':'clinical.dash',
-    'cp-IBS':'clinical.ibs','cp-T2D':'clinical.t2d','cp-IBD_acute':'clinical.ibd_acute','cp-IBD_remiss':'clinical.ibd_remiss'};
-  Object.entries(_clinMap).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=t(key);});
-  /* Clinical sub */
-  const _clinSub=document.querySelector('#clinical-section>p.sn:first-of-type');
-  if(_clinSub)_clinSub.textContent=t('onb.clinical.sub');
-  /* Cibi sub */
-  const _cibiSub=document.querySelector('#step-4>.sn');
-  if(_cibiSub)_cibiSub.textContent=t('onb.cibi.sub');
-  /* Onb nav buttons */
-  document.querySelectorAll('#onb-screen .onb-step .btn-ghost[onclick*="goStep"]').forEach(btn=>btn.textContent=t('onb.btn.indietro'));
-  document.querySelectorAll('#onb-screen .onb-step .btn-primary').forEach(btn=>{
-    const oc=btn.getAttribute('onclick')||'';
-    if(oc.includes('runCalcAndGenerate'))btn.textContent=t('onb.btn.genera');
-    else if(oc.includes('activateGeneratedPlan'))btn.textContent=t('onb.btn.attiva');
-    else if(btn.id==='to-step3-btn'||oc.includes('goStep'))btn.textContent=t('onb.btn.avanti');
-  });
-  /* Result card labels */
-  document.querySelectorAll('#result-card .t-xxs.muted.sn').forEach(el=>{
-    const v=el.textContent.trim();
-    if(v==='IL TUO TDEE'||v==='YOUR TDEE')el.textContent=t('onb.result.tdee');
-    else if(v==='Dettaglio calcolo'||v==='Calculation detail')el.textContent=t('onb.result.detail');
-  });
-  document.querySelectorAll('#result-card .rl.sn').forEach(el=>{
-    const v=el.textContent.trim();
-    if(v==='Proteine'||v==='Protein')el.textContent=t('onb.result.proteine');
-    else if(v==='Grassi'||v==='Fat')el.textContent=t('onb.result.grassi');
-  });
-  const _previewLbl=document.querySelector('#plan-preview .sec-label');
-  if(_previewLbl)_previewLbl.textContent=t('onb.result.preview');
-  /* Result kcal/day suffix */
-  const _rTgtEl=document.getElementById('r-tgt');
-  if(_rTgtEl){
-    const _nodes=[..._rTgtEl.parentElement.childNodes].filter(n=>n.nodeType===3);
-    const _sfx=_nodes.find(n=>n.textContent.includes('giorno')||n.textContent.includes('/day'));
-    if(_sfx)_sfx.textContent=_lang==='en'?' kcal/day':' kcal/giorno';
-  }
-  /* Coach loading msg */
-  const _coachMsg=document.getElementById('coach-msg');
-  if(_coachMsg&&(_coachMsg.textContent.trim()==='— Analisi in corso...'||_coachMsg.textContent.trim()==='— Analysing...'))
-    _coachMsg.textContent=t('coach.msg.loading');
-  /* Adaptive banner buttons */
-  document.querySelectorAll('button[onclick="applyAdaptiveSuggestion()"]').forEach(b=>b.textContent=t('adaptive.btn.apply'));
-  document.querySelectorAll('button[onclick="dismissAdaptive()"]').forEach(b=>b.textContent=t('adaptive.btn.dismiss'));
-  /* Lang buttons */
-  document.getElementById('lang-btn-it')?.classList.toggle('seg-on',_lang==='it');
-  document.getElementById('lang-btn-en')?.classList.toggle('seg-on',_lang==='en');
+}
   /* ── OFF-SCREEN TABS: defer when called from boot, run immediately otherwise ── */
   const _offscreen=()=>{
   /* ── PROGRESS ── */
@@ -3041,8 +2753,7 @@ function generateReportInsight(rep){
   if(avgAdher!==null&&avgAdher>=8)parts.push(t('rep.adherenceGreat',{v:avgAdher}));
   if(ciDays>=5)parts.push(t('rep.ciHigh',{n:ciDays}));
   else if(ciDays>0&&ciDays<3)parts.push(t('rep.ciLow',{n:ciDays}));
-  return parts.join(' ')||t('rep.steady');
-}
+  return parts.join(' ')||t('rep.steady');}
 function renderWeeklyReport(){
   const card=document.getElementById('weekly-report-card');
   const cont=document.getElementById('weekly-report-content');
@@ -3058,14 +2769,12 @@ function renderWeeklyReport(){
   cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${wColor};margin:0 0 2px;">${wTxt}</p>
-      <span class="t-xxs muted sn">${t('prog.peso')}</span></div>
-    <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
+      <span class="t-xxs muted sn">${t('prog.peso')}</span></div>    <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--on);margin:0 0 2px;">${rep.ciDays}/7</p>
       <span class="t-xxs muted sn">Check-in</span></div>
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${pct>=80?'var(--p)':pct>=50?'var(--orange)':'var(--red)'};margin:0 0 2px;">${pct}%</p>
-      <span class="t-xxs muted sn">${t('oggi.pasti')}</span></div>
-  </div>
+      <span class="t-xxs muted sn">${t('oggi.pasti')}</span></div>  </div>
   <p class="sn" style="font-size:12px;color:var(--muted);line-height:1.55;">${sanitize(insight)}</p>`;
 }
 function shareWeeklyReport(){
@@ -3076,8 +2785,7 @@ function shareWeeklyReport(){
   const pct=rep.mealsTotal>0?Math.round(rep.mealsDone/rep.mealsTotal*100)+'%':'—';
   const text=`📊 Iron Kinetic — Weekly Report\n\n${t('prog.peso')}: ${wTxt}\nCheck-in: ${rep.ciDays}/7\n${t('oggi.pasti')}: ${pct}\nEnergy: ${rep.avgEnergy||'—'}/10\nAdherence: ${rep.avgAdher||'—'}/10\n\n${insight}`;
   if(navigator.share){navigator.share({title:'Iron Kinetic Report',text}).catch(()=>{});}
-  else{try{navigator.clipboard.writeText(text);toast(t('rep.copied'));}catch{toast(t('rep.shareUnsup'));}}
-}
+  else{try{navigator.clipboard.writeText(text);toast(t('rep.copied'));}catch{toast(t('rep.shareUnsup'));}}}
 
 /* ═══════════════════════════════════════
    visualViewport keyboard handler
@@ -4493,8 +4201,7 @@ function renderPersonalInsight(){
   const die=t('prof.die');
   content.innerHTML=`<p style="margin:0 0 4px;"><strong style="color:var(--on);">${p.sex==='M'?'♂':'♀'} ${sanitize(p.age)}${t('prof.anni')} · ${sanitize(p.weight)}kg${p.bf?` · ${sanitize(p.bf)}% ${t('prof.grassi').toLowerCase()}`:''}</strong></p>`+
     `<p style="margin:0 0 4px;">${t('prof.obiettivo')}: <strong style="color:var(--p);">${p.goal?t('goal.label.'+p.goal)||'—':'—'}</strong> · ${t('prof.target')}: <strong style="color:var(--p);">${sanitize(p.targetKcal)} kcal${die}</strong></p>`+
-    `<p style="margin:0 0 4px;">${sanitize(prefs.mealsCount||3)} ${t('prefs.pasti')} · ${t('prefs.gusto')}: ${sanitize(prefs.taste||'—')} · ${sanitize(prefs.dietStyle||'—')}</p>`+
-    `<p style="margin:0;">${t('prefs.cibiScelti')}: ${sanitize(foodsList)}${prefs.intolerances?` · ${t('prefs.esclusi')}: ${sanitize(prefs.intolerances)}`:''}</p>`;
+    `<p style="margin:0 0 4px;">${sanitize(prefs.mealsCount||3)} ${t('prefs.pasti')} · ${t('prefs.gusto')}: ${sanitize(prefs.taste||'—')} · ${sanitize(prefs.dietStyle||'—')}</p>`+    `<p style="margin:0;">${t('prefs.cibiScelti')}: ${sanitize(foodsList)}${prefs.intolerances?` · ${t('prefs.esclusi')}: ${sanitize(prefs.intolerances)}`:''}</p>`;
 }
 
 /* ═══════════════════════════════════════
@@ -4631,8 +4338,7 @@ function renderMeals(){
   }).join('');
   document.getElementById('meals-done').textContent=done;
   const dateEl=document.getElementById('oggi-date-label');
-  if(dateEl)dateEl.textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
-  const pastiBar=document.getElementById('oggi-pasti-bar');
+  if(dateEl)dateEl.textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();  const pastiBar=document.getElementById('oggi-pasti-bar');
   if(pastiBar)pastiBar.style.width=(mNames.length>0?Math.round(done/mNames.length*100):0)+'%';
   renderKcalRing();
 }
@@ -4695,8 +4401,7 @@ function renderKcalRing(){
   const r2=getEl('kcal-ring-oggi');
   if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct/100);r2.style.stroke=pct>=99.5?'#22c55e':'var(--p)';}
   const pctEl=getEl('oggi-kcal-pct');
-  if(pctEl)pctEl.textContent=Math.round(pct)+'% '+t('oggi.kcal.pct');
-}
+  if(pctEl)pctEl.textContent=Math.round(pct)+'% '+t('oggi.kcal.pct');}
 
 /* ═══════════════════════════════════════
    REFEED
@@ -4736,8 +4441,7 @@ function renderSettings(){
     if(getPhase()===p)b.classList.add('on');b.onclick=()=>{hap();setPhase(p);};el.appendChild(b);
   });
   renderRefeed();renderModDisplay();
-  {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent=t('set.mod.units',{cur,max:MAX_U});const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}
-  const prof=getProfile();if(prof)_renderProfileCard(prof);
+  {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent=t('set.mod.units',{cur,max:MAX_U});const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}  const prof=getProfile();if(prof)_renderProfileCard(prof);
   _renderPrefsCard();
   if(document.getElementById('hdr-plan')){document.getElementById('hdr-plan').textContent=m.name||'';document.getElementById('hdr-plan').style.display=m.name?'block':'none';}
 }
@@ -4770,7 +4474,7 @@ function _renderPrefsCard(){
   if(!prefs||!wrap||!cont)return;
   wrap.style.display='block';
   const foodsList=prefs.foods?.length>0?prefs.foods.join(', '):'—';
-  cont.textContent=`${prefs.mealsCount||3} ${t('prefs.pastiDie')} · ${t('prefs.gusto')}: ${prefs.taste||'—'} · ${t('prefs.stile')}: ${prefs.dietStyle||'—'}\n`+
+  cont.textContent=`${prefs.mealsCount||3} ${t('prefs.pastiDie')} · ${t('prefs.gusto')}: ${prefs.taste?t('taste.'+prefs.taste):'—'} · ${t('prefs.stile')}: ${prefs.dietStyle?t('style.'+prefs.dietStyle):'—'}\n`+
     `${t('prefs.cibiScelti')}: ${foodsList}\n`+
     `${prefs.extraFoods?`${t('prefs.extra')}: ${prefs.extraFoods}\n`:''}`+
     `${prefs.intolerances?`${t('prefs.esclusi')}: ${prefs.intolerances}`:''}`;
@@ -4792,8 +4496,7 @@ function applyMod(u){
   else{const n=Math.max(MIN_UNITS,Math.min(MAX_UNITS,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
   renderModDisplay();renderMacros();renderCoach();renderMeals();
   const cur=getMod();
-  const lbl=getEl('mod-units-label');if(lbl)lbl.textContent=t('set.mod.units',{cur,max:MAX_UNITS});
-  const stepper=getEl('mod-stepper');
+  const lbl=getEl('mod-units-label');if(lbl)lbl.textContent=t('set.mod.units',{cur,max:MAX_UNITS});  const stepper=getEl('mod-stepper');
   if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
 }
 const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
@@ -4804,8 +4507,7 @@ function closeConfirm(){getEl('modal-confirm').style.display='none';_confirmCb=n
 document.addEventListener('DOMContentLoaded',()=>{const okBtn=getEl('confirm-ok-btn');if(okBtn)okBtn.onclick=()=>{closeConfirm();_confirmCb&&_confirmCb();};},{once:true});
 function updateWeight(){
   const v=parseFloat(getEl('inp-weight-upd').value);
-  if(!v||v<40||v>250)return toast(t('toast.pesoInvalido'));
-  const p=getProfile()||{};
+  if(!v||v<40||v>250)return toast(t('toast.pesoInvalido'));  const p=getProfile()||{};
   p.weight=v;lsS(SK.profile,p);
   const m=calculateUserMacros(p);
   p.targetKcal=m.targetKcal;p.pro=m.pro;p.carbs=m.carbs;p.fat=m.fat;p.tdee=m.tdee;
@@ -4817,8 +4519,7 @@ function updateWeight(){
 }
 function resetProfile(){
   showConfirm(t('confirm.deleteAll'),()=>{
-    try{clearAppData();}catch{}
-    if(bodyChart){bodyChart.destroy();bodyChart=null;}
+    try{clearAppData();}catch{}    if(bodyChart){bodyChart.destroy();bodyChart=null;}
     dietData=null;
     profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
     prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
@@ -4933,8 +4634,7 @@ function switchChart(mode,btn){
     renderPredictionChart();
   } else {
     if(predSum)predSum.style.display='none';
-    if(lbl)lbl.textContent=mode==='waist'?t('prog.chart.girovita'):t('prog.chart.peso');
-    renderChart(getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1));
+    if(lbl)lbl.textContent=mode==='waist'?t('prog.chart.girovita'):t('prog.chart.peso');    renderChart(getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1));
   }
 }
 
@@ -5604,7 +5304,7 @@ function mountApp(){
   document.getElementById('onb-screen').classList.remove('on');document.getElementById('app-shell').classList.add('on');
   document.getElementById('log-date').value=toISO();
   const dow=new Date().getDay();const days=dietData.days||[];const match=days.find(d=>d.d===(dow===0?7:dow));
-  selDay=(match||days[0]).d;
+  selDay=(match||(days[0])||{d:1}).d;
   /* Hide non-oggi screens before any render */
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t==='oggi'?'block':'none';});
   document.getElementById('nav-oggi').classList.add('on');
@@ -5778,20 +5478,26 @@ function toggleFaq(item){
 
 /* ── Shared boot sequence (after all gates are cleared) ── */
 function _bootAfterGates(){
-  const consent=gdprStatus();
-  if(!consent||!consent.accepted){
-    document.getElementById('gdpr-gate').classList.add('on');
-    return;
-  }
-  const raw=localStorage.getItem(SK.diet);
-  if(raw){
-    try{
-      const parsed=JSON.parse(raw);validateSchema(parsed);
-      const p=getProfile();if(p?.targetKcal){parsed.metadata.baseKcal=p.targetKcal;parsed.metadata.basePro=p.pro;parsed.metadata.baseCarbs=p.carbs;parsed.metadata.baseFat=p.fat;}
-      dietData=parsed;mountApp();
-    }catch{try{localStorage.removeItem(SK.diet);}catch{}showOnb();toast(t('toast.pianoCorrotto'));}
-  }else{
-    showOnb();
+  try{
+    const consent=gdprStatus();
+    if(!consent||!consent.accepted){
+      document.body.classList.remove('onboarding-active');
+      document.getElementById('gdpr-gate').classList.add('on');
+      return;
+    }
+    const raw=localStorage.getItem(SK.diet);
+    if(raw){
+      try{
+        const parsed=JSON.parse(raw);validateSchema(parsed);
+        const p=getProfile();if(p?.targetKcal){parsed.metadata.baseKcal=p.targetKcal;parsed.metadata.basePro=p.pro;parsed.metadata.baseCarbs=p.carbs;parsed.metadata.baseFat=p.fat;}
+        dietData=parsed;mountApp();
+      }catch{try{localStorage.removeItem(SK.diet);}catch{}try{showOnb();}catch{}try{toast(t('toast.pianoCorrotto'));}catch{}}
+    }else{
+      showOnb();
+    }
+  }catch{
+    /* Last-resort fallback: try to show onboarding, else show gdpr gate */
+    try{showOnb();}catch{try{document.getElementById('onb-screen').classList.add('on');}catch{}}
   }
 }
 
@@ -5813,7 +5519,16 @@ const _ONB=[
 ];
 function showOnboarding(){
   const el=document.getElementById('onboarding-overlay');
-  if(!el) return;
+  if(!el){
+    /* Element is after this <script> block — show placeholder so screen is never black, then retry. */
+    try{showOnb();}catch{}
+    document.addEventListener('DOMContentLoaded',()=>{
+      try{showOnboarding();document.getElementById('onb-screen')?.classList.remove('on');}
+      catch{try{_bootAfterGates();}catch{}}
+    },{once:true});
+    return;
+  }
+  el.style.display='flex';
   _ONB.forEach((_,i)=>{
     const tt=document.getElementById(`onb-t${i}`);
     const tb=document.getElementById(`onb-b${i}`);
@@ -5857,25 +5572,56 @@ function _onbFinish(){
 
 /* ENTRY POINT */
 (()=>{
-  initLang(); /* read ik_lang from localStorage, set _lang + html lang attr */
-  /* Apply translations to gate screens immediately */
-  applyTranslations();
-  const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);
-  const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);
+  /* Emergency watchdog — if nothing is visible after 900ms, force a safe screen */
+  setTimeout(()=>{
+    try{
+      const visible=
+        document.getElementById('pwa-gate')?.classList.contains('on')||
+        document.getElementById('gdpr-gate')?.classList.contains('on')||
+        document.getElementById('onb-screen')?.classList.contains('on')||
+        document.getElementById('app-shell')?.classList.contains('on')||
+        (document.getElementById('onboarding-overlay')?.style.display==='flex');
+      if(!visible){
+        if(gdprStatus&&gdprStatus()?.accepted){try{showOnb();}catch{document.getElementById('onb-screen').classList.add('on');}}
+        else{document.getElementById('gdpr-gate').classList.add('on');}
+      }
+    }catch{}
+  },900);
 
-  /* PWA gate: force install-awareness on very first open */
-  if(!localStorage.getItem('ik_pwa_seen')){
-    document.getElementById('pwa-gate').classList.add('on');
-    return; /* acknowledgedPWA() continues the boot flow */
+  try{
+    initLang(); /* read ik_lang from localStorage, set _lang + html lang attr */
+    /* Apply translations to gate screens immediately */
+    try{applyTranslations();}catch(e){}
+    try{const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);}catch(e){}
+    try{const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);}catch(e){}
+
+    /* Detect installed PWA (iOS standalone or W3C display-mode) — skip PWA gate if already installed */
+    const isStandalone=(()=>{try{return window.navigator.standalone===true||window.matchMedia('(display-mode:standalone)').matches;}catch{return false;}})();
+    if(isStandalone){try{localStorage.setItem('ik_pwa_seen','1');}catch{}}
+
+    /* PWA gate: force install-awareness on very first open (browser only, not installed PWA) */
+    if(!isStandalone&&!localStorage.getItem('ik_pwa_seen')){
+      document.getElementById('pwa-gate').classList.add('on');
+      return; /* acknowledgedPWA() continues the boot flow */
+    }
+    const _gdpr=gdprStatus();
+    if(!_gdpr||!_gdpr.accepted){
+      document.body.classList.remove('onboarding-active');
+      document.getElementById('gdpr-gate')?.classList.add('on');
+      return;
+    }
+
+    /* Onboarding slideshow: shown once on first launch */
+    if(lsG(SK.onboardingDone)!==true){showOnboarding();return;}
+
+    _bootAfterGates();
+  }catch(e){
+    /* Fatal boot error — show safest available screen */
+    try{
+      if(gdprStatus&&gdprStatus()?.accepted){document.getElementById('onb-screen').classList.add('on');}
+      else{document.getElementById('gdpr-gate').classList.add('on');}
+    }catch{}
   }
-
-  /* Onboarding slideshow: shown once on first launch */
-  if(lsG(SK.onboardingDone)!==true){
-    showOnboarding();
-    return;
-  }
-
-  _bootAfterGates();
 })();
 </script>
 
