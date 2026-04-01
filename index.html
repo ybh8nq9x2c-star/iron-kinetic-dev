@@ -1417,6 +1417,55 @@ body.onboarding-active #onb-screen{
 
 </div><!-- /#app-shell -->
 
+<!-- ══════════════════════════════════════
+     ONBOARDING SLIDESHOW — moved BEFORE main script so getElementById finds it at boot
+══════════════════════════════════════ -->
+<div id="onboarding-overlay" style="display:none;">
+  <div id="onboarding-slides-wrap">
+    <div id="onboarding-slides">
+      <div class="onboarding-slide">
+        <div class="onb-emoji">🏋️‍♂️</div>
+        <p class="onb-title" id="onb-t0"></p>
+        <p class="onb-body" id="onb-b0"></p>
+      </div>
+      <div class="onboarding-slide">
+        <div class="onb-emoji">✅</div>
+        <p class="onb-title" id="onb-t1"></p>
+        <p class="onb-body" id="onb-b1"></p>
+      </div>
+      <div class="onboarding-slide">
+        <div class="onb-emoji">⚡</div>
+        <p class="onb-title" id="onb-t2"></p>
+        <p class="onb-body" id="onb-b2"></p>
+      </div>
+      <div class="onboarding-slide">
+        <div class="onb-emoji">📈</div>
+        <p class="onb-title" id="onb-t3"></p>
+        <p class="onb-body" id="onb-b3"></p>
+      </div>
+      <div class="onboarding-slide">
+        <div class="onb-emoji">🎯</div>
+        <p class="onb-title" id="onb-t4"></p>
+        <p class="onb-body" id="onb-b4"></p>
+        <button id="onb-start-btn" class="btn btn-neon" onclick="onbFinish()" style="width:100%;margin-top:8px;font-size:15px;font-weight:700;"></button>
+      </div>
+    </div>
+  </div>
+  <div class="onb-dots">
+    <span class="onb-dot active"></span>
+    <span class="onb-dot"></span>
+    <span class="onb-dot"></span>
+    <span class="onb-dot"></span>
+    <span class="onb-dot"></span>
+  </div>
+  <div class="onb-nav">
+    <button id="onb-skip-btn" class="btn btn-ghost" onclick="onbSkip()" style="font-size:13px;padding:8px 14px;"></button>
+    <div style="flex:1;"></div>
+    <button id="onb-prev-btn" class="btn btn-ghost" onclick="onbPrev()" style="font-size:13px;padding:8px 14px;visibility:hidden;"></button>
+    <button id="onb-next-btn" class="btn btn-neon-o" onclick="onbNext()" style="font-size:13px;padding:8px 16px;"></button>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav id="nav">
   <button id="nav-oggi" class="nb on" onclick="switchTab('oggi')" aria-label="Oggi">
@@ -5765,7 +5814,7 @@ const _ONB=[
 ];
 function showOnboarding(){
   const el=document.getElementById('onboarding-overlay');
-  if(!el) return;
+  if(!el){showOnb();return;}/* fallback: overlay not yet in DOM (parse order race) */
   _ONB.forEach((_,i)=>{
     const tt=document.getElementById(`onb-t${i}`);
     const tb=document.getElementById(`onb-b${i}`);
@@ -5831,54 +5880,7 @@ function _onbFinish(){
 })();
 </script>
 
-<!-- ══════════════════════════════════════
-     ONBOARDING SLIDESHOW
-══════════════════════════════════════ -->
-<div id="onboarding-overlay" style="display:none;">
-  <div id="onboarding-slides-wrap">
-    <div id="onboarding-slides">
-      <div class="onboarding-slide">
-        <div class="onb-emoji">🏋️‍♂️</div>
-        <p class="onb-title" id="onb-t0"></p>
-        <p class="onb-body" id="onb-b0"></p>
-      </div>
-      <div class="onboarding-slide">
-        <div class="onb-emoji">✅</div>
-        <p class="onb-title" id="onb-t1"></p>
-        <p class="onb-body" id="onb-b1"></p>
-      </div>
-      <div class="onboarding-slide">
-        <div class="onb-emoji">⚡</div>
-        <p class="onb-title" id="onb-t2"></p>
-        <p class="onb-body" id="onb-b2"></p>
-      </div>
-      <div class="onboarding-slide">
-        <div class="onb-emoji">📈</div>
-        <p class="onb-title" id="onb-t3"></p>
-        <p class="onb-body" id="onb-b3"></p>
-      </div>
-      <div class="onboarding-slide">
-        <div class="onb-emoji">🎯</div>
-        <p class="onb-title" id="onb-t4"></p>
-        <p class="onb-body" id="onb-b4"></p>
-        <button id="onb-start-btn" class="btn btn-neon" onclick="onbFinish()" style="width:100%;margin-top:8px;font-size:15px;font-weight:700;"></button>
-      </div>
-    </div>
-  </div>
-  <div class="onb-dots">
-    <span class="onb-dot active"></span>
-    <span class="onb-dot"></span>
-    <span class="onb-dot"></span>
-    <span class="onb-dot"></span>
-    <span class="onb-dot"></span>
-  </div>
-  <div class="onb-nav">
-    <button id="onb-skip-btn" class="btn btn-ghost" onclick="onbSkip()" style="font-size:13px;padding:8px 14px;"></button>
-    <div style="flex:1;"></div>
-    <button id="onb-prev-btn" class="btn btn-ghost" onclick="onbPrev()" style="font-size:13px;padding:8px 14px;visibility:hidden;"></button>
-    <button id="onb-next-btn" class="btn btn-neon-o" onclick="onbNext()" style="font-size:13px;padding:8px 16px;"></button>
-  </div>
-</div>
+
 
 <!-- ══════════════════════════════════════
      MODAL CONFIRM
