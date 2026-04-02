@@ -884,7 +884,7 @@ body.onboarding-active #onb-screen{
               <circle cx="22" cy="22" r="17" class="ring-track"/>
               <circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring-oggi" stroke="var(--p)" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4))"/>
             </svg>
-            <span id="oggi-kcal-pct" class="t-xxs muted sn" style="font-size:9px;">0% consumato</span>
+            <span id="oggi-kcal-pct" class="t-xxs muted sn" style="font-size:9px;">0%</span>
           </div>
         </div>
         <!-- 3 Macro chips -->
@@ -1407,8 +1407,8 @@ body.onboarding-active #onb-screen{
 
       <!-- Disclaimer -->
       <div style="background:rgba(255,59,48,.05);border:1px solid rgba(255,59,48,.14);border-radius:var(--r);padding:14px;">
-        <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 5px;" class="sn">⚕️ Avviso medico importante</p>
-        <p style="font-size:11px;color:var(--muted);margin:0;line-height:1.6;" class="sn">Iron Kinetic è uno strumento informativo di supporto e <strong style="color:var(--on);">non costituisce consiglio medico</strong>. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
+        <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 5px;" class="sn" id="info-disclaimer-title">⚕️ Avviso medico importante</p>
+        <p style="font-size:11px;color:var(--muted);margin:0;line-height:1.6;" class="sn" id="info-disclaimer-text">Iron Kinetic è uno strumento informativo di supporto e <strong style="color:var(--on);">non costituisce consiglio medico</strong>. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
       </div>
 
       <div style="height:8px;"></div>
@@ -1493,7 +1493,7 @@ body.onboarding-active #onb-screen{
 /* ── FIX 5: global error handler ── */
 window.addEventListener('unhandledrejection',e=>{
   console.error('Unhandled:',e.reason);
-  try{showToast(t('toast.errore')||'Errore inatteso');}catch{}
+  try{showToast(t('toast.errore'));}catch{}
 });
 window.onerror=(msg,src,line)=>{
   console.error('Error:',msg,src,line);
@@ -1788,6 +1788,8 @@ it:{
   'onb2.slide5.body':'Inserisci i tuoi dati, scegli il piano e parti. Tutto offline, tutto tuo.',
   'confirm.cancel':'Annulla','confirm.ok':'Conferma',
   'oggi.trackers.title':'Attività e Trackers',
+  'oggi.kcal.target':'Target Giorno','oggi.kcal.totali':'Kcal totali','oggi.trackers':'Attività e Trackers',
+  'oggi.kcal.pct':'{pct}% consumato',
   'aria.day.prev':'Giorno precedente','aria.day.next':'Giorno successivo',
   'aria.checkin.hunger':'Fame (1–10)','aria.checkin.energy':'Energia (1–10)',
   'aria.checkin.adherence':'Aderenza (1–10)','aria.checkin.digestion':'Digestione (1–10)',
@@ -1801,9 +1803,11 @@ it:{
   'pwa.android.step2':'Seleziona <strong style="color:var(--p);">Aggiungi a schermata Home</strong> o <strong style="color:var(--p);">Installa app</strong>',
   'pwa.android.step3':'Conferma toccando <strong style="color:var(--p);">Installa</strong>',
   'set.btn.aggiornaPeso':'Aggiorna peso',
+  'prog.fp.title':'Impronta Metabolica',
   'fp.efficienza':'EFFICIENZA','fp.rispostaDeficit':'risposta al deficit',
   'fp.adattamento':'ADATTAMENTO','fp.riduzione':'riduzione metabolica',
   'fp.risposta':'RISPOSTA','fp.segnale':'per segnale affidabile',
+  'fp.days':'gg',
   'fp.perditaReale':'PERDITA REALE','fp.mediaSettimanaleFP':'media settimanale',
   'pred.text':'Tra 12 settimane {last} kg {diff} kg. Proiezione con correzione adattamento metabolico.',
   'pred.noData':'Registra almeno 5 pesate per attivare la previsione.',
@@ -1816,6 +1820,93 @@ it:{
   'shop.cat.proteine':'Proteine','shop.cat.carboidrati':'Carboidrati',
   'shop.cat.grassi':'Grassi','shop.cat.latticini':'Latticini',
   'shop.cat.verdure':'Verdure','shop.cat.altro':'Altro',
+  'set.danger.title':'Zona Pericolosa',
+  'set.danger.warn':'Queste azioni sono irreversibili senza un backup.',
+  'help.contact.sub.email':'Scrivici a <strong style="color:var(--p);">support&#64;ironkinetic.app</strong>',
+  'faq.q.0':'Come funziona il calcolo del TDEE?',
+  'faq.a.0':'Se inserisci la percentuale di grasso corporeo, viene usata la formula <strong>Katch-McArdle</strong> basata sulla massa magra. Altrimenti viene usata la formula <strong>Mifflin-St Jeor</strong>. Il TDEE finale viene moltiplicato per un fattore di attività calcolato da allenamenti settimanali e passi giornalieri.',
+  'faq.q.1':'Come viene generato il piano alimentare?',
+  'faq.a.1':'Il piano viene generato automaticamente in base ai tuoi cibi preferiti, al numero di pasti scelto, al gusto (dolce/salato/misto) e allo stile alimentare (onnivoro/vegetariano/vegano). Le porzioni sono calcolate per raggiungere il tuo target proteico e calorico personale. Nessun JSON esterno necessario.',
+  'faq.q.2':'Cosa fa il Modificatore AI?',
+  'faq.a.2':'Il modificatore aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall\'inizio.',
+  'faq.q.3':'Cos\'è il Refeed Day?',
+  'faq.a.3':'Un refeed è un giorno di aumento calorico controllato (+400 kcal, +50g carbs) usato in Fase 2 per stimolare la leptina e prevenire il calo metabolico durante la fase di definizione. Va pianificato 1 volta ogni 7-10 giorni.',
+  'faq.q.4':'Come funziona il Coach AI?',
+  'faq.a.4':'Il coach analizza: la tua curva di peso (ultimi 7 giorni), la variazione del girovita, l\'assunzione di acqua e sale, i giorni dall\'ultimo refeed, e la fase attiva. Sulla base di questi dati mostra un\'analisi contestuale: stallo metabolico, rischio catabolico, ricomposizione, ritenzione idrica o progressione ottimale. Tutto avviene localmente, senza AI esterna.',
+  'faq.q.5':'Come faccio il backup e ripristino?',
+  'faq.a.5':'Da <em>Profilo → Dati</em> puoi esportare un file JSON con tutti i tuoi dati. Per ripristinare, usa <em>Importa Backup</em>. Il file contiene profilo, piano, log del peso, check-in e impostazioni. Conservalo in un posto sicuro — è l\'unico modo per recuperare i dati se cambi dispositivo o svuoti il browser.',
+  'faq.q.6':'Perché il peso varia molto giornalmente?',
+  'faq.a.6':'Fluttuazioni di 1-2 kg al giorno sono normali e dipendono da: acqua corporea, glicogeno muscolare, contenuto intestinale, ciclo ormonale (donne). Il Coach riconosce la ritenzione idrica (sale alto + acqua bassa) e ti avvisa quando il peso è "falsato". Analizza sempre il trend su 7+ giorni, non il singolo pesata.',
+  'faq.q.7':'L\'app è adatta a tutti?',
+  'faq.a.7':'Iron Kinetic è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.',
+  'faq.q.8':'Posso installare l\'app sul telefono?',
+  'faq.a.8':'Sì. Iron Kinetic è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un\'app nativa, anche offline.',
+  'faq.q.9':'I miei dati vengono inviati da qualche parte?',
+  'faq.a.9':'No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server, account o sincronizzazione cloud. L\'unica eccezione sono le richieste di font e icone a Google (Google Fonts/Material Symbols) che non trasmettono i tuoi dati personali.',
+  'prv.badge':'Aggiornata: Gennaio 2025 · Conforme GDPR (Reg. UE 2016/679)',
+  'prv.s0.h':'📱 In sintesi: i tuoi dati restano sul tuo dispositivo',
+  'prv.s0.p':'Iron Kinetic è un\'app offline-first. Tutti i tuoi dati (peso, misure, piano alimentare, check-in) vengono salvati <strong>esclusivamente nel localStorage del tuo browser</strong>. Non esistono account utente, non esistono server dove vengono inviati i tuoi dati, non viene effettuato nessun tracking.',
+  'prv.s1.h':'1. Titolare del trattamento',
+  'prv.s1.p':'<strong>Iron Kinetic</strong><br>Email: privacy&#64;ironkinetic.app<br>Per qualsiasi richiesta relativa ai tuoi dati, contattaci all\'indirizzo sopra indicato.',
+  'prv.s2.h':'2. Dati trattati e finalità',
+  'prv.s2.p':'L\'app tratta, <em>localmente sul tuo dispositivo</em>, le seguenti categorie di dati:',
+  'prv.s2.li':'<li><strong>Dati anagrafici e fisici</strong> (età, altezza, peso, sesso biologico, grasso corporeo): necessari per il calcolo del TDEE e dei macronutrienti personalizzati.</li><li><strong>Dati relativi alla salute</strong> ex art. 9 GDPR (peso corporeo, percentuale di grasso, girovita): trattati sulla base del tuo consenso esplicito, esclusivamente per fornirti il servizio di coaching nutrizionale.</li><li><strong>Dati sulle abitudini alimentari</strong> (preferenze alimentari, intolleranze, numero di pasti): utilizzati per generare il piano nutrizionale personalizzato.</li><li><strong>Dati di attività quotidiana</strong> (passi, workout): utilizzati per il coaching giornaliero.</li><li><strong>Check-in giornalieri</strong> (fame, energia, aderenza, digestione): utilizzati per l\'analisi dei trend e i suggerimenti contestuali.</li>',
+  'prv.s3.h':'3. Base giuridica del trattamento',
+  'prv.s3.p1':'Il trattamento dei dati ordinari è basato sul <strong>contratto</strong> (art. 6 par. 1 lett. b GDPR): i dati sono necessari per erogare il servizio richiesto.',
+  'prv.s3.p2':'Il trattamento dei <strong>dati relativi alla salute</strong> (art. 9 GDPR) è basato sul <strong>tuo consenso esplicito</strong> (art. 9 par. 2 lett. a GDPR), prestato al primo avvio dell\'app e sempre revocabile.',
+  'prv.s4.h':'4. Archiviazione e sicurezza',
+  'prv.s4.p1':'<strong>Nessun dato viene trasmesso a server esterni.</strong> Tutti i dati sono conservati nel localStorage del tuo dispositivo tramite l\'API Web Storage standard.',
+  'prv.s4.p2':'La sicurezza dei dati dipende dalla protezione del tuo dispositivo (codice di sblocco, cifratura). Ti consigliamo di:',
+  'prv.s4.li':'<li>Mantenere il dispositivo protetto da accessi non autorizzati.</li><li>Usare la funzione <em>Esporta Backup</em> per conservare una copia sicura dei tuoi dati.</li><li>Non utilizzare l\'app su dispositivi condivisi senza cancellare i dati dopo l\'uso.</li>',
+  'prv.s5.h':'5. Conservazione dei dati',
+  'prv.s5.p':'I dati rimangono sul tuo dispositivo finché non li elimini tu. Puoi cancellare tutti i tuoi dati in qualsiasi momento tramite <em>Profilo → Ricomincia da capo</em> oppure svuotando i dati del sito nelle impostazioni del tuo browser.',
+  'prv.s6.h':'6. Condivisione con terze parti',
+  'prv.s6.p1':'I tuoi dati personali <strong>non vengono condivisi con nessuna terza parte</strong>.',
+  'prv.s6.p2':'L\'app utilizza le seguenti risorse esterne, senza trasmissione di dati personali:',
+  'prv.s6.li':'<li><strong>Google Fonts</strong> (fonts.googleapis.com): caricamento dei font Space Grotesk e Manrope. Google potrebbe registrare l\'indirizzo IP richiedente.</li><li><strong>Chart.js via jsDelivr</strong> (cdn.jsdelivr.net): libreria grafica. Nessun dato personale trasmesso.</li><li><strong>Material Symbols</strong> (Google): icone vettoriali. Stesse condizioni di Google Fonts.</li>',
+  'prv.s7.h':'7. Trasferimento verso paesi terzi',
+  'prv.s7.p':'I dati personali conservati localmente non sono soggetti a trasferimento verso paesi terzi. Le richieste verso Google Fonts potrebbero coinvolgere server al di fuori dello Spazio Economico Europeo; tali trasferimenti sono regolati dalle Clausole Contrattuali Standard della Commissione UE.',
+  'prv.s8.h':'8. I tuoi diritti (artt. 15–22 GDPR)',
+  'prv.s8.r0.ico':'👁','prv.s8.r0.lbl':'Accesso','prv.s8.r0.desc':'Puoi vedere tutti i tuoi dati direttamente nell\'app (sezione Profilo).',
+  'prv.s8.r1.ico':'✏️','prv.s8.r1.lbl':'Rettifica','prv.s8.r1.desc':'Puoi modificare i tuoi dati in qualsiasi momento dall\'app.',
+  'prv.s8.r2.ico':'🗑','prv.s8.r2.lbl':'Cancellazione','prv.s8.r2.desc':'Usa "Ricomincia da capo" per cancellare tutti i dati.',
+  'prv.s8.r3.ico':'📦','prv.s8.r3.lbl':'Portabilità','prv.s8.r3.desc':'Esporta i tuoi dati in formato JSON leggibile.',
+  'prv.s8.r4.ico':'🚫','prv.s8.r4.lbl':'Revoca consenso','prv.s8.r4.desc':'Revoca consenso da Profilo → Privacy.',
+  'prv.s8.r5.ico':'⚖️','prv.s8.r5.lbl':'Reclamo','prv.s8.r5.desc':'Puoi proporre reclamo al Garante Privacy italiano (gpdp.it).',
+  'prv.s9.h':'9. Cookie e tecnologie di tracciamento',
+  'prv.s9.p':'<strong>Iron Kinetic non utilizza cookie.</strong> I dati sono conservati tramite Web Storage API (localStorage), che non è soggetta alla Direttiva Cookie 2002/58/CE ma rientra nel perimetro del GDPR per i dati personali in essa contenuti.',
+  'prv.s10.h':'10. Avviso per i minori',
+  'prv.s10.p':'Il servizio è destinato a persone di età non inferiore a 16 anni. L\'app non raccoglie consapevolmente dati di minori di 16 anni. Se sei un genitore e ritieni che tuo figlio abbia utilizzato il servizio, contattaci per la cancellazione dei dati.',
+  'prv.s11.h':'11. Modifiche alla presente informativa',
+  'prv.s11.p':'Eventuali modifiche saranno comunicate tramite aggiornamento dell\'app. La data di ultimo aggiornamento è indicata in cima a questo documento.',
+  'prv.contact.h':'Contatti e reclami',
+  'prv.contact.p1':'Per esercitare i tuoi diritti o per qualsiasi domanda: <strong>privacy&#64;ironkinetic.app</strong>',
+  'prv.contact.p2':'Autorità di controllo: <strong>Garante per la protezione dei dati personali</strong><br>Piazza Venezia 11 — 00187 Roma · <a href="https://gpdp.it" style="color:var(--p);">gpdp.it</a>',
+  'help.disclaimer.title':'⚕️ Avviso medico importante',
+  'help.disclaimer.text':'Iron Kinetic è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
+  'weekly.report.title':'Report Settimanale',
+  'weekly.report.share':'Condividi',
+  'weekly.report.label.peso':'Peso',
+  'weekly.report.label.pasti':'Pasti',
+  'weekly.insight.noData':'Registra pesate e check-in per ricevere analisi personalizzata.',
+  'weekly.insight.weightDown':'Ottimo: −{val} kg questa settimana.',
+  'weekly.insight.weightUp':'Peso in risalita di +{val} kg: controlla ritenzione e aderenza.',
+  'weekly.insight.weightStable':'Peso stabile ({val} kg): metabolismo in adattamento.',
+  'weekly.insight.energyLow':'Energia media bassa ({val}/10): aumenta i carb peri-workout.',
+  'weekly.insight.hungerHigh':'Fame elevata ({val}/10): considera +100–150 kcal da carboidrati.',
+  'weekly.insight.adherHigh':'Aderenza eccellente ({val}/10): continua così.',
+  'weekly.insight.ciHigh':'{val}/7 check-in: consistenza di alto livello.',
+  'weekly.insight.ciLow':'Solo {val}/7 check-in: registra ogni giorno per analisi più precise.',
+  'weekly.insight.default':'Settimana regolare. Mantieni la costanza.',
+  'share.report.text':'📊 Iron Kinetic — Report Settimanale\n\nPeso: {wTxt}\nCheck-in: {ciDays}/7\nPasti: {pct}\nEnergia: {energy}/10\nAderenza: {adher}/10\n\n{insight}',
+  'toast.reportCopied':'📋 Report copiato!',
+  'toast.shareUnsup':'⚠️ Condivisione non supportata',
+  'import.errFormat':'Formato non valido',
+  'import.errPlan':'Piano non valido nel backup: {msg}',
+  'notif.action.open':'Apri App',
+  'toast.errore':'⚠️ Errore inatteso',
+  'toast.valoreNonValido':'⚠️ Valore non valido',
+  'gdpr.footer2':'Non accettando non potrai utilizzare l\'app, in quanto il trattamento dei dati è necessario per erogare il servizio.',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -2106,9 +2197,11 @@ en:{
   'pwa.android.step2':'Select <strong style="color:var(--p);">Add to Home Screen</strong> or <strong style="color:var(--p);">Install App</strong>',
   'pwa.android.step3':'Confirm by tapping <strong style="color:var(--p);">Install</strong>',
   'set.btn.aggiornaPeso':'Update weight',
+  'prog.fp.title':'Metabolic Fingerprint',
   'fp.efficienza':'EFFICIENCY','fp.rispostaDeficit':'response to deficit',
   'fp.adattamento':'ADAPTATION','fp.riduzione':'metabolic reduction',
   'fp.risposta':'RESPONSE','fp.segnale':'for reliable signal',
+  'fp.days':'d',
   'fp.perditaReale':'ACTUAL LOSS','fp.mediaSettimanaleFP':'weekly average',
   'pred.text':'In 12 weeks {last} kg {diff} kg. Projection with metabolic adaptation correction.',
   'pred.noData':'Log at least 5 weigh-ins to activate the prediction.',
@@ -2121,7 +2214,95 @@ en:{
   'shop.cat.proteine':'Protein','shop.cat.carboidrati':'Carbohydrates',
   'shop.cat.grassi':'Fats','shop.cat.latticini':'Dairy',
   'shop.cat.verdure':'Vegetables',  'oggi.kcal.target':'Daily Target','oggi.kcal.totali':'Total kcal','oggi.trackers':'Activity & Trackers',
+  'oggi.kcal.pct':'{pct}% consumed',
 'shop.cat.altro':'Other',
+  'set.danger.title':'Danger Zone',
+  'set.danger.warn':'These actions are irreversible without a backup.',
+  'help.contact.sub.email':'Reach us at <strong style="color:var(--p);">support&#64;ironkinetic.app</strong>',
+  'faq.q.0':'How is the TDEE calculated?',
+  'faq.a.0':'If you enter your body fat percentage, the <strong>Katch-McArdle</strong> formula based on lean mass is used. Otherwise the <strong>Mifflin-St Jeor</strong> formula applies. The final TDEE is multiplied by an activity factor derived from weekly training sessions and daily step count.',
+  'faq.q.1':'How is the meal plan generated?',
+  'faq.a.1':'The plan is generated automatically based on your preferred foods, chosen number of meals, taste preference (sweet/savoury/mixed) and dietary style (omnivore/vegetarian/vegan). Portions are calculated to hit your personal protein and calorie targets. No external JSON required.',
+  'faq.q.2':'What does the AI Modifier do?',
+  'faq.a.2':'The modifier raises or lowers the calorie target by 100 kcal per unit (±25g carbs). Use it for micro-adjustments when you notice a weight plateau, excessive hunger or low energy — without having to redo your profile from scratch.',
+  'faq.q.3':'What is a Refeed Day?',
+  'faq.a.3':'A refeed is a day of controlled caloric increase (+400 kcal, +50g carbs) used in Phase 2 to stimulate leptin and prevent metabolic slowdown during the cutting phase. It should be scheduled once every 7–10 days.',
+  'faq.q.4':'How does the AI Coach work?',
+  'faq.a.4':'The coach analyses: your weight curve (last 7 days), waist change, water and salt intake, days since the last refeed, and the active phase. Based on this data it shows a contextual insight: metabolic plateau, catabolic risk, recomposition, water retention or optimal progression. Everything runs locally, no external AI.',
+  'faq.q.5':'How do I back up and restore my data?',
+  'faq.a.5':'From <em>Profile → Data</em> you can export a JSON file with all your data. To restore, use <em>Import Backup</em>. The file contains your profile, plan, weight log, check-ins and settings. Keep it somewhere safe — it\'s the only way to recover data if you change device or clear your browser.',
+  'faq.q.6':'Why does my weight fluctuate so much day to day?',
+  'faq.a.6':'Fluctuations of 1–2 kg per day are normal and depend on: body water, muscle glycogen, gut content, hormonal cycle (women). The Coach detects water retention (high salt + low water) and alerts you when the weight reading is "skewed". Always analyse the trend over 7+ days, not a single weigh-in.',
+  'faq.q.7':'Is the app suitable for everyone?',
+  'faq.a.7':'Iron Kinetic is a nutritional coaching support tool for healthy adults (16+). It is not a medical device and does not replace advice from a doctor, nutritionist or dietitian. If you have medical conditions, eating disorders or specific health issues, always consult a qualified healthcare professional before following any nutritional plan.',
+  'faq.q.8':'Can I install the app on my phone?',
+  'faq.a.8':'Yes. Iron Kinetic is a Progressive Web App (PWA). On iPhone/iPad: open in Safari → Share → "Add to Home Screen". On Android: open in Chrome → "⋮" menu → "Add to Home Screen". It will work like a native app, even offline.',
+  'faq.q.9':'Is my data sent anywhere?',
+  'faq.a.9':'No. All data (weight, plan, check-ins, preferences) stays in your device\'s localStorage. There are no servers, accounts or cloud sync. The only exception are font and icon requests to Google (Google Fonts/Material Symbols), which do not transmit your personal data.',
+  'prv.badge':'Updated: January 2025 · GDPR compliant (EU Reg. 2016/679)',
+  'prv.s0.h':'📱 In short: your data stays on your device',
+  'prv.s0.p':'Iron Kinetic is an offline-first app. All your data (weight, measurements, meal plan, check-ins) is saved <strong>exclusively in your browser\'s localStorage</strong>. There are no user accounts, no servers where your data is sent, and no tracking of any kind.',
+  'prv.s1.h':'1. Data controller',
+  'prv.s1.p':'<strong>Iron Kinetic</strong><br>Email: privacy&#64;ironkinetic.app<br>For any request regarding your data, contact us at the address above.',
+  'prv.s2.h':'2. Data processed and purposes',
+  'prv.s2.p':'The app processes, <em>locally on your device</em>, the following categories of data:',
+  'prv.s2.li':'<li><strong>Biographical and physical data</strong> (age, height, weight, biological sex, body fat): required to calculate your personalised TDEE and macronutrients.</li><li><strong>Health-related data</strong> under GDPR Art. 9 (body weight, body fat percentage, waist): processed on the basis of your explicit consent, exclusively to provide the nutritional coaching service.</li><li><strong>Dietary habit data</strong> (food preferences, intolerances, number of meals): used to generate your personalised nutrition plan.</li><li><strong>Daily activity data</strong> (steps, workouts): used for daily coaching.</li><li><strong>Daily check-ins</strong> (hunger, energy, adherence, digestion): used for trend analysis and contextual suggestions.</li>',
+  'prv.s3.h':'3. Legal basis for processing',
+  'prv.s3.p1':'The processing of ordinary data is based on <strong>contract</strong> (GDPR Art. 6(1)(b)): the data is necessary to deliver the requested service.',
+  'prv.s3.p2':'The processing of <strong>health-related data</strong> (GDPR Art. 9) is based on <strong>your explicit consent</strong> (GDPR Art. 9(2)(a)), given at first launch and always revocable.',
+  'prv.s4.h':'4. Storage and security',
+  'prv.s4.p1':'<strong>No data is transmitted to external servers.</strong> All data is stored in your device\'s localStorage via the standard Web Storage API.',
+  'prv.s4.p2':'Data security depends on your device protection (lock code, encryption). We recommend:',
+  'prv.s4.li':'<li>Keep your device protected from unauthorised access.</li><li>Use the <em>Export Backup</em> function to keep a safe copy of your data.</li><li>Do not use the app on shared devices without clearing data afterwards.</li>',
+  'prv.s5.h':'5. Data retention',
+  'prv.s5.p':'Data stays on your device until you delete it. You can delete all your data at any time via <em>Profile → Start over</em> or by clearing the site data in your browser settings.',
+  'prv.s6.h':'6. Sharing with third parties',
+  'prv.s6.p1':'Your personal data is <strong>not shared with any third party</strong>.',
+  'prv.s6.p2':'The app uses the following external resources, without transmitting personal data:',
+  'prv.s6.li':'<li><strong>Google Fonts</strong> (fonts.googleapis.com): loading Space Grotesk and Manrope fonts. Google may log the requesting IP address.</li><li><strong>Chart.js via jsDelivr</strong> (cdn.jsdelivr.net): charting library. No personal data transmitted.</li><li><strong>Material Symbols</strong> (Google): vector icons. Same conditions as Google Fonts.</li>',
+  'prv.s7.h':'7. Transfers to third countries',
+  'prv.s7.p':'Locally stored personal data is not subject to transfer to third countries. Requests to Google Fonts may involve servers outside the European Economic Area; such transfers are governed by the EU Commission\'s Standard Contractual Clauses.',
+  'prv.s8.h':'8. Your rights (GDPR Arts. 15–22)',
+  'prv.s8.r0.ico':'👁','prv.s8.r0.lbl':'Access','prv.s8.r0.desc':'You can view all your data directly in the app (Profile section).',
+  'prv.s8.r1.ico':'✏️','prv.s8.r1.lbl':'Rectification','prv.s8.r1.desc':'You can edit your data at any time from the app.',
+  'prv.s8.r2.ico':'🗑','prv.s8.r2.lbl':'Erasure','prv.s8.r2.desc':'Use "Start over" to delete all data.',
+  'prv.s8.r3.ico':'📦','prv.s8.r3.lbl':'Portability','prv.s8.r3.desc':'Export your data in readable JSON format.',
+  'prv.s8.r4.ico':'🚫','prv.s8.r4.lbl':'Revoke consent','prv.s8.r4.desc':'Revoke consent from Profile → Privacy.',
+  'prv.s8.r5.ico':'⚖️','prv.s8.r5.lbl':'Complaint','prv.s8.r5.desc':'You can lodge a complaint with your national data protection authority.',
+  'prv.s9.h':'9. Cookies and tracking technologies',
+  'prv.s9.p':'<strong>Iron Kinetic does not use cookies.</strong> Data is stored via the Web Storage API (localStorage), which is not subject to the Cookie Directive 2002/58/EC but falls within the scope of the GDPR for the personal data it contains.',
+  'prv.s10.h':'10. Notice for minors',
+  'prv.s10.p':'The service is intended for people aged 16 or over. The app does not knowingly collect data from users under 16. If you are a parent and believe your child has used the service, contact us for data deletion.',
+  'prv.s11.h':'11. Changes to this policy',
+  'prv.s11.p':'Any changes will be communicated via an app update. The date of the last update is shown at the top of this document.',
+  'prv.contact.h':'Contact and complaints',
+  'prv.contact.p1':'To exercise your rights or for any questions: <strong>privacy&#64;ironkinetic.app</strong>',
+  'prv.contact.p2':'Supervisory authority: <strong>Information Commissioner\'s Office</strong> (or your national DPA) · <a href="https://gpdp.it" style="color:var(--p);">gpdp.it</a>',
+  'help.disclaimer.title':'⚕️ Medical disclaimer',
+  'help.disclaimer.text':'Iron Kinetic is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
+  'weekly.report.title':'Weekly Report',
+  'weekly.report.share':'Share',
+  'weekly.report.label.peso':'Weight',
+  'weekly.report.label.pasti':'Meals',
+  'weekly.insight.noData':'Log weigh-ins and check-ins to receive personalised analysis.',
+  'weekly.insight.weightDown':'Great: −{val} kg this week.',
+  'weekly.insight.weightUp':'Weight up +{val} kg: check retention and adherence.',
+  'weekly.insight.weightStable':'Weight stable ({val} kg): metabolism adapting.',
+  'weekly.insight.energyLow':'Average energy low ({val}/10): increase peri-workout carbs.',
+  'weekly.insight.hungerHigh':'High hunger ({val}/10): consider +100–150 kcal from carbs.',
+  'weekly.insight.adherHigh':'Excellent adherence ({val}/10): keep it up.',
+  'weekly.insight.ciHigh':'{val}/7 check-ins: top-level consistency.',
+  'weekly.insight.ciLow':'Only {val}/7 check-ins: log every day for more precise analysis.',
+  'weekly.insight.default':'Regular week. Keep the consistency.',
+  'share.report.text':'📊 Iron Kinetic — Weekly Report\n\nWeight: {wTxt}\nCheck-ins: {ciDays}/7\nMeals: {pct}\nEnergy: {energy}/10\nAdherence: {adher}/10\n\n{insight}',
+  'toast.reportCopied':'📋 Report copied!',
+  'toast.shareUnsup':'⚠️ Sharing not supported',
+  'import.errFormat':'Invalid format',
+  'import.errPlan':'Invalid plan in backup: {msg}',
+  'notif.action.open':'Open App',
+  'toast.errore':'⚠️ Unexpected error',
+  'toast.valoreNonValido':'⚠️ Invalid value',
+  'gdpr.footer2':'Without accepting, you won\'t be able to use the app, as data processing is necessary to deliver the service.',
 }
 };
 let _lang='en';
@@ -2239,9 +2420,15 @@ function applyTranslations(deferOffscreen){
     if(v==='Fase Corrente'||v==='Current Phase')el.textContent=t('set.fase.title');
     else if(v==='Modificatore AI'||v==='AI Modifier')el.textContent=t('set.mod.title');
     else if(v==='Dati'||v==='Data')el.textContent=t('set.dati.title');
+    else if(v==='Zona Pericolosa'||v==='Danger Zone')el.textContent=t('set.danger.title');
   });
   document.querySelectorAll('[onclick="applyMod(0)"]').forEach(b=>{if(b.textContent.includes('Reset')||b.textContent.includes('reset'))b.textContent=t('set.mod.reset');});
   document.querySelectorAll('[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
+  /* danger zone accordion warning text */
+  document.querySelectorAll('#acc-danger .sn.t-xxs.muted').forEach(p=>{
+    if(p.textContent.includes('irreversibili')||p.textContent.includes('irreversible')||p.textContent.includes('backup'))
+      p.textContent=t('set.danger.warn');
+  });
   document.querySelectorAll('#scr-info .rowb').forEach(row=>{
     const lbl=row.querySelector('span:first-child');if(!lbl)return;
     const v=lbl.textContent.trim();
@@ -2476,7 +2663,10 @@ function applyTranslations(deferOffscreen){
     else if(txt2==='Calendario Aderenza'||txt2==='Adherence Calendar')lbl.textContent=t('prog.calendar.title');
     else if(txt2==='Promemoria Check-in'||txt2==='Check-in Reminder')lbl.textContent=t('prog.notif.title');
     else if(txt2.startsWith('Trend check-in')||txt2.startsWith('Check-in trend'))lbl.textContent=t('prog.checkin.title');
+    else if(txt2==='Report Settimanale'||txt2==='Weekly Report')lbl.textContent=t('weekly.report.title');
+    else if(txt2==='Impronta Metabolica'||txt2==='Metabolic Fingerprint')lbl.textContent=t('prog.fp.title');
   });
+  document.querySelectorAll('button[onclick="shareWeeklyReport()"]').forEach(b=>b.textContent=t('weekly.report.share'));
   document.querySelectorAll('#scr-prog .field-label').forEach(lbl=>{
     const f=lbl.getAttribute('for')||'';
     if(f==='log-w')lbl.textContent=t('prog.peso');
@@ -2498,6 +2688,7 @@ function applyTranslations(deferOffscreen){
     const on=b.getAttribute('onclick')||'';
     if(on.includes("'weight'"))b.textContent=t('prog.chart.peso').replace('Trend ','');
     else if(on.includes("'waist'"))b.textContent=t('prog.chart.girovita').replace('Trend ','');
+    else if(on.includes("'prediction'"))b.textContent=t('chart.previsione');
   });
   const monthLabel=document.querySelector('#chart-monthly-delta+.t-xxs.muted');
   if(monthLabel)monthLabel.textContent=t('prog.chart.questeMese');
@@ -2534,6 +2725,7 @@ function applyTranslations(deferOffscreen){
     else if(v==='Target TDEE')lbl.textContent=t('set.hero.tdee');
     else if(v==='Base BMR')lbl.textContent=t('set.hero.bmr');
     else if(v==='Lingua / Language')lbl.textContent=t('set.lang.label');
+    else if(v==='Zona Pericolosa'||v==='Danger Zone')lbl.textContent=t('set.danger.title');
   });
   const regenBtn=document.querySelector('button[onclick="resetProfile()"]');
   if(regenBtn&&regenBtn.classList.contains('btn-danger-o')&&regenBtn.classList.contains('btn-xs'))
@@ -2598,8 +2790,10 @@ function applyTranslations(deferOffscreen){
     if(b.classList.contains('btn-xs'))b.textContent=t('info.consenso.dettagli');
   });
   /* disclaimer */
-  const disclaimerTitle=document.querySelector('#scr-info .card+div p:first-child');
+  const disclaimerTitle=document.getElementById('info-disclaimer-title')||document.querySelector('#scr-info .card+div p:first-child');
   if(disclaimerTitle)disclaimerTitle.textContent=t('info.disclaimer.title');
+  const disclaimerText=document.getElementById('info-disclaimer-text');
+  if(disclaimerText)disclaimerText.textContent=t('info.disclaimer.text');
   /* ── MODALS ── */
   /* shopping modal title */
   const shTitle=document.getElementById('shopping-title');if(shTitle)shTitle.textContent=t('shopping.title');
@@ -2669,6 +2863,64 @@ function applyTranslations(deferOffscreen){
   /* GDPR footer (innerHTML — dev-defined LANG string with HTML) */
   const _gdprFooter=document.querySelector('#gdpr-gate p[style*="font-size:11px"][style*="color:var(--dim)"]');
   if(_gdprFooter)_gdprFooter.innerHTML=t('gdpr.footer');
+  const _gdprFooter2=document.querySelector('#gdpr-gate p[style*="font-size:10px"][style*="color:var(--dim)"]');
+  if(_gdprFooter2){const _f2t=_gdprFooter2.querySelector('span')||null;_gdprFooter2.childNodes[0]&&(_gdprFooter2.childNodes[0].textContent='\n      '+t('gdpr.footer2')+'\n      ');}
+  /* ── DANGER ZONE accordion warning ── */
+  document.querySelectorAll('#acc-danger .sn.t-xxs.muted').forEach(p=>{
+    if(p.textContent.includes('irreversibili')||p.textContent.includes('irreversible'))
+      p.textContent=t('set.danger.warn');
+  });
+  /* ── FAQ items (innerHTML — dev-defined LANG strings, no user input) ── */
+  const _faqItems=document.querySelectorAll('#faq-list .faq-item');
+  _faqItems.forEach((item,i)=>{
+    const qEl=item.querySelector('.faq-q-text');
+    const aEl=item.querySelector('.faq-answer');
+    if(qEl&&t('faq.q.'+i)!==('faq.q.'+i))qEl.textContent=t('faq.q.'+i);
+    if(aEl&&t('faq.a.'+i)!==('faq.a.'+i))aEl.innerHTML=t('faq.a.'+i);
+  });
+  /* ── Help contact email sub-line ── */
+  document.querySelectorAll('.help-contact-card p').forEach(p=>{
+    const v=p.textContent.trim();
+    if(v.includes('Scrivici a')||v.includes('Reach us at')||v.includes('support@ironkinetic'))
+      p.innerHTML=t('help.contact.sub.email');
+  });
+  /* ── Privacy modal full content (innerHTML — dev-defined LANG strings) ── */
+  const _pm=document.getElementById('modal-privacy');if(!_pm)return;
+  const _prvBadge=_pm.querySelector('.prv-badge');if(_prvBadge)_prvBadge.textContent=t('prv.badge');
+  /* section helpers */
+  const _prvSections=_pm.querySelectorAll('.prv-section');
+  const _prvSetSection=(sec,hTxt,bodyFn)=>{
+    if(!sec)return;
+    const h=sec.querySelector('.prv-h2');if(h)h.innerHTML=hTxt;
+    bodyFn(sec);
+  };
+  /* s0: summary highlight */
+  const _s0=_pm.querySelector('.prv-highlight');
+  if(_s0){const h=_s0.querySelector('.prv-h2');if(h)h.innerHTML=t('prv.s0.h');const p=_s0.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s0.p');}
+  /* sections 1-11 + contact */
+  if(_prvSections[0])_prvSetSection(_prvSections[0],t('prv.s1.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s1.p');});
+  if(_prvSections[1])_prvSetSection(_prvSections[1],t('prv.s2.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s2.p');const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=t('prv.s2.li');});
+  if(_prvSections[2])_prvSetSection(_prvSections[2],t('prv.s3.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.s3.p1');if(ps[1])ps[1].innerHTML=t('prv.s3.p2');});
+  if(_prvSections[3])_prvSetSection(_prvSections[3],t('prv.s4.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.s4.p1');if(ps[1])ps[1].innerHTML=t('prv.s4.p2');const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=t('prv.s4.li');});
+  if(_prvSections[4])_prvSetSection(_prvSections[4],t('prv.s5.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s5.p');});
+  if(_prvSections[5])_prvSetSection(_prvSections[5],t('prv.s6.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.s6.p1');if(ps[1])ps[1].innerHTML=t('prv.s6.p2');const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=t('prv.s6.li');});
+  if(_prvSections[6])_prvSetSection(_prvSections[6],t('prv.s7.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s7.p');});
+  if(_prvSections[7])_prvSetSection(_prvSections[7],t('prv.s8.h'),s=>{
+    const items=s.querySelectorAll('.prv-right-item');
+    [0,1,2,3,4,5].forEach(i=>{
+      if(!items[i])return;
+      const ico=items[i].querySelector('.prv-right-ico');if(ico)ico.textContent=t('prv.s8.r'+i+'.ico');
+      const lbl=items[i].querySelector('.prv-right-label');if(lbl)lbl.textContent=t('prv.s8.r'+i+'.lbl');
+      const desc=items[i].querySelector('.prv-right-desc');if(desc)desc.textContent=t('prv.s8.r'+i+'.desc');
+    });
+  });
+  if(_prvSections[8])_prvSetSection(_prvSections[8],t('prv.s9.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s9.p');});
+  if(_prvSections[9])_prvSetSection(_prvSections[9],t('prv.s10.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s10.p');});
+  if(_prvSections[10])_prvSetSection(_prvSections[10],t('prv.s11.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s11.p');});
+  if(_prvSections[11])_prvSetSection(_prvSections[11],t('prv.contact.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.contact.p1');if(ps[1])ps[1].innerHTML=t('prv.contact.p2');});
+  /* ── Help modal disclaimer ── */
+  const _hdTitle=document.getElementById('help-disclaimer-title');if(_hdTitle)_hdTitle.textContent=t('help.disclaimer.title');
+  const _hdText=document.getElementById('help-disclaimer-text');if(_hdText)_hdText.textContent=t('help.disclaimer.text');
   }; /* end _offscreen */
   if(deferOffscreen)(window.requestIdleCallback||window.setTimeout)(_offscreen,{timeout:300});
   else _offscreen();
@@ -2926,7 +3178,7 @@ function renderFingerprint(){
       ${bar(fp.adaptation,'var(--orange)')}
       <p class="muted sn" style="font-size:10px;margin-top:4px;">${t('fp.riduzione')}</p></div>
     <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.risposta')}</span>
-      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.responseDays}gg</p>
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.responseDays}${t('fp.days')}</p>
       <p class="muted sn" style="font-size:10px;margin-top:2px;">${t('fp.segnale')}</p></div>
     <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.perditaReale')}</span>
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.avgWeekly}kg/w</p>
@@ -3030,19 +3282,19 @@ function generateWeeklyReport(){
 }
 function generateReportInsight(rep){
   const{weightChange,avgEnergy,avgHunger,avgAdher,ciDays}=rep;
-  if(!ciDays&&weightChange===null)return'Registra pesate e check-in per ricevere analisi personalizzata.';
+  if(!ciDays&&weightChange===null)return t('weekly.insight.noData');
   const parts=[];
   if(weightChange!==null){
-    if(weightChange<-0.5)parts.push(`Ottimo: −${Math.abs(weightChange)} kg questa settimana.`);
-    else if(weightChange>0.3)parts.push(`Peso in risalita di +${weightChange} kg: controlla ritenzione e aderenza.`);
-    else parts.push(`Peso stabile (${weightChange>=0?'+':''}${weightChange} kg): metabolismo in adattamento.`);
+    if(weightChange<-0.5)parts.push(t('weekly.insight.weightDown',{val:Math.abs(weightChange)}));
+    else if(weightChange>0.3)parts.push(t('weekly.insight.weightUp',{val:weightChange}));
+    else parts.push(t('weekly.insight.weightStable',{val:(weightChange>=0?'+':'')+weightChange}));
   }
-  if(avgEnergy!==null&&avgEnergy<=4)parts.push(`Energia media bassa (${avgEnergy}/10): aumenta i carb peri-workout.`);
-  if(avgHunger!==null&&avgHunger>=7)parts.push(`Fame elevata (${avgHunger}/10): considera +100–150 kcal da carboidrati.`);
-  if(avgAdher!==null&&avgAdher>=8)parts.push(`Aderenza eccellente (${avgAdher}/10): continua così.`);
-  if(ciDays>=5)parts.push(`${ciDays}/7 check-in: consistenza di alto livello.`);
-  else if(ciDays>0&&ciDays<3)parts.push(`Solo ${ciDays}/7 check-in: registra ogni giorno per analisi più precise.`);
-  return parts.join(' ')||'Settimana regolare. Mantieni la costanza.';
+  if(avgEnergy!==null&&avgEnergy<=4)parts.push(t('weekly.insight.energyLow',{val:avgEnergy}));
+  if(avgHunger!==null&&avgHunger>=7)parts.push(t('weekly.insight.hungerHigh',{val:avgHunger}));
+  if(avgAdher!==null&&avgAdher>=8)parts.push(t('weekly.insight.adherHigh',{val:avgAdher}));
+  if(ciDays>=5)parts.push(t('weekly.insight.ciHigh',{val:ciDays}));
+  else if(ciDays>0&&ciDays<3)parts.push(t('weekly.insight.ciLow',{val:ciDays}));
+  return parts.join(' ')||t('weekly.insight.default');
 }
 function renderWeeklyReport(){
   const card=document.getElementById('weekly-report-card');
@@ -3059,13 +3311,13 @@ function renderWeeklyReport(){
   cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${wColor};margin:0 0 2px;">${wTxt}</p>
-      <span class="t-xxs muted sn">Peso</span></div>
+      <span class="t-xxs muted sn">${t('weekly.report.label.peso')}</span></div>
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--on);margin:0 0 2px;">${rep.ciDays}/7</p>
       <span class="t-xxs muted sn">Check-in</span></div>
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${pct>=80?'var(--p)':pct>=50?'var(--orange)':'var(--red)'};margin:0 0 2px;">${pct}%</p>
-      <span class="t-xxs muted sn">Pasti</span></div>
+      <span class="t-xxs muted sn">${t('weekly.report.label.pasti')}</span></div>
   </div>
   <p class="sn" style="font-size:12px;color:var(--muted);line-height:1.55;">${sanitize(insight)}</p>`;
 }
@@ -3075,12 +3327,10 @@ function shareWeeklyReport(){
   const insight=generateReportInsight(rep);
   const wTxt=rep.weightChange!==null?`${rep.weightChange>=0?'+':''}${rep.weightChange} kg`:'—';
   const pct=rep.mealsTotal>0?Math.round(rep.mealsDone/rep.mealsTotal*100)+'%':'—';
-  const text=`📊 Iron Kinetic — Report Settimanale\n\nPeso: ${wTxt}\nCheck-in: ${rep.ciDays}/7\nPasti: ${pct}\nEnergia: ${rep.avgEnergy||'—'}/10\nAderenza: ${rep.avgAdher||'—'}/10\n\n${insight}`;
+  const text=t('share.report.text',{wTxt,ciDays:rep.ciDays,pct,energy:rep.avgEnergy||'—',adher:rep.avgAdher||'—',insight});
   if(navigator.share){navigator.share({title:'Iron Kinetic Report',text}).catch(()=>{});}
-  else{try{navigator.clipboard.writeText(text);toast('📋 Report copiato!');}catch{toast('⚠️ Condivisione non supportata');}}
-}
-
-/* ═══════════════════════════════════════
+  else{try{navigator.clipboard.writeText(text);toast(t('toast.reportCopied'));}catch{toast(t('toast.shareUnsup'));}}
+}/* ═══════════════════════════════════════
    visualViewport keyboard handler
 ═══════════════════════════════════════ */
 (()=>{
@@ -4696,7 +4946,7 @@ function renderKcalRing(){
   const r2=getEl('kcal-ring-oggi');
   if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct/100);r2.style.stroke=pct>=99.5?'#22c55e':'var(--p)';}
   const pctEl=getEl('oggi-kcal-pct');
-  if(pctEl)pctEl.textContent=Math.round(pct)+'% consumato';
+  if(pctEl)pctEl.textContent=t('oggi.kcal.pct',{pct:Math.round(pct)});
 }
 
 /* ═══════════════════════════════════════
@@ -4805,7 +5055,7 @@ function closeConfirm(){getEl('modal-confirm').style.display='none';_confirmCb=n
 document.addEventListener('DOMContentLoaded',()=>{const okBtn=getEl('confirm-ok-btn');if(okBtn)okBtn.onclick=()=>{closeConfirm();_confirmCb&&_confirmCb();};},{once:true});
 function updateWeight(){
   const v=parseFloat(getEl('inp-weight-upd').value);
-  if(!v||v<40||v>250)return toast(t('toast.errore')||'Valore non valido');
+  if(!v||v<40||v>250)return toast(t('toast.valoreNonValido'));
   const p=getProfile()||{};
   p.weight=v;lsS(SK.profile,p);
   const m=calculateUserMacros(p);
@@ -4955,13 +5205,13 @@ function importBackup(evt){
   r.onload=e=>{
     try{
       const d=JSON.parse(e.target.result);
-      if(typeof d!=='object'||Array.isArray(d))throw new Error('Formato non valido');
+      if(typeof d!=='object'||Array.isArray(d))throw new Error(t('import.errFormat'));
 
       /* ── Pre-flight validation: ensure the diet plan (if present) is schema-valid ── */
       const rawDiet=d[SK.diet];
       if(rawDiet){
         try{const parsed=JSON.parse(rawDiet);validateSchema(parsed);}
-        catch(se){throw new Error(`Piano non valido nel backup: ${se.message}`);}
+        catch(se){throw new Error(t('import.errPlan',{msg:se.message}));}
       }
 
       /* ── Confirm before destructive operation ── */
@@ -5439,7 +5689,7 @@ function scheduleLocalReminder(type,hour){
       reg.showNotification(lbl.title,{
         body:lbl.body,icon:'/icon-192.png',badge:'/icon-192.png',
         tag:type,renotify:true,
-        actions:[{action:'open',title:'Apri App'}]
+        actions:[{action:'open',title:t('notif.action.open')}]
       }).catch(()=>{
         /* SW showNotification failed — fallback to basic Notification API */
         try{new Notification(lbl.title,{body:lbl.body});}catch{}
@@ -6170,4 +6420,16 @@ function _onbFinish(){
     </div>
 
     <!-- Disclaimer medico -->
-    <div style="background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,
+    <div style="background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.18);border-radius:var(--r);padding:14px 16px;margin-top:4px;">
+      <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 6px;" class="sn" id="help-disclaimer-title">⚕️ Avviso medico importante</p>
+      <p style="font-size:11px;color:var(--muted);line-height:1.6;font-weight:500;margin:0;" class="sn" id="help-disclaimer-text">Iron Kinetic è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
+    </div>
+
+    <div class="help-version" id="help-version-txt">Iron Kinetic · v2.0.0 · PWA</div>
+
+  </div>
+</div>
+</div>
+
+</body>
+</html>
