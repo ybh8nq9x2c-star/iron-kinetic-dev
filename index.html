@@ -3165,7 +3165,7 @@ function calcMacros(){
   const carbs=Math.max(carbFloor, rawCarbs);
   const modified=m!==0||ref||rev>0;
 
-  return{kcal,pro,carbs,fat,modified,refeedActive:ref,reverseWeeks:rev};
+  const _s=getDayMacroShift(),_c=Math.round(Math.max(carbFloor,carbs*_s.carbMult)),_f=Math.round(Math.max(fatFloor,fat*_s.fatMult)),_k=Math.max(kcalFloor,Math.round(pro*4+_c*4+_f*9));return{kcal:_k,pro,carbs:_c,fat:_f,modified,refeedActive:ref,reverseWeeks:rev,dayType:_s.label};
 }
 /* Alias used by regenSingleMeal and swapMealComponent */
 const calcDailyMacros=calcMacros;
@@ -3203,6 +3203,19 @@ function detectStall(){
 const SK_ADAPTIVE='ikadaptive';
 const SK_REPORT='ikweeklyreport';
 function avg(arr){return arr.length?arr.reduce((a,v)=>a+v,0)/arr.length:0;}
+
+/* ── Feature A: Training/Rest Periodization ── */
+function getDayMacroShift(){const w=gT('workout')>=1;return w?{carbMult:1.15,fatMult:0.90,label:'training'}:{carbMult:0.90,fatMult:1.05,label:'rest'}}
+
+/* ── Feature C: Circadian Hunger Distribution Bias ── */
+function getHungerDistributionBias(){let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins))||[]}catch{}const r=arr.slice(-14);if(r.length<5)return{frontLoad:false,backLoad:false,intensity:0};const e=r.filter(c=>['routine','workout'].includes(c.tag)).map(c=>c.hunger||5),l=r.filter(c=>['social','stress'].includes(c.tag)).map(c=>c.hunger||5),ae=e.length?e.reduce((a,v)=>a+v,0)/e.length:5,al=l.length?l.reduce((a,v)=>a+v,0)/l.length:5,oa=r.reduce((a,c)=>a+(c.hunger||5),0)/r.length;if(oa>6.5&&ae>al+1)return{frontLoad:true,backLoad:false,intensity:Math.min(1,(ae-5)/5)};if(oa>6.5&&al>ae+1)return{frontLoad:false,backLoad:true,intensity:Math.min(1,(al-5)/5)};return{frontLoad:false,backLoad:false,intensity:0}}
+
+/* ── Feature B: Meal Skip Learning ── */
+function getMealSkipRates(){if(!dietData)return{};const nms=getMealNames(),c={};nms.forEach(n=>c[n]={d:0,t:0});const now=new Date();for(let i=0;i<14;i++){const d=new Date(now.getTime()-i*86400000),dow=d.getDay()===0?7:d.getDay();nms.forEach(n=>{c[n].t++;if(lsR(mk(dow,n))==='1')c[n].d++})}const r={};nms.forEach(n=>r[n]=c[n].t?1-c[n].d/c[n].t:0);return r}
+function getAdaptedMealDistribution(){const nms=getMealNames(),n=nms.length,std={2:[.45,.55],3:[.25,.4,.35],4:[.2,.35,.1,.35],5:[.2,.3,.1,.3,.1]}[n]||Array(n).fill(1/n),sr=getMealSkipRates();if(!Object.values(sr).some(v=>v>.2))return std;const raw=nms.map(n=>Math.max(.05,1-sr[n]*.6)),sum=raw.reduce((a,v)=>a+v,0);let a=raw.map(v=>Math.round(v/sum*100)/100),d=1-a.reduce((x,v)=>x+v,0);a[a.length-1]=Math.round((a[a.length-1]+d)*100)/100;const b=getHungerDistributionBias();if(b.intensity>.2&&a.length>=2){const sh=b.intensity*.08;if(b.frontLoad){a[0]=Math.round((a[0]+sh)*100)/100;a[a.length-1]=Math.round((a[a.length-1]-sh)*100)/100}else if(b.backLoad){a[0]=Math.round((a[0]-sh)*100)/100;a[a.length-1]=Math.round((a[a.length-1]+sh)*100)/100}a=a.map(v=>Math.max(.08,v));const s2=a.reduce((x,v)=>x+v,0);a=a.map(v=>Math.round(v/s2*100)/100)}return a}
+
+/* ── Feature D: Progressive Protein ── */
+function getProgressiveProRate(base,goal,startMs){if(goal!=='cut_extreme'&&goal!=='recomp')return base;if(!startMs)return base;const w=Math.floor((Date.now()-startMs)/(7*24*3600*1000));if(w<4)return base;const inc=Math.floor(w/4)*.10,cap=goal==='cut_extreme'?2.6:2.4;return Math.min(base+inc,cap)}
 
 /* ── Feature 1: Adaptive Macro Engine ── */
 function runAdaptiveEngine(){
@@ -3664,7 +3677,7 @@ function calculateUserMacros(p){
      Anziani senza CKD: floor 1.2g/kg (sarcopenia)
      IBD acuta: 1.5g/kg */
   const proRateMap={cut_extreme:2.2,recomp:2.2,maintain:1.8,bulk:2.0};
-  let proRate=proRateMap[goal]||1.8;
+  const _ps=parseInt(lsR(SK.progStart)||0);let proRate=getProgressiveProRate(proRateMap[goal]||1.8,goal,_ps);
   const prefs=typeof getPrefs==='function'?getPrefs():null;
   if(prefs?.dietStyle==='vegano') proRate*=1.10;  /* +10% bioavailability */
   /* Sovrascritture cliniche (precedenza su obiettivo) */
@@ -4990,6 +5003,13 @@ function renderMacros(){
   getEl('m-kcal').style.color=m.modified?'#FFB800':'var(--p)';
   getEl('m-carbs').style.color=m.modified?'#FFB800':'var(--on)';
   const mb=getEl('m-mod-badge');if(mb)mb.style.display=m.modified?'block':'none';
+  /* Feature A: daytype badge */
+  let _dtb=getEl('m-daytype-badge');
+  if(!_dtb){_dtb=document.createElement('span');_dtb.id='m-daytype-badge';
+    _dtb.className='t-xxs sn';_dtb.style.cssText='font-size:8px;letter-spacing:.06em;font-weight:700;margin-left:4px;';
+    const _mbp=mb?.parentNode;if(_mbp)_mbp.appendChild(_dtb);}
+  if(_dtb){_dtb.textContent=m.dayType==='training'?(_lang==='en'?'TRAINING DAY':'GIORNO ALLENAMENTO'):(_lang==='en'?'REST DAY':'GIORNO RIPOSO');
+    _dtb.style.color=m.dayType==='training'?'var(--p)':'var(--muted)';}
 }
 
 /* ═══════════════════════════════════════
@@ -5106,10 +5126,13 @@ function renderMeals(){
   const cont=document.getElementById('meals-list');let done=0;
   /* Update /N counter */
   const totalEl=document.getElementById('meals-total');if(totalEl)totalEl.textContent='/'+mNames.length;
+  const dist=getAdaptedMealDistribution();
+  const skipRates=getMealSkipRates();
   cont.innerHTML=mNames.map((n,mealIdx)=>{
     const meal=day[n];if(!meal)return'';
     const checked=lsR(mk(day.d,n))==='1';if(checked)done++;
     const _mType=canonicalMealType(n);const isHardcodedMeal=_mType==='breakfast'||_mType==='snack';
+    const skipBadge=(skipRates[n]||0)>=0.6?`<span style="font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--orange);margin-left:4px;">${_lang==='en'?'OFTEN SKIPPED':'SPESSO SALTATO'}</span>`:'';
     const fa=meal.carbSource?finalCarb(meal):null;
     const diff=fa!==null?fa-meal.baseAmount:0;
     const carbLabel=meal.carbSource?(localizeFoodLabel(FOOD_DB[meal.carbSource]?.label||meal.carbSource)):'';
@@ -5139,7 +5162,7 @@ function renderMeals(){
           ${checked?`<span class="material-symbols-outlined sn" style="font-size:16px;color:var(--p);font-variation-settings:'FILL' 1;">check</span>`:''}
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(localizedMealName(n))}</span>${badge}${circBadge}${synBadge}</div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(localizedMealName(n))}</span>${badge}${circBadge}${synBadge}${skipBadge}</div>
           <p class="meal-desc sn">${carbLine}${sanitize(localizeMealRest(meal.rest))}</p>
         </div>
       </button>
