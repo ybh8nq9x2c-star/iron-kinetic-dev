@@ -752,6 +752,8 @@ body.onboarding-active #onb-screen{
         <option value="endurance">🏃 Resistenza (Corsa, Ciclismo)</option>
         <option value="team">⚽ Sport di Squadra / Ibrido (Calcio, Basket, Rugby)</option>
         <option value="fitness">🏋️ Fitness Generale</option>
+        <option value="powerlifting">🏆 Powerlifting / Sollevamento Pesi</option>
+        <option value="combat">🥊 Sport da Combattimento (MMA, Boxe, Judo)</option>
       </select>
     </div>
     <div>
@@ -774,7 +776,7 @@ body.onboarding-active #onb-screen{
         <button class="seg-btn sn" data-goal="cut_extreme" data-mod="-500" style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">🔥 Definizione Estrema — −500 kcal</button>
         <button class="seg-btn sn" data-goal="recomp"      data-mod="-200" style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">🔁 Ricomposizione — −200 kcal</button>
         <button class="seg-btn sn" data-goal="maintain"    data-mod="0"    style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">⚖️ Mantenimento — 0 kcal</button>
-        <button class="seg-btn sn" data-goal="bulk"        data-mod="300"  style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">💪 Bulk lean — +300 kcal</button>
+        <button class="seg-btn sn" data-goal="bulk"        data-mod="250"  style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">💪 Bulk lean — +250 kcal</button>
       </div>
     </div>
     <div class="row g2" id="back-from-2">
@@ -1065,7 +1067,7 @@ body.onboarding-active #onb-screen{
         <!-- Refeed (shown by renderRefeed when phase=2) -->
         <div id="refeed-card" style="display:none;border-bottom:1px solid var(--line);">
           <div class="rowb" style="padding:13px 15px;">
-            <div><p class="t-xxs sn" style="color:var(--p);">Refeed Day</p><p style="font-size:12px;font-weight:500;color:var(--muted);margin-top:2px;" class="sn">+400 kcal · +50g carbs</p></div>
+            <div><p class="t-xxs sn" style="color:var(--p);">Refeed Day</p><p style="font-size:12px;font-weight:500;color:var(--muted);margin-top:2px;" class="sn">+880 kcal · +220g carbs · proteine e grassi invariati</p></div>
             <button id="refeed-oggi-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 12px;">OFF</button>
           </div>
         </div>
@@ -1362,7 +1364,7 @@ body.onboarding-active #onb-screen{
                 <div class="rowb">
                   <div>
                     <span class="sec-label" style="display:block;margin-bottom:3px;">Refeed Day</span>
-                    <p class="sn" style="font-size:13px;font-weight:600;color:var(--on);margin:0;">+400 kcal · +50g carbs</p>
+                    <p class="sn" style="font-size:13px;font-weight:600;color:var(--on);margin:0;">+880 kcal · +220g carbs · proteine e grassi invariati</p>
                     <p class="t-xxs muted sn" style="margin-top:2px;">Solo Fase 2</p>
                   </div>
                   <button id="set-refeed-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 16px;">DISATTIVO</button>
@@ -1707,7 +1709,7 @@ it:{
   'oggi.giorno':'Giorno','oggi.acqua':'Acqua','oggi.sale':'Sale','oggi.passi':'Passi','oggi.workout':'Workout',
   'oggi.workout.fatto':'Fatto ✓','oggi.workout.completato':'✓ Completato','oggi.workout.nonFatto':'Non fatto',
   'oggi.shopping':'🛒 Lista della Spesa',
-  'oggi.refeed.title':'Refeed Day','oggi.refeed.sub':'+400 kcal · +50g carbs',
+  'oggi.refeed.title':'Refeed Day','oggi.refeed.sub':'+880 kcal · +220g carbs · proteine e grassi invariati',
   'oggi.mantenimento.title':'Mantenimento','oggi.mantenimento.sub':'LONG TERM',
   'oggi.mantenimento.msg':'Sei in fase di mantenimento. Focus su routine sostenibile e stabilità del peso.',
   'oggi.checkin.title':'Check-in giornaliero','oggi.checkin.20sec':'20 sec',
@@ -1738,7 +1740,7 @@ it:{
   'set.profilo.title':'Il Tuo Profilo','set.rigenera':'🔄 Rigenera profilo',
   'set.piano.title':'Piano Attivo','set.piano.meta':'{fasi} fasi · {giorni} giorni',
   'set.fase.title':'Fase Corrente',
-  'set.refeed.title':'Refeed Day','set.refeed.sub':'+400 kcal · +50g carbs','set.refeed.soloFase2':'Solo Fase 2',
+  'set.refeed.title':'Refeed Day','set.refeed.sub':'+880 kcal · +220g carbs · proteine e grassi invariati','set.refeed.soloFase2':'Solo Fase 2',
   'set.refeed.off':'DISATTIVO','set.refeed.on':'ON 🔥',
   'set.mod.title':'Modificatore AI','set.mod.base':'Base invariata',
   'set.mod.taglio':'Taglio −{kcal} kcal','set.mod.boost':'Boost +{kcal} kcal','set.mod.reset':'Reset modificatore',
@@ -1847,7 +1849,7 @@ it:{
   'coach.msg.trend_iniz':'📊 −{rate} kg/sett stimato su {days} giorni ({cnt} pesate). Span troppo breve per un\'analisi affidabile — continua a registrare il peso per 7+ giorni.',
   'coach.msg.ricomp_attiva':'🔁 Peso stabile ±{rate} kg/sett, girovita −{waist} cm. Stai perdendo grasso e guadagnando massa simultaneamente. NON cambiare il piano.',
   'coach.msg.ritenzione':'💧 Sale oggi: {salt}g (≈{saltmg}mg Na+) vs acqua {water}L. Il peso è falsato dalla ritenzione. Bevi 500ml nelle prossime 2h. Il sodio sierico si normalizza in 12-24h con corretta idratazione.',
-  'coach.msg.ricarica':'🔥 {days} giorni in deficit: leptina in calo, adattamento metabolico. Refeed {urgenza} entro 1-2 giorni. Target: TDEE +300-500 kcal SOLO da carboidrati (riso, patate, avena). Grassi invariati.',
+  'coach.msg.ricarica':'🔥 {days} giorni in deficit: leptina in calo, adattamento metabolico. Refeed {urgenza} entro 1-2 giorni. Target: +880 kcal SOLO da carboidrati (220g riso, patate, avena). Grassi e proteine invariati.',
   'coach.msg.adatt_met':'⚡ Trend piatto ({cnt} rilevazioni). Il metabolismo si è adattato. Tre opzioni: (A) −100 kcal dai carboidrati serali, (B) +2.000 passi NEAT/die, (C) settimana refeed poi riprendi deficit.',
   'coach.msg.surplus_insuff':'⚡ Peso fermo da {cnt} rilevazioni. In bulk lean target: +0.15-0.30 kg/sett. Aggiungi 150-200 kcal da carboidrati (riso, avena). Se girovita cresce >0.5cm/sett, torna al mantenimento 1 settimana.',
   'coach.msg.deficit_ott':'🔥 −{rate} kg/sett: velocità ottimale ({min}–{max} kg/sett). Preservazione massa magra massimale. Piano perfettamente calibrato. Mantieni invariato.',
@@ -1929,6 +1931,9 @@ it:{
   'onb.cibi.sub':'Seleziona i cibi che ami o scrivili tu. L\'app costruirà il piano perfetto per te.',
   'adaptive.btn.apply':'Applica','adaptive.btn.dismiss':'Ignora',
   'coach.msg.loading':'— Analisi in corso...',
+  'coach.bodycomp.recomp':'Ricomposizione rilevata: peso stabile, girovita -2%. +150 kcal anti-RED-S. Non modificare il piano.',
+  'coach.micro.b12med':'Vegano >21gg: integra B12 (2.4µg/die) e controlla ferro non-eme. Abbina vitamina C al pasto.',
+  'coach.micro.b12high':'Vegano >60gg: verifica B12 sierica, ferritina e zinco. Deficit subclinici compromettono il recupero.',
   'onb2.skip':'Salta','onb2.next':'Avanti →','onb2.prev':'← Indietro','onb2.start':'Inizia ora →',
   'onb2.slide1.title':'Finalmente un\'app che ti ascolta',
   'onb2.slide1.body':'Iron Kinetic impara dai tuoi check-in quotidiani e adatta il piano al tuo corpo, non a un modello generico.',
@@ -1985,7 +1990,7 @@ it:{
   'faq.q.2':'Cosa fa il Modificatore AI?',
   'faq.a.2':'Il modificatore aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall\'inizio.',
   'faq.q.3':'Cos\'è il Refeed Day?',
-  'faq.a.3':'Un refeed è un giorno di aumento calorico controllato (+400 kcal, +50g carbs) usato in Fase 2 per stimolare la leptina e prevenire il calo metabolico durante la fase di definizione. Va pianificato 1 volta ogni 7-10 giorni.',
+  'faq.a.3':'Refeed day: +880 kcal extra via 220g carbs only (riso, patate, avena). Proteine e grassi invariati. Ogni 7-10 giorni in Fase 2. Stimola la leptina (Dirlewanger 2000).',
   'faq.q.4':'Come funziona il Coach AI?',
   'faq.a.4':'Il coach analizza: la tua curva di peso (ultimi 7 giorni), la variazione del girovita, l\'assunzione di acqua e sale, i giorni dall\'ultimo refeed, e la fase attiva. Sulla base di questi dati mostra un\'analisi contestuale: stallo metabolico, rischio catabolico, ricomposizione, ritenzione idrica o progressione ottimale. Tutto avviene localmente, senza AI esterna.',
   'faq.q.5':'Come faccio il backup e ripristino?',
@@ -2104,7 +2109,7 @@ en:{
   'oggi.giorno':'Day','oggi.acqua':'Water','oggi.sale':'Salt','oggi.passi':'Steps','oggi.workout':'Workout',
   'oggi.workout.fatto':'Done ✓','oggi.workout.completato':'✓ Done','oggi.workout.nonFatto':'Not done',
   'oggi.shopping':'🛒 Shopping List',
-  'oggi.refeed.title':'Refeed Day','oggi.refeed.sub':'+400 kcal · +50g carbs',
+  'oggi.refeed.title':'Refeed Day','oggi.refeed.sub':'+880 kcal · +220g carbs · protein and fats unchanged',
   'oggi.mantenimento.title':'Maintenance','oggi.mantenimento.sub':'LONG TERM',
   'oggi.mantenimento.msg':'You\'re in maintenance mode. Focus on a sustainable routine and weight stability.',
   'oggi.checkin.title':'Daily check-in','oggi.checkin.20sec':'20 sec',
@@ -2136,7 +2141,7 @@ en:{
   'set.profilo.title':'Your Profile','set.rigenera':'🔄 Regenerate profile',
   'set.piano.title':'Active Plan','set.piano.meta':'{fasi} phases · {giorni} days',
   'set.fase.title':'Current Phase',
-  'set.refeed.title':'Refeed Day','set.refeed.sub':'+400 kcal · +50g carbs','set.refeed.soloFase2':'Phase 2 only',
+  'set.refeed.title':'Refeed Day','set.refeed.sub':'+880 kcal · +220g carbs · protein and fats unchanged','set.refeed.soloFase2':'Phase 2 only',
   'set.refeed.off':'INACTIVE','set.refeed.on':'ON 🔥',
   'set.mod.title':'AI Modifier','set.mod.base':'Unchanged',
   'set.mod.taglio':'Cut −{kcal} kcal','set.mod.boost':'Boost +{kcal} kcal','set.mod.reset':'Reset modifier',
@@ -2245,7 +2250,7 @@ en:{
   'coach.msg.trend_iniz':'📊 −{rate} kg/week estimated over {days} days ({cnt} weigh-ins). Span too short for reliable analysis — keep logging weight for 7+ days.',
   'coach.msg.ricomp_attiva':'🔁 Weight stable ±{rate} kg/week, waist −{waist} cm. You\'re losing fat and gaining muscle simultaneously. Do NOT change the plan.',
   'coach.msg.ritenzione':'💧 Salt today: {salt}g (≈{saltmg}mg Na+) vs water {water}L. Weight is skewed by retention. Drink 500ml in the next 2h. Serum sodium normalises in 12-24h with proper hydration.',
-  'coach.msg.ricarica':'🔥 {days} days in deficit: leptin dropping, metabolic adaptation. {urgenza} refeed within 1-2 days. Target: TDEE +300-500 kcal from carbs ONLY (rice, potatoes, oats). Fats unchanged.',
+  'coach.msg.ricarica':'🔥 {days} days in deficit: leptin dropping, metabolic adaptation. {urgenza} refeed within 1-2 days. Target: +880 kcal from carbs ONLY (220g rice, potatoes, oats). Fats and protein unchanged.',
   'coach.msg.adatt_met':'⚡ Flat trend ({cnt} readings). Your metabolism has adapted. Three options: (A) −100 kcal from evening carbs, (B) +2,000 NEAT steps/day, (C) refeed week then resume deficit.',
   'coach.msg.surplus_insuff':'⚡ Weight stuck for {cnt} readings. Lean bulk target: +0.15-0.30 kg/week. Add 150-200 kcal from carbs (rice, oats). If waist grows >0.5cm/week, return to maintenance for 1 week.',
   'coach.msg.deficit_ott':'🔥 −{rate} kg/week: optimal rate ({min}–{max} kg/week). Maximum lean mass preservation. Plan perfectly calibrated. Keep unchanged.',
@@ -2327,6 +2332,9 @@ en:{
   'onb.cibi.sub':'Select the foods you enjoy or type your own. The app will build the perfect plan for you.',
   'adaptive.btn.apply':'Apply','adaptive.btn.dismiss':'Dismiss',
   'coach.msg.loading':'— Analysing...',
+  'coach.bodycomp.recomp':'Body recomposition detected: stable weight, waist -2%. +150 kcal anti-RED-S. Do not change the plan.',
+  'coach.micro.b12med':'Vegan >21 days: supplement B12 (2.4µg/day) and monitor non-haem iron. Pair vitamin C with meals.',
+  'coach.micro.b12high':'Vegan >60 days: check serum B12, ferritin and zinc. Subclinical deficits impair recovery.',
   'onb2.skip':'Skip','onb2.next':'Next →','onb2.prev':'← Back','onb2.start':'Start now →',
   'onb2.slide1.title':'Finally an app that listens to you',
   'onb2.slide1.body':'Iron Kinetic learns from your daily check-ins and adapts the plan to your body, not a generic template.',
@@ -2382,7 +2390,7 @@ en:{
   'faq.q.2':'What does the AI Modifier do?',
   'faq.a.2':'The modifier raises or lowers the calorie target by 100 kcal per unit (±25g carbs). Use it for micro-adjustments when you notice a weight plateau, excessive hunger or low energy — without having to redo your profile from scratch.',
   'faq.q.3':'What is a Refeed Day?',
-  'faq.a.3':'A refeed is a day of controlled caloric increase (+400 kcal, +50g carbs) used in Phase 2 to stimulate leptin and prevent metabolic slowdown during the cutting phase. It should be scheduled once every 7–10 days.',
+  'faq.a.3':'Refeed day: +880 kcal extra via 220g carbs only (rice, potatoes, oats). Proteins and fats unchanged. Every 7-10 days in Phase 2. Stimulates leptin (Dirlewanger 2000).',
   'faq.q.4':'How does the AI Coach work?',
   'faq.a.4':'The coach analyses: your weight curve (last 7 days), waist change, water and salt intake, days since the last refeed, and the active phase. Based on this data it shows a contextual insight: metabolic plateau, catabolic risk, recomposition, water retention or optimal progression. Everything runs locally, no external AI.',
   'faq.q.5':'How do I back up and restore my data?',
@@ -2916,7 +2924,7 @@ function applyTranslations(deferOffscreen){
   const setBtnAiutoTxt=document.getElementById('set-btn-aiuto-txt');
   if(setBtnAiutoTxt)setBtnAiutoTxt.textContent=t('set.btn.aiuto');
   const refeedSubEl=document.querySelector('#set-refeed-card p.sn:not(.sec-label)');
-  if(refeedSubEl&&(refeedSubEl.textContent.trim()==='+400 kcal · +50g carbs'))
+  if(refeedSubEl&&(refeedSubEl.textContent.trim()==='+880 kcal · +220g carbs · proteine e grassi invariati'||refeedSubEl.textContent.trim()==='+880 kcal · +220g carbs · protein and fats unchanged'||refeedSubEl.textContent.trim()==='+400 kcal · +50g carbs'))
     refeedSubEl.textContent=t('set.refeed.sub');
   const refeedFase2=document.querySelector('#set-refeed-card .t-xxs.muted');
   if(refeedFase2)refeedFase2.textContent=t('set.refeed.soloFase2');
@@ -3097,7 +3105,8 @@ const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
   progStart:'ik_prog_start',p4Start:'ik_p4_start',profile:'ik_user_profile',
   prefs:'ik_user_prefs',checkins:'ik_checkins',
   onboardingDone:'ik_onboarding_done',lang:'ik_lang',
-  sport:'ik_sport',trainTime:'ik_train_time'};
+  sport:'ik_sport',trainTime:'ik_train_time',
+  protRotDay:'ik-prot-rot'};
 
 /* ═══════════════════════════════════════
    STATE
@@ -3166,7 +3175,7 @@ function calcMacros(){
   const modCarbs=m*25;
 
   /* Refeed: +352 kcal solo da carbs (non da grassi) — letteratura leptina */
-  const refeedCarbs=ref?88:0; /* 88×4 = 352 kcal */
+  const refeedCarbs=ref?220:0; /* 220×4 = 880 kcal */
   const refeedKcal=refeedCarbs*4;   /* always derived from carbs so kcal≡carb×4 */
 
   /* Fase 4 reverse diet: +100 kcal/sett progressivo */
@@ -3182,7 +3191,9 @@ function calcMacros(){
   const carbs=Math.max(carbFloor, rawCarbs);
   const modified=m!==0||ref||rev>0;
 
-  const _s=getDayMacroShift(),_c=Math.round(Math.max(carbFloor,carbs*_s.carbMult)),_f=Math.round(Math.max(fatFloor,fat*_s.fatMult)),_k=Math.max(kcalFloor,Math.round(pro*4+_c*4+_f*9));return{kcal:_k,pro,carbs:_c,fat:_f,modified,refeedActive:ref,reverseWeeks:rev,dayType:_s.label};
+  const _s=getDayMacroShift(),_c=Math.round(Math.max(carbFloor,carbs*_s.carbMult)),_f=Math.round(Math.max(fatFloor,fat*_s.fatMult)),_k=Math.max(kcalFloor,Math.round(pro*4+_c*4+_f*9));  /* MISSING3: body composition shift */
+  const bcs=getBodyCompShift();if(bcs){kcal+=bcs.shift;const _bcMsg=bcs.msg;}
+  return{kcal:_k,pro,carbs:_c,fat:_f,modified,refeedActive:ref,reverseWeeks:rev,dayType:_s.label};
 }
 /* Alias used by regenSingleMeal and swapMealComponent */
 const calcDailyMacros=calcMacros;
@@ -3229,7 +3240,9 @@ function getHungerDistributionBias(){let arr=[];try{arr=JSON.parse(localStorage.
 
 /* ── Feature B: Meal Skip Learning ── */
 function getMealSkipRates(){if(!dietData)return{};const nms=getMealNames(),c={};nms.forEach(n=>c[n]={d:0,t:0});const now=new Date();for(let i=0;i<14;i++){const d=new Date(now.getTime()-i*86400000),dow=d.getDay()===0?7:d.getDay();nms.forEach(n=>{c[n].t++;if(lsR(mk(dow,n))==='1')c[n].d++})}const r={};nms.forEach(n=>r[n]=c[n].t?1-c[n].d/c[n].t:0);return r}
-function getAdaptedMealDistribution(){const nms=getMealNames(),n=nms.length,std={2:[.45,.55],3:[.25,.4,.35],4:[.2,.35,.1,.35],5:[.2,.3,.1,.3,.1]}[n]||Array(n).fill(1/n),sr=getMealSkipRates();if(!Object.values(sr).some(v=>v>.2))return std;const raw=nms.map(n=>Math.max(.05,1-sr[n]*.6)),sum=raw.reduce((a,v)=>a+v,0);let a=raw.map(v=>Math.round(v/sum*100)/100),d=1-a.reduce((x,v)=>x+v,0);a[a.length-1]=Math.round((a[a.length-1]+d)*100)/100;const b=getHungerDistributionBias();if(b.intensity>.2&&a.length>=2){const sh=b.intensity*.08;if(b.frontLoad){a[0]=Math.round((a[0]+sh)*100)/100;a[a.length-1]=Math.round((a[a.length-1]-sh)*100)/100}else if(b.backLoad){a[0]=Math.round((a[0]-sh)*100)/100;a[a.length-1]=Math.round((a[a.length-1]+sh)*100)/100}a=a.map(v=>Math.max(.08,v));const s2=a.reduce((x,v)=>x+v,0);a=a.map(v=>Math.round(v/s2*100)/100)}return a}
+function getAdaptedMealDistribution(){const nms=getMealNames(),n=nms.length,std={2:[.45,.55],3:[.25,.4,.35],4:[.2,.35,.1,.35],5:[.2,.3,.1,.3,.1]}[n]||Array(n).fill(1/n),sr=getMealSkipRates();if(!Object.values(sr).some(v=>v>.2))return std;const raw=nms.map(n=>Math.max(.05,1-sr[n]*.6)),sum=raw.reduce((a,v)=>a+v,0);let a=raw.map(v=>Math.round(v/sum*100)/100),d=1-a.reduce((x,v)=>x+v,0);a[a.length-1]=Math.round((a[a.length-1]+d)*100)/100;const b=getHungerDistributionBias();if(b.intensity>.2&&a.length>=2){const sh=b.intensity*.08;if(b.frontLoad){a[0]=Math.round((a[0]+sh)*100)/100;a[a.length-1]=Math.round((a[a.length-1]-sh)*100)/100}else if(b.backLoad){a[0]=Math.round((a[0]-sh)*100)/100;a[a.length-1]=Math.round((a[a.length-1]+sh)*100)/100}a=a.map(v=>Math.max(.08,v));const s2=a.reduce((x,v)=>x+v,0);a=a.map(v=>Math.round(v/s2*100)/100)}const _ttRaw=lsR(SK.trainTime)||'';if(_ttRaw&&a.length>=3){const [_tH,_tM]=_ttRaw.split(':').map(Number);const trainHour=_tH+(_tM||0)/60;const mealH=a.length;// Meal window assumed 07:00-21:00. IF user skips breakfast (IF protocol)
+  // distribution bias from Feature B/C already compensates via skip rates.
+  const _mHrs=Array.from({length:mealH},(_,i)=>7+(14/(mealH-1||1))*i);const _pre=_mHrs.map((h,i)=>({i,d:Math.abs(h-(trainHour-1.5))})).sort((a,b)=>a.d-b.d)[0].i;const _post=_mHrs.map((h,i)=>({i,d:Math.abs(h-(trainHour+0.75))})).sort((a,b)=>a.d-b.d)[0].i;a[_pre]=Math.round(Math.min(a[_pre]*1.12,0.35)*100)/100;a[_post]=Math.round(Math.min(a[_post]*1.10,0.35)*100)/100;const _sN=a.reduce((x,v)=>x+v,0);a=a.map(v=>Math.round(v/_sN*100)/100);const _dN=1-a.reduce((x,v)=>x+v,0);a[a.length-1]=Math.round((a[a.length-1]+_dN)*100)/100}return a}
 
 /* ── Feature D: Progressive Protein ── */
 function getProgressiveProRate(base,goal,startMs){if(goal!=='cut_extreme'&&goal!=='recomp')return base;if(!startMs)return base;const w=Math.floor((Date.now()-startMs)/(7*24*3600*1000));if(w<4)return base;const inc=Math.floor(w/4)*.10,cap=goal==='cut_extreme'?2.6:2.4;return Math.min(base+inc,cap)}
@@ -3278,18 +3291,20 @@ function dismissAdaptive(){
 /* ── Feature 2: Circadian Nutrition Timing ── */
 function getCircadianTips(n,idx,total){
   if(idx===0||canonicalMealType(n)==='breakfast')return'';
-  // Last meal ≥ 2-meal plan → evening
-  if(idx===total-1&&total>=2){
-    return`<span style="font-size:11px;margin-left:3px;" title="${t('circ.serale')}">🌙</span>`;
+  const tcirc={preWo:t('circ.preWo'),postWo:t('circ.postWo'),serale:t('circ.serale')};
+  const tH=profState?.trainTime?parseInt(profState.trainTime.split(':')[0]):null;
+  const mHrs=Array.from({length:total},(_,i)=>7+14/(Math.max(total-1,1))*i);
+  const mH=mHrs[idx];
+  if(tH!==null){
+    /* Dynamic: show badges only when meal slot is near workout window */
+    if(Math.abs(mH-(tH-1.5))<1) return`<span style="font-size:11px;margin-left:3px;" title="${tcirc.preWo}">⚡</span>`;
+    if(Math.abs(mH-(tH+0.75))<1) return`<span style="font-size:11px;margin-left:3px;" title="${tcirc.postWo}">🔄</span>`;
+    /* For 2-meal plans also show evening badge on last slot */
+    if(idx===total-1&&total===2) return`<span style="font-size:11px;margin-left:3px;" title="${tcirc.serale}">🌙</span>`;
+    return'';
   }
-  // Second meal in ≥3-meal plan → pre-workout window
-  if(total>=3&&idx===1){
-    return`<span style="font-size:11px;margin-left:3px;" title="${t('circ.preWo')}">⚡</span>`;
-  }
-  // Third meal in ≥4-meal plan → post-workout window
-  if(total>=4&&idx===2){
-    return`<span style="font-size:11px;margin-left:3px;" title="${t('circ.postWo')}">🔄</span>`;
-  }
+  /* No trainTime set — only show evening badge for 2-meal plans; no pre/post guessing */
+  if(total===2&&idx===total-1) return`<span style="font-size:11px;margin-left:3px;" title="${tcirc.serale}">🌙</span>`;
   return'';
 }
 
@@ -3663,6 +3678,8 @@ function calculateUserMacros(p){
     endurance:{palBoost:0.25,proMin:1.2,proMax:1.8,carbMult:1.35,fatMult:0.85,system:'Aerobico'},
     team:{palBoost:0.15,proMin:1.4,proMax:2.0,carbMult:1.20,fatMult:0.90,system:'Glicolitico Misto'},
     fitness:{palBoost:0.05,proMin:1.4,proMax:1.8,carbMult:1.0,fatMult:1.0,system:'Misto'},
+    powerlifting:{proMin:1.7,proMax:2.4,carbMult:1.05,fatMult:1.0,palBoost:0.12,system:'ATP-CP / Forza Massimale'},
+    combat:{proMin:2.0,proMax:2.4,carbMult:1.10,fatMult:0.95,palBoost:0.13,system:'Glicolitico / Fosfageno'},
   };
   const _sportKey=p.sport||_sport||'fitness';
   const _sm=_sportTypes[_sportKey]||_sportTypes.fitness;
@@ -3687,6 +3704,19 @@ function calculateUserMacros(p){
   const deficitMap={cut_extreme:-500,recomp:-200,maintain:0,bulk:250};
   const floorKcal=sex==='F'?1200:1500;
   let targetKcal=Math.max(floorKcal,tdeeRaw+(deficitMap[goal]||0));
+
+  /* ── EA SAFETY GATE (Mountjoy 2018 IOC / RED-S prevention) ──
+     Energy Availability = (EI - EEE) / LBM ≥ 30 kcal/kg FFM
+     EA < 20 = clinical RED-S risk; EA < 30 = subclinical zone */
+  const eee=(parseInt(p.workoutsWk)||0)*350; /* estimated exercise energy expenditure */
+  if(p.bf&&!isNaN(parseFloat(p.bf))){
+    const _lbm=w*(1-parseFloat(p.bf)/100);
+    if(_lbm>0){
+      const ea=(targetKcal-eee)/_lbm;
+      if(ea<20){targetKcal=Math.round(20*_lbm+eee);showToast('⚠️ RED-S risk: calories increased for safety');}
+      else if(ea<30){targetKcal=Math.round(30*_lbm+eee);showToast('EA safety floor applied (30 kcal/kg FFM)');}
+    }
+  }
 
   /* ── PROTOCOLLI CLINICI — override proteico (ADA 2026 / ESPEN) ──
      CKD eGFR<60: cap RIGIDO 0.8g/kg (protezione renale, ADA/KDIGO)
@@ -3880,23 +3910,23 @@ const FOOD_DB={
   merluzzo:        {kcal:82, pro:18, carb:0,   fat:0.7, fiber:0,   gi:0,  sat:0.1, omega3:0.2, ca:16,  fe:0.4,na:54,   fodmap:false,label:'Merluzzo al vapore',      isProtein:true, maxPortionG:250},
   branzino:        {kcal:97, pro:19, carb:0,   fat:2.3, fiber:0,   gi:0,  sat:0.5, omega3:0.8, ca:12,  fe:0.6,na:72,   fodmap:false,label:'Branzino al vapore',      isProtein:true, maxPortionG:250},
   gamberetti:      {kcal:85, pro:18, carb:0.9, fat:0.9, fiber:0,   gi:0,  sat:0.2, omega3:0.3, ca:70,  fe:2.6,na:130,  fodmap:false,label:'Gamberetti',              isProtein:true, maxPortionG:200},
-  uova:            {kcal:155,pro:13, carb:1,   fat:11,  fiber:0,   gi:0,  sat:3.3, omega3:0.1, ca:56,  fe:1.8,na:124,  fodmap:false,label:'Uova intere',             isProtein:true, unitG:60, maxPortionG:300},
+  uova:            {kcal:155,satiety:2.9,pro:13, carb:1,   fat:11,  fiber:0,   gi:0,  sat:3.3, omega3:0.1, ca:56,  fe:1.8,na:124,  fodmap:false,label:'Uova intere',             isProtein:true, unitG:60, maxPortionG:300},
   albume:          {kcal:52, pro:11, carb:0.7, fat:0.2, fiber:0,   gi:0,  sat:0,   omega3:0,   ca:7,   fe:0.1,na:166,  fodmap:false,label:"Albume d'uovo",           isProtein:true, maxPortionG:300},
   bresaola:        {kcal:151,pro:32, carb:0,   fat:2,   fiber:0,   gi:0,  sat:0.8, omega3:0,   ca:10,  fe:2.8,na:1800, fodmap:false,label:'Bresaola',                isProtein:true, maxPortionG:100},
   tofu:            {kcal:76, pro:8,  carb:2,   fat:4,   fiber:0.3, gi:15, sat:0.5, omega3:0.3, ca:350, fe:5.4,na:7,    fodmap:false,label:'Tofu',                    isProtein:true, maxPortionG:280},
   tempeh:          {kcal:193,pro:19, carb:9,   fat:11,  fiber:5,   gi:25, sat:2.2, omega3:0.4, ca:111, fe:2.7,na:9,    fodmap:false,label:'Tempeh',                  isProtein:true, maxPortionG:200},
   seitan:          {kcal:143,pro:25, carb:6,   fat:2,   fiber:0.5, gi:20, sat:0.3, omega3:0,   ca:16,  fe:1.8,na:50,   fodmap:false,label:'Seitan',                  isProtein:true, maxPortionG:200},
-  legumi:          {kcal:116,pro:8,  carb:20,  fat:0.5, fiber:6,   gi:32, sat:0.1, omega3:0,   ca:50,  fe:2.5,na:5,    fodmap:true, label:'Legumi misti',            isProtein:true, maxPortionG:250},
+  legumi:          {kcal:116,satiety:2.3,pro:8,  carb:20,  fat:0.5, fiber:6,   gi:32, sat:0.1, omega3:0,   ca:50,  fe:2.5,na:5,    fodmap:true, label:'Legumi misti',            isProtein:true, maxPortionG:250},
   /* ── CARBOIDRATI ──────────────────────────────────────────────────────────── */
-  riso:            {kcal:130,pro:2.7,carb:28,  fat:0.3, fiber:0.4, gi:72, sat:0.1, omega3:0,   ca:10,  fe:0.2,na:1,    fodmap:false,label:'Riso bianco cotto',       isCarb:true, rawFactor:0.33, maxPortionG:280},
-  'riso basmati':  {kcal:121,pro:2.5,carb:25,  fat:0.4, fiber:0.4, gi:58, sat:0.1, omega3:0,   ca:6,   fe:0.2,na:1,    fodmap:false,label:'Riso basmati cotto',      isCarb:true, rawFactor:0.33, maxPortionG:280},
+  riso:            {kcal:130,satiety:1.8,pro:2.7,carb:28,  fat:0.3, fiber:0.4, gi:72, sat:0.1, omega3:0,   ca:10,  fe:0.2,na:1,    fodmap:false,label:'Riso bianco cotto',       isCarb:true, rawFactor:0.33, maxPortionG:280},
+  'riso basmati':  {kcal:121,satiety:1.9,pro:2.5,carb:25,  fat:0.4, fiber:0.4, gi:58, sat:0.1, omega3:0,   ca:6,   fe:0.2,na:1,    fodmap:false,label:'Riso basmati cotto',      isCarb:true, rawFactor:0.33, maxPortionG:280},
   'riso integrale':{kcal:112,pro:2.6,carb:23,  fat:0.9, fiber:1.8, gi:55, sat:0.2, omega3:0,   ca:10,  fe:0.5,na:1,    fodmap:false,label:'Riso integrale cotto',    isCarb:true, rawFactor:0.33, maxPortionG:280},
-  pasta:           {kcal:131,pro:5,  carb:27,  fat:0.9, fiber:1.8, gi:55, sat:0.2, omega3:0,   ca:7,   fe:1.3,na:1,    fodmap:true, label:'Pasta integrale',         isCarb:true, rawFactor:0.40, maxPortionG:220},
-  patate:          {kcal:86, pro:2,  carb:20,  fat:0.1, fiber:1.8, gi:78, sat:0,   omega3:0,   ca:12,  fe:0.8,na:6,    fodmap:false,label:'Patate lesse',            isCarb:true, maxPortionG:350},
-  'patate dolci':  {kcal:86, pro:1.6,carb:20,  fat:0.1, fiber:3,   gi:63, sat:0,   omega3:0,   ca:30,  fe:0.6,na:55,   fodmap:false,label:'Patate dolci al forno',   isCarb:true, maxPortionG:300},
-  pane:            {kcal:247,pro:9,  carb:46,  fat:3,   fiber:6,   gi:51, sat:0.5, omega3:0,   ca:73,  fe:2.5,na:385,  fodmap:true, label:'Pane integrale',          isCarb:true, maxPortionG:130},
-  avena:           {kcal:71, pro:2.4,carb:12,  fat:1.5, fiber:1.7, gi:55, sat:0.3, omega3:0.1, ca:18,  fe:1.5,na:2,    fodmap:false,label:'Avena cotta',              isCarb:true, rawFactor:0.33,maxPortionG:350},
-  quinoa:          {kcal:120,pro:4.4,carb:22,  fat:1.9, fiber:2.8, gi:53, sat:0.2, omega3:0,   ca:17,  fe:1.5,na:7,    fodmap:false,label:'Quinoa cotta',            isCarb:true, maxPortionG:220},
+  pasta:           {kcal:131,satiety:1.6,pro:5,  carb:27,  fat:0.9, fiber:1.8, gi:55, sat:0.2, omega3:0,   ca:7,   fe:1.3,na:1,    fodmap:true, label:'Pasta integrale',         isCarb:true, rawFactor:0.40, maxPortionG:220},
+  patate:          {kcal:86,satiety:3.8, pro:2,  carb:20,  fat:0.1, fiber:1.8, gi:78, sat:0,   omega3:0,   ca:12,  fe:0.8,na:6,    fodmap:false,label:'Patate lesse',            isCarb:true, maxPortionG:350},
+  'patate dolci':  {kcal:86,satiety:3.8, pro:1.6,carb:20,  fat:0.1, fiber:3,   gi:63, sat:0,   omega3:0,   ca:30,  fe:0.6,na:55,   fodmap:false,label:'Patate dolci al forno',   isCarb:true, maxPortionG:300},
+  pane:            {kcal:247,satiety:1.4,pro:9,  carb:46,  fat:3,   fiber:6,   gi:51, sat:0.5, omega3:0,   ca:73,  fe:2.5,na:385,  fodmap:true, label:'Pane integrale',          isCarb:true, maxPortionG:130},
+  avena:           {kcal:71,satiety:2.1, pro:2.4,carb:12,  fat:1.5, fiber:1.7, gi:55, sat:0.3, omega3:0.1, ca:18,  fe:1.5,na:2,    fodmap:false,label:'Avena cotta',              isCarb:true, rawFactor:0.33,maxPortionG:350},
+  quinoa:          {kcal:120,satiety:2.2,pro:4.4,carb:22,  fat:1.9, fiber:2.8, gi:53, sat:0.2, omega3:0,   ca:17,  fe:1.5,na:7,    fodmap:false,label:'Quinoa cotta',            isCarb:true, maxPortionG:220},
   farro:           {kcal:338,pro:14, carb:63,  fat:2.4, fiber:7,   gi:45, sat:0.4, omega3:0,   ca:57,  fe:3.7,na:5,    fodmap:true, label:'Farro secco',             isCarb:true, maxPortionG:80},
   couscous:        {kcal:112,pro:3.8,carb:23,  fat:0.2, fiber:1.4, gi:65, sat:0,   omega3:0,   ca:8,   fe:0.4,na:5,    fodmap:true, label:'Couscous cotto',          isCarb:true, rawFactor:0.40, maxPortionG:200},
   orzo:            {kcal:119,pro:2.3,carb:25,  fat:0.4, fiber:1.8, gi:28, sat:0.1, omega3:0,   ca:11,  fe:0.6,na:3,    fodmap:true, label:'Orzo perlato cotto',      isCarb:true, rawFactor:0.33, maxPortionG:220},
@@ -3914,7 +3944,7 @@ const FOOD_DB={
   parmigiano:      {kcal:392,pro:33, carb:0,   fat:28,  fiber:0,   gi:0,  sat:18,  omega3:0.1, ca:1165,fe:0.7,na:1529, fodmap:false,label:'Parmigiano grattugiato',  isFat:true,  maxPortionG:25},
   'yogurt greco':  {kcal:97, pro:9,  carb:4,   fat:5,   fiber:0,   gi:11, sat:3.2, omega3:0.1, ca:110, fe:0.1,na:47,   fodmap:false,label:'Yogurt greco 0%',         isDairy:true,isProtein:true, maxPortionG:300},
   skyr:            {kcal:63, pro:11, carb:4,   fat:0.2, fiber:0,   gi:15, sat:0.1, omega3:0,   ca:135, fe:0.1,na:43,   fodmap:false,label:'Skyr',                    isDairy:true,isProtein:true, maxPortionG:300},
-  'fiocchi latte': {kcal:84, pro:11, carb:3.4, fat:2.3, fiber:0,   gi:10, sat:1.5, omega3:0.1, ca:80,  fe:0.1,na:320,  fodmap:false,label:'Fiocchi di latte',        isDairy:true,isProtein:true, maxPortionG:300},
+  'fiocchi latte': {kcal:84,satiety:2.0, pro:11, carb:3.4, fat:2.3, fiber:0,   gi:10, sat:1.5, omega3:0.1, ca:80,  fe:0.1,na:320,  fodmap:false,label:'Fiocchi di latte',        isDairy:true,isProtein:true, maxPortionG:300},
   ricotta:         {kcal:174,pro:11, carb:3,   fat:13,  fiber:0,   gi:27, sat:8.3, omega3:0.1, ca:207, fe:0.4,na:84,   fodmap:false,label:'Ricotta',                 isFat:true,  isDairy:true, maxPortionG:200},
   'cioccolato fondente':{kcal:546,pro:5,carb:60,fat:31, fiber:11,  gi:25, sat:18,  omega3:0,   ca:73,  fe:8.0,na:20,   fodmap:false,label:'Cioccolato fondente 85%',isSweet:true, maxPortionG:30},
   /* ── NUOVI PESCI ──────────────────────────────────────────────────────────────── */
@@ -4786,8 +4816,8 @@ function runCalcAndGenerate(){
   const _die=t('prof.die');
   det+=`\n${t('res.detail.acqua')}: ${res.waterTarget}L${_die} · ${t('res.detail.fibra')}: ≥${res.fiberTarget||25}g${_die} · Na+: <${res.sodiumMax||2000}mg${_die}`;
   /* ISSN/ACSM Sport Adaptation Detail */
-  const _sportLabels={strength:'Forza/Potenza',endurance:'Resistenza',team:'Squadra/Ibrido',fitness:'Fitness Generale'};
-  const _sportSystems={strength:'ATP-CP / Glicolitico',endurance:'Aerobico',team:'Glicolitico Misto',fitness:'Misto'};
+  const _sportLabels={strength:'Forza/Potenza',endurance:'Resistenza',team:'Squadra/Ibrido',fitness:'Fitness Generale',powerlifting:'Powerlifting/Sollevamento Pesi',combat:'Sport da Combattimento'};
+  const _sportSystems={strength:'ATP-CP / Glicolitico',endurance:'Aerobico',team:'Glicolitico Misto',fitness:'Misto',powerlifting:'ATP-CP / Forza Massimale',combat:'Glicolitico / Fosfageno'};
   const _sk=profState.sport||'fitness';
   det+=`\n─ Sport: ${_sportLabels[_sk]||_sk} · Sistema energetico: ${_sportSystems[_sk]||'—'}`;
   if(profState.trainTime){
@@ -4971,6 +5001,26 @@ function renderCheckinAnalytics(){
 }
 
 
+function getBodyCompShift(){
+  const log=getLog().filter(e=>e.weight&&Number(e.weight)>0).slice(-21);
+  if(log.length<10)return null;
+  const wDelta=Math.abs(Number(log[log.length-1].weight)-Number(log[0].weight));
+  const wLogs=log.filter(e=>e.waist&&Number(e.waist)>0);
+  if(wDelta<0.3&&wLogs.length>=2){
+    const wstDelta=(Number(wLogs[0].waist)-Number(wLogs[wLogs.length-1].waist))/Number(wLogs[0].waist)*100;
+    if(wstDelta>=2)return{shift:150,msg:'coach.bodycomp.recomp'};
+  }
+  return null;
+}
+
+function getMicroRisk(){
+  const prefs=getPrefs();if(prefs?.dietStyle!=='vegano')return null;
+  const days=Math.floor((Date.now()-new Date(lsR(SK.onboardingDone)||Date.now()))/86400000);
+  if(days>60)return{level:'high',msg:'coach.micro.b12high'};
+  if(days>21)return{level:'med',msg:'coach.micro.b12med'};
+  return null;
+}
+
 function renderCoach(){
   const d=analyzeState();
   const card=document.getElementById('coach-card');const iw=document.getElementById('coach-ico-wrap');
@@ -4991,6 +5041,19 @@ function renderCoach(){
       sbEl.innerHTML='';
     }
   }
+  /* MISSING2: micro risk badge */
+  const _mr=getMicroRisk();
+  let _mrEl=document.getElementById('coach-micro-badge');
+  if(_mr){
+    if(!_mrEl){_mrEl=document.createElement('div');_mrEl.id='coach-micro-badge';
+      _mrEl.style.cssText='margin-top:10px;padding:8px 10px;border-radius:var(--r2);font-size:11px;font-weight:600;line-height:1.5;';
+      card.appendChild(_mrEl);}
+    const _mrColor=_mr.level==='high'?'rgba(255,59,48,.12)':'rgba(255,159,10,.10)';
+    const _mrBorder=_mr.level==='high'?'rgba(255,59,48,.28)':'rgba(255,159,10,.28)';
+    const _mrTc=_mr.level==='high'?'var(--red)':'var(--orange)';
+    _mrEl.style.background=_mrColor;_mrEl.style.border=`1px solid ${_mrBorder}`;_mrEl.style.color=_mrTc;
+    _mrEl.textContent=(_mr.level==='high'?'🧪 ':'💊 ')+t(_mr.msg);
+  }else if(_mrEl){_mrEl.remove();}
 }
 
 function toggleAccordion(id){
@@ -5207,6 +5270,9 @@ function renderMeals(){
     const circBadge=getCircadianTips(n,mealIdx,mNames.length);
     const synergy=!checked?calcSynergyScore(meal.rest):null;
     const synBadge=synergy?`<span style="font-size:11px;margin-left:3px;" title="${sanitize(synergy.label)}">${synergy.emoji}</span>`:'';
+    /* MISSING4: satiety badge — shown when food has satiety>=2.5 */
+    const _satFood=meal._meta?.protein&&FOOD_DB[meal._meta.protein]?.satiety>=2.5?meal._meta.protein:meal._meta?.carb&&FOOD_DB[meal._meta.carb]?.satiety>=2.5?meal._meta.carb:null;
+    const satietyBadge=_satFood?`<span style="font-size:11px;margin-left:3px;" title="Alto potere saziante">🪹</span>`:'';
     const bs=checked?'border:1px solid rgba(77,220,198,.22);background:rgba(77,220,198,.03);':'border:1px solid var(--line);background:var(--s1);';
     /* Breakfast/snack use hardcoded string recipes — component swap is meaningless for them.
        Show only the regen button to avoid misleading protein/carb swap labels. */
@@ -5227,7 +5293,7 @@ function renderMeals(){
           ${checked?`<span class="material-symbols-outlined sn" style="font-size:16px;color:var(--p);font-variation-settings:'FILL' 1;">check</span>`:''}
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(localizedMealName(n))}</span>${badge}${circBadge}${synBadge}${skipBadge}</div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(localizedMealName(n))}</span>${badge}${circBadge}${synBadge}${satietyBadge}${skipBadge}</div>
           <p class="meal-desc sn">${carbLine}${sanitize(localizeMealRest(meal.rest))}</p>
         </div>
       </button>
@@ -5774,7 +5840,10 @@ function regenSingleMeal(dayNum,mealName){
   const rDefProt=style==='vegano'?['tofu','legumi','tempeh','seitan']:style==='vegetariano'?['uova','albume','legumi','tofu','yogurt greco','skyr','fiocchi latte','ricotta']:['pollo','coscia pollo','tacchino','manzo','salmone','tonno','merluzzo','branzino','gamberetti','uova','platessa','sgombro','trota'];
   const userProteins=_rp.length>0?_rp:rDefProt;
   const proteins=cspFilter(userProteins).length>0?cspFilter(userProteins):['pollo'];
-  const prot=proteins[(dayNum-1+mealIdx)%proteins.length];
+  /* MISSING5: protein rotation — advance rotation index per regen call */
+  let _protRotIdx=parseInt(lsR(SK.protRotDay)||'0');
+  lsW(SK.protRotDay,String((_protRotIdx+1)%Math.max(proteins.length,1)));
+  const prot=proteins[(_protRotIdx+dayNum-1+mealIdx)%proteins.length];
 
   const _rc=[...new Set([...foods.filter(f=>FOOD_DB[f]?.isCarb),..._xr.carbs])];
   const rDefCarbs=['riso','riso basmati','riso integrale','pasta','patate','patate dolci','quinoa','avena','couscous','orzo','mais','gallette'];
@@ -5787,6 +5856,12 @@ function regenSingleMeal(dayNum,mealName){
   const userFats=_rf.length>0?_rf:rDefFats;
   const fatsList=cspFilter(userFats).length>0?cspFilter(userFats):['olio oliva'];
   const fat=fatsList[(dayNum-1)%fatsList.length];
+
+  /* MISSING4: satiety-based hunger filter */
+  const _cks=JSON.parse(localStorage.getItem(SK.checkins)||'[]').slice(-3);
+  const _avgH=_cks.length?_cks.reduce((a,c)=>a+(+c.hunger||5),0)/_cks.length:5;
+  let candidates=Object.keys(FOOD_DB);
+  if(_avgH>7) candidates=candidates.filter(f=>!FOOD_DB[f].satiety||FOOD_DB[f].satiety>=2.0);
 
   const prevMeal=day[mealName];
   const meal=buildMeal(mealName,prot,carb,fat,proT,carbT,kcalT,macros,prefs.taste||'misto',dayNum,mealIdx,style,FOOD_DB,excluded,isIBS,isDASH);
@@ -6727,7 +6802,7 @@ function _onbFinish(){
           <span class="faq-q-text">Cos'è il Refeed Day?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Un refeed è un giorno di aumento calorico controllato (+400 kcal, +50g carbs) usato in Fase 2 per stimolare la leptina e prevenire il calo metabolico durante la fase di definizione. Va pianificato 1 volta ogni 7-10 giorni.</div>
+        <div class="faq-answer">Refeed day: +880 kcal extra via 220g carbs only (riso, patate, avena). Proteine e grassi invariati. Ogni 7-10 giorni in Fase 2. Stimola la leptina (Dirlewanger 2000).</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
