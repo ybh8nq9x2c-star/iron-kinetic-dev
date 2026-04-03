@@ -745,6 +745,20 @@ body.onboarding-active #onb-screen{
       </div>
       <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="st-label">Selezionato: —</p>
     </div>
+    <div>
+      <label class="field-label" for="f-sport">Sport praticato</label>
+      <select class="inp" id="f-sport" onchange="_sport=this.value;profState.sport=this.value;" style="font-size:15px!important;color:var(--on);background:var(--s1);">
+        <option value="strength">💪 Forza / Potenza (Pesistica, Sprint)</option>
+        <option value="endurance">🏃 Resistenza (Corsa, Ciclismo)</option>
+        <option value="team">⚽ Sport di Squadra / Ibrido (Calcio, Basket, Rugby)</option>
+        <option value="fitness">🏋️ Fitness Generale</option>
+      </select>
+    </div>
+    <div>
+      <label class="field-label" for="f-train-time">Orario di allenamento</label>
+      <input class="inp" id="f-train-time" type="time" onchange="_trainTime=this.value;profState.trainTime=this.value;" style="font-size:16px!important;color:var(--on);"/>
+      <p style="font-size:10px;color:var(--dim);margin-top:5px;font-weight:500;line-height:1.5;" class="sn">⏱ Cruciale per il nutrient timing: i pasti pre/post-workout verranno calibrati su questo orario.</p>
+    </div>
     <div class="row g2">
       <button class="btn btn-ghost sn" onclick="goStep(0)" style="flex:1;">← Indietro</button>
       <button class="btn btn-primary sn" onclick="goStep(2)" style="flex:2;">Continua →</button>
@@ -3082,15 +3096,18 @@ const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
   refeed:'ik_refeed_date',wLog:'ik_weight_log',
   progStart:'ik_prog_start',p4Start:'ik_p4_start',profile:'ik_user_profile',
   prefs:'ik_user_prefs',checkins:'ik_checkins',
-  onboardingDone:'ik_onboarding_done',lang:'ik_lang'};
+  onboardingDone:'ik_onboarding_done',lang:'ik_lang',
+  sport:'ik_sport',trainTime:'ik_train_time'};
 
 /* ═══════════════════════════════════════
    STATE
 ═══════════════════════════════════════ */
 let dietData=null,bodyChart=null,chartMode='weight',selDay=1,activeTab='oggi';
+let _sport='strength',_trainTime='';
 let profState={sex:'M',age:null,height:null,weight:null,bf:null,
                workoutsWk:null,stepsDay:null,goal:null,goalMod:0,
-               tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
+               tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,
+               sport:'strength',trainTime:''};
 let prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',
                intolerances:'',foods:[],extraFoods:''};
 let curStep=0;
@@ -3636,6 +3653,20 @@ function calculateUserMacros(p){
   }
   bmr=Math.round(bmr);
 
+  /* ── SPORT-SPECIFIC MACRO MODULATION (ISSN 2018 / ACSM 2016) ──
+     PAL dinamico per sport: Strength/Team 2.0-2.4, Endurance 2.5-3.4+
+     Energy Availability check: EA = (EI - EEE) / FFM ≥ 30 kcal/kg (RED-S prevention)
+     Macros in g/kg: Endurance CHO 8-12, PRO 1.2-1.8; Strength PRO 1.6-2.2, CHO 4-7;
+     Team/Hybrid CHO 6-10, PRO 1.4-2.0; General Fitness balanced */
+  const _sportTypes={
+    strength:{palBoost:0.10,proMin:1.6,proMax:2.2,carbMult:1.0,fatMult:1.0,system:'ATP-CP / Glicolitico'},
+    endurance:{palBoost:0.25,proMin:1.2,proMax:1.8,carbMult:1.35,fatMult:0.85,system:'Aerobico'},
+    team:{palBoost:0.15,proMin:1.4,proMax:2.0,carbMult:1.20,fatMult:0.90,system:'Glicolitico Misto'},
+    fitness:{palBoost:0.05,proMin:1.4,proMax:1.8,carbMult:1.0,fatMult:1.0,system:'Misto'},
+  };
+  const _sportKey=p.sport||_sport||'fitness';
+  const _sm=_sportTypes[_sportKey]||_sportTypes.fitness;
+
   /* ── PAL GRANULARE (5 livelli Harris-Benedict) + NEAT ──
      Wk→PAL base: 0=Sedentario 1.20, 1-2=Leg.attivo 1.375,
      3-4=Mod.attivo 1.55, 5=Attivo 1.725, 6+=Molto attivo 1.90
@@ -3645,7 +3676,8 @@ function calculateUserMacros(p){
   const st=parseInt(p.stepsDay)||5000;
   const palBase=wk===0?1.200:wk<=2?1.375:wk<=4?1.550:wk===5?1.725:1.900;
   const neatAdd=st<=2500?0.00:st<=4000?0.03:st<=6000?0.06:st<=8000?0.09:st<=10000?0.12:st<=12000?0.14:0.16;
-  const actMult=palBase+neatAdd;
+  /* Apply sport-specific PAL boost (ISSN/ACSM dynamic PAL modulation) */
+  const actMult=Math.min(palBase+neatAdd+_sm.palBoost, 3.4);
   const tdeeRaw=Math.round(bmr*actMult);
 
   /* ── TARGET KCAL per obiettivo ──
@@ -3680,6 +3712,8 @@ function calculateUserMacros(p){
   const _ps=parseInt(lsR(SK.progStart)||0);let proRate=getProgressiveProRate(proRateMap[goal]||1.8,goal,_ps);
   const prefs=typeof getPrefs==='function'?getPrefs():null;
   if(prefs?.dietStyle==='vegano') proRate*=1.10;  /* +10% bioavailability */
+  /* Sport-specific protein range (ISSN 2018): clamp within sport's g/kg bounds */
+  proRate=Math.max(_sm.proMin,Math.min(proRate,_sm.proMax));
   /* Sovrascritture cliniche (precedenza su obiettivo) */
   if(isCKD)        proRate=Math.min(proRate,NC.protCKD_gkg);
   if(isIBDact)     proRate=Math.max(proRate,NC.protIBD_acute_gkg);
@@ -3703,6 +3737,11 @@ function calculateUserMacros(p){
   const carbsRaw=Math.round((targetKcal-pro*4-fat*9)/4);
   const carbsFloor=goal==='cut_extreme'?80:goal==='bulk'?Math.round(3*w):100;
   let carbs=Math.max(carbsFloor,carbsRaw);
+  /* Sport carb/fat multipliers (ISSN: Endurance +35%, Strength baseline, Team +20%) */
+  carbs=Math.round(carbs*_sm.carbMult);
+  fat=Math.round(fat*_sm.fatMult);
+  /* Recalculate kcal to stay consistent after sport multipliers */
+  targetKcal=Math.max(floorKcal,pro*4+carbs*4+fat*9);
 
   /* ── MILP-LITE: applica vincoli WHO simultaneamente ── */
   const constrained=applyMILP(targetKcal,pro,carbs,fat,sex,goal);
@@ -4722,6 +4761,12 @@ function runCalcAndGenerate(){
   prefState.extraFoods=document.getElementById('f-extra-foods').value||'';
   prefState.intolerances=document.getElementById('f-intolerances').value||'';
 
+  /* Capture sport and training time from onboarding inputs */
+  const _sportEl=document.getElementById('f-sport');
+  const _trainEl=document.getElementById('f-train-time');
+  if(_sportEl){_sport=_sportEl.value;profState.sport=_sport;}
+  if(_trainEl){_trainTime=_trainEl.value;profState.trainTime=_trainTime;}
+
   /* Must have at least something (pref or default) */
   const res=calculateUserMacros(profState);
   Object.assign(profState,{tdee:res.tdee,targetKcal:res.targetKcal,pro:res.pro,carbs:res.carbs,fat:res.fat});
@@ -4740,6 +4785,21 @@ function runCalcAndGenerate(){
   det+=`\n${t('res.detail.proteina')}: ${res.proRate}g/kg · Carbs ${res.carbsPct||'?'}% · ${t('prof.grassi')} ${res.fatPct||'?'}% · ${t('prof.proteine')} ${res.proPct||'?'}% kcal`;
   const _die=t('prof.die');
   det+=`\n${t('res.detail.acqua')}: ${res.waterTarget}L${_die} · ${t('res.detail.fibra')}: ≥${res.fiberTarget||25}g${_die} · Na+: <${res.sodiumMax||2000}mg${_die}`;
+  /* ISSN/ACSM Sport Adaptation Detail */
+  const _sportLabels={strength:'Forza/Potenza',endurance:'Resistenza',team:'Squadra/Ibrido',fitness:'Fitness Generale'};
+  const _sportSystems={strength:'ATP-CP / Glicolitico',endurance:'Aerobico',team:'Glicolitico Misto',fitness:'Misto'};
+  const _sk=profState.sport||'fitness';
+  det+=`\n─ Sport: ${_sportLabels[_sk]||_sk} · Sistema energetico: ${_sportSystems[_sk]||'—'}`;
+  if(profState.trainTime){
+    /* Chrononutrition timing anchored to training time (ISSN Position Stand 2017) */
+    const [hh,mm]=profState.trainTime.split(':').map(Number);
+    const preH=new Date(0,0,0,hh,mm);preH.setMinutes(preH.getMinutes()-90);
+    const postH=new Date(0,0,0,hh,mm);postH.setMinutes(postH.getMinutes()+45);
+    const fmt=d=>`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    det+=`\n─ Allenamento: ${profState.trainTime} · Pre-workout ~${fmt(preH)} · Post-workout ~${fmt(postH)}`;
+    det+=`\n─ Pre: CHO 1-4g/kg + PRO 0.3g/kg · Post (<4h): CHO 1.2g/kg + PRO 0.3g/kg · Pre-sleep: 30-40g caseina`;
+    det+=`\n─ Idratazione (ACSM): 500ml 2h prima · 200ml 10min prima · 180-350ml ogni 20min durante`;
+  }
   document.getElementById('r-detail').textContent=det;
 
   /* Generate plan */
@@ -4780,6 +4840,11 @@ function activateGeneratedPlan(){
   if(res.carbsPct)profState.carbsPct=res.carbsPct;
   if(res.fatPct)profState.fatPct=res.fatPct;
   if(res.proPct)profState.proPct=res.proPct;
+  /* Persist sport and training time */
+  profState.sport=profState.sport||_sport||'fitness';
+  profState.trainTime=profState.trainTime||_trainTime||'';
+  lsS(SK.sport,profState.sport);
+  lsW(SK.trainTime,profState.trainTime);
   lsS(SK.profile,profState);
   lsS(SK.prefs,prefState);
   const patched=applyProfileToMeta(plan);
@@ -5132,7 +5197,7 @@ function renderMeals(){
     const meal=day[n];if(!meal)return'';
     const checked=lsR(mk(day.d,n))==='1';if(checked)done++;
     const _mType=canonicalMealType(n);const isHardcodedMeal=_mType==='breakfast'||_mType==='snack';
-    const skipBadge=(skipRates[n]||0)>=0.6?`<span style="font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--orange);margin-left:4px;">${_lang==='en'?'OFTEN SKIPPED':'SPESSO SALTATO'}</span>`:'';
+    const totalDays=Object.keys(skipRates).length;const skipBadge=(skipRates[n]||0)>=0.6&&totalDays>=14?`<span style="font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--orange);margin-left:4px;">${_lang==='en'?'OFTEN SKIPPED':'SPESSO SALTATO'}</span>`:'';
     const fa=meal.carbSource?finalCarb(meal):null;
     const diff=fa!==null?fa-meal.baseAmount:0;
     const carbLabel=meal.carbSource?(localizeFoodLabel(FOOD_DB[meal.carbSource]?.label||meal.carbSource)):'';
@@ -5360,7 +5425,7 @@ function resetProfile(){
     try{clearAppData();}catch{}
     if(bodyChart){bodyChart.destroy();bodyChart=null;}
     dietData=null;
-    profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null};
+    profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,sport:'fitness',trainTime:''};_sport='fitness';_trainTime='';
     prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
     curStep=0;
     for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===0);dot.classList.remove('completed');}}
@@ -6144,6 +6209,10 @@ function mountApp(){
   document.body.classList.remove('onboarding-active');
   document.getElementById('onb-screen').classList.remove('on');document.getElementById('app-shell').classList.add('on');
   document.getElementById('log-date').value=toISO();
+  /* Restore sport and trainTime state from persisted profile */
+  const _mpProf=getProfile();
+  if(_mpProf?.sport){_sport=_mpProf.sport;profState.sport=_mpProf.sport;}
+  if(_mpProf?.trainTime){_trainTime=_mpProf.trainTime;profState.trainTime=_mpProf.trainTime;}
   const dow=new Date().getDay();const days=dietData.days||[];const match=days.find(d=>d.d===(dow===0?7:dow));
   selDay=(match||days[0]).d;
   /* Hide non-oggi screens before any render */
