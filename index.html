@@ -236,17 +236,46 @@ body.onboarding-active #onb-screen{
 #trackers-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
 #trackers-chevron{transition:transform .25s ease;color:var(--muted);font-size:18px;}
 /* ── Onboarding slideshow ── */
-#onboarding-overlay{position:fixed;inset:0;background:var(--bg);z-index:10000;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;gap:28px;}
-#onboarding-slides-wrap{width:100%;max-width:360px;overflow:hidden;}
-#onboarding-slides{display:flex;transition:transform .35s ease;}
-.onboarding-slide{min-width:100%;flex-shrink:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding:8px 4px;}
-.onb-emoji{font-size:60px;line-height:1.1;}
-.onb-title{font-size:22px;font-weight:700;color:var(--on);line-height:1.3;margin:0;}
-.onb-body{font-size:14px;color:var(--muted);line-height:1.65;max-width:300px;margin:0;}
-.onb-dots{display:flex;gap:8px;}
+#onboarding-overlay{
+  position:fixed;inset:0;
+  background:var(--bg);
+  z-index:10000;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:max(32px,env(safe-area-inset-top,0px)) 24px max(24px,env(safe-area-inset-bottom,0px));
+  gap:24px;
+  overflow:hidden;
+}
+#onboarding-slides-wrap{
+  width:min(360px,100%);
+  overflow:hidden;
+  flex-shrink:0;
+}
+#onboarding-slides{
+  display:flex;
+  width:100%;
+  transition:transform .35s ease;
+}
+.onboarding-slide{
+  width:min(360px,100vw - 48px);
+  min-width:min(360px,100vw - 48px);
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:14px;
+  padding:0;
+}
+.onb-emoji{font-size:58px;line-height:1;display:block;}
+.onb-title{font-size:21px;font-weight:700;color:var(--on);line-height:1.3;margin:0;letter-spacing:-.02em;width:100%;}
+.onb-body{font-size:14px;color:var(--muted);line-height:1.65;margin:0;width:100%;}
+.onb-dots{display:flex;gap:8px;flex-shrink:0;}
 .onb-dot{width:8px;height:8px;border-radius:50%;background:var(--dim);transition:background .2s,transform .2s;}
 .onb-dot.active{background:var(--p);transform:scale(1.3);}
-.onb-nav{display:flex;align-items:center;gap:12px;width:100%;max-width:360px;}
+.onb-nav{display:flex;align-items:center;gap:12px;width:min(360px,100%);flex-shrink:0;}
 /* ── Tracker blocks ── */
 .tracker-block{padding:14px 16px;border-top:1px solid var(--line);}
 .tracker-block:first-child{border-top:none;}
@@ -938,7 +967,7 @@ body.onboarding-active #onb-screen{
         </div>
         <!-- Meals list -->
         <div id="meals-list" style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;">
-          <div class="card" style="padding:14px;text-align:center;"><span id="meals-empty-txt" class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;"></span></div>
+          <div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Genera il tuo piano dall'onboarding —</span></div>
         </div>
         <!-- Shopping -->
         <div class="pasti-shopping">
@@ -1023,14 +1052,14 @@ body.onboarding-active #onb-screen{
           </div>
         </div>
         <button class="btn btn-primary w100 sn" onclick="saveDailyCheckin()">Salva check-in</button>
-        <div class="note-box" id="checkin-feedback"></div>
+        <div class="note-box" id="checkin-feedback">Dopo il primo check-in riceverai un supporto contestuale.</div>
         <button id="ci-edit-btn" class="btn btn-ghost w100" onclick="editDailyCheckin()" style="display:none;font-size:13px;margin-top:4px;"></button>
       </div>
 
       <!-- 7. Maintain Card (hidden, preserve) -->
       <div class="maintain-card" id="maintain-card">
         <div class="rowb" style="margin-bottom:10px;"><span class="sec-label" style="margin-bottom:0;color:#0A84FF;">Mantenimento</span><span class="t-xxs" style="color:#8ec5ff;">LONG TERM</span></div>
-        <p id="maintain-msg" class="sn" style="font-size:13px;line-height:1.6;font-weight:600;color:var(--on);"></p>
+        <p id="maintain-msg" class="sn" style="font-size:13px;line-height:1.6;font-weight:600;color:var(--on);">Sei in fase di mantenimento. Focus su routine sostenibile e stabilità del peso.</p>
       </div>
 
       <!-- 8. Profilo Card (collapsible, default closed) -->
@@ -1161,7 +1190,7 @@ body.onboarding-active #onb-screen{
         <div style="padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;">
           <span class="sec-label" style="margin-bottom:0;">Storico</span>
         </div>
-        <div id="hist-list"><div style="padding:14px;text-align:center;"><span id="hist-empty-txt" class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;"></span></div></div>
+        <div id="hist-list"><div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Nessuna voce —</span></div></div>
       </div>
     </div>
   </div><!-- /scr-prog -->
@@ -1906,20 +1935,6 @@ it:{
   'notif.action.open':'Apri App',
   'toast.errore':'⚠️ Errore inatteso',
   'toast.valoreNonValido':'⚠️ Valore non valido',
-  'meals.emptyPlan':'— Genera il tuo piano dall\'onboarding —',
-  'checkin.feedback.empty':'Dopo il primo check-in riceverai un supporto contestuale.',
-  'maintain.msg':'Sei in fase di mantenimento. Focus su routine sostenibile e stabilità del peso.',
-  'prog.storico.emptyShort':'Nessuna voce',
-  'btn.generazione':'⟳ Generazione...',
-  'chart.previsioneSett':'Previsione Peso (12 sett.)',
-  'validate.notJson':'Non è un oggetto JSON.',
-  'validate.noMeta':'\"metadata\" mancante.',
-  'validate.noDays':'\"days\" mancante o vuoto.',
-  'validate.noPhases':'\"phases\" mancante o vuoto.',
-  'weekly.report.label.checkin':'Check-in',
-  'meals.default.0':'Pranzo',
-  'meals.default.1':'Merenda',
-  'meals.default.2':'Cena',
   'gdpr.footer2':'Non accettando non potrai utilizzare l\'app, in quanto il trattamento dei dati è necessario per erogare il servizio.',
 },
 en:{
@@ -2316,20 +2331,6 @@ en:{
   'notif.action.open':'Open App',
   'toast.errore':'⚠️ Unexpected error',
   'toast.valoreNonValido':'⚠️ Invalid value',
-  'meals.emptyPlan':'— Generate your plan from onboarding —',
-  'checkin.feedback.empty':'After your first check-in you\'ll receive contextual support.',
-  'maintain.msg':'You\'re in maintenance phase. Focus on a sustainable routine and weight stability.',
-  'prog.storico.emptyShort':'No entries',
-  'btn.generazione':'⟳ Generating...',
-  'chart.previsioneSett':'Weight Forecast (12 wk.)',
-  'validate.notJson':'Not a valid JSON object.',
-  'validate.noMeta':'\"metadata\" missing.',
-  'validate.noDays':'\"days\" missing or empty.',
-  'validate.noPhases':'\"phases\" missing or empty.',
-  'weekly.report.label.checkin':'Check-in',
-  'meals.default.0':'Lunch',
-  'meals.default.1':'Snack',
-  'meals.default.2':'Dinner',
   'gdpr.footer2':'Without accepting, you won\'t be able to use the app, as data processing is necessary to deliver the service.',
 }
 };
@@ -2520,8 +2521,8 @@ function applyTranslations(deferOffscreen){
   /* check-in section label */
   document.querySelectorAll('#daily-check-card .sec-label').forEach(e=>e.textContent=t('oggi.checkin.title'));
   const ciFeedback=document.getElementById('checkin-feedback');
-  if(ciFeedback&&(!ciFeedback.textContent.trim()||ciFeedback.textContent.trim()===LANG.it['oggi.checkin.feedback_default']))
-    if(!ciFeedback.classList.contains('has-feedback'))ciFeedback.textContent=t('oggi.checkin.feedback_default');
+  if(ciFeedback&&ciFeedback.textContent.trim()===LANG.it['oggi.checkin.feedback_default'])
+    ciFeedback.textContent=t('oggi.checkin.feedback_default');
   const ciSalvaBtn=document.querySelector('#daily-check-card .btn-primary');
   if(ciSalvaBtn)ciSalvaBtn.textContent=t('oggi.checkin.salva');
   /* Micro chips (check-in context) */
@@ -2535,20 +2536,8 @@ function applyTranslations(deferOffscreen){
   const maintSub=document.querySelector('#maintain-card .t-xxs');
   if(maintSub)maintSub.textContent=t('oggi.mantenimento.sub');
   const maintMsg=document.getElementById('maintain-msg');
-  if(maintMsg&&(maintMsg.textContent.trim()===LANG.it['oggi.mantenimento.msg']||!maintMsg.textContent.trim()))
+  if(maintMsg&&maintMsg.textContent.trim()===LANG.it['oggi.mantenimento.msg'])
     maintMsg.textContent=t('oggi.mantenimento.msg');
-  /* meals empty placeholder */
-  const _mealsEmptyTxt=document.getElementById('meals-empty-txt');
-  if(_mealsEmptyTxt)_mealsEmptyTxt.textContent=t('meals.emptyPlan');
-  /* checkin-feedback default */
-  const _cfbDef=document.getElementById('checkin-feedback');
-  if(_cfbDef&&!_cfbDef.classList.contains('has-feedback'))_cfbDef.textContent=t('oggi.checkin.feedback_default');
-  /* maintain-msg (unconditional — already cleared in HTML) */
-  const _mm2=document.getElementById('maintain-msg');
-  if(_mm2&&!_mm2.textContent.trim())_mm2.textContent=t('oggi.mantenimento.msg');
-  /* hist empty placeholder */
-  const _histEmptyTxt=document.getElementById('hist-empty-txt');
-  if(_histEmptyTxt)_histEmptyTxt.textContent=t('prog.storico.empty');
   /* weight update button */
   const weightUpdBtn=document.getElementById('btn-weight-upd');
   if(weightUpdBtn)weightUpdBtn.textContent=t('set.btn.aggiornaPeso');
@@ -3354,7 +3343,7 @@ function renderWeeklyReport(){
       <span class="t-xxs muted sn">${t('weekly.report.label.peso')}</span></div>
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--on);margin:0 0 2px;">${rep.ciDays}/7</p>
-      <span class="t-xxs muted sn">${t('weekly.report.label.checkin')}</span></div>
+      <span class="t-xxs muted sn">Check-in</span></div>
     <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${pct>=80?'var(--p)':pct>=50?'var(--orange)':'var(--red)'};margin:0 0 2px;">${pct}%</p>
       <span class="t-xxs muted sn">${t('weekly.report.label.pasti')}</span></div>
@@ -4521,7 +4510,7 @@ function runCalcAndGenerate(){
   hap('medium');
   const _genBtn=document.querySelector('button[onclick="runCalcAndGenerate()"]');
   const _genBtnTxt=_genBtn?.textContent;
-  if(_genBtn){_genBtn.disabled=true;_genBtn.textContent=t('btn.generazione');}
+  if(_genBtn){_genBtn.disabled=true;_genBtn.textContent='⟳ Generazione...';}
   prefState.extraFoods=document.getElementById('f-extra-foods').value||'';
   prefState.intolerances=document.getElementById('f-intolerances').value||'';
 
@@ -4834,8 +4823,8 @@ function renderTrackers(){
   const sb=getEl('salt-bar');sb.style.width=`${sp}%`;sb.style.background=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.35)';
   const sr=getEl('salt-ring');sr.style.strokeDashoffset=`${CIRC*(1-sp/100)}`;sr.style.stroke=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.4)';
   const st=parseInt(lsR(dk('steps'))||'0'),tgt=(getPhase()===3&&detectStall())?11000:STBASE;
-  getEl('steps-val').textContent=st.toLocaleString(_lang==='en'?'en-US':'it-IT');
-  getEl('steps-tgt').textContent=tgt.toLocaleString(_lang==='en'?'en-US':'it-IT');
+  getEl('steps-val').textContent=st.toLocaleString('it-IT');
+  getEl('steps-tgt').textContent=tgt.toLocaleString('it-IT');
   getEl('steps-bar').style.width=`${Math.min(100,st/tgt*100)}%`;
   const wd=gT('workout')>=1;
   getEl('wk-ratio').textContent=wd?'1/1':'0/1';
@@ -4849,7 +4838,7 @@ function renderTrackers(){
 }
 function addWater(a){hap();const mx=getWMAX();const c=gT('water');if(c>=mx){toast(t('toast.acquaLimite',{max:mx}));hap('error');return;}const n=Math.min(mx,parseFloat((c+a).toFixed(2)));sT('water',n);renderTrackers();renderCoach();toast(`+${a}L → ${n.toFixed(1)}L`);}
 function addSalt(a){hap();const c=gT('salt');if(c>=SMAX){toast(t('toast.saleLimite'));hap('error');return;}const n=Math.min(SMAX,parseFloat((c+a).toFixed(1)));sT('salt',n);renderTrackers();renderCoach();toast(`+${a}g → ${n.toFixed(1)}g`);}
-function addSteps(a){hap();const n=parseInt(lsR(dk('steps'))||'0')+a;const capped=Math.min(30000,n);lsW(dk('steps'),capped.toString());if(n>30000)toast(t('toast.stepsCap'));renderTrackers();toast(`+${a.toLocaleString(_lang==='en'?'en-US':'it-IT')} → ${capped.toLocaleString(_lang==='en'?'en-US':'it-IT')}`);}
+function addSteps(a){hap();const n=parseInt(lsR(dk('steps'))||'0')+a;const capped=Math.min(30000,n);lsW(dk('steps'),capped.toString());if(n>30000)toast(t('toast.stepsCap')||'⚠️ Max 30.000 passi');renderTrackers();toast(`+${a.toLocaleString()} → ${capped.toLocaleString()}`);}
 function toggleWk(){hap('medium');const n=gT('workout')>=1?0:1;sT('workout',n);renderTrackers();toast(t(n?'toast.wkCompletato':'toast.wkRimosso'));}
 function resetT(tp){hap();const prev=gT(tp);sT(tp,0);renderTrackers();showToast(t('toast.azzerato')+' — '+'<button onclick="sT(\''+tp+'\','+prev+');renderTrackers();closeToast()" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:inherit">'+t('toast.undo')+'</button>',4000);}
 
@@ -4870,7 +4859,7 @@ function buildDaySelector(){
   });
 }
 function getMealNames(){
-  return dietData?.metadata?.mealNames||[t('meals.default.0'),t('meals.default.1'),t('meals.default.2')];
+  return dietData?.metadata?.mealNames||['Pranzo','Merenda','Cena'];
 }
 function renderMeals(){
   document.querySelectorAll('button[onclick="openShoppingList()"]').forEach(b=>b.style.display=dietData?'':'none');
@@ -4883,8 +4872,7 @@ function renderMeals(){
   cont.innerHTML=mNames.map((n,mealIdx)=>{
     const meal=day[n];if(!meal)return'';
     const checked=lsR(mk(day.d,n))==='1';if(checked)done++;
-    const SPECIAL_MEAL_NAMES_=['Colazione','Breakfast','Spuntino','Morning Snack'];
-    const isHardcodedMeal=SPECIAL_MEAL_NAMES_.some(s=>n===s||n.includes(s))||(dietData?.metadata?.specialMeals||[]).includes(n);
+    const isHardcodedMeal=n==='Colazione'||n.includes('Spuntino');
     const fa=meal.carbSource?finalCarb(meal):null;
     const diff=fa!==null?fa-meal.baseAmount:0;
     const carbLabel=meal.carbSource?(FOOD_DB[meal.carbSource]?.label||meal.carbSource):'';
@@ -5221,7 +5209,7 @@ function switchChart(mode,btn){
   const lbl=document.getElementById('chart-mode-label');
   const predSum=document.getElementById('prediction-summary');
   if(mode==='prediction'){
-    if(lbl)lbl.textContent=t('chart.previsioneSett');
+    if(lbl)lbl.textContent='Previsione Peso (12 sett)';
     renderPredictionChart();
   } else {
     if(predSum)predSum.style.display='none';
@@ -5319,10 +5307,10 @@ function applyProfileToMeta(parsed){
   return parsed;
 }
 function validateSchema(obj){
-  if(!obj||typeof obj!=='object')throw new Error(t('validate.notJson'));
-  if(!obj.metadata)throw new Error(t('validate.noMeta'));
-  if(!Array.isArray(obj.days)||!obj.days.length)throw new Error(t('validate.noDays'));
-  if(!Array.isArray(obj.phases)||!obj.phases.length)throw new Error(t('validate.noPhases'));
+  if(!obj||typeof obj!=='object')throw new Error('Non è un oggetto JSON.');
+  if(!obj.metadata)throw new Error('"metadata" mancante.');
+  if(!Array.isArray(obj.days)||!obj.days.length)throw new Error('"days" mancante o vuoto.');
+  if(!Array.isArray(obj.phases)||!obj.phases.length)throw new Error('"phases" mancante o vuoto.');
 }
 
 /* ═══════════════════════════════════════
@@ -5569,8 +5557,7 @@ function generateShoppingList(){
   (dietData.days||[]).forEach(day=>{
     Object.entries(day).forEach(([mName,meal])=>{
       if(!meal||typeof meal!=='object'||mName==='d')return;
-      const SPECIAL_MEAL_NAMES_=['Colazione','Breakfast','Spuntino','Morning Snack'];
-      const isHardcodedMeal=SPECIAL_MEAL_NAMES_.some(s=>mName===s||mName.includes(s))||(dietData?.metadata?.specialMeals||[]).includes(mName);
+      const isHardcodedMeal=mName==='Colazione'||mName.includes('Spuntino');
 
       /* 1. carbSource + baseAmount — stored separately from rest string.
             Skip for breakfast/snack: their rest string already lists the carb.
