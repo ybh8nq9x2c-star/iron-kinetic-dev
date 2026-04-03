@@ -236,17 +236,117 @@ body.onboarding-active #onb-screen{
 #trackers-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
 #trackers-chevron{transition:transform .25s ease;color:var(--muted);font-size:18px;}
 /* ── Onboarding slideshow ── */
-#onboarding-overlay{position:fixed;inset:0;background:var(--bg);z-index:10000;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;gap:28px;}
-#onboarding-slides-wrap{width:100%;max-width:360px;overflow:hidden;}
-#onboarding-slides{display:flex;transition:transform .35s ease;}
-.onboarding-slide{min-width:100%;flex-shrink:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding:8px 4px;}
-.onb-emoji{font-size:60px;line-height:1.1;}
-.onb-title{font-size:22px;font-weight:700;color:var(--on);line-height:1.3;margin:0;}
-.onb-body{font-size:14px;color:var(--muted);line-height:1.65;max-width:300px;margin:0;}
-.onb-dots{display:flex;gap:8px;}
-.onb-dot{width:8px;height:8px;border-radius:50%;background:var(--dim);transition:background .2s,transform .2s;}
-.onb-dot.active{background:var(--p);transform:scale(1.3);}
-.onb-nav{display:flex;align-items:center;gap:12px;width:100%;max-width:360px;}
+#onboarding-overlay{
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  width:100%;
+  background:var(--bg);
+  z-index:10000;
+  display:none; /* toggled to flex by JS */
+  flex-direction:column;
+  align-items:stretch; /* children fill full width */
+  justify-content:flex-start;
+  overflow:hidden;
+  /* safe area */
+  padding-top:max(env(safe-area-inset-top,0px),0px);
+  padding-bottom:max(env(safe-area-inset-bottom,0px),0px);
+  box-sizing:border-box;
+}
+/* Slides viewport: fills all available vertical space */
+#onboarding-slides-wrap{
+  flex:1;
+  width:100%;
+  overflow:hidden;
+  display:flex;
+  align-items:stretch;
+  min-height:0;
+}
+/* Slides strip: horizontal scroll via transform */
+#onboarding-slides{
+  display:flex;
+  width:100%;
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+/* Each slide: exactly 100vw wide, flex column, content centered */
+.onboarding-slide{
+  /* Critical: min-width = 100% of the slides-wrap = 100vw */
+  min-width:100%;
+  width:100%;
+  flex-shrink:0;
+  box-sizing:border-box;
+  /* vertical centering inside the slide */
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  /* horizontal padding keeps text off the edges on all widths */
+  padding:32px 32px 24px;
+}
+/* Emoji: block, centered, consistent spacing */
+.onb-emoji{
+  font-size:64px;
+  line-height:1;
+  display:block;
+  text-align:center;
+  width:100%;
+  margin:0 0 24px;
+  user-select:none;
+  -webkit-user-select:none;
+}
+/* Title: centered, balanced wrapping */
+.onb-title{
+  font-size:22px;
+  font-weight:700;
+  color:var(--on);
+  line-height:1.3;
+  margin:0 0 14px;
+  text-align:center;
+  width:100%;
+  max-width:320px;
+}
+/* Body: centered, comfortable reading width */
+.onb-body{
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.65;
+  text-align:center;
+  margin:0;
+  width:100%;
+  max-width:300px;
+}
+/* Progress dots row */
+.onb-dots{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  padding:20px 0 12px;
+  flex-shrink:0;
+}
+.onb-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--dim);
+  transition:background .2s,transform .2s,width .2s;
+  display:block;
+}
+.onb-dot.active{background:var(--p);transform:scale(1.25);}
+/* Bottom nav: skip / back / next — balanced 3-column */
+.onb-nav{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  box-sizing:border-box;
+  padding:8px 24px max(env(safe-area-inset-bottom,0px),20px);
+  flex-shrink:0;
+}
+/* Skip lives in col-1 (left), Back in col-2 (center), Next in col-3 (right) */
+#onb-skip-btn{ justify-self:start; }
+#onb-prev-btn{ justify-self:center; }
+#onb-next-btn{ justify-self:end; }
 /* ── Tracker blocks ── */
 .tracker-block{padding:14px 16px;border-top:1px solid var(--line);}
 .tracker-block:first-child{border-top:none;}
@@ -258,6 +358,25 @@ body.onboarding-active #onb-screen{
 .pasti-day-sel{padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;}
 .pasti-shopping{padding:12px 16px;border-top:1px solid var(--line);}
 @media(max-width:390px){.pg{padding-left:12px;padding-right:12px;}.grid2,.range-row{grid-template-columns:1fr;}#nav{left:max(8px,var(--sal));right:max(8px,var(--sar));}#hdr{left:max(8px,var(--sal));right:max(8px,var(--sar));}}
+@media(max-width:375px){
+  .onboarding-slide{padding:28px 28px 20px;}
+  .onb-emoji{font-size:58px;margin-bottom:20px;}
+  .onb-title{font-size:21px;}
+}
+@media(max-width:360px){
+  .onboarding-slide{padding:24px 24px 18px;}
+  .onb-emoji{font-size:54px;margin-bottom:18px;}
+  .onb-title{font-size:20px;margin-bottom:12px;}
+  .onb-body{font-size:13.5px;}
+  .onb-nav{padding-left:20px;padding-right:20px;}
+}
+@media(max-width:320px){
+  .onboarding-slide{padding:20px 20px 14px;}
+  .onb-emoji{font-size:48px;margin-bottom:14px;}
+  .onb-title{font-size:18px;margin-bottom:10px;max-width:260px;}
+  .onb-body{font-size:13px;max-width:252px;}
+  .onb-nav{padding-left:16px;padding-right:16px;gap:6px;}
+}
 
 /* ═══════════════════════════════════════
    MODALS — Privacy / Aiuto
@@ -905,7 +1024,7 @@ body.onboarding-active #onb-screen{
           </div>
           <div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;">
-              <span class="t-xxs muted sn">GRASSI</span>
+              <span class="t-xxs muted sn" id="macro-fat-lbl">GRASSI</span>
               <span id="m-fat" class="sn" style="font-size:11px;font-weight:700;color:var(--on);">—</span>
             </div>
             <div class="bar-track"><div class="bar-fill bfw" id="b-fat" style="width:0%;"></div></div>
@@ -1086,7 +1205,7 @@ body.onboarding-active #onb-screen{
       <div class="card" style="padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
           <div>
-            <p id="chart-mode-label" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin:0 0 5px;">Trend Peso</p>
+            <p id="chart-mode-label" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin:0 0 5px;">Weight Trend</p>
             <div style="display:flex;align-items:center;gap:6px;">
               <span style="width:7px;height:7px;border-radius:50%;background:var(--p);display:inline-block;flex-shrink:0;"></span>
               <span class="t-xxs muted sn">Reale</span>
@@ -1110,7 +1229,7 @@ body.onboarding-active #onb-screen{
       </div>
       <!-- Check-in analytics (unchanged) -->
       <div class="analytics-card" id="checkin-analytics-card">
-        <div class="rowb"><span class="sec-label" style="margin-bottom:0;">Trend check-in</span><span class="t-xxs muted">ULTIMI 7 GIORNI</span></div>
+        <div class="rowb"><span class="sec-label" style="margin-bottom:0;">Trend check-in</span><span id="checkin-last7-lbl" class="t-xxs muted">ULTIMI 7 GIORNI</span></div>
         <div class="analytics-bars">
           <div class="analytics-row"><span class="analytics-lab">Fame</span><div class="analytics-track"><div class="analytics-fill" id="an-hunger"></div></div><span class="analytics-val" id="an-hunger-v">--</span></div>
           <div class="analytics-row"><span class="analytics-lab">Energia</span><div class="analytics-track"><div class="analytics-fill" id="an-energy"></div></div><span class="analytics-val" id="an-energy-v">--</span></div>
@@ -1123,7 +1242,7 @@ body.onboarding-active #onb-screen{
       <div class="card" id="fingerprint-card" style="padding:14px;display:none;">
         <div class="rowb" style="margin-bottom:12px;">
           <span class="sec-label" style="margin-bottom:0;">Impronta Metabolica</span>
-          <span class="t-xxs muted">PROFILO UNICO</span>
+          <span id="fp-badge-lbl" class="t-xxs muted">PROFILO UNICO</span>
         </div>
         <div id="fingerprint-content"></div>
       </div>
@@ -1421,36 +1540,52 @@ body.onboarding-active #onb-screen{
      ONBOARDING SLIDESHOW — moved BEFORE main script so getElementById finds it at boot
 ══════════════════════════════════════ -->
 <div id="onboarding-overlay" style="display:none;">
+
+  <!-- Slides viewport -->
   <div id="onboarding-slides-wrap">
     <div id="onboarding-slides">
+
+      <!-- Slide 1 -->
       <div class="onboarding-slide">
         <div class="onb-emoji">🏋️‍♂️</div>
         <p class="onb-title" id="onb-t0"></p>
         <p class="onb-body" id="onb-b0"></p>
       </div>
+
+      <!-- Slide 2 -->
       <div class="onboarding-slide">
         <div class="onb-emoji">✅</div>
         <p class="onb-title" id="onb-t1"></p>
         <p class="onb-body" id="onb-b1"></p>
       </div>
+
+      <!-- Slide 3 -->
       <div class="onboarding-slide">
         <div class="onb-emoji">⚡</div>
         <p class="onb-title" id="onb-t2"></p>
         <p class="onb-body" id="onb-b2"></p>
       </div>
+
+      <!-- Slide 4 -->
       <div class="onboarding-slide">
         <div class="onb-emoji">📈</div>
         <p class="onb-title" id="onb-t3"></p>
         <p class="onb-body" id="onb-b3"></p>
       </div>
+
+      <!-- Slide 5 — last: Start CTA replaces Next in the nav row -->
       <div class="onboarding-slide">
         <div class="onb-emoji">🎯</div>
         <p class="onb-title" id="onb-t4"></p>
         <p class="onb-body" id="onb-b4"></p>
-        <button id="onb-start-btn" class="btn btn-neon" onclick="onbFinish()" style="width:100%;margin-top:8px;font-size:15px;font-weight:700;"></button>
+        <button id="onb-start-btn" class="btn btn-primary" onclick="onbFinish()"
+          style="margin-top:28px;width:100%;max-width:280px;height:52px;font-size:15px;font-weight:800;letter-spacing:.06em;border-radius:var(--r-pill);"></button>
       </div>
+
     </div>
   </div>
+
+  <!-- Progress dots -->
   <div class="onb-dots">
     <span class="onb-dot active"></span>
     <span class="onb-dot"></span>
@@ -1458,12 +1593,17 @@ body.onboarding-active #onb-screen{
     <span class="onb-dot"></span>
     <span class="onb-dot"></span>
   </div>
+
+  <!-- Nav: 3-column grid — Skip (left) | Back (center) | Next (right) -->
   <div class="onb-nav">
-    <button id="onb-skip-btn" class="btn btn-ghost" onclick="onbSkip()" style="font-size:13px;padding:8px 14px;"></button>
-    <div style="flex:1;"></div>
-    <button id="onb-prev-btn" class="btn btn-ghost" onclick="onbPrev()" style="font-size:13px;padding:8px 14px;visibility:hidden;"></button>
-    <button id="onb-next-btn" class="btn btn-neon-o" onclick="onbNext()" style="font-size:13px;padding:8px 16px;"></button>
+    <button id="onb-skip-btn" class="btn btn-ghost sn" onclick="onbSkip()"
+      style="height:44px;font-size:13px;padding:0 18px;border-radius:var(--r-pill);"></button>
+    <button id="onb-prev-btn" class="btn btn-ghost sn" onclick="onbPrev()"
+      style="height:44px;font-size:13px;padding:0 18px;border-radius:var(--r-pill);visibility:hidden;"></button>
+    <button id="onb-next-btn" class="btn btn-neon-o sn" onclick="onbNext()"
+      style="height:44px;font-size:13px;padding:0 22px;border-radius:var(--r-pill);font-weight:700;"></button>
   </div>
+
 </div>
 
 <!-- BOTTOM NAV -->
@@ -1803,6 +1943,7 @@ it:{
   'pwa.android.step2':'Seleziona <strong style="color:var(--p);">Aggiungi a schermata Home</strong> o <strong style="color:var(--p);">Installa app</strong>',
   'pwa.android.step3':'Conferma toccando <strong style="color:var(--p);">Installa</strong>',
   'set.btn.aggiornaPeso':'Aggiorna peso',
+  'prog.fp.badge':'PROFILO UNICO',
   'prog.fp.title':'Impronta Metabolica',
   'fp.efficienza':'EFFICIENZA','fp.rispostaDeficit':'risposta al deficit',
   'fp.adattamento':'ADATTAMENTO','fp.riduzione':'riduzione metabolica',
@@ -1961,6 +2102,7 @@ en:{
   'ci.edit.btn':'✏️ Edit check-in',
   'oggi.checkin.feedback_default':'After your first check-in you\'ll receive contextual coaching.',
   'oggi.mod.badge':'MOD',
+  'prog.fp.badge':'UNIQUE PROFILE',
   'prog.title':'Progress','prog.registra':'Record',
   'prog.peso':'Weight (kg)','prog.girovita':'Waist (cm)','prog.data':'Date',
   'prog.btn.aggiungi':'+ Add Entry',
@@ -2315,7 +2457,7 @@ function applyLang(){
   _trApplied=false;
   applyTranslations();
   renderMacros?.();renderTrackers?.();renderMeals?.();renderKcalRing?.();
-  renderCoach?.();renderSettings?.();
+  renderCoach?.();renderSettings?.();renderCheckinAnalytics?.();renderFingerprint?.();
 }
 function setLang(lang){
   _lang=(lang==='en')?'en':'it';
@@ -2439,6 +2581,16 @@ function applyTranslations(deferOffscreen){
     else if(v==='Tracking')lbl.textContent=t('info.app.tracking');
   });
   /* ── end i18n static patch ── */
+  /* ── extra always-run patches ── */
+  const _fatLbl=document.getElementById('macro-fat-lbl');
+  if(_fatLbl)_fatLbl.textContent=_lang==='en'?'FAT':'GRASSI';
+  const _u7=document.getElementById('checkin-last7-lbl');
+  if(_u7)_u7.textContent=t('prog.checkin.ultimi7');
+  const _fpBadge=document.getElementById('fp-badge-lbl');
+  if(_fpBadge)_fpBadge.textContent=t('prog.fp.badge');
+  const _cml=document.getElementById('chart-mode-label');
+  if(_cml){const cur=_cml.dataset.mode||'weight';_cml.textContent=cur==='waist'?t('prog.chart.girovita'):t('prog.chart.peso');}
+  /* ── end extra patches ── */
 
   if(_trApplied)return;_trApplied=true;
   /* Helper shortcuts */
@@ -3590,6 +3742,80 @@ function calculateUserMacros(p){
    Esteso con: GI glicemico, fibra, omega-3, fodmap flag,
    grassi saturi, calcio, ferro, sodio (micronutrienti chiave)
 ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════
+   FOOD LABEL LOCALISATION — translate-at-render-time only
+   FOOD_DB labels remain in Italian; this function maps them
+   to English when _lang === 'en'. Call at every render site.
+══════════════════════════════════════════════════════ */
+function localizeFoodLabel(label=''){
+  if(!label)return label;
+  const map={
+    'Petto di pollo':'Chicken breast','Coscia di pollo':'Chicken thigh',
+    'Petto di tacchino':'Turkey breast','Manzo magrissimo':'Extra lean beef',
+    'Macinato magro':'Lean mince','Salmone al vapore':'Steamed salmon',
+    'Tonno al naturale':'Tuna in water','Merluzzo al vapore':'Steamed cod',
+    'Branzino al vapore':'Steamed sea bass','Gamberetti':'Shrimp',
+    'Uova intere':'Whole eggs',"Albume d'uovo":'Egg whites',
+    'Bresaola':'Bresaola','Tofu':'Tofu','Tempeh':'Tempeh',
+    'Seitan':'Seitan','Legumi misti':'Mixed legumes',
+    'Riso bianco cotto':'Cooked white rice','Riso basmati cotto':'Cooked basmati rice',
+    'Riso integrale cotto':'Cooked brown rice','Pasta integrale':'Wholegrain pasta',
+    'Patate lesse':'Boiled potatoes','Patate dolci al forno':'Baked sweet potatoes',
+    'Pane integrale':'Wholegrain bread','Avena cotta':'Cooked oats',
+    'Quinoa cotta':'Cooked quinoa','Farro secco':'Pearled spelt',
+    'Couscous cotto':'Cooked couscous','Orzo perlato cotto':'Cooked pearl barley',
+    'Gallette di riso':'Rice cakes','Wrap integrale':'Wholegrain wrap',
+    'Frutta mista':'Mixed fruit','Avocado':'Avocado',
+    'Olio EVO':'Extra virgin olive oil','Mandorle':'Almonds',
+    'Noci':'Walnuts','Nocciole':'Hazelnuts','Pistacchi':'Pistachios',
+    'Burro di arachidi':'Peanut butter','Semi di chia':'Chia seeds',
+    'Parmigiano grattugiato':'Grated parmesan','Yogurt greco 0%':'Greek yogurt 0%',
+    'Skyr':'Skyr','Fiocchi di latte':'Cottage cheese','Ricotta':'Ricotta',
+  };
+  if(_lang!=='en')return label;
+  return map[label]||label;
+}
+
+/* localizeMealRest: translate food labels within the free-text meal.rest string.
+   Splits on comma, localizes each token, rejoins. Does NOT mutate stored data. */
+function localizeMealRest(rest=''){
+  if(!rest||_lang!=='en')return rest;
+  /* Apply the same localizeFoodLabel map word-by-word on each comma-segment */
+  const map={
+    'Petto di pollo':'Chicken breast','Coscia di pollo':'Chicken thigh',
+    'Petto di tacchino':'Turkey breast','Manzo magrissimo':'Extra lean beef',
+    'Macinato magro':'Lean mince','Salmone al vapore':'Steamed salmon',
+    'Tonno al naturale':'Tuna in water','Merluzzo al vapore':'Steamed cod',
+    'Branzino al vapore':'Steamed sea bass','Gamberetti':'Shrimp',
+    'Uova intere':'Whole eggs',"Albume d'uovo":'Egg whites',
+    'Yogurt greco 0%':'Greek yogurt 0%','Yogurt greco':'Greek yogurt',
+    'Fiocchi di latte':'Cottage cheese','Parmigiano grattugiato':'Grated parmesan',
+    'Olio EVO':'Extra virgin olive oil','Mandorle':'Almonds',
+    'Noci':'Walnuts','Nocciole':'Hazelnuts','Pistacchi':'Pistachios',
+    'Burro di arachidi':'Peanut butter','Semi di chia':'Chia seeds',
+    'Riso bianco cotto':'Cooked white rice','Riso basmati cotto':'Cooked basmati rice',
+    'Riso integrale cotto':'Cooked brown rice','Avena cotta':'Cooked oats',
+    'Gallette di riso':'Rice cakes','Pane integrale':'Wholegrain bread',
+    'Patate lesse':'Boiled potatoes','Patate dolci al forno':'Baked sweet potatoes',
+    'Frutta mista':'Mixed fruit','Quinoa cotta':'Cooked quinoa',
+    /* common free-text label fragments */
+    'Yogurt senza lattosio':'Lactose-free yogurt',
+    'Latte riso':'Rice milk','Latte avena':'Oat milk','Latte mandorla':'Almond milk',
+    'Latte cocco':'Coconut milk','Bevanda soia':'Soy drink',
+    'Burro di mandorle':'Almond butter',
+    'Frutti di bosco':'Mixed berries',
+    'Riso soffiato':'Puffed rice',
+    'Ricotta':'Ricotta','Skyr':'Skyr','Tofu':'Tofu','Tempeh':'Tempeh','Seitan':'Seitan',
+  };
+  /* Replace all known Italian phrases, longest first to avoid partial matches */
+  const sorted=Object.keys(map).sort((a,b)=>b.length-a.length);
+  let out=rest;
+  sorted.forEach(it=>{
+    if(out.includes(it))out=out.split(it).join(map[it]);
+  });
+  return out;
+}
+
 const FOOD_DB={
   /* ── PROTEINE ──────────────────────────────────────────────────────────────── */
   pollo:           {kcal:165,pro:31, carb:0,   fat:3.6, fiber:0,   gi:0,  sat:1.0, omega3:0.1, ca:15,  fe:0.9,na:70,   fodmap:false,label:'Petto di pollo',         isProtein:true, maxPortionG:250},
@@ -4886,7 +5112,7 @@ function renderMeals(){
     const _mType=canonicalMealType(n);const isHardcodedMeal=_mType==='breakfast'||_mType==='snack';
     const fa=meal.carbSource?finalCarb(meal):null;
     const diff=fa!==null?fa-meal.baseAmount:0;
-    const carbLabel=meal.carbSource?(FOOD_DB[meal.carbSource]?.label||meal.carbSource):'';
+    const carbLabel=meal.carbSource?(localizeFoodLabel(FOOD_DB[meal.carbSource]?.label||meal.carbSource)):'';
     /* Badge shows modifier delta for ALL meal types; carbLine only for computed main meals */
     const badge=(diff!==0&&meal.carbSource)?`<span class="mod-badge">${diff>0?'+':''}${diff}g ${sanitize(carbLabel)}</span>`:'';
     const carbLine=(fa!==null&&!isHardcodedMeal)?`<strong style="color:var(--on);">${fa}g ${sanitize(carbLabel)}</strong>, `:'';
@@ -4914,7 +5140,7 @@ function renderMeals(){
         </div>
         <div style="flex:1;min-width:0;">
           <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(localizedMealName(n))}</span>${badge}${circBadge}${synBadge}</div>
-          <p class="meal-desc sn">${carbLine}${sanitize(meal.rest)}</p>
+          <p class="meal-desc sn">${carbLine}${sanitize(localizeMealRest(meal.rest))}</p>
         </div>
       </button>
       ${actionsHtml}
@@ -5218,13 +5444,14 @@ function switchChart(mode,btn){
     b.style.borderColor=on?'rgba(77,220,198,.22)':'var(--glass-stroke)';b.style.color=on?'var(--p)':'var(--on-v)';
   });
   const lbl=document.getElementById('chart-mode-label');
+  if(lbl)lbl.dataset.mode=mode;
   const predSum=document.getElementById('prediction-summary');
   if(mode==='prediction'){
-    if(lbl)lbl.textContent='Previsione Peso (12 sett)';
+    if(lbl)lbl.textContent=_lang==='en'?'Weight Forecast (12 wk)':'Previsione Peso (12 sett)';
     renderPredictionChart();
   } else {
     if(predSum)predSum.style.display='none';
-    if(lbl)lbl.textContent=mode==='waist'?'Trend Girovita':'Trend Peso';
+    if(lbl)lbl.textContent=mode==='waist'?t('prog.chart.girovita'):t('prog.chart.peso');
     renderChart(getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1));
   }
 }
@@ -5410,7 +5637,7 @@ function swapMealComponent(dayNum, mealName, component){
 
   try{lsW(SK.diet,JSON.stringify(dietData));}catch{}
   renderMeals();renderMacros();
-  toast(`${mealName}: ${t(component==='protein'?'meal.comp.protein':component==='carb'?'meal.comp.carb':'meal.comp.fat')} → ${FOOD_DB[nextFood]?.label||nextFood}`);
+  toast(`${mealName}: ${t(component==='protein'?'meal.comp.protein':component==='carb'?'meal.comp.carb':'meal.comp.fat')} → ${localizeFoodLabel(FOOD_DB[nextFood]?.label||nextFood)}`);
 }
 
 function regenSingleMeal(dayNum,mealName){
@@ -5504,7 +5731,7 @@ function openShoppingList(){
     if(categories[cat].length>0){
       html+=`<div class="shop-cat">${t('shop.cat.'+cat)}</div>`;
       categories[cat].forEach(item=>{
-        html+=`<div class="shop-item"><span>${item.name}</span><span class="shop-item-qty">${item.qty.toFixed(0)}g</span></div>`;
+        html+=`<div class="shop-item"><span>${localizeFoodLabel(item.name)||item.name}</span><span class="shop-item-qty">${item.qty.toFixed(0)}g</span></div>`;
       });
     }
   });
@@ -6125,7 +6352,13 @@ function showOnboarding(){
 function _onbRender(idx){
   _onbCur=idx;
   const slides=document.getElementById('onboarding-slides');
-  if(slides) slides.style.transform=`translateX(-${idx*100}%)`;
+  const wrap=document.getElementById('onboarding-slides-wrap');
+  if(slides){
+    /* Use wrap pixel width for translate — guarantees correct offset even if
+       percentage resolution differs from viewport on some mobile browsers */
+    const slideW=(wrap?wrap.offsetWidth:window.innerWidth)||window.innerWidth;
+    slides.style.transform=`translateX(-${idx*slideW}px)`;
+  }
   document.querySelectorAll('.onb-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
   const last=idx===_ONB.length-1;
   const skipBtn=document.getElementById('onb-skip-btn');
@@ -6139,6 +6372,11 @@ function onbNext(){if(_onbCur<_ONB.length-1)_onbRender(_onbCur+1);}
 function onbPrev(){if(_onbCur>0)_onbRender(_onbCur-1);}
 function onbSkip(){_onbFinish();}
 function onbFinish(){_onbFinish();}
+/* Re-anchor slides on resize / orientation change */
+window.addEventListener('resize',()=>{
+  const ov=document.getElementById('onboarding-overlay');
+  if(ov&&ov.style.display==='flex')_onbRender(_onbCur);
+});
 function _onbFinish(){
   lsS(SK.onboardingDone,true);
   const el=document.getElementById('onboarding-overlay');
