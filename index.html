@@ -550,7 +550,7 @@ body.onboarding-active #onb-screen{
 #gdpr-gate.on{display:flex;}
 </style>
 </head>
-<body>
+<body class="onboarding-active">
 <div class="glow-a" aria-hidden="true"></div>
 <div class="glow-b" aria-hidden="true"></div>
 
@@ -746,7 +746,7 @@ body.onboarding-active #onb-screen{
       <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="st-label">Selezionato: —</p>
     </div>
     <div class="row g2">
-      <button class="btn btn-ghost sn" onclick="goStep(0)" style="flex:1;">← Back</button>
+      <button class="btn btn-ghost sn" onclick="goStep(0)" style="flex:1;">← Indietro</button>
       <button class="btn btn-primary sn" onclick="goStep(2)" style="flex:2;">Continua →</button>
     </div>
   </div>
@@ -764,7 +764,7 @@ body.onboarding-active #onb-screen{
       </div>
     </div>
     <div class="row g2" id="back-from-2">
-      <button class="btn btn-ghost sn" onclick="goStep(1)" style="flex:1;">← Back</button>
+      <button class="btn btn-ghost sn" onclick="goStep(1)" style="flex:1;">← Indietro</button>
       <button class="btn btn-primary sn" id="to-step3-btn" onclick="goStep(3)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled>Continua →</button>
     </div>
   </div>
@@ -807,7 +807,7 @@ body.onboarding-active #onb-screen{
     <!-- Intolleranze/allergie -->
     <div>
       <label class="field-label">Intolleranze / alimenti da escludere</label>
-      <input class="inp" id="f-intolerances" type="text" placeholder="e.g. lactose, gluten, nuts…" style="font-size:16px !important;"/>
+      <input class="inp" id="f-intolerances" type="text" placeholder="es. lattosio, glutine, frutta secca…" style="font-size:16px !important;"/>
     </div>
 
     <!-- Protocollo clinico opzionale -->
@@ -827,7 +827,7 @@ body.onboarding-active #onb-screen{
     </div>
 
     <div class="row g2">
-      <button class="btn btn-ghost sn" onclick="goStep(2)" style="flex:1;">← Back</button>
+      <button class="btn btn-ghost sn" onclick="goStep(2)" style="flex:1;">← Indietro</button>
       <button class="btn btn-primary sn" onclick="goStep(4)" style="flex:2;">Continua →</button>
     </div>
   </div>
@@ -839,82 +839,83 @@ body.onboarding-active #onb-screen{
 
     <!-- Food quick-select chips by category -->
     <div>
-      <p class="field-label" style="margin-bottom:8px;">Preferred proteins</p>
+      <p class="field-label" style="margin-bottom:8px;">Proteine preferite</p>
       <div class="chip-row" id="food-proteins">
-        <button class="food-tag" onclick="toggleFood(this,'pollo')">🍗 Chicken</button>
-        <button class="food-tag" onclick="toggleFood(this,'coscia pollo')">🍗 Chicken thigh</button>
-        <button class="food-tag" onclick="toggleFood(this,'tacchino')">🦃 Turkey</button>
-        <button class="food-tag" onclick="toggleFood(this,'manzo')">🥩 Beef</button>
-        <button class="food-tag" onclick="toggleFood(this,'salmone')">🐟 Salmon</button>
-        <button class="food-tag" onclick="toggleFood(this,'tonno')">🐠 Tuna</button>
-        <button class="food-tag" onclick="toggleFood(this,'merluzzo')">🐡 Cod</button>
-        <button class="food-tag" onclick="toggleFood(this,'branzino')">🐟 Sea bass</button>
-        <button class="food-tag" onclick="toggleFood(this,'platessa')">🐠 Flounder</button>
-        <button class="food-tag" onclick="toggleFood(this,'sgombro')">🐟 Mackerel</button>
-        <button class="food-tag" onclick="toggleFood(this,'trota')">🐡 Trout</button>
-        <button class="food-tag" onclick="toggleFood(this,'gamberetti')">🦐 Shrimp</button>
-        <button class="food-tag" onclick="toggleFood(this,'uova')">🥚 Eggs</button>
-        <button class="food-tag" onclick="toggleFood(this,'albume')">⬜ Egg whites</button>
+        <button class="food-tag" onclick="toggleFood(this,'pollo')">🍗 Pollo</button>
+        <button class="food-tag" onclick="toggleFood(this,'coscia pollo')">🍗 Coscia pollo</button>
+        <button class="food-tag" onclick="toggleFood(this,'tacchino')">🦃 Tacchino</button>
+        <button class="food-tag" onclick="toggleFood(this,'manzo')">🥩 Manzo</button>
+        <button class="food-tag" onclick="toggleFood(this,'salmone')">🐟 Salmone</button>
+        <button class="food-tag" onclick="toggleFood(this,'tonno')">🐠 Tonno</button>
+        <button class="food-tag" onclick="toggleFood(this,'merluzzo')">🐡 Merluzzo</button>
+        <button class="food-tag" onclick="toggleFood(this,'branzino')">🐟 Branzino</button>
+        <button class="food-tag" onclick="toggleFood(this,'platessa')">🐠 Platessa</button>
+        <button class="food-tag" onclick="toggleFood(this,'sgombro')">🐟 Sgombro</button>
+        <button class="food-tag" onclick="toggleFood(this,'trota')">🐡 Trota</button>
+        <button class="food-tag" onclick="toggleFood(this,'gamberetti')">🦐 Gamberetti</button>
+        <button class="food-tag" onclick="toggleFood(this,'uova')">🥚 Uova</button>
+        <button class="food-tag" onclick="toggleFood(this,'albume')">⬜ Albume</button>
         <button class="food-tag" onclick="toggleFood(this,'tofu')">🧊 Tofu</button>
-        <button class="food-tag" onclick="toggleFood(this,'legumi')">🫘 Legumes</button>
+        <button class="food-tag" onclick="toggleFood(this,'legumi')">🫘 Legumi</button>
       </div>
     </div>
 
     <div>
-      <p class="field-label" style="margin-bottom:8px;">Preferred carbs</p>
+      <p class="field-label" style="margin-bottom:8px;">Carboidrati preferiti</p>
       <div class="chip-row" id="food-carbs">
-        <button class="food-tag" onclick="toggleFood(this,'riso')">🍚 Rice</button>
-        <button class="food-tag" onclick="toggleFood(this,'riso basmati')">🍚 Basmati rice</button>
-        <button class="food-tag" onclick="toggleFood(this,'riso integrale')">🌾 Brown rice</button>
+        <button class="food-tag" onclick="toggleFood(this,'riso')">🍚 Riso</button>
+        <button class="food-tag" onclick="toggleFood(this,'riso basmati')">🍚 Riso basmati</button>
+        <button class="food-tag" onclick="toggleFood(this,'riso integrale')">🌾 Riso integrale</button>
         <button class="food-tag" onclick="toggleFood(this,'pasta')">🍝 Pasta</button>
-        <button class="food-tag" onclick="toggleFood(this,'patate')">🥔 Potatoes</button>
-        <button class="food-tag" onclick="toggleFood(this,'patate dolci')">🍠 Sweet potatoes</button>
-        <button class="food-tag" onclick="toggleFood(this,'pane')">🍞 Bread</button>
-        <button class="food-tag" onclick="toggleFood(this,'avena')">🌾 Oats</button>
+        <button class="food-tag" onclick="toggleFood(this,'patate')">🥔 Patate</button>
+        <button class="food-tag" onclick="toggleFood(this,'patate dolci')">🍠 Patate dolci</button>
+        <button class="food-tag" onclick="toggleFood(this,'pane')">🍞 Pane</button>
+        <button class="food-tag" onclick="toggleFood(this,'avena')">🌾 Avena</button>
         <button class="food-tag" onclick="toggleFood(this,'quinoa')">🌿 Quinoa</button>
-        <button class="food-tag" onclick="toggleFood(this,'farro')">🌾 Spelt</button>
+        <button class="food-tag" onclick="toggleFood(this,'farro')">🌾 Farro</button>
         <button class="food-tag" onclick="toggleFood(this,'couscous')">🌾 Couscous</button>
-        <button class="food-tag" onclick="toggleFood(this,'orzo')">🌾 Barley</button>
-        <button class="food-tag" onclick="toggleFood(this,'mais')">🌽 Corn</button>
+        <button class="food-tag" onclick="toggleFood(this,'orzo')">🌾 Orzo</button>
+        <button class="food-tag" onclick="toggleFood(this,'mais')">🌽 Mais</button>
         <button class="food-tag" onclick="toggleFood(this,'polenta')">🟡 Polenta</button>
-        <button class="food-tag" onclick="toggleFood(this,'frutta')">🍎 Fruit</button>
+        <button class="food-tag" onclick="toggleFood(this,'frutta')">🍎 Frutta</button>
       </div>
     </div>
 
     <div>
-      <p class="field-label" style="margin-bottom:8px;">Fats & other</p>
+      <p class="field-label" style="margin-bottom:8px;">Grassi e altro</p>
       <div class="chip-row" id="food-fats">
         <button class="food-tag" onclick="toggleFood(this,'avocado')">🥑 Avocado</button>
-        <button class="food-tag" onclick="toggleFood(this,'olio oliva')">🫒 EVO oil</button>
-        <button class="food-tag" onclick="toggleFood(this,'mandorle')">🌰 Almonds</button>
-        <button class="food-tag" onclick="toggleFood(this,'noci')">🥜 Walnuts</button>
-        <button class="food-tag" onclick="toggleFood(this,'nocciole')">🌰 Hazelnuts</button>
-        <button class="food-tag" onclick="toggleFood(this,'pistacchi')">🟢 Pistachios</button>
-        <button class="food-tag" onclick="toggleFood(this,'burro arachidi')">🥜 Peanut butter</button>
+        <button class="food-tag" onclick="toggleFood(this,'olio oliva')">🫒 Olio EVO</button>
+        <button class="food-tag" onclick="toggleFood(this,'mandorle')">🌰 Mandorle</button>
+        <button class="food-tag" onclick="toggleFood(this,'noci')">🥜 Noci</button>
+        <button class="food-tag" onclick="toggleFood(this,'nocciole')">🌰 Nocciole</button>
+        <button class="food-tag" onclick="toggleFood(this,'pistacchi')">🟢 Pistacchi</button>
+        <button class="food-tag" onclick="toggleFood(this,'burro arachidi')">🥜 Burro arachidi</button>
         <button class="food-tag" onclick="toggleFood(this,'tahini')">🫙 Tahini</button>
-        <button class="food-tag" onclick="toggleFood(this,'semi chia')">🌱 Chia seeds</button>
-        <button class="food-tag" onclick="toggleFood(this,'semi lino')">🌱 Flaxseeds</button>
-        <button class="food-tag" onclick="toggleFood(this,'olive')">🫒 Olives</button>
-        <button class="food-tag" onclick="toggleFood(this,'yogurt greco')">🍶 Greek yogurt</button>
+        <button class="food-tag" onclick="toggleFood(this,'semi chia')">🌱 Semi chia</button>
+        <button class="food-tag" onclick="toggleFood(this,'semi lino')">🌱 Semi lino</button>
+        <button class="food-tag" onclick="toggleFood(this,'olive')">🫒 Olive</button>
+        <button class="food-tag" onclick="toggleFood(this,'yogurt greco')">🍶 Yogurt greco</button>
         <button class="food-tag" onclick="toggleFood(this,'ricotta')">🧀 Ricotta</button>
-        <button class="food-tag" onclick="toggleFood(this,'fiocchi latte')">🥛 Cottage cheese</button>
-        <button class="food-tag" onclick="toggleFood(this,'cioccolato fondente')">🍫 Dark chocolate</button>
+        <button class="food-tag" onclick="toggleFood(this,'fiocchi latte')">🥛 Fiocchi latte</button>
+        <button class="food-tag" onclick="toggleFood(this,'cioccolato fondente')">🍫 Cioccolato</button>
       </div>
+    </div>
 
     <div>
-      <p class="field-label" style="margin-bottom:8px;">Add other foods you love</p>
-      <input class="inp" id="f-extra-foods" type="text" placeholder="e.g. broccoli, courgettes, apples, skyr…"/>
+      <p class="field-label" style="margin-bottom:8px;">Aggiungi altri cibi che ami</p>
+      <input class="inp" id="f-extra-foods" type="text" placeholder="es. broccoli, zucchine, mele, skyr…"/>
     </div>
 
     <div class="row g2">
-      <button class="btn btn-ghost sn" onclick="goStep(3)" style="flex:1;">← Back</button>
-      <button class="btn btn-primary sn" onclick="runCalcAndGenerate()" style="flex:2;">⚡ Generate My Plan</button>
+      <button class="btn btn-ghost sn" onclick="goStep(3)" style="flex:1;">← Indietro</button>
+      <button class="btn btn-primary sn" onclick="runCalcAndGenerate()" style="flex:2;">⚡ Genera il Mio Piano</button>
     </div>
 
     <!-- Result reveal -->
     <div class="result-card" id="result-card">
       <div style="text-align:center;margin-bottom:14px;">
-        <p class="t-xxs muted sn" style="margin-bottom:5px;">YOUR TDEE</p>
+        <p class="t-xxs muted sn" style="margin-bottom:5px;">IL TUO TDEE</p>
         <div class="result-big sn" id="r-tdee">—</div>
         <p class="t-xxs sn" style="color:var(--muted);margin-top:3px;" id="r-tdee-lbl">—</p>
       </div>
@@ -1682,9 +1683,9 @@ it:{
   'clinical.t2d':'🩸 Diabete T2D','clinical.ibd_acute':'⚠️ IBD acuta','clinical.ibd_remiss':'IBD remissione',
   'onb.step4.title':'I Tuoi Cibi',
   'onb.cibi.proteine':'Proteine preferite','onb.cibi.carb':'Carboidrati preferiti','onb.cibi.grassi':'Grassi preferiti',
-  'onb.cibi.extra':'Add other foods you love','onb.cibi.extra.ph':'e.g. broccoli, courgettes, apples, skyr…',
-  'onb.btn.indietro':'← Back','onb.btn.genera':'⚡ Generate My Plan',
-  'onb.result.tdee':'YOUR TDEE','onb.result.target':'TARGET → {kcal} kcal/day',
+  'onb.cibi.extra':'Aggiungi altri cibi che ami','onb.cibi.extra.ph':'es. broccoli, zucchine, mele, skyr…',
+  'onb.btn.indietro':'← Indietro','onb.btn.genera':'⚡ Genera il Mio Piano',
+  'onb.result.tdee':'IL TUO TDEE','onb.result.target':'TARGET → {kcal} kcal/giorno',
   'onb.result.proteine':'Proteine','onb.result.carbs':'Carbs','onb.result.grassi':'Grassi',
   'onb.result.detail':'Dettaglio calcolo','onb.result.preview':'Il Tuo Piano — Anteprima',
   'onb.btn.attiva':'✅ Attiva questo piano',
@@ -1914,7 +1915,7 @@ it:{
   'onb.cibi.sub':'Seleziona i cibi che ami o scrivili tu. L\'app costruirà il piano perfetto per te.',
   'adaptive.btn.apply':'Applica','adaptive.btn.dismiss':'Ignora',
   'coach.msg.loading':'— Analisi in corso...',
-  'onb2.skip':'Skip','onb2.next':'Next →','onb2.prev':'← Back','onb2.start':'Start now →',
+  'onb2.skip':'Salta','onb2.next':'Avanti →','onb2.prev':'← Indietro','onb2.start':'Inizia ora →',
   'onb2.slide1.title':'Finalmente un\'app che ti ascolta',
   'onb2.slide1.body':'Iron Kinetic impara dai tuoi check-in quotidiani e adatta il piano al tuo corpo, non a un modello generico.',
   'onb2.slide2.title':'30 secondi al giorno. Risultati reali.',
@@ -3817,62 +3818,62 @@ function localizeMealRest(rest=''){
 
 const FOOD_DB={
   /* ── PROTEINE ──────────────────────────────────────────────────────────────── */
-  pollo:           {kcal:165,pro:31, carb:0,   fat:3.6, fiber:0,   gi:0,  sat:1.0, omega3:0.1, ca:15,  fe:0.9,na:70,   fodmap:false,label:'Chicken breast',         isProtein:true, maxPortionG:250},
-  'coscia pollo':  {kcal:177,pro:25, carb:0,   fat:8.5, fiber:0,   gi:0,  sat:2.5, omega3:0.2, ca:14,  fe:1.2,na:88,   fodmap:false,label:'Chicken thigh',         isProtein:true, maxPortionG:250},
-  tacchino:        {kcal:135,pro:29, carb:0,   fat:1.8, fiber:0,   gi:0,  sat:0.5, omega3:0.1, ca:19,  fe:1.4,na:63,   fodmap:false,label:'Turkey breast',       isProtein:true, maxPortionG:250},
-  manzo:           {kcal:217,pro:26, carb:0,   fat:12,  fiber:0,   gi:0,  sat:5.0, omega3:0.1, ca:20,  fe:2.7,na:65,   fodmap:false,label:'Lean beef',        isProtein:true, maxPortionG:220},
-  'macinato magro':{kcal:185,pro:23, carb:0,   fat:10,  fiber:0,   gi:0,  sat:4.2, omega3:0.1, ca:18,  fe:2.5,na:70,   fodmap:false,label:'Lean mince',          isProtein:true, maxPortionG:220},
-  salmone:         {kcal:208,pro:20, carb:0,   fat:13,  fiber:0,   gi:0,  sat:3.1, omega3:2.3, ca:12,  fe:0.3,na:59,   fodmap:false,label:'Steamed salmon',       isProtein:true, maxPortionG:220},
-  tonno:           {kcal:130,pro:29, carb:0,   fat:1,   fiber:0,   gi:0,  sat:0.3, omega3:0.2, ca:10,  fe:1.0,na:50,   fodmap:false,label:'Tuna in water',       isProtein:true, maxPortionG:160},
-  merluzzo:        {kcal:82, pro:18, carb:0,   fat:0.7, fiber:0,   gi:0,  sat:0.1, omega3:0.2, ca:16,  fe:0.4,na:54,   fodmap:false,label:'Steamed cod',      isProtein:true, maxPortionG:250},
-  branzino:        {kcal:97, pro:19, carb:0,   fat:2.3, fiber:0,   gi:0,  sat:0.5, omega3:0.8, ca:12,  fe:0.6,na:72,   fodmap:false,label:'Steamed sea bass',      isProtein:true, maxPortionG:250},
-  gamberetti:      {kcal:85, pro:18, carb:0.9, fat:0.9, fiber:0,   gi:0,  sat:0.2, omega3:0.3, ca:70,  fe:2.6,na:130,  fodmap:false,label:'Shrimp',              isProtein:true, maxPortionG:200},
-  uova:            {kcal:155,pro:13, carb:1,   fat:11,  fiber:0,   gi:0,  sat:3.3, omega3:0.1, ca:56,  fe:1.8,na:124,  fodmap:false,label:'Whole eggs',             isProtein:true, unitG:60, maxPortionG:300},
-  albume:          {kcal:52, pro:11, carb:0.7, fat:0.2, fiber:0,   gi:0,  sat:0,   omega3:0,   ca:7,   fe:0.1,na:166,  fodmap:false,label:'Egg whites',           isProtein:true, maxPortionG:300},
+  pollo:           {kcal:165,pro:31, carb:0,   fat:3.6, fiber:0,   gi:0,  sat:1.0, omega3:0.1, ca:15,  fe:0.9,na:70,   fodmap:false,label:'Petto di pollo',         isProtein:true, maxPortionG:250},
+  'coscia pollo':  {kcal:177,pro:25, carb:0,   fat:8.5, fiber:0,   gi:0,  sat:2.5, omega3:0.2, ca:14,  fe:1.2,na:88,   fodmap:false,label:'Coscia di pollo',         isProtein:true, maxPortionG:250},
+  tacchino:        {kcal:135,pro:29, carb:0,   fat:1.8, fiber:0,   gi:0,  sat:0.5, omega3:0.1, ca:19,  fe:1.4,na:63,   fodmap:false,label:'Petto di tacchino',       isProtein:true, maxPortionG:250},
+  manzo:           {kcal:217,pro:26, carb:0,   fat:12,  fiber:0,   gi:0,  sat:5.0, omega3:0.1, ca:20,  fe:2.7,na:65,   fodmap:false,label:'Manzo magrissimo',        isProtein:true, maxPortionG:220},
+  'macinato magro':{kcal:185,pro:23, carb:0,   fat:10,  fiber:0,   gi:0,  sat:4.2, omega3:0.1, ca:18,  fe:2.5,na:70,   fodmap:false,label:'Macinato magro',          isProtein:true, maxPortionG:220},
+  salmone:         {kcal:208,pro:20, carb:0,   fat:13,  fiber:0,   gi:0,  sat:3.1, omega3:2.3, ca:12,  fe:0.3,na:59,   fodmap:false,label:'Salmone al vapore',       isProtein:true, maxPortionG:220},
+  tonno:           {kcal:130,pro:29, carb:0,   fat:1,   fiber:0,   gi:0,  sat:0.3, omega3:0.2, ca:10,  fe:1.0,na:50,   fodmap:false,label:'Tonno al naturale',       isProtein:true, maxPortionG:160},
+  merluzzo:        {kcal:82, pro:18, carb:0,   fat:0.7, fiber:0,   gi:0,  sat:0.1, omega3:0.2, ca:16,  fe:0.4,na:54,   fodmap:false,label:'Merluzzo al vapore',      isProtein:true, maxPortionG:250},
+  branzino:        {kcal:97, pro:19, carb:0,   fat:2.3, fiber:0,   gi:0,  sat:0.5, omega3:0.8, ca:12,  fe:0.6,na:72,   fodmap:false,label:'Branzino al vapore',      isProtein:true, maxPortionG:250},
+  gamberetti:      {kcal:85, pro:18, carb:0.9, fat:0.9, fiber:0,   gi:0,  sat:0.2, omega3:0.3, ca:70,  fe:2.6,na:130,  fodmap:false,label:'Gamberetti',              isProtein:true, maxPortionG:200},
+  uova:            {kcal:155,pro:13, carb:1,   fat:11,  fiber:0,   gi:0,  sat:3.3, omega3:0.1, ca:56,  fe:1.8,na:124,  fodmap:false,label:'Uova intere',             isProtein:true, unitG:60, maxPortionG:300},
+  albume:          {kcal:52, pro:11, carb:0.7, fat:0.2, fiber:0,   gi:0,  sat:0,   omega3:0,   ca:7,   fe:0.1,na:166,  fodmap:false,label:"Albume d'uovo",           isProtein:true, maxPortionG:300},
   bresaola:        {kcal:151,pro:32, carb:0,   fat:2,   fiber:0,   gi:0,  sat:0.8, omega3:0,   ca:10,  fe:2.8,na:1800, fodmap:false,label:'Bresaola',                isProtein:true, maxPortionG:100},
   tofu:            {kcal:76, pro:8,  carb:2,   fat:4,   fiber:0.3, gi:15, sat:0.5, omega3:0.3, ca:350, fe:5.4,na:7,    fodmap:false,label:'Tofu',                    isProtein:true, maxPortionG:280},
   tempeh:          {kcal:193,pro:19, carb:9,   fat:11,  fiber:5,   gi:25, sat:2.2, omega3:0.4, ca:111, fe:2.7,na:9,    fodmap:false,label:'Tempeh',                  isProtein:true, maxPortionG:200},
   seitan:          {kcal:143,pro:25, carb:6,   fat:2,   fiber:0.5, gi:20, sat:0.3, omega3:0,   ca:16,  fe:1.8,na:50,   fodmap:false,label:'Seitan',                  isProtein:true, maxPortionG:200},
-  legumi:          {kcal:116,pro:8,  carb:20,  fat:0.5, fiber:6,   gi:32, sat:0.1, omega3:0,   ca:50,  fe:2.5,na:5,    fodmap:true, label:'Mixed legumes',            isProtein:true, maxPortionG:250},
+  legumi:          {kcal:116,pro:8,  carb:20,  fat:0.5, fiber:6,   gi:32, sat:0.1, omega3:0,   ca:50,  fe:2.5,na:5,    fodmap:true, label:'Legumi misti',            isProtein:true, maxPortionG:250},
   /* ── CARBOIDRATI ──────────────────────────────────────────────────────────── */
-  riso:            {kcal:130,pro:2.7,carb:28,  fat:0.3, fiber:0.4, gi:72, sat:0.1, omega3:0,   ca:10,  fe:0.2,na:1,    fodmap:false,label:'Cooked white rice',       isCarb:true, rawFactor:0.33, maxPortionG:280},
-  'riso basmati':  {kcal:121,pro:2.5,carb:25,  fat:0.4, fiber:0.4, gi:58, sat:0.1, omega3:0,   ca:6,   fe:0.2,na:1,    fodmap:false,label:'Cooked basmati rice',      isCarb:true, rawFactor:0.33, maxPortionG:280},
-  'riso integrale':{kcal:112,pro:2.6,carb:23,  fat:0.9, fiber:1.8, gi:55, sat:0.2, omega3:0,   ca:10,  fe:0.5,na:1,    fodmap:false,label:'Cooked brown rice',    isCarb:true, rawFactor:0.33, maxPortionG:280},
-  pasta:           {kcal:131,pro:5,  carb:27,  fat:0.9, fiber:1.8, gi:55, sat:0.2, omega3:0,   ca:7,   fe:1.3,na:1,    fodmap:true, label:'Wholegrain pasta',         isCarb:true, rawFactor:0.40, maxPortionG:220},
-  patate:          {kcal:86, pro:2,  carb:20,  fat:0.1, fiber:1.8, gi:78, sat:0,   omega3:0,   ca:12,  fe:0.8,na:6,    fodmap:false,label:'Boiled potatoes',            isCarb:true, maxPortionG:350},
-  'patate dolci':  {kcal:86, pro:1.6,carb:20,  fat:0.1, fiber:3,   gi:63, sat:0,   omega3:0,   ca:30,  fe:0.6,na:55,   fodmap:false,label:'Baked sweet potatoes',   isCarb:true, maxPortionG:300},
-  pane:            {kcal:247,pro:9,  carb:46,  fat:3,   fiber:6,   gi:51, sat:0.5, omega3:0,   ca:73,  fe:2.5,na:385,  fodmap:true, label:'Wholegrain bread',          isCarb:true, maxPortionG:130},
-  avena:           {kcal:71, pro:2.4,carb:12,  fat:1.5, fiber:1.7, gi:55, sat:0.3, omega3:0.1, ca:18,  fe:1.5,na:2,    fodmap:false,label:'Cooked oats',              isCarb:true, rawFactor:0.33,maxPortionG:350},
-  quinoa:          {kcal:120,pro:4.4,carb:22,  fat:1.9, fiber:2.8, gi:53, sat:0.2, omega3:0,   ca:17,  fe:1.5,na:7,    fodmap:false,label:'Cooked quinoa',            isCarb:true, maxPortionG:220},
-  farro:           {kcal:338,pro:14, carb:63,  fat:2.4, fiber:7,   gi:45, sat:0.4, omega3:0,   ca:57,  fe:3.7,na:5,    fodmap:true, label:'Dry spelt',             isCarb:true, maxPortionG:80},
-  couscous:        {kcal:112,pro:3.8,carb:23,  fat:0.2, fiber:1.4, gi:65, sat:0,   omega3:0,   ca:8,   fe:0.4,na:5,    fodmap:true, label:'Cooked couscous',          isCarb:true, rawFactor:0.40, maxPortionG:200},
-  orzo:            {kcal:119,pro:2.3,carb:25,  fat:0.4, fiber:1.8, gi:28, sat:0.1, omega3:0,   ca:11,  fe:0.6,na:3,    fodmap:true, label:'Cooked pearl barley',      isCarb:true, rawFactor:0.33, maxPortionG:220},
-  gallette:        {kcal:387,pro:7.5,carb:82,  fat:2.5, fiber:2.5, gi:70, sat:0.5, omega3:0,   ca:5,   fe:1.2,na:30,   fodmap:false,label:'Rice cakes',        isCarb:true, maxPortionG:60},
-  wrap:            {kcal:290,pro:8,  carb:50,  fat:6,   fiber:4,   gi:55, sat:1,   omega3:0,   ca:80,  fe:2,  na:420,  fodmap:true, label:'Wholegrain wrap',          isCarb:true, maxPortionG:80},
-  frutta:          {kcal:60, pro:0.5,carb:14,  fat:0.2, fiber:2,   gi:40, sat:0,   omega3:0,   ca:10,  fe:0.3,na:2,    fodmap:false,label:'Mixed fruit',            isCarb:true, maxPortionG:250},
+  riso:            {kcal:130,pro:2.7,carb:28,  fat:0.3, fiber:0.4, gi:72, sat:0.1, omega3:0,   ca:10,  fe:0.2,na:1,    fodmap:false,label:'Riso bianco cotto',       isCarb:true, rawFactor:0.33, maxPortionG:280},
+  'riso basmati':  {kcal:121,pro:2.5,carb:25,  fat:0.4, fiber:0.4, gi:58, sat:0.1, omega3:0,   ca:6,   fe:0.2,na:1,    fodmap:false,label:'Riso basmati cotto',      isCarb:true, rawFactor:0.33, maxPortionG:280},
+  'riso integrale':{kcal:112,pro:2.6,carb:23,  fat:0.9, fiber:1.8, gi:55, sat:0.2, omega3:0,   ca:10,  fe:0.5,na:1,    fodmap:false,label:'Riso integrale cotto',    isCarb:true, rawFactor:0.33, maxPortionG:280},
+  pasta:           {kcal:131,pro:5,  carb:27,  fat:0.9, fiber:1.8, gi:55, sat:0.2, omega3:0,   ca:7,   fe:1.3,na:1,    fodmap:true, label:'Pasta integrale',         isCarb:true, rawFactor:0.40, maxPortionG:220},
+  patate:          {kcal:86, pro:2,  carb:20,  fat:0.1, fiber:1.8, gi:78, sat:0,   omega3:0,   ca:12,  fe:0.8,na:6,    fodmap:false,label:'Patate lesse',            isCarb:true, maxPortionG:350},
+  'patate dolci':  {kcal:86, pro:1.6,carb:20,  fat:0.1, fiber:3,   gi:63, sat:0,   omega3:0,   ca:30,  fe:0.6,na:55,   fodmap:false,label:'Patate dolci al forno',   isCarb:true, maxPortionG:300},
+  pane:            {kcal:247,pro:9,  carb:46,  fat:3,   fiber:6,   gi:51, sat:0.5, omega3:0,   ca:73,  fe:2.5,na:385,  fodmap:true, label:'Pane integrale',          isCarb:true, maxPortionG:130},
+  avena:           {kcal:71, pro:2.4,carb:12,  fat:1.5, fiber:1.7, gi:55, sat:0.3, omega3:0.1, ca:18,  fe:1.5,na:2,    fodmap:false,label:'Avena cotta',              isCarb:true, rawFactor:0.33,maxPortionG:350},
+  quinoa:          {kcal:120,pro:4.4,carb:22,  fat:1.9, fiber:2.8, gi:53, sat:0.2, omega3:0,   ca:17,  fe:1.5,na:7,    fodmap:false,label:'Quinoa cotta',            isCarb:true, maxPortionG:220},
+  farro:           {kcal:338,pro:14, carb:63,  fat:2.4, fiber:7,   gi:45, sat:0.4, omega3:0,   ca:57,  fe:3.7,na:5,    fodmap:true, label:'Farro secco',             isCarb:true, maxPortionG:80},
+  couscous:        {kcal:112,pro:3.8,carb:23,  fat:0.2, fiber:1.4, gi:65, sat:0,   omega3:0,   ca:8,   fe:0.4,na:5,    fodmap:true, label:'Couscous cotto',          isCarb:true, rawFactor:0.40, maxPortionG:200},
+  orzo:            {kcal:119,pro:2.3,carb:25,  fat:0.4, fiber:1.8, gi:28, sat:0.1, omega3:0,   ca:11,  fe:0.6,na:3,    fodmap:true, label:'Orzo perlato cotto',      isCarb:true, rawFactor:0.33, maxPortionG:220},
+  gallette:        {kcal:387,pro:7.5,carb:82,  fat:2.5, fiber:2.5, gi:70, sat:0.5, omega3:0,   ca:5,   fe:1.2,na:30,   fodmap:false,label:'Gallette di riso',        isCarb:true, maxPortionG:60},
+  wrap:            {kcal:290,pro:8,  carb:50,  fat:6,   fiber:4,   gi:55, sat:1,   omega3:0,   ca:80,  fe:2,  na:420,  fodmap:true, label:'Wrap integrale',          isCarb:true, maxPortionG:80},
+  frutta:          {kcal:60, pro:0.5,carb:14,  fat:0.2, fiber:2,   gi:40, sat:0,   omega3:0,   ca:10,  fe:0.3,na:2,    fodmap:false,label:'Frutta mista',            isCarb:true, maxPortionG:250},
   /* ── GRASSI / LATTICINI ──────────────────────────────────────────────────── */
   avocado:         {kcal:160,pro:2,  carb:9,   fat:15,  fiber:6.7, gi:10, sat:2.1, omega3:0.1, ca:12,  fe:0.6,na:7,    fodmap:false,label:'Avocado',                 isFat:true,  maxPortionG:180},
-  'olio oliva':    {kcal:884,pro:0,  carb:0,   fat:100, fiber:0,   gi:0,  sat:14,  omega3:0.8, ca:1,   fe:0.6,na:2,    fodmap:false,label:'EVO oil',                isFat:true,  maxPortionG:20},
-  mandorle:        {kcal:579,pro:21, carb:22,  fat:50,  fiber:12,  gi:15, sat:3.8, omega3:0,   ca:264, fe:3.7,na:1,    fodmap:false,label:'Almonds',                isFat:true,  maxPortionG:30},
-  noci:            {kcal:654,pro:15, carb:14,  fat:65,  fiber:6.7, gi:15, sat:6.1, omega3:9.1, ca:98,  fe:2.9,na:2,    fodmap:false,label:'Walnuts',                    isFat:true,  maxPortionG:30},
-  pistacchi:       {kcal:562,pro:20, carb:28,  fat:45,  fiber:10,  gi:15, sat:5.6, omega3:0.1, ca:105, fe:3.9,na:1,    fodmap:false,label:'Pistachios',               isFat:true,  maxPortionG:30},
-  'burro arachidi':{kcal:589,pro:25, carb:20,  fat:50,  fiber:6,   gi:14, sat:8.5, omega3:0,   ca:49,  fe:1.9,na:340,  fodmap:false,label:'Peanut butter',       isFat:true,  maxPortionG:30},
-  'semi chia':     {kcal:486,pro:17, carb:42,  fat:31,  fiber:34,  gi:1,  sat:3.3, omega3:17.8,ca:631, fe:7.7,na:16,   fodmap:false,label:'Chia seeds',            isFat:true,  maxPortionG:20},
-  parmigiano:      {kcal:392,pro:33, carb:0,   fat:28,  fiber:0,   gi:0,  sat:18,  omega3:0.1, ca:1165,fe:0.7,na:1529, fodmap:false,label:'Grated parmesan',  isFat:true,  maxPortionG:25},
-  'yogurt greco':  {kcal:97, pro:9,  carb:4,   fat:5,   fiber:0,   gi:11, sat:3.2, omega3:0.1, ca:110, fe:0.1,na:47,   fodmap:false,label:'Greek yogurt 0%',         isDairy:true,isProtein:true, maxPortionG:300},
+  'olio oliva':    {kcal:884,pro:0,  carb:0,   fat:100, fiber:0,   gi:0,  sat:14,  omega3:0.8, ca:1,   fe:0.6,na:2,    fodmap:false,label:'Olio EVO',                isFat:true,  maxPortionG:20},
+  mandorle:        {kcal:579,pro:21, carb:22,  fat:50,  fiber:12,  gi:15, sat:3.8, omega3:0,   ca:264, fe:3.7,na:1,    fodmap:false,label:'Mandorle',                isFat:true,  maxPortionG:30},
+  noci:            {kcal:654,pro:15, carb:14,  fat:65,  fiber:6.7, gi:15, sat:6.1, omega3:9.1, ca:98,  fe:2.9,na:2,    fodmap:false,label:'Noci',                    isFat:true,  maxPortionG:30},
+  pistacchi:       {kcal:562,pro:20, carb:28,  fat:45,  fiber:10,  gi:15, sat:5.6, omega3:0.1, ca:105, fe:3.9,na:1,    fodmap:false,label:'Pistacchi',               isFat:true,  maxPortionG:30},
+  'burro arachidi':{kcal:589,pro:25, carb:20,  fat:50,  fiber:6,   gi:14, sat:8.5, omega3:0,   ca:49,  fe:1.9,na:340,  fodmap:false,label:'Burro di arachidi',       isFat:true,  maxPortionG:30},
+  'semi chia':     {kcal:486,pro:17, carb:42,  fat:31,  fiber:34,  gi:1,  sat:3.3, omega3:17.8,ca:631, fe:7.7,na:16,   fodmap:false,label:'Semi di chia',            isFat:true,  maxPortionG:20},
+  parmigiano:      {kcal:392,pro:33, carb:0,   fat:28,  fiber:0,   gi:0,  sat:18,  omega3:0.1, ca:1165,fe:0.7,na:1529, fodmap:false,label:'Parmigiano grattugiato',  isFat:true,  maxPortionG:25},
+  'yogurt greco':  {kcal:97, pro:9,  carb:4,   fat:5,   fiber:0,   gi:11, sat:3.2, omega3:0.1, ca:110, fe:0.1,na:47,   fodmap:false,label:'Yogurt greco 0%',         isDairy:true,isProtein:true, maxPortionG:300},
   skyr:            {kcal:63, pro:11, carb:4,   fat:0.2, fiber:0,   gi:15, sat:0.1, omega3:0,   ca:135, fe:0.1,na:43,   fodmap:false,label:'Skyr',                    isDairy:true,isProtein:true, maxPortionG:300},
-  'fiocchi latte': {kcal:84, pro:11, carb:3.4, fat:2.3, fiber:0,   gi:10, sat:1.5, omega3:0.1, ca:80,  fe:0.1,na:320,  fodmap:false,label:'Cottage cheese',        isDairy:true,isProtein:true, maxPortionG:300},
+  'fiocchi latte': {kcal:84, pro:11, carb:3.4, fat:2.3, fiber:0,   gi:10, sat:1.5, omega3:0.1, ca:80,  fe:0.1,na:320,  fodmap:false,label:'Fiocchi di latte',        isDairy:true,isProtein:true, maxPortionG:300},
   ricotta:         {kcal:174,pro:11, carb:3,   fat:13,  fiber:0,   gi:27, sat:8.3, omega3:0.1, ca:207, fe:0.4,na:84,   fodmap:false,label:'Ricotta',                 isFat:true,  isDairy:true, maxPortionG:200},
-  'cioccolato fondente':{kcal:546,pro:5,carb:60,fat:31, fiber:11,  gi:25, sat:18,  omega3:0,   ca:73,  fe:8.0,na:20,   fodmap:false,label:'Dark chocolate 85%',isSweet:true, maxPortionG:30},
+  'cioccolato fondente':{kcal:546,pro:5,carb:60,fat:31, fiber:11,  gi:25, sat:18,  omega3:0,   ca:73,  fe:8.0,na:20,   fodmap:false,label:'Cioccolato fondente 85%',isSweet:true, maxPortionG:30},
   /* ── NUOVI PESCI ──────────────────────────────────────────────────────────────── */
-  platessa:        {kcal:83, pro:17, carb:0,   fat:1.3, fiber:0,   gi:0,  sat:0.3, omega3:0.3, ca:18,  fe:0.3,na:70,   fodmap:false,label:'Steamed flounder',      isProtein:true, maxPortionG:250},
-  orata:           {kcal:96, pro:18, carb:0,   fat:2.5, fiber:0,   gi:0,  sat:0.6, omega3:0.5, ca:30,  fe:0.6,na:80,   fodmap:false,label:'Baked sea bream',           isProtein:true, maxPortionG:250},
-  sgombro:         {kcal:205,pro:19, carb:0,   fat:14,  fiber:0,   gi:0,  sat:3.3, omega3:2.6, ca:12,  fe:1.1,na:90,   fodmap:false,label:'Steamed mackerel',        isProtein:true, maxPortionG:200},
-  sardine:         {kcal:208,pro:25, carb:0,   fat:11,  fiber:0,   gi:0,  sat:2.9, omega3:2.0, ca:382, fe:2.9,na:120,  fodmap:false,label:'Canned sardines',      isProtein:true, maxPortionG:150},
-  'pesce spada':   {kcal:121,pro:20, carb:0,   fat:4,   fiber:0,   gi:0,  sat:1.1, omega3:0.7, ca:30,  fe:0.9,na:115,  fodmap:false,label:'Grilled swordfish', isProtein:true, maxPortionG:220},
-  trota:           {kcal:119,pro:20, carb:0,   fat:3.7, fiber:0,   gi:0,  sat:0.8, omega3:0.9, ca:70,  fe:0.7,na:52,   fodmap:false,label:'Steamed trout',          isProtein:true, maxPortionG:220},
+  platessa:        {kcal:83, pro:17, carb:0,   fat:1.3, fiber:0,   gi:0,  sat:0.3, omega3:0.3, ca:18,  fe:0.3,na:70,   fodmap:false,label:'Platessa al vapore',      isProtein:true, maxPortionG:250},
+  orata:           {kcal:96, pro:18, carb:0,   fat:2.5, fiber:0,   gi:0,  sat:0.6, omega3:0.5, ca:30,  fe:0.6,na:80,   fodmap:false,label:'Orata al forno',           isProtein:true, maxPortionG:250},
+  sgombro:         {kcal:205,pro:19, carb:0,   fat:14,  fiber:0,   gi:0,  sat:3.3, omega3:2.6, ca:12,  fe:1.1,na:90,   fodmap:false,label:'Sgombro al vapore',        isProtein:true, maxPortionG:200},
+  sardine:         {kcal:208,pro:25, carb:0,   fat:11,  fiber:0,   gi:0,  sat:2.9, omega3:2.0, ca:382, fe:2.9,na:120,  fodmap:false,label:'Sardine al naturale',      isProtein:true, maxPortionG:150},
+  'pesce spada':   {kcal:121,pro:20, carb:0,   fat:4,   fiber:0,   gi:0,  sat:1.1, omega3:0.7, ca:30,  fe:0.9,na:115,  fodmap:false,label:'Pesce spada alla griglia', isProtein:true, maxPortionG:220},
+  trota:           {kcal:119,pro:20, carb:0,   fat:3.7, fiber:0,   gi:0,  sat:0.8, omega3:0.9, ca:70,  fe:0.7,na:52,   fodmap:false,label:'Trota al vapore',          isProtein:true, maxPortionG:220},
   /* ── NUOVI CARBOIDRATI ───────────────────────────────────────────────────────── */
-  mais:            {kcal:86, pro:3.2,carb:19,  fat:1.2, fiber:2.4, gi:52, sat:0.2, omega3:0,   ca:3,   fe:0.5,na:15,   fodmap:false,label:'Cooked corn',               isCarb:true, maxPortionG:200},
+  mais:            {kcal:86, pro:3.2,carb:19,  fat:1.2, fiber:2.4, gi:52, sat:0.2, omega3:0,   ca:3,   fe:0.5,na:15,   fodmap:false,label:'Mais cotto',               isCarb:true, maxPortionG:200},
   polenta:         {kcal:72, pro:1.8,carb:15,  fat:0.5, fiber:0.9, gi:69, sat:0.1, omega3:0,   ca:2,   fe:0.3,na:1,    fodmap:false,label:'Polenta cotta',             isCarb:true, rawFactor:0.25, maxPortionG:300},
   /* ── NUOVI GRASSI/SEMI ───────────────────────────────────────────────────────── */
   nocciole:        {kcal:628,pro:15, carb:17,  fat:61,  fiber:10,  gi:15, sat:4.5, omega3:0.1, ca:114, fe:4.7,na:1,    fodmap:false,label:'Nocciole',                 isFat:true,  maxPortionG:30},
@@ -4064,18 +4065,18 @@ function generatePersonalizedPlan(prof, prefs, macros){
 
   /* Nomi pasti per numero scelto */
   const mealNames={
-    2:['Lunch','Dinner'],
-    3:['Breakfast','Lunch','Dinner'],
-    4:['Breakfast','Lunch','Snack','Dinner'],
-    5:['Breakfast','Lunch','Pre-Snack','Dinner','Post-Snack'],
+    2:['Pranzo','Cena'],
+    3:['Colazione','Pranzo','Cena'],
+    4:['Colazione','Pranzo','Spuntino','Cena'],
+    5:['Colazione','Pranzo','Spuntino Pre','Cena','Spuntino Post'],
   };
   const mNames=mealNames[mealsN]||mealNames[3];
 
   /* ── DISTRIBUZIONE KCAL per pasto (TEF-aware) ──
-     Breakfast: 20-25% — high protein stabilises glycemia
-     Lunch: 35-40% — main meal, maximum thermogenesis
-     Dinner: 30-35% — reduced carbs, omega-3 fats
-     Snacks: 10% — protein-rich for inter-meal satiety */
+     Colazione: 20-25% — proteine elevate stabilizzano glicemia
+     Pranzo: 35-40% — pasto principale, massima termogenesi
+     Cena: 30-35% — riduzione carboidrati, grassi omega-3
+     Spuntini: 10% — proteici per saziamento inter-pasto */
   const dist={
     2:[0.45,0.55],
     3:[0.25,0.40,0.35],
@@ -4220,19 +4221,19 @@ function buildMeal(mName,prot,carb,fat,proTarget,carbTarget,kcalTarget,macros,ta
 
   /* ── Verdure: pool espanso — OMS 400g/die distribuiti sui pasti principali ── */
   const veggiesAll=[
-    'Steamed broccoli 130g','Sautéed spinach 120g','Grilled courgettes 150g',
-    'Steamed asparagus 130g','Steamed cauliflower 140g','Green beans 150g',
-    'Grilled aubergine 150g','Roasted peppers 120g','Radicchio 100g',
-    'Cucumber & tomato 150g','Mixed salad 130g','Steamed carrots 130g',
-    'Sautéed mushrooms 120g','Cherry tomatoes 150g',
-    'Sautéed chard 130g','Baked fennel 140g','White cabbage 120g',
-    'Cucumber & tomato salad 160g','Rocket & cherry tomatoes 110g',
+    'Broccoli al vapore 130g','Spinaci saltati 120g','Zucchine grigliate 150g',
+    'Asparagi al vapore 130g','Cavolfiore al vapore 140g','Fagiolini 150g',
+    'Melanzane grigliate 150g','Peperoni arrostiti 120g','Radicchio 100g',
+    'Cetrioli e pomodori 150g','Insalata mista 130g','Carote al vapore 130g',
+    'Funghi champignon saltati 120g','Pomodori datterini 150g',
+    'Bietola saltata 130g','Finocchio al forno 140g','Cavolo cappuccio 120g',
+    'Insalata di cetrioli e pomodori 160g','Rucola e pomodorini 110g',
   ];
   const veggiesIBS=[
-    'Grilled courgettes 150g','Steamed carrots 130g','Sautéed spinach 120g',
-    'Lettuce 100g','Cherry tomatoes 120g','Cucumber 130g',
-    'Green beans 130g','Celeriac 120g','Steamed bok choy 130g',
-    'Steamed chard 120g','Fennel 120g','Rocket 80g',
+    'Zucchine grigliate 150g','Carote al vapore 130g','Spinaci saltati 120g',
+    'Lattuga 100g','Pomodori datterini 120g','Cetrioli 130g',
+    'Fagiolini 130g','Sedano rapa 120g','Bok choy al vapore 130g',
+    'Bietola al vapore 120g','Finocchio 120g','Rucola 80g',
   ];
   const veggiePool=isIBS?veggiesIBS:veggiesAll;
   const veggies=veggiePool[((day-1)*3+mealIdx*7)%veggiePool.length];
@@ -4253,30 +4254,30 @@ function buildMeal(mName,prot,carb,fat,proTarget,carbTarget,kcalTarget,macros,ta
 function buildSnack(taste,style,DB,excluded,proTarget,carbTarget,day,mealIdx,isIBS){
   /* Snack dolci — IG moderato-basso, proteici */
   const sweet=[
-    {rest:'Greek yogurt 170g + Mixed berries 80g + Almonds 15g (Ca++, omega-3)',carbSource:null,baseAmount:0},
-    {rest:'Oats 40g + Mixed berries 100g + Chia seeds 10g (fibre, omega-3)',carbSource:null,baseAmount:0},
-    {rest:'Dark chocolate 85% 30g + Walnuts 20g (flavonoids, omega-3)',carbSource:null,baseAmount:0},
-    {rest:'Ripe banana 1 + Almond butter 20g (potassium, mono fats)',carbSource:null,baseAmount:0},
-    {rest:'Pear 1 + Cottage cheese 100g + Chia seeds 8g (soluble fibre)',carbSource:null,baseAmount:0},
-    {rest:'Apple 1 + Peanut butter 20g + Cinnamon to taste (low glycaemic)',carbSource:null,baseAmount:0},
+    {rest:'Yogurt greco 170g + Frutti di bosco 80g + Mandorle 15g (Ca++, omega-3)',carbSource:null,baseAmount:0},
+    {rest:'Avena 40g + Frutti di bosco 100g + Semi di chia 10g (fibra, omega-3)',carbSource:null,baseAmount:0},
+    {rest:'Cioccolato fondente 85% 30g + Noci 20g (flavonoidi, omega-3)',carbSource:null,baseAmount:0},
+    {rest:'Banana matura 1 + Burro di mandorle 20g (potassio, grassi mono)',carbSource:null,baseAmount:0},
+    {rest:'Pera 1 + Fiocchi di latte 100g + Semi di chia 8g (fibra solubile)',carbSource:null,baseAmount:0},
+    {rest:'Mela 1 + Burro di arachidi 20g + Cannella q.b. (indice glicemico basso)',carbSource:null,baseAmount:0},
   ];
   /* Snack salati — proteici, low-carb */
   const savory=[
-    {rest:'Ricotta 150g + Cherry tomatoes 80g + EVO oil 5g (Ca++, omega-6)',carbSource:null,baseAmount:0},
-    {rest:'Tuna in water 100g + Avocado 80g (omega-3, omega-9)',carbSource:null,baseAmount:0},
-    {rest:'Hard-boiled eggs 2 + Avocado 80g (complete protein, unsaturated fats)',carbSource:null,baseAmount:0},
-    {rest:'Scrambled egg whites 150g + Mixed raw vegetables (lean protein)',carbSource:null,baseAmount:0},
-    {rest:'Cottage cheese 150g + Radishes 60g + EVO oil 5g (lean protein)',carbSource:null,baseAmount:0},
-    {rest:'Smoked salmon 80g + Cucumber 80g + EVO oil 5g (omega-3)',carbSource:null,baseAmount:0},
+    {rest:'Ricotta 150g + Pomodorini 80g + Olio EVO 5g (Ca++, omega-6)',carbSource:null,baseAmount:0},
+    {rest:'Tonno al naturale 100g + Avocado 80g (omega-3, omega-9)',carbSource:null,baseAmount:0},
+    {rest:'Uova sode 2 + Avocado 80g (proteine complete, grassi insaturi)',carbSource:null,baseAmount:0},
+    {rest:'Albume strapazzato 150g + Verdure crude miste (proteina magra)',carbSource:null,baseAmount:0},
+    {rest:'Fiocchi di latte 150g + Ravanelli 60g + Olio EVO 5g (proteina magra)',carbSource:null,baseAmount:0},
+    {rest:'Salmone affumicato 80g + Cetrioli 80g + Olio EVO 5g (omega-3)',carbSource:null,baseAmount:0},
   ];
   /* FODMAP-safe alternatives */
   const ibsSafe=[
-    {rest:'Lactose-free yogurt 150g + Strawberries 80g + Almonds 20g',carbSource:null,baseAmount:0},
-    {rest:'Hard-boiled eggs 2 + Raw carrots 100g + EVO oil 5g',carbSource:null,baseAmount:0},
-    {rest:'Tofu 100g + Cucumber 100g + Pumpkin seeds 20g (Zn, Mg)',carbSource:null,baseAmount:0},
-    {rest:'Puffed rice 30g + Almond butter 20g + Blueberries 60g',carbSource:null,baseAmount:0},
-    {rest:'Cottage cheese 150g + Raw carrots 80g + EVO oil 5g',carbSource:null,baseAmount:0},
-    {rest:'Turkey 80g + Cucumber 100g + Sunflower seeds 15g (FODMAP-safe)',carbSource:null,baseAmount:0},
+    {rest:'Yogurt senza lattosio 150g + Fragole 80g + Mandorle 20g',carbSource:null,baseAmount:0},
+    {rest:'Uova sode 2 + Carote crude 100g + Olio EVO 5g',carbSource:null,baseAmount:0},
+    {rest:'Tofu 100g + Cetrioli 100g + Semi di zucca 20g (Zn, Mg)',carbSource:null,baseAmount:0},
+    {rest:'Riso soffiato 30g + Burro di mandorle 20g + Mirtilli 60g',carbSource:null,baseAmount:0},
+    {rest:'Fiocchi di latte 150g + Carote crude 80g + Olio EVO 5g',carbSource:null,baseAmount:0},
+    {rest:'Tacchino 80g + Cetrioli 100g + Semi di girasole 15g (FODMAP-safe)',carbSource:null,baseAmount:0},
   ];
   const pool=isIBS?ibsSafe:taste==='dolce'?sweet:taste==='salato'?savory:[...sweet,...savory];
   /* Prime-offset indexing avoids day/slot collisions; _regenSeed shifts on regen */
@@ -4285,7 +4286,7 @@ function buildSnack(taste,style,DB,excluded,proTarget,carbTarget,day,mealIdx,isI
   return snack?{...snack,_meta:{protein:'generic',carb:snack.carbSource||'generic',fat:'generic'}}:snack;
 }
 
-/* ── BREAKFAST: high protein (25% target) for glycaemic stability ── */
+/* ── COLAZIONE: proteina elevata (25% target) per stabilità glicemica ── */
 function buildBreakfast(taste,style,DB,excluded,proTarget,carbTarget,macros,isIBS,day){
   const noGluten=excluded.some(e=>e.includes('glut')||e.includes('celi'));
   const noLattosio=excluded.some(e=>e.includes('lattosio')||e.includes('latte'))||style==='vegano';
@@ -4294,57 +4295,57 @@ function buildBreakfast(taste,style,DB,excluded,proTarget,carbTarget,macros,isIB
 
   if(isIBS){
     if(style==='vegano') return pick([
-      {carbSource:'avena',baseAmount:50,rest:'Gluten-free oats 50g, Rice milk 200ml, Strawberries 80g, Chia seeds 10g (FODMAP-safe)'},
-      {carbSource:'riso', baseAmount:45,rest:'Puffed rice 45g, Rice milk 200ml, Blueberries 80g, Pumpkin seeds 15g (FODMAP-safe)'},
+      {carbSource:'avena',baseAmount:50,rest:'Avena senza glutine 50g, Latte riso 200ml, Fragole 80g, Semi di chia 10g (FODMAP-safe)'},
+      {carbSource:'riso', baseAmount:45,rest:'Riso soffiato 45g, Latte riso 200ml, Mirtilli 80g, Semi di zucca 15g (FODMAP-safe)'},
     ]);
     return pick([
-      {carbSource:'avena',baseAmount:50,rest:'Oats 50g, Lactose-free yogurt 150g, Blueberries 80g, Almonds 20g (FODMAP-safe)'},
-      {carbSource:'avena',baseAmount:50,rest:'Oats 50g, Lactose-free yogurt 150g, Strawberries 80g, Walnuts 15g (FODMAP-safe)'},
-      {carbSource:'riso', baseAmount:45,rest:'Puffed rice 45g, Lactose-free yogurt 130g, Ripe banana 80g, Chia seeds 10g (FODMAP-safe)'},
+      {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt senza lattosio 150g, Mirtilli 80g, Mandorle 20g (FODMAP-safe)'},
+      {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt senza lattosio 150g, Fragole 80g, Noci 15g (FODMAP-safe)'},
+      {carbSource:'riso', baseAmount:45,rest:'Riso soffiato 45g, Yogurt senza lattosio 130g, Banana matura 80g, Semi di chia 10g (FODMAP-safe)'},
     ]);
   }
   if(taste==='salato'){
     if(style==='vegano') return pick([
-      {carbSource:'pane',baseAmount:60,rest:'Wholegrain bread 60g, Avocado 100g, Tomatoes, EVO oil 10g, Hemp seeds 15g'},
-      {carbSource:'pane',baseAmount:60,rest:'Rye bread 60g, Hummus 80g, Cucumber, EVO oil 8g, Flaxseeds 10g'},
+      {carbSource:'pane',baseAmount:60,rest:'Pane integrale 60g, Avocado 100g, Pomodori, Olio EVO 10g, Semi di canapa 15g'},
+      {carbSource:'pane',baseAmount:60,rest:'Pane di segale 60g, Hummus 80g, Cetrioli, Olio EVO 8g, Semi di lino 10g'},
     ]);
     if(noLattosio) return pick([
-      {carbSource:'pane',baseAmount:60,rest:'Wholegrain bread 60g, Scrambled eggs 3, Avocado 70g, EVO oil 8g'},
-      {carbSource:'pane',baseAmount:55,rest:'Rye bread 55g, Hard-boiled eggs 2, Smoked salmon 50g, EVO oil 8g'},
+      {carbSource:'pane',baseAmount:60,rest:'Pane integrale 60g, Uova strapazzate 3, Avocado 70g, Olio EVO 8g'},
+      {carbSource:'pane',baseAmount:55,rest:'Pane di segale 55g, Uova sode 2, Salmone affumicato 50g, Olio EVO 8g'},
     ]);
     return pick([
-      {carbSource:'pane',baseAmount:60,rest:'Wholegrain bread 60g, Scrambled eggs 3, Tomatoes, EVO oil 10g (TEF +25%)'},
-      {carbSource:'pane',baseAmount:55,rest:'Rye bread 55g, Ricotta 80g, Avocado 70g, EVO oil 8g'},
-      {carbSource:'pane',baseAmount:60,rest:'Wholegrain bread 60g, Turkey 60g, Cherry tomatoes, EVO oil 8g'},
+      {carbSource:'pane',baseAmount:60,rest:'Pane integrale 60g, Uova strapazzate 3, Pomodori, Olio EVO 10g (TEF +25%)'},
+      {carbSource:'pane',baseAmount:55,rest:'Pane di segale 55g, Ricotta 80g, Avocado 70g, Olio EVO 8g'},
+      {carbSource:'pane',baseAmount:60,rest:'Pane integrale 60g, Tacchino 60g, Pomodori datterini, Olio EVO 8g'},
     ]);
   }
   if(taste==='dolce'){
     if(style==='vegano') return pick([
-      {carbSource:'avena',baseAmount:60,rest:'Oats 60g, Plant milk 200ml, Mixed berries 100g, Chia seeds 15g, Plant protein 20g'},
-      {carbSource:'avena',baseAmount:60,rest:'Oats 60g, Almond milk 200ml, Banana 80g, Peanut butter 20g, Flaxseeds 10g'},
+      {carbSource:'avena',baseAmount:60,rest:'Avena 60g, Latte vegetale 200ml, Frutti di bosco 100g, Semi di chia 15g, Proteine vegetali 20g'},
+      {carbSource:'avena',baseAmount:60,rest:'Avena 60g, Latte mandorla 200ml, Banana 80g, Burro di arachidi 20g, Semi di lino 10g'},
     ]);
     if(noLattosio) return pick([
-      {carbSource:'avena',baseAmount:55,rest:'Oats 55g, Soy drink 200ml, Banana, Almonds 25g, Flaxseeds 10g'},
-      {carbSource:'avena',baseAmount:55,rest:'Oats 55g, Coconut milk 150ml, Mango 80g, Walnuts 20g, Chia seeds 10g'},
+      {carbSource:'avena',baseAmount:55,rest:'Avena 55g, Bevanda soia 200ml, Banana, Mandorle 25g, Semi di lino 10g'},
+      {carbSource:'avena',baseAmount:55,rest:'Avena 55g, Latte cocco 150ml, Mango 80g, Noci 20g, Semi di chia 10g'},
     ]);
     return pick([
-      {carbSource:'avena',baseAmount:50,rest:'Oats 50g, Greek yogurt 150g, Mixed berries 80g, Honey 8g, Walnuts 20g'},
-      {carbSource:'avena',baseAmount:50,rest:'Oats 50g, Greek yogurt 150g, Banana 80g, Almond butter 15g, Cinnamon to taste'},
-      {carbSource:'avena',baseAmount:55,rest:'Oats 55g, White yogurt 180g, Peaches 90g, Almonds 20g, Honey 6g'},
+      {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt greco 150g, Frutti di bosco 80g, Miele 8g, Noci 20g'},
+      {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt greco 150g, Banana 80g, Burro di mandorle 15g, Cannella q.b.'},
+      {carbSource:'avena',baseAmount:55,rest:'Avena 55g, Yogurt bianco 180g, Pesche 90g, Mandorle 20g, Miele 6g'},
     ]);
   }
   /* misto */
   if(style==='vegano'){
     const b=pick([
-      {carbSource:'avena',baseAmount:55,rest:'Oats 55g, Oat milk 200ml, Mixed fruit 130g, Almond butter 20g, Chia seeds 10g'},
-      {carbSource:'avena',baseAmount:55,rest:'Oats 55g, Oat milk 200ml, Apple 100g, Walnuts 20g, Hemp seeds 10g'},
+      {carbSource:'avena',baseAmount:55,rest:'Avena 55g, Latte avena 200ml, Frutta mista 130g, Burro mandorle 20g, Semi chia 10g'},
+      {carbSource:'avena',baseAmount:55,rest:'Avena 55g, Latte avena 200ml, Mela 100g, Noci 20g, Semi di canapa 10g'},
     ]);
     return b?{...b,_meta:{protein:'tofu',carb:b.carbSource||'avena',fat:'mandorle'}}:b;
   }
   const b=pick([
-    {carbSource:'avena',baseAmount:50,rest:'Oats 50g, Greek yogurt 130g, Fruit 130g, Walnuts 20g, Honey 8g'},
-    {carbSource:'avena',baseAmount:50,rest:'Oats 50g, Greek yogurt 150g, Strawberries 100g, Almonds 20g'},
-    {carbSource:'pane', baseAmount:55,rest:'Wholegrain bread 55g, Scrambled eggs 2, Orange 120g, Almonds 15g'},
+    {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt greco 130g, Frutta 130g, Noci 20g, Miele 8g'},
+    {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt greco 150g, Fragole 100g, Mandorle 20g'},
+    {carbSource:'pane', baseAmount:55,rest:'Pane integrale 55g, Uova strapazzate 2, Arancia 120g, Mandorle 15g'},
   ]);
   return b?{...b,_meta:{protein:'uova',carb:b.carbSource||'avena',fat:'mandorle'}}:b;
 }
@@ -4748,7 +4749,7 @@ function runCalcAndGenerate(){
   window._pendingPlan=plan;
   window._pendingRes=res;
   toast(t('toast.pianoGen'));
-  if(_genBtn){_genBtn.disabled=false;_genBtn.textContent=_genBtnTxt||'⚡ Generate My Plan';}
+  if(_genBtn){_genBtn.disabled=false;_genBtn.textContent=_genBtnTxt||'⚡ Genera il Mio Piano';}
 }
 
 function activateGeneratedPlan(){
@@ -5095,7 +5096,7 @@ function normalizePlanLabel(name,goal){
   return name||'';
 }
 function getMealNames(){
-  return dietData?.metadata?.mealNames||['Lunch','Snack','Dinner'];
+  return dietData?.metadata?.mealNames||['Pranzo','Merenda','Cena'];
 }
 function renderMeals(){
   document.querySelectorAll('button[onclick="openShoppingList()"]').forEach(b=>b.style.display=dietData?'':'none');
@@ -6117,24 +6118,19 @@ function showOnb(){
   applyTranslations();
 }
 function mountApp(){
-  /* ── Remove onboarding-active FIRST — CSS hides #hdr/#nav with !important while set ── */
   document.body.classList.remove('onboarding-active');
-  document.getElementById('onb-screen').classList.remove('on');
-  document.getElementById('app-shell').classList.add('on');
+  document.getElementById('onb-screen').classList.remove('on');document.getElementById('app-shell').classList.add('on');
   document.getElementById('log-date').value=toISO();
-  const dow=new Date().getDay();const days=dietData?.days||[];const match=days.find(d=>d.d===(dow===0?7:dow));
-  selDay=(match||days[0]||{d:1}).d;
+  const dow=new Date().getDay();const days=dietData.days||[];const match=days.find(d=>d.d===(dow===0?7:dow));
+  selDay=(match||days[0]).d;
   /* Hide non-oggi screens before any render */
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t==='oggi'?'block':'none';});
   document.getElementById('nav-oggi').classList.add('on');
   ['nav-prog','nav-set','nav-info'].forEach(id=>{const b=document.getElementById(id);if(b){b.classList.remove('on');b.classList.add('inactive');}});
   /* Critical path — runs before first paint */
   initLang();
-  try{ applyTranslations(); }catch(e){ console.warn('[IK] applyTranslations:',e); }
-  try{ renderMacros();   }catch(e){ console.error('[IK] renderMacros:',e); }
-  try{ renderTrackers(); }catch(e){ console.error('[IK] renderTrackers:',e); }
-  try{ renderMeals();    }catch(e){ console.error('[IK] renderMeals:',e); }
-  try{ renderKcalRing(); }catch(e){ console.error('[IK] renderKcalRing:',e); }
+  applyTranslations();
+  renderMacros();renderTrackers();renderMeals();renderKcalRing();
   /* Deferred — runs after first paint */
   requestAnimationFrame(()=>{
     renderCoach?.();renderRefeed?.();renderPersonalInsight?.();
@@ -6390,24 +6386,25 @@ function _onbFinish(){
 
 /* ENTRY POINT */
 (()=>{
-  try{
-    initLang();
-    try{ applyTranslations(); }catch(e){ console.warn('[IK] applyTranslations:',e); }
-    const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);
-    const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);
-    if(!localStorage.getItem('ik_pwa_seen')){
-      document.getElementById('pwa-gate').classList.add('on');
-      return;
-    }
-    if(lsG(SK.onboardingDone)!==true){
-      showOnboarding();
-      return;
-    }
-    _bootAfterGates();
-  }catch(e){
-    console.error('[IK] Boot error:',e);
-    try{ _bootAfterGates(); }catch(e2){ console.error('[IK] Recovery failed:',e2); }
+  initLang(); /* read ik_lang from localStorage, set _lang + html lang attr */
+  /* Apply translations to gate screens immediately */
+  applyTranslations();
+  const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);
+  const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);
+
+  /* PWA gate: force install-awareness on very first open */
+  if(!localStorage.getItem('ik_pwa_seen')){
+    document.getElementById('pwa-gate').classList.add('on');
+    return; /* acknowledgedPWA() continues the boot flow */
   }
+
+  /* Onboarding slideshow: shown once on first launch */
+  if(lsG(SK.onboardingDone)!==true){
+    showOnboarding();
+    return;
+  }
+
+  _bootAfterGates();
 })();
 </script>
 
