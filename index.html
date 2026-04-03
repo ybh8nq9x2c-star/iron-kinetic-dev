@@ -236,46 +236,17 @@ body.onboarding-active #onb-screen{
 #trackers-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
 #trackers-chevron{transition:transform .25s ease;color:var(--muted);font-size:18px;}
 /* ── Onboarding slideshow ── */
-#onboarding-overlay{
-  position:fixed;inset:0;
-  background:var(--bg);
-  z-index:10000;
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:max(32px,env(safe-area-inset-top,0px)) 24px max(24px,env(safe-area-inset-bottom,0px));
-  gap:24px;
-  overflow:hidden;
-}
-#onboarding-slides-wrap{
-  width:min(360px,100%);
-  overflow:hidden;
-  flex-shrink:0;
-}
-#onboarding-slides{
-  display:flex;
-  width:100%;
-  transition:transform .35s ease;
-}
-.onboarding-slide{
-  width:min(360px,100vw - 48px);
-  min-width:min(360px,100vw - 48px);
-  flex-shrink:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
-  gap:14px;
-  padding:0;
-}
-.onb-emoji{font-size:58px;line-height:1;display:block;}
-.onb-title{font-size:21px;font-weight:700;color:var(--on);line-height:1.3;margin:0;letter-spacing:-.02em;width:100%;}
-.onb-body{font-size:14px;color:var(--muted);line-height:1.65;margin:0;width:100%;}
-.onb-dots{display:flex;gap:8px;flex-shrink:0;}
+#onboarding-overlay{position:fixed;inset:0;background:var(--bg);z-index:10000;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;gap:28px;}
+#onboarding-slides-wrap{width:100%;max-width:360px;overflow:hidden;}
+#onboarding-slides{display:flex;transition:transform .35s ease;}
+.onboarding-slide{min-width:100%;flex-shrink:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding:8px 4px;}
+.onb-emoji{font-size:60px;line-height:1.1;}
+.onb-title{font-size:22px;font-weight:700;color:var(--on);line-height:1.3;margin:0;}
+.onb-body{font-size:14px;color:var(--muted);line-height:1.65;max-width:300px;margin:0;}
+.onb-dots{display:flex;gap:8px;}
 .onb-dot{width:8px;height:8px;border-radius:50%;background:var(--dim);transition:background .2s,transform .2s;}
 .onb-dot.active{background:var(--p);transform:scale(1.3);}
-.onb-nav{display:flex;align-items:center;gap:12px;width:min(360px,100%);flex-shrink:0;}
+.onb-nav{display:flex;align-items:center;gap:12px;width:100%;max-width:360px;}
 /* ── Tracker blocks ── */
 .tracker-block{padding:14px 16px;border-top:1px solid var(--line);}
 .tracker-block:first-child{border-top:none;}
@@ -3124,9 +3095,7 @@ function dismissAdaptive(){
 
 /* ── Feature 2: Circadian Nutrition Timing ── */
 function getCircadianTips(n,idx,total){
-  if(idx===0)return'';
-  const nl=n.toLowerCase();
-  if(nl.includes('colazione'))return'';
+  if(idx===0||canonicalMealType(n)==='breakfast')return'';
   // Last meal ≥ 2-meal plan → evening
   if(idx===total-1&&total>=2){
     return`<span style="font-size:11px;margin-left:3px;" title="${t('circ.serale')}">🌙</span>`;
@@ -3956,8 +3925,8 @@ function generatePersonalizedPlan(prof, prefs, macros){
    poi carboidrati, poi grassi (linee guida ADA T2D)
 ══════════════════════════════════════════════════════ */
 function buildMeal(mName,prot,carb,fat,proTarget,carbTarget,kcalTarget,macros,taste,day,mealIdx,style,DB,excluded,isIBS,isDASH){
-  const isBreakfast=mName==='Colazione';
-  const isSnack=mName.includes('Spuntino');
+  const isBreakfast=canonicalMealType(mName)==='breakfast';
+  const isSnack=canonicalMealType(mName)==='snack';
   if(isSnack){const _s=buildSnack(taste,style,DB,excluded,proTarget,carbTarget,day,mealIdx,isIBS);return _s?{..._s,targetKcal:kcalTarget}:_s;}
   if(isBreakfast){const _b=buildBreakfast(taste,style,DB,excluded,proTarget,carbTarget,macros,isIBS,day);return _b?{..._b,targetKcal:kcalTarget}:_b;}
 
@@ -4823,8 +4792,8 @@ function renderTrackers(){
   const sb=getEl('salt-bar');sb.style.width=`${sp}%`;sb.style.background=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.35)';
   const sr=getEl('salt-ring');sr.style.strokeDashoffset=`${CIRC*(1-sp/100)}`;sr.style.stroke=sp>=100?'var(--red)':sp>=70?'var(--orange)':'rgba(199,196,216,.4)';
   const st=parseInt(lsR(dk('steps'))||'0'),tgt=(getPhase()===3&&detectStall())?11000:STBASE;
-  getEl('steps-val').textContent=st.toLocaleString('it-IT');
-  getEl('steps-tgt').textContent=tgt.toLocaleString('it-IT');
+  getEl('steps-val').textContent=st.toLocaleString(_lang==='en'?'en-US':'it-IT');
+  getEl('steps-tgt').textContent=tgt.toLocaleString(_lang==='en'?'en-US':'it-IT');
   getEl('steps-bar').style.width=`${Math.min(100,st/tgt*100)}%`;
   const wd=gT('workout')>=1;
   getEl('wk-ratio').textContent=wd?'1/1':'0/1';
@@ -4858,6 +4827,48 @@ function buildDaySelector(){
     el.appendChild(b);
   });
 }
+/* ── Canonical meal type helpers ──────────────────────────────────
+   canonicalMealType: maps any IT/EN meal name → internal type or null
+   localizedMealName: maps stored Italian key → display string in current lang
+   These allow storage to stay as Italian keys while display adapts to _lang.
+──────────────────────────────────────────────────────────────── */
+function canonicalMealType(name){
+  const n=String(name||'').trim().toLowerCase();
+  if(n==='colazione'||n==='breakfast')return'breakfast';
+  if(n.includes('spuntino')||n==='snack'||n==='merenda'||n==='morning snack'||n==='dinner snack')return'snack';
+  if(n==='pranzo'||n==='lunch')return'lunch';
+  if(n==='cena'||n==='dinner')return'dinner';
+  return null;
+}
+function localizedMealName(name){
+  const type=canonicalMealType(name);
+  if(!type)return name; /* custom/unknown name — return as-is */
+  const map={
+    breakfast:{it:'Colazione',en:'Breakfast'},
+    snack:    {it:'Spuntino', en:'Snack'},
+    lunch:    {it:'Pranzo',   en:'Lunch'},
+    dinner:   {it:'Cena',     en:'Dinner'},
+  };
+  return(map[type]||{})[_lang]||name;
+}
+/* ── normalizePlanLabel: translate stored plan name via goal enum ── */
+function normalizePlanLabel(name,goal){
+  /* Prefer goal enum → t() whenever available */
+  const g=String(goal||'').trim();
+  if(g&&['cut_extreme','recomp','maintain','bulk'].includes(g))
+    return t('misc.piano')+' '+t('goal.label.'+g);
+  /* Fallback: map raw Italian/English name strings */
+  const raw=String(name||'').trim().toLowerCase();
+  if(['ricomposizione','ricomposizione corporea','recomposition','body recomposition'].includes(raw))
+    return t('misc.piano')+' '+t('goal.label.recomp');
+  if(['definizione aggressiva','aggressive cut'].includes(raw))
+    return t('misc.piano')+' '+t('goal.label.cut_extreme');
+  if(['mantenimento','maintenance'].includes(raw))
+    return t('misc.piano')+' '+t('goal.label.maintain');
+  if(['bulk lean','lean bulk'].includes(raw))
+    return t('misc.piano')+' '+t('goal.label.bulk');
+  return name||'';
+}
 function getMealNames(){
   return dietData?.metadata?.mealNames||['Pranzo','Merenda','Cena'];
 }
@@ -4872,7 +4883,7 @@ function renderMeals(){
   cont.innerHTML=mNames.map((n,mealIdx)=>{
     const meal=day[n];if(!meal)return'';
     const checked=lsR(mk(day.d,n))==='1';if(checked)done++;
-    const isHardcodedMeal=n==='Colazione'||n.includes('Spuntino');
+    const _mType=canonicalMealType(n);const isHardcodedMeal=_mType==='breakfast'||_mType==='snack';
     const fa=meal.carbSource?finalCarb(meal):null;
     const diff=fa!==null?fa-meal.baseAmount:0;
     const carbLabel=meal.carbSource?(FOOD_DB[meal.carbSource]?.label||meal.carbSource):'';
@@ -4896,13 +4907,13 @@ function renderMeals(){
         </div>`;
     return `<div style="width:100%;">
       <button class="meal-row${checked?' done':''}" onclick="toggleMeal(${day.d},'${sanitize(n)}')"
-        aria-pressed="${checked}" aria-label="${sanitize(n)}${checked?' '+t('meal.completed'):''}"
+        aria-pressed="${checked}" aria-label="${sanitize(localizedMealName(n))}${checked?' '+t('meal.completed'):''}"
         style="${bs}border-radius:var(--r);display:flex;align-items:flex-start;gap:12px;padding:13px;touch-action:manipulation;cursor:pointer;width:100%;text-align:left;">
         <div style="width:32px;height:32px;border-radius:var(--r2);border:1.5px solid ${checked?'var(--p)':'var(--line)'};background:${checked?'rgba(77,220,198,.10)':'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
           ${checked?`<span class="material-symbols-outlined sn" style="font-size:16px;color:var(--p);font-variation-settings:'FILL' 1;">check</span>`:''}
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(n)}</span>${badge}${circBadge}${synBadge}</div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(localizedMealName(n))}</span>${badge}${circBadge}${synBadge}</div>
           <p class="meal-desc sn">${carbLine}${sanitize(meal.rest)}</p>
         </div>
       </button>
@@ -4911,7 +4922,7 @@ function renderMeals(){
   }).join('');
   document.getElementById('meals-done').textContent=done;
   const dateEl=document.getElementById('oggi-date-label');
-  if(dateEl)dateEl.textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
+  if(dateEl)dateEl.textContent=new Date().toLocaleDateString(_lang==='en'?'en-US':'it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
   const pastiBar=document.getElementById('oggi-pasti-bar');
   if(pastiBar)pastiBar.style.width=(mNames.length>0?Math.round(done/mNames.length*100):0)+'%';
   renderKcalRing();
@@ -5008,7 +5019,7 @@ function toggleRefeed(){
 function renderSettings(){
   if(!dietData){const prof=getProfile();if(prof)_renderProfileCard(prof);return;}
   const m=dietData.metadata||{};
-  document.getElementById('set-plan-name').textContent=m.name||'—';
+  document.getElementById('set-plan-name').textContent=normalizePlanLabel(m.name,m.goal)||'—';
   document.getElementById('set-plan-meta').textContent=t('set.piano.meta',{fasi:(dietData.phases||[]).length,giorni:(dietData.days||[]).length});
   const el=document.getElementById('set-phases');el.innerHTML='';
   (dietData.phases||[]).forEach((_,i)=>{
@@ -5019,7 +5030,7 @@ function renderSettings(){
   {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_U;const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}
   const prof=getProfile();if(prof)_renderProfileCard(prof);
   _renderPrefsCard();
-  if(document.getElementById('hdr-plan')){document.getElementById('hdr-plan').textContent=m.name||'';document.getElementById('hdr-plan').style.display=m.name?'block':'none';}
+  if(document.getElementById('hdr-plan')){const _pn=normalizePlanLabel(m.name,m.goal);document.getElementById('hdr-plan').textContent=_pn;document.getElementById('hdr-plan').style.display=_pn?'block':'none';}
 }
 function _renderProfileCard(prof){
   /* Hero metrics */
@@ -5557,7 +5568,7 @@ function generateShoppingList(){
   (dietData.days||[]).forEach(day=>{
     Object.entries(day).forEach(([mName,meal])=>{
       if(!meal||typeof meal!=='object'||mName==='d')return;
-      const isHardcodedMeal=mName==='Colazione'||mName.includes('Spuntino');
+      const _smType=canonicalMealType(mName);const isHardcodedMeal=_smType==='breakfast'||_smType==='snack';
 
       /* 1. carbSource + baseAmount — stored separately from rest string.
             Skip for breakfast/snack: their rest string already lists the carb.
