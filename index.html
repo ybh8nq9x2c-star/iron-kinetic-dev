@@ -261,12 +261,20 @@ body.onboarding-active #onb-screen{
   align-items:stretch;
   min-height:0;
 }
-/* Slides strip: horizontal scroll via transform */
+/* Slides strip: horizontal scroll via transform — class-based for 60fps */
 #onboarding-slides{
   display:flex;
   width:100%;
   transition:transform .35s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+  transform:translateX(0);
 }
+#onboarding-slides.slide1{transform:translateX(-100%);}
+#onboarding-slides.slide2{transform:translateX(-200%);}
+#onboarding-slides.slide3{transform:translateX(-300%);}
+#onboarding-slides.slide4{transform:translateX(-400%);}
+/* remove will-change when overlay is hidden */
+#onboarding-overlay[style*="none"] #onboarding-slides{will-change:auto;}
 /* Each slide: exactly 100vw wide, flex column, content centered */
 .onboarding-slide{
   /* Critical: min-width = 100% of the slides-wrap = 100vw */
@@ -326,12 +334,12 @@ body.onboarding-active #onb-screen{
   flex-shrink:0;
 }
 .onb-dot{
-  width:8px;height:8px;border-radius:50%;
+  width:10px;height:10px;border-radius:50%;
   background:var(--dim);
-  transition:background .2s,transform .2s,width .2s;
-  display:block;
+  transition:background .25s,transform .25s,box-shadow .25s,width .25s;
+  display:block;flex-shrink:0;
 }
-.onb-dot.active{background:var(--p);transform:scale(1.25);}
+.onb-dot.active{background:var(--p);transform:scale(1.3);box-shadow:0 0 8px rgba(77,220,198,.5);}
 /* Bottom nav: skip / back / next — balanced 3-column */
 .onb-nav{
   display:grid;
@@ -572,6 +580,16 @@ body.onboarding-active #onb-screen{
   display:none;flex-direction:column;align-items:center;justify-content:center;
 }
 #lang-gate.on{display:flex;}
+
+/* ── FIX12: Coach card state classes ── */
+.coach-card-primary{background:rgba(77,220,198,.04);border:1px solid rgba(77,220,198,.22);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;}
+.coach-card-warning{background:rgba(255,159,10,.06);border:1px solid rgba(255,159,10,.28);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;}
+.coach-card-danger{background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.22);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;}
+.coach-card-info{background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.22);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;}
+.coach-ico-primary{background:rgba(77,220,198,.12);color:var(--p);}
+.coach-ico-warning{background:rgba(255,159,10,.12);color:var(--orange);}
+.coach-ico-danger{background:rgba(255,59,48,.12);color:var(--red);}
+.coach-ico-info{background:rgba(10,132,255,.12);color:var(--blue);}
 </style>
 </head>
 <body class="onboarding-active">
@@ -609,8 +627,8 @@ body.onboarding-active #onb-screen{
       <div style="width:72px;height:72px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.30);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
         <span class="material-symbols-outlined sn" style="color:var(--p);font-size:36px;font-variation-settings:'FILL' 1;">add_to_home_screen</span>
       </div>
-      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Aggiungi alla Schermata Home</h2>
-      <p style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">Per la migliore esperienza, installa Iron Kinetic come app sul tuo dispositivo. Funziona offline, si apre come una vera app e non occupa spazio.</p>
+      <h2 id="pwa-title" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Add to Home Screen</h2>
+      <p id="pwa-sub" style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">For the best experience, install Iron Kinetic as an app on your device. Works offline, opens like a real app and takes no storage.</p>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:12px;">
@@ -619,15 +637,15 @@ body.onboarding-active #onb-screen{
         <div class="pwa-os-label">📱 iPhone / Safari</div>
         <div class="pwa-step">
           <div class="pwa-step-num">1</div>
-          <div style="font-size:12px;color:var(--on);line-height:1.55;">Tocca il pulsante <strong style="color:var(--p);">Condividi</strong> (rettangolo con freccia in su) nella barra di Safari</div>
+          <div id="pwa-ios-1" style="font-size:12px;color:var(--on);line-height:1.55;">Tap the <strong style="color:var(--p);">Share</strong> button (rectangle with arrow pointing up) in the Safari bar</div>
         </div>
         <div class="pwa-step">
           <div class="pwa-step-num">2</div>
-          <div style="font-size:12px;color:var(--on);line-height:1.55;">Scorri in basso e tocca <strong style="color:var(--p);">Aggiungi a schermata Home</strong></div>
+          <div id="pwa-ios-2" style="font-size:12px;color:var(--on);line-height:1.55;">Scroll down and tap <strong style="color:var(--p);">Add to Home Screen</strong></div>
         </div>
         <div class="pwa-step">
           <div class="pwa-step-num">3</div>
-          <div style="font-size:12px;color:var(--on);line-height:1.55;">Tocca <strong style="color:var(--p);">Aggiungi</strong> in alto a destra</div>
+          <div id="pwa-ios-3" style="font-size:12px;color:var(--on);line-height:1.55;">Tap <strong style="color:var(--p);">Add</strong> in the top right</div>
         </div>
       </div>
       <!-- Android / Chrome -->
@@ -635,30 +653,30 @@ body.onboarding-active #onb-screen{
         <div class="pwa-os-label">🤖 Android / Chrome</div>
         <div class="pwa-step">
           <div class="pwa-step-num">1</div>
-          <div style="font-size:12px;color:var(--on);line-height:1.55;">Tocca il menu <strong style="color:var(--p);">⋮</strong> in alto a destra nel browser</div>
+          <div id="pwa-and-1" style="font-size:12px;color:var(--on);line-height:1.55;">Tap the <strong style="color:var(--p);">⋮</strong> menu at the top right of your browser</div>
         </div>
         <div class="pwa-step">
           <div class="pwa-step-num">2</div>
-          <div style="font-size:12px;color:var(--on);line-height:1.55;">Seleziona <strong style="color:var(--p);">Aggiungi a schermata Home</strong> o <strong style="color:var(--p);">Installa app</strong></div>
+          <div id="pwa-and-2" style="font-size:12px;color:var(--on);line-height:1.55;">Select <strong style="color:var(--p);">Add to Home Screen</strong> or <strong style="color:var(--p);">Install App</strong></div>
         </div>
         <div class="pwa-step">
           <div class="pwa-step-num">3</div>
-          <div style="font-size:12px;color:var(--on);line-height:1.55;">Conferma toccando <strong style="color:var(--p);">Installa</strong></div>
+          <div id="pwa-and-3" style="font-size:12px;color:var(--on);line-height:1.55;">Confirm by tapping <strong style="color:var(--p);">Install</strong></div>
         </div>
       </div>
     </div>
 
-    <p style="font-size:11px;color:var(--muted);text-align:center;line-height:1.55;" class="sn">Puoi continuare senza installare, ma l'esperienza sarà ottimale solo come app installata.</p>
+    <p id="pwa-skip-note" style="font-size:11px;color:var(--muted);text-align:center;line-height:1.55;" class="sn">You can continue without installing, but the experience is optimal only as an installed app.</p>
   </div>
 
   <div style="padding-top:16px;">
-    <button onclick="acknowledgedPWA()" style="width:100%;height:52px;border-radius:var(--r-pill);background:var(--p);color:#003730;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:none;cursor:pointer;touch-action:manipulation;" class="sn">Ho capito, Continua →</button>
+    <button id="pwa-btn" onclick="acknowledgedPWA()" style="width:100%;height:52px;border-radius:var(--r-pill);background:var(--p);color:#003730;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:none;cursor:pointer;touch-action:manipulation;" class="sn">Got it, Continue →</button>
   </div>
 </div>
 </div>
 
 <!-- ══════════════════════════════════════
-     GDPR CONSENT GATE — primo avvio
+     GDPR CONSENT GATE — first launch
 ══════════════════════════════════════ -->
 <div id="gdpr-gate">
 <div style="max-width:420px;margin:0 auto;width:100%;padding:calc(max(8px,var(--sat)) + 20px) 24px 40px;display:flex;flex-direction:column;flex:1;">
@@ -667,38 +685,38 @@ body.onboarding-active #onb-screen{
       <div style="width:64px;height:64px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.28);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
         <span class="material-symbols-outlined sn" style="color:var(--p);font-size:32px;font-variation-settings:'FILL' 1;">shield</span>
       </div>
-      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Privacy &amp; Consenso</h2>
-      <p style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">Prima di iniziare, ti informiamo su come trattiamo i tuoi dati.</p>
+      <h2 id="gdpr-gate-title" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Privacy &amp; Consent</h2>
+      <p id="gdpr-gate-sub" style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">Before you start, here's how we handle your data.</p>
     </div>
 
     <!-- Highlights box -->
     <div style="background:rgba(77,220,198,.06);border:1px solid rgba(77,220,198,.16);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;">
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">smartphone</span>
-        <div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Dati solo sul tuo dispositivo</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Peso, misure e piano alimentare rimangono nel tuo browser locale (localStorage). Nessun dato inviato a server esterni.</p></div>
+        <div><p id="gdpr-p1-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Data stays on your device</p><p id="gdpr-p1-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Weight, measurements and meal plan stay in your local browser (localStorage). No data sent to external servers.</p></div>
       </div>
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">healing</span>
-        <div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Dati sanitari — art. 9 GDPR</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Peso e grasso corporeo sono dati relativi alla salute. Il trattamento avviene <em>esclusivamente</em> per fornirti il servizio richiesto, con tuo esplicito consenso.</p></div>
+        <div><p id="gdpr-p2-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Health data — GDPR Art. 9</p><p id="gdpr-p2-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Weight and body fat are health-related data. Processing occurs <em>exclusively</em> to provide the service you requested, with your explicit consent.</p></div>
       </div>
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">block</span>
-        <div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Zero cookie di terze parti</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Nessun cookie di tracking, analytics o advertising. Nessuna condivisione con terzi.</p></div>
+        <div><p id="gdpr-p3-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Zero third-party cookies</p><p id="gdpr-p3-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">No tracking, analytics or advertising cookies. No sharing with third parties.</p></div>
       </div>
     </div>
 
-    <p style="font-size:11px;color:var(--dim);line-height:1.6;text-align:center;" class="sn">
-      Cliccando <strong style="color:var(--on);">Accetta e Continua</strong> acconsenti al trattamento dei dati come descritto nell'<button onclick="openModal('privacy')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:'Manrope',sans-serif;">Informativa Privacy</button>.<br>
-      Puoi revocare il consenso in qualsiasi momento da <em>Profilo → Privacy</em>.
+    <p id="gdpr-gate-footer" style="font-size:11px;color:var(--dim);line-height:1.6;text-align:center;" class="sn">
+      By clicking <strong style="color:var(--on);">Accept &amp; Continue</strong> you consent to data processing as described in the <button onclick="openModal('privacy')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:'Manrope',sans-serif;">Privacy Policy</button>.<br>
+      You can revoke consent at any time from <em>Profile → Privacy</em>.
     </p>
   </div>
 
   <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
-    <button onclick="gdprAccept()" class="btn btn-primary w100 sn" style="height:52px;font-size:13px;">✓ Accetta e Continua</button>
-    <button onclick="openModal('privacy')" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;">Leggi l'Informativa Privacy completa</button>
+    <button id="gdpr-accept-btn" onclick="gdprAccept()" class="btn btn-primary w100 sn" style="height:52px;font-size:13px;">✓ Accept &amp; Continue</button>
+    <button id="gdpr-read-btn" onclick="openModal('privacy')" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;">Read the full Privacy Policy</button>
     <p style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;" class="sn">
-      Non accettando non potrai utilizzare l'app, in quanto il trattamento dei dati è necessario per erogare il servizio.<br>
-      Titolare: Iron Kinetic · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
+      <span id="gdpr-gate-footer2">Without accepting, you won't be able to use the app, as data processing is necessary to deliver the service.</span><br>
+      Controller: Iron Kinetic · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
     </p>
   </div>
 </div>
@@ -1011,7 +1029,7 @@ body.onboarding-active #onb-screen{
     <div class="pg">
 
       <!-- 1. Coach Card -->
-      <div id="coach-card" class="card-neon" style="padding:16px;position:relative;overflow:hidden;">
+      <div id="coach-card" class="card-neon" aria-live="polite" style="padding:16px;position:relative;overflow:hidden;">
         <div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:200px;height:80px;background:rgba(77,220,198,.08);filter:blur(40px);pointer-events:none;border-radius:50%;"></div>
         <div class="row g3" style="position:relative;padding-right:56px;">
           <div id="coach-ico-wrap" style="width:40px;height:40px;border-radius:12px;background:var(--p);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 16px rgba(77,220,198,.28);">
@@ -1023,6 +1041,7 @@ body.onboarding-active #onb-screen{
           </div>
         </div>
         <div id="coach-streak-badge" style="position:absolute;top:14px;right:14px;"></div>
+        <div id="coach-micro-badge" style="display:none;margin-top:10px;padding:8px 10px;border-radius:var(--r2);font-size:11px;font-weight:600;line-height:1.5;"></div>
       </div>
 
       <!-- Adaptive Macro Engine Banner -->
@@ -1051,15 +1070,15 @@ body.onboarding-active #onb-screen{
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;">
           <div>
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-              <span class="t-xxs muted sn">Target Giorno</span>
+              <span class="t-xxs muted sn" data-i18n="oggi.kcal.target">Target Giorno</span>
               <span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span>
             </div>
             <p id="m-kcal" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;color:var(--p);line-height:1;margin:0 0 6px;">—</p>
-            <span class="t-xxs muted sn">Kcal totali</span>
+            <span class="t-xxs muted sn" data-i18n="oggi.kcal.totali">Kcal totali</span>
             <div style="height:0;overflow:hidden;"><div class="bar-fill bfn" id="b-kcal" style="width:0%;"></div></div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
-            <svg width="72" height="72" viewBox="0 0 44 44" class="ring-svg" aria-hidden="true">
+            <svg width="72" height="72" viewBox="0 0 44 44" class="ring-svg" role="img" aria-label="Kcal ring">
               <circle cx="22" cy="22" r="17" class="ring-track"/>
               <circle cx="22" cy="22" r="17" class="ring-fill" id="kcal-ring-oggi" stroke="var(--p)" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4))"/>
             </svg>
@@ -1116,7 +1135,7 @@ body.onboarding-active #onb-screen{
           </div>
         </div>
         <!-- Meals list -->
-        <div id="meals-list" style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;">
+        <div id="meals-list" role="list" style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;">
           <div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Genera il tuo piano dall'onboarding —</span></div>
         </div>
         <!-- Shopping -->
@@ -1138,7 +1157,7 @@ body.onboarding-active #onb-screen{
           <!-- Acqua -->
           <div class="tracker-block">
             <div class="rowb" style="margin-bottom:10px;">
-              <div><p class="t-xxs muted sn">Acqua</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span style="color:var(--p);" id="water-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ <span id="water-target">4.5</span>L</span></p></div>
+              <div><p class="t-xxs muted sn" data-i18n="oggi.acqua">Acqua</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span style="color:var(--p);" id="water-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ <span id="water-target">4.5</span>L</span></p></div>
               <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="water-ring" stroke="var(--p)" stroke-dasharray="138.2" stroke-dashoffset="138.2" style="filter:drop-shadow(0 0 4px rgba(77,220,198,.4));"/></svg>
             </div>
             <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill bfn" id="water-bar" style="width:0%;"></div></div>
@@ -1151,7 +1170,7 @@ body.onboarding-active #onb-screen{
           <!-- Sale -->
           <div class="tracker-block">
             <div class="rowb" style="margin-bottom:10px;">
-              <div><p class="t-xxs muted sn">Sale</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span id="salt-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ 6g</span></p></div>
+              <div><p class="t-xxs muted sn" data-i18n="oggi.sale">Sale</p><p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:3px;" class="sn"><span id="salt-val">0.0</span><span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:3px;">/ 6g</span></p></div>
               <svg width="48" height="48" viewBox="0 0 52 52" class="ring-svg" aria-hidden="true"><circle cx="26" cy="26" r="22" class="ring-track"/><circle cx="26" cy="26" r="22" class="ring-fill" id="salt-ring" stroke="rgba(199,196,216,.4)" stroke-dasharray="138.2" stroke-dashoffset="138.2"/></svg>
             </div>
             <div class="bar-track lg" style="margin-bottom:10px;"><div class="bar-fill" id="salt-bar" style="width:0%;background:rgba(199,196,216,.35);transition:width .5s cubic-bezier(.4,0,.2,1),background .3s;"></div></div>
@@ -1164,14 +1183,14 @@ body.onboarding-active #onb-screen{
           <!-- Passi + Workout -->
           <div class="tracker-2col">
             <div>
-              <p class="t-xxs muted sn">Passi</p>
+              <p class="t-xxs muted sn" data-i18n="oggi.passi">Passi</p>
               <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--p);margin:4px 0;" class="sn" id="steps-val">0</p>
               <p class="t-xxs sn" style="color:var(--dim);">/ <span id="steps-tgt">8.000</span></p>
               <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill bfn" id="steps-bar" style="width:0%;"></div></div>
               <div class="row g2"><button onclick="addSteps(1000)" class="btn btn-neon-o btn-xs f1 sn">+1k</button><button onclick="addSteps(2500)" class="btn btn-ghost btn-xs f1 sn">+2.5k</button></div>
             </div>
             <div>
-              <p class="t-xxs muted sn">Workout</p>
+              <p class="t-xxs muted sn" data-i18n="oggi.workout">Workout</p>
               <p id="wk-ratio" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--on);margin:4px 0;" class="sn">0/1</p>
               <p id="wk-status" class="t-xxs sn" style="color:var(--dim);">Non fatto</p>
               <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill" id="wk-bar" style="width:0%;background:rgba(199,196,216,.25);transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
@@ -1545,21 +1564,21 @@ body.onboarding-active #onb-screen{
 
       <!-- Status consenso -->
       <div class="card" style="padding:16px;">
-        <span class="sec-label" style="margin-bottom:8px;">Stato consenso</span>
+        <span class="sec-label" id="info-consent-status-lbl" style="margin-bottom:8px;">Consent status</span>
         <div class="rowb" style="margin-bottom:12px;">
           <p style="font-size:13px;font-weight:600;color:var(--on);margin:0;" class="sn" id="info-consent-label">—</p>
           <span id="info-consent-badge" style="display:none;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:999px;"></span>
         </div>
         <p style="font-size:11px;color:var(--muted);line-height:1.55;margin:0 0 12px;" class="sn" id="info-consent-date"></p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button onclick="gdprWithdraw()" class="btn btn-danger-o btn-xs sn" style="padding:0 14px;">Revoca consenso</button>
-          <button onclick="openModal('privacy')" class="btn btn-ghost btn-xs sn" style="padding:0 14px;">Dettagli privacy</button>
+          <button id="info-revoke-btn" onclick="gdprWithdraw()" class="btn btn-danger-o btn-xs sn" style="padding:0 14px;">Revoke consent</button>
+          <button id="info-privacy-btn" onclick="openModal('privacy')" class="btn btn-ghost btn-xs sn" style="padding:0 14px;">Privacy details</button>
         </div>
       </div>
 
       <!-- App info -->
       <div class="card" style="padding:16px;">
-        <span class="sec-label" style="margin-bottom:8px;">Applicazione</span>
+        <span class="sec-label" id="info-app-lbl" style="margin-bottom:8px;">Application</span>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <div class="rowb">
             <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Versione</span>
@@ -1638,8 +1657,8 @@ body.onboarding-active #onb-screen{
         <div class="onb-emoji">🎯</div>
         <p class="onb-title" id="onb-t4"></p>
         <p class="onb-body" id="onb-b4"></p>
-        <button id="onb-start-btn" class="btn btn-primary" onclick="onbFinish()"
-          style="margin-top:28px;width:100%;max-width:280px;height:52px;font-size:15px;font-weight:800;letter-spacing:.06em;border-radius:var(--r-pill);"></button>
+        <button id="onb-start-btn" class="btn btn-primary" onclick="onbFinish()" aria-label="Start"
+          style="margin-top:28px;width:100%;max-width:300px;height:60px;font-size:16px;font-weight:800;letter-spacing:.08em;border-radius:var(--r-pill);box-shadow:0 8px 28px rgba(77,220,198,.35);"></button>
       </div>
 
     </div>
@@ -1813,7 +1832,7 @@ it:{
   'gdpr.p3.title':'Zero cookie di terze parti',
   'gdpr.p3.sub':'Nessun cookie di tracking, analytics o advertising. Nessuna condivisione con terzi.',
   'gdpr.btn.accetta':'✓ Accetta e Continua','gdpr.btn.leggi':'Leggi l\'Informativa Privacy completa',
-  'gdpr.footer':'Cliccando <strong>Accetta e Continua</strong> acconsenti al trattamento dei dati come descritto nell\'<span onclick>Informativa Privacy</span>.<br>Puoi revocare il consenso in qualsiasi momento da <em>Profilo › Privacy</em>.',
+  'gdpr.footer':'Cliccando <strong style="color:var(--on)">Accetta e Continua</strong> acconsenti al trattamento dei dati come descritto nell\'<button onclick="openModal(\'privacy\')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:\'Manrope\',sans-serif;">Informativa Privacy</button>.<br>Puoi revocare il consenso in qualsiasi momento da <em>Profilo → Privacy</em>.',
   'pwa.title':'Aggiungi alla Schermata Home',
   'pwa.sub':'Per la migliore esperienza, installa Iron Kinetic come app sul tuo dispositivo. Funziona offline, si apre come una vera app e non occupa spazio.',
   'pwa.skip':'Puoi continuare senza installare, ma l\'esperienza sarà ottimale solo come app installata.',
@@ -1978,17 +1997,17 @@ it:{
   'coach.bodycomp.recomp':'Ricomposizione rilevata: peso stabile, girovita -2%. +150 kcal anti-RED-S. Non modificare il piano.',
   'coach.micro.b12med':'Vegano >21gg: integra B12 (2.4µg/die) e controlla ferro non-eme. Abbina vitamina C al pasto.',
   'coach.micro.b12high':'Vegano >60gg: verifica B12 sierica, ferritina e zinco. Deficit subclinici compromettono il recupero.',
-  'onb2.skip':'Salta','onb2.next':'Avanti →','onb2.prev':'← Indietro','onb2.start':'Inizia ora →',
-  'onb2.slide1.title':'Finalmente un\'app che ti ascolta',
-  'onb2.slide1.body':'Iron Kinetic impara dai tuoi check-in quotidiani e adatta il piano al tuo corpo, non a un modello generico.',
-  'onb2.slide2.title':'30 secondi al giorno. Risultati reali.',
-  'onb2.slide2.body':'Un check-in veloce ogni giorno. Il motore adattivo fa il resto: kcal, macro, timing circadiano.',
-  'onb2.slide3.title':'Il piano che cambia quando cambi tu',
-  'onb2.slide3.body':'Plateau? Fame alta? L\'algoritmo rileva i segnali e suggerisce aggiustamenti mirati in tempo reale.',
-  'onb2.slide4.title':'Sai già dove sarai tra 30 giorni',
-  'onb2.slide4.body':'La curva predittiva calcola il tuo peso futuro in base all\'andamento reale, non a promesse.',
-  'onb2.slide5.title':'Inizia oggi. Il tuo corpo non aspetta.',
-  'onb2.slide5.body':'Inserisci i tuoi dati, scegli il piano e parti. Tutto offline, tutto tuo.',
+  'onb2.skip':'Salta','onb2.next':'Avanti','onb2.prev':'← Indietro','onb2.start':'INIZIA ORA',
+  'onb2.slide1.title':'Finalmente un\'app che ti ASCOLTA',
+  'onb2.slide1.body':'Iron Kinetic adatta il piano al tuo corpo reale,\nnon a un modello generico.',
+  'onb2.slide2.title':'30 secondi al giorno',
+  'onb2.slide2.body':'Un check-in veloce. Il motore adattivo fa tutto il resto:\nkcal, macro, timing perfetto.',
+  'onb2.slide3.title':'Risultati PREDIBILI',
+  'onb2.slide3.body':'Sai esattamente dove sarai tra 30 giorni.\nLa curva predittiva non mente.',
+  'onb2.slide4.title':'Il piano si adatta a TE',
+  'onb2.slide4.body':'Plateau? Fame alta? L\'app rileva e corregge in tempo reale.',
+  'onb2.slide5.title':'INIZIA ORA',
+  'onb2.slide5.body':'Il tuo corpo non aspetta. Entra i dati → ottieni piano perfetto.',
   'confirm.cancel':'Annulla','confirm.ok':'Conferma',
   'confirm.resetPlanOnly':'Rigenera solo il piano? Profilo e preferenze cancellati, log peso e check-in conservati.',
   'confirm.resetAll':'Reset completo? Tutti i dati (peso, check-in, piano, profilo) saranno cancellati. Irreversibile.',
@@ -2243,7 +2262,7 @@ en:{
   'gdpr.p3.title':'Zero third-party cookies',
   'gdpr.p3.sub':'No tracking, analytics or advertising cookies. No data sharing with third parties.',
   'gdpr.btn.accetta':'✓ Accept & Continue','gdpr.btn.leggi':'Read the full Privacy Policy',
-  'gdpr.footer':'By clicking <strong>Accept & Continue</strong> you consent to data processing as described in the <span onclick>Privacy Policy</span>.<br>You can revoke consent at any time from <em>Profile › Privacy</em>.',
+  'gdpr.footer':'By clicking <strong style="color:var(--on)">Accept &amp; Continue</strong> you consent to data processing as described in the <button onclick="openModal(\'privacy\')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:\'Manrope\',sans-serif;">Privacy Policy</button>.<br>You can revoke consent at any time from <em>Profile → Privacy</em>.',
   'pwa.title':'Add to Home Screen',
   'pwa.sub':'For the best experience, install Iron Kinetic as an app on your device. Works offline, opens like a real app, and takes no storage.',
   'pwa.skip':'You can continue without installing, but the experience is best as an installed app.',
@@ -2408,17 +2427,17 @@ en:{
   'coach.bodycomp.recomp':'Body recomposition detected: stable weight, waist -2%. +150 kcal anti-RED-S. Do not change the plan.',
   'coach.micro.b12med':'Vegan >21 days: supplement B12 (2.4µg/day) and monitor non-haem iron. Pair vitamin C with meals.',
   'coach.micro.b12high':'Vegan >60 days: check serum B12, ferritin and zinc. Subclinical deficits impair recovery.',
-  'onb2.skip':'Skip','onb2.next':'Next →','onb2.prev':'← Back','onb2.start':'Start now →',
-  'onb2.slide1.title':'Finally an app that listens to you',
-  'onb2.slide1.body':'Iron Kinetic learns from your daily check-ins and adapts the plan to your body, not a generic template.',
-  'onb2.slide2.title':'30 seconds a day. Real results.',
-  'onb2.slide2.body':'A quick daily check-in. The adaptive engine does the rest: kcal, macros, circadian timing.',
-  'onb2.slide3.title':'The plan that changes when you do',
-  'onb2.slide3.body':'Plateau? High hunger? The algorithm detects signals and suggests targeted adjustments in real time.',
-  'onb2.slide4.title':'You already know where you\'ll be in 30 days',
-  'onb2.slide4.body':'The predictive curve calculates your future weight based on real progress, not promises.',
-  'onb2.slide5.title':'Start today. Your body won\'t wait.',
-  'onb2.slide5.body':'Enter your data, pick a plan, and go. Fully offline, fully yours.',
+  'onb2.skip':'Skip','onb2.next':'Next','onb2.prev':'← Back','onb2.start':'START NOW',
+  'onb2.slide1.title':'Finally an app that LISTENS to you',
+  'onb2.slide1.body':'Iron Kinetic adapts the plan to your real body,\nnot a generic template.',
+  'onb2.slide2.title':'30 seconds a day',
+  'onb2.slide2.body':'A quick check-in. The adaptive engine does the rest:\nkcal, macros, perfect timing.',
+  'onb2.slide3.title':'PREDICTABLE results',
+  'onb2.slide3.body':'You know exactly where you\'ll be in 30 days.\nThe predictive curve doesn\'t lie.',
+  'onb2.slide4.title':'The plan adapts to YOU',
+  'onb2.slide4.body':'Plateau? High hunger? The app detects and corrects in real time.',
+  'onb2.slide5.title':'START NOW',
+  'onb2.slide5.body':'Your body won\'t wait. Enter your data → get the perfect plan.',
   'confirm.cancel':'Cancel','confirm.ok':'Confirm',
   'confirm.resetPlanOnly':'Regenerate plan only? Profile and preferences cleared, weight log and check-ins kept.',
   'confirm.resetAll':'Full reset? All data (weight, check-ins, plan, profile) will be deleted. Irreversible.',
@@ -2572,7 +2591,10 @@ en:{
 }
 };
 let _lang='en';
-let _regenSeed=0; /* incremented on every regenSingleMeal call to vary breakfast/snack picks */
+/* ── Early storage helpers — defined here because used before the main Storage block ── */
+const lsR=k=>{try{return localStorage.getItem(k);}catch{return null;}};
+const lsW=(k,v)=>{try{localStorage.setItem(k,v);}catch{}};
+let _regenSeed=parseInt(lsR('ik-rseed')||'0'); /* persisted across reloads — FIX2 */
 function t(key,vars={}){
   const s=LANG[_lang]?.[key]??LANG.it?.[key]??key;
   return Object.entries(vars).reduce((r,[k,v])=>r.replace(new RegExp(`\\{${k}\\}`,'g'),String(v)),s);
@@ -2630,6 +2652,10 @@ function applyTranslations(deferOffscreen){
   /* ── i18n static patch ── */
   const _nm={'nav-lbl-oggi':'nav.oggi','nav-lbl-trend':'nav.trend','nav-lbl-profilo':'nav.profilo','nav-lbl-aiuto':'nav.aiuto'};
   Object.entries(_nm).forEach(([id,k])=>{const el=document.getElementById(id);if(el)el.textContent=t(k);});
+  /* FIX7: generic data-i18n pass — replaces fragile text-matching */
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    el.textContent=t(el.dataset.i18n);
+  });
   document.querySelectorAll('.t-xxs.muted').forEach(el=>{
     const v=el.textContent.trim();
     if(v==='Acqua'||v==='Water')el.textContent=t('oggi.acqua');
@@ -3158,47 +3184,44 @@ function applyTranslations(deferOffscreen){
   const prvConsTitle=document.querySelector('#modal-privacy [style*="background:var(--s2)"] .prv-h2');
   if(prvConsTitle)prvConsTitle.textContent=t('privacy.consenso.title');
   document.querySelectorAll('button[onclick="gdprAccept();closeModal(\'modal-privacy\')"]').forEach(b=>b.textContent=t('privacy.consenso.rinnova'));
-  /* PWA gate */
-  const pwaTitle=document.querySelector('#pwa-gate h2');if(pwaTitle)pwaTitle.textContent=t('pwa.title');
-  const pwaSub=document.querySelector('#pwa-gate h2+p');if(pwaSub)pwaSub.textContent=t('pwa.sub');
-  const pwaSkip=document.querySelector('#pwa-gate .pwa-step~p,.skip-pwa');
-  if(pwaSkip)pwaSkip.textContent=t('pwa.skip');
-  const pwaBtn=document.querySelector('button[onclick="acknowledgedPWA()"]');if(pwaBtn)pwaBtn.textContent=t('pwa.btn');
-  /* PWA step texts (innerHTML: dev-defined LANG strings, no user input) */
-  const _pwaTexts=document.querySelectorAll('#pwa-gate .pwa-step > div:not(.pwa-step-num)');
-  if(_pwaTexts[0])_pwaTexts[0].innerHTML=t('pwa.ios.step1');
-  if(_pwaTexts[1])_pwaTexts[1].innerHTML=t('pwa.ios.step2');
-  if(_pwaTexts[2])_pwaTexts[2].innerHTML=t('pwa.ios.step3');
-  if(_pwaTexts[3])_pwaTexts[3].innerHTML=t('pwa.android.step1');
-  if(_pwaTexts[4])_pwaTexts[4].innerHTML=t('pwa.android.step2');
-  if(_pwaTexts[5])_pwaTexts[5].innerHTML=t('pwa.android.step3');
+  /* Consent management buttons (privacy modal + profile tab) */
+  /* PWA gate — direct ID lookups (robust, no CSS selector fragility) */
+  const _pid=id=>document.getElementById(id);
+  if(_pid('prv-revoke-btn'))_pid('prv-revoke-btn').textContent=t('privacy.consenso.revoca');
+  if(_pid('prv-renew-btn'))_pid('prv-renew-btn').textContent=t('privacy.consenso.rinnova');
+  if(_pid('info-revoke-btn'))_pid('info-revoke-btn').textContent=t('privacy.consenso.revoca');
+  if(_pid('info-privacy-btn'))_pid('info-privacy-btn').textContent=t('info.consenso.dettagli');
+  if(_pid('prv-consent-mgmt-title'))_pid('prv-consent-mgmt-title').textContent=t('privacy.consenso.title');
+  if(_pid('info-consent-status-lbl'))_pid('info-consent-status-lbl').textContent=t('info.consenso.title');
+  if(_pid('info-app-lbl'))_pid('info-app-lbl').textContent=t('info.app.title');
+  if(_pid('pwa-title'))_pid('pwa-title').textContent=t('pwa.title');
+  if(_pid('pwa-sub'))_pid('pwa-sub').textContent=t('pwa.sub');
+  if(_pid('pwa-skip-note'))_pid('pwa-skip-note').textContent=t('pwa.skip');
+  if(_pid('pwa-btn'))_pid('pwa-btn').textContent=t('pwa.btn');
+  if(_pid('pwa-ios-1'))_pid('pwa-ios-1').innerHTML=t('pwa.ios.step1');
+  if(_pid('pwa-ios-2'))_pid('pwa-ios-2').innerHTML=t('pwa.ios.step2');
+  if(_pid('pwa-ios-3'))_pid('pwa-ios-3').innerHTML=t('pwa.ios.step3');
+  if(_pid('pwa-and-1'))_pid('pwa-and-1').innerHTML=t('pwa.android.step1');
+  if(_pid('pwa-and-2'))_pid('pwa-and-2').innerHTML=t('pwa.android.step2');
+  if(_pid('pwa-and-3'))_pid('pwa-and-3').innerHTML=t('pwa.android.step3');
   /* confirm modal buttons */
   const _cfCancelBtn=document.getElementById('confirm-cancel-btn');
   if(_cfCancelBtn&&!_cfCancelBtn.dataset.custom)_cfCancelBtn.textContent=t('confirm.cancel');
   const _cfOkBtn=document.getElementById('confirm-ok-btn');
   if(_cfOkBtn&&!_cfOkBtn.dataset.custom)_cfOkBtn.textContent=t('confirm.ok');
-  /* GDPR gate */
-  const gdprTitle=document.querySelector('#gdpr-gate h2');if(gdprTitle)gdprTitle.textContent=t('gdpr.title');
-  const gdprSub=document.querySelector('#gdpr-gate h2+p');if(gdprSub)gdprSub.textContent=t('gdpr.sub');
-  const gdprAccBtn=document.querySelector('button[onclick="gdprAccept()"]');
-  if(gdprAccBtn)gdprAccBtn.textContent=t('gdpr.btn.accetta');
-  const gdprReadBtn=document.querySelector('button[onclick="openModal(\'privacy\')"].btn-ghost.w100');
-  if(gdprReadBtn)gdprReadBtn.textContent=t('gdpr.btn.leggi');
-  /* GDPR bullet rows (title + sub via innerHTML — dev-defined LANG strings) */
-  const _gdprBullets=document.querySelectorAll('#gdpr-gate .row.g3');
-  const _gdprKeys=[['gdpr.p1.title','gdpr.p1.sub'],['gdpr.p2.title','gdpr.p2.sub'],['gdpr.p3.title','gdpr.p3.sub']];
-  _gdprBullets.forEach((row,i)=>{
-    if(!_gdprKeys[i])return;
-    const _gtitle=row.querySelector('p[style*="font-weight:700"]');
-    const _gsub=row.querySelector('p:last-child');
-    if(_gtitle)_gtitle.textContent=t(_gdprKeys[i][0]);
-    if(_gsub)_gsub.innerHTML=t(_gdprKeys[i][1]);
-  });
-  /* GDPR footer (innerHTML — dev-defined LANG string with HTML) */
-  const _gdprFooter=document.querySelector('#gdpr-gate p[style*="font-size:11px"][style*="color:var(--dim)"]');
-  if(_gdprFooter)_gdprFooter.innerHTML=t('gdpr.footer');
-  const _gdprFooter2=document.querySelector('#gdpr-gate p[style*="font-size:10px"][style*="color:var(--dim)"]');
-  if(_gdprFooter2){const _f2t=_gdprFooter2.querySelector('span')||null;_gdprFooter2.childNodes[0]&&(_gdprFooter2.childNodes[0].textContent='\n      '+t('gdpr.footer2')+'\n      ');}
+  /* GDPR gate — direct ID lookups */
+  if(_pid('gdpr-gate-title'))_pid('gdpr-gate-title').textContent=t('gdpr.title');
+  if(_pid('gdpr-gate-sub'))_pid('gdpr-gate-sub').textContent=t('gdpr.sub');
+  if(_pid('gdpr-accept-btn'))_pid('gdpr-accept-btn').textContent=t('gdpr.btn.accetta');
+  if(_pid('gdpr-read-btn'))_pid('gdpr-read-btn').textContent=t('gdpr.btn.leggi');
+  if(_pid('gdpr-p1-title'))_pid('gdpr-p1-title').textContent=t('gdpr.p1.title');
+  if(_pid('gdpr-p1-sub'))_pid('gdpr-p1-sub').innerHTML=t('gdpr.p1.sub');
+  if(_pid('gdpr-p2-title'))_pid('gdpr-p2-title').textContent=t('gdpr.p2.title');
+  if(_pid('gdpr-p2-sub'))_pid('gdpr-p2-sub').innerHTML=t('gdpr.p2.sub');
+  if(_pid('gdpr-p3-title'))_pid('gdpr-p3-title').textContent=t('gdpr.p3.title');
+  if(_pid('gdpr-p3-sub'))_pid('gdpr-p3-sub').innerHTML=t('gdpr.p3.sub');
+  if(_pid('gdpr-gate-footer'))_pid('gdpr-gate-footer').innerHTML=t('gdpr.footer');
+  if(_pid('gdpr-gate-footer2'))_pid('gdpr-gate-footer2').textContent=t('gdpr.footer2');
   /* ── DANGER ZONE accordion warning ── */
   document.querySelectorAll('#acc-danger .sn.t-xxs.muted').forEach(p=>{
     if(p.textContent.includes('irreversibili')||p.textContent.includes('irreversible'))
@@ -3279,8 +3302,20 @@ const mk=(d,n)=>`ik_ml_${toISO()}_d${d}_${n}`;
 /* Storage */
 const lsG=(k,fb=null)=>{try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):fb;}catch{return fb;}};
 const lsS=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));_tabDirty.oggi=true;_tabDirty.prog=true;_tabDirty.set=true;}catch(e){if(e.name==='QuotaExceededError'||e.code===22||e.code===1014){try{showToast(t('toast.storageQuota')||'⚠️ Spazio esaurito — esporta backup');}catch{}}}};
-const lsR=k=>{try{return localStorage.getItem(k);}catch{return null;}};
-const lsW=(k,v)=>{try{localStorage.setItem(k,v);}catch{}};
+/* lsR and lsW defined earlier (before first use) to avoid TDZ — see top of script */
+
+/* ── FIX4: atomic saveState wrapper ── */
+function saveState(key,value){
+  const prev=lsR(key);
+  try{
+    lsW(key,typeof value==='string'?value:JSON.stringify(value));
+  }catch(e){
+    if(e.name==='QuotaExceededError'){
+      try{showToast(t('toast.storageQuota'));}catch{}
+      try{if(prev!==null)lsW(key,prev);}catch{}
+    }
+  }
+}
 const getLog=()=>lsG(SK.wLog,[]);
 const saveLog=a=>lsS(SK.wLog,a);
 const getProfile=()=>lsG(SK.profile,null);
@@ -3301,7 +3336,11 @@ const isRefeed=()=>lsR(SK.refeed)===toISO();
 const revWeeks=()=>{const s=parseInt(lsR(SK.p4Start)||'0');return s?Math.floor((Date.now()-s)/(7*24*3600*1000)):0;};
 
 function totalModUnits(){let u=getMod();const p=getPhase();if(p===2&&isRefeed())u+=4;if(p===4)u+=revWeeks();return u;}
+let _macroCache=null,_macroCacheKey='';
 function calcMacros(){
+  const p=getProfile();
+  const _ck=JSON.stringify({w:p?.weight,g:p?.goal,s:p?.sex,mod:getMod(),ref:isRefeed(),ph:getPhase(),base:baseKcal()});
+  if(_macroCache&&_macroCacheKey===_ck)return _macroCache;
   const m=getMod(),phase=getPhase(),ref=(phase===2&&isRefeed()),rev=(phase===4?revWeeks():0);
   const prof=getProfile();
   const goal=prof?.goal||'maintain';
@@ -3336,7 +3375,9 @@ function calcMacros(){
 
   const _s=getDayMacroShift(),_c=Math.round(Math.max(carbFloor,carbs*_s.carbMult)),_f=Math.round(Math.max(fatFloor,fat*_s.fatMult)),_k=Math.max(kcalFloor,Math.round(pro*4+_c*4+_f*9));  /* MISSING3: body composition shift */
   const bcs=getBodyCompShift();if(bcs){kcal+=bcs.shift;const _bcMsg=bcs.msg;}
-  return{kcal:_k,pro,carbs:_c,fat:_f,modified,refeedActive:ref,reverseWeeks:rev,dayType:_s.label};
+  const _result={kcal:_k,pro,carbs:_c,fat:_f,modified,refeedActive:ref,reverseWeeks:rev,dayType:_s.label};
+  _macroCache=_result;_macroCacheKey=_ck;
+  return _result;
 }
 /* Alias used by regenSingleMeal and swapMealComponent */
 const calcDailyMacros=calcMacros;
@@ -5102,6 +5143,7 @@ function activateGeneratedPlan(){
   profState.trainTime=profState.trainTime||_trainTime||'';
   lsS(SK.sport,profState.sport);
   lsW(SK.trainTime,profState.trainTime);
+  _macroCache=null;
   lsS(SK.profile,profState);
   lsS(SK.prefs,prefState);
   const patched=applyProfileToMeta(plan);
@@ -5253,34 +5295,51 @@ function renderCoach(){
   const card=document.getElementById('coach-card');const iw=document.getElementById('coach-ico-wrap');
   const ic=document.getElementById('coach-ico');const lb=document.getElementById('coach-lbl');const ms=document.getElementById('coach-msg');
   const isPrimary=d.ib==='#4ddcc6'||d.ib==='#F97316';
-  card.style.cssText=`background:rgba(77,220,198,.04);border:1px solid ${d.br};border-radius:var(--r);box-shadow:inset 0 0 28px ${d.gl};padding:16px;position:relative;overflow:hidden;`;
-  iw.style.cssText=`width:40px;height:40px;border-radius:12px;background:${d.ib};display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px ${d.gl};`;
-  ic.style.color=isPrimary?'#003730':'#fff';ic.textContent=d.ico;
-  lb.style.color=isPrimary?'var(--p)':d.br;lb.textContent=d.lbl;
+  /* FIX12: use CSS classes instead of inline cssText */
+  const _ck=d.colorKey||'primary';
+  card.className=`card-neon coach-card-${_ck}`;
+  iw.className=`coach-ico-${_ck}`;
+  iw.style.cssText='width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+  ic.style.color='';ic.textContent=d.ico;
+  lb.style.color='';lb.textContent=d.lbl;
   ms.style.color='var(--on)';ms.textContent=d.msg;
-  /* Add streak badge if applicable */
+  /* Add streak badge if applicable — FIX6: streak>=2, no createElement */
   const streakCount=getStreakCount('checkin');
   const sbEl=document.getElementById('coach-streak-badge');
   if(sbEl){
-    if(streakCount>=1){
+    if(streakCount>=2){
       sbEl.innerHTML=`<span class="streak-badge"><span class="fire">🔥</span> ${sanitize(streakCount)}</span>`;
+      sbEl.style.display='block';
     }else{
-      sbEl.innerHTML='';
+      sbEl.innerHTML='';sbEl.style.display='none';
     }
   }
-  /* MISSING2: micro risk badge */
+  /* Satiety badge — FIX6: hunger>=7 and adherence<=5 */
+  const _cksCoach=JSON.parse(localStorage.getItem(SK.checkins)||'[]').slice(-3);
+  const _avgHCoach=_cksCoach.length?_cksCoach.reduce((a,c)=>a+(+c.hunger||5),0)/_cksCoach.length:0;
+  const _avgACoach=_cksCoach.length?_cksCoach.reduce((a,c)=>a+(+c.adherence||5),0)/_cksCoach.length:10;
+  const _showSatiety=_avgHCoach>=7&&_avgACoach<=5;
+  /* Micro risk badge — FIX6: always use static div */
   const _mr=getMicroRisk();
-  let _mrEl=document.getElementById('coach-micro-badge');
-  if(_mr){
-    if(!_mrEl){_mrEl=document.createElement('div');_mrEl.id='coach-micro-badge';
-      _mrEl.style.cssText='margin-top:10px;padding:8px 10px;border-radius:var(--r2);font-size:11px;font-weight:600;line-height:1.5;';
-      card.appendChild(_mrEl);}
-    const _mrColor=_mr.level==='high'?'rgba(255,59,48,.12)':'rgba(255,159,10,.10)';
-    const _mrBorder=_mr.level==='high'?'rgba(255,59,48,.28)':'rgba(255,159,10,.28)';
-    const _mrTc=_mr.level==='high'?'var(--red)':'var(--orange)';
-    _mrEl.style.background=_mrColor;_mrEl.style.border=`1px solid ${_mrBorder}`;_mrEl.style.color=_mrTc;
-    _mrEl.textContent=(_mr.level==='high'?'🧪 ':'💊 ')+t(_mr.msg);
-  }else if(_mrEl){_mrEl.remove();}
+  const _mrEl=document.getElementById('coach-micro-badge');
+  if(_mrEl){
+    if(_mr){
+      const _mrColor=_mr.level==='high'?'rgba(255,59,48,.12)':'rgba(255,159,10,.10)';
+      const _mrBorder=_mr.level==='high'?'rgba(255,59,48,.28)':'rgba(255,159,10,.28)';
+      const _mrTc=_mr.level==='high'?'var(--red)':'var(--orange)';
+      _mrEl.style.background=_mrColor;_mrEl.style.borderColor=_mrBorder;_mrEl.style.color=_mrTc;
+      _mrEl.style.border=`1px solid ${_mrBorder}`;
+      _mrEl.textContent=(_mr.level==='high'?'🧪 ':'💊 ')+t(_mr.msg);
+      _mrEl.style.display='block';
+    }else if(_showSatiety){
+      _mrEl.style.background='rgba(255,159,10,.10)';_mrEl.style.border='1px solid rgba(255,159,10,.28)';
+      _mrEl.style.color='var(--orange)';
+      _mrEl.textContent='⚠️ '+(_lang==='en'?'High hunger + low adherence: consider +100 kcal':'Fame alta + aderenza bassa: considera +100 kcal');
+      _mrEl.style.display='block';
+    }else{
+      _mrEl.innerHTML='';_mrEl.style.display='none';
+    }
+  }
 }
 
 function toggleAccordion(id){
@@ -5290,7 +5349,8 @@ function toggleAccordion(id){
     const isTarget=b.id==='acc-'+id;
     const open=b.style.maxHeight&&b.style.maxHeight!=='0px';
     if(isTarget){
-      b.style.maxHeight=open?'0':'600px';
+      /* FIX15: use scrollHeight instead of hardcoded 600px */
+      b.style.maxHeight=open?'0':b.scrollHeight+'px';
       chevrons[i].style.transform=open?'':'rotate(90deg)';
     } else {
       b.style.maxHeight='0';
@@ -5298,6 +5358,12 @@ function toggleAccordion(id){
     }
   });
 }
+/* FIX15: update open accordions on resize */
+window.addEventListener('resize',()=>{
+  document.querySelectorAll('.acc-body').forEach(b=>{
+    if(b.style.maxHeight&&b.style.maxHeight!=='0px')b.style.maxHeight=b.scrollHeight+'px';
+  });
+});
 function toggleTrackers(){
   const b=getEl('trackers-body');
   const c=getEl('trackers-chevron');
@@ -5406,8 +5472,8 @@ function renderTrackers(){
   wb.style.borderColor=wd?'rgba(77,220,198,.22)':'var(--glass-stroke)';
   wb.style.color=wd?'var(--p)':'var(--on-v)';
 }
-function addWater(a){hap();const mx=getWMAX();const c=gT('water');if(c>=mx){toast(t('toast.acquaLimite',{max:mx}));hap('error');return;}const n=Math.min(mx,parseFloat((c+a).toFixed(2)));sT('water',n);renderTrackers();renderCoach();toast(`+${a}L → ${n.toFixed(1)}L`);}
-function addSalt(a){hap();const c=gT('salt');if(c>=SMAX){toast(t('toast.saleLimite'));hap('error');return;}const n=Math.min(SMAX,parseFloat((c+a).toFixed(1)));sT('salt',n);renderTrackers();renderCoach();toast(`+${a}g → ${n.toFixed(1)}g`);}
+function addWater(a){hap();const mx=getWMAX();const c=gT('water');if(c>=mx){toast(t('toast.acquaLimite',{max:mx}));hap('error');return;}const n=Math.min(mx,parseFloat((c+a).toFixed(2)));sT('water',n);scheduleRender(renderTrackers,renderCoach);toast(`+${a}L → ${n.toFixed(1)}L`);}
+function addSalt(a){hap();const c=gT('salt');if(c>=SMAX){toast(t('toast.saleLimite'));hap('error');return;}const n=Math.min(SMAX,parseFloat((c+a).toFixed(1)));sT('salt',n);scheduleRender(renderTrackers,renderCoach);toast(`+${a}g → ${n.toFixed(1)}g`);}
 function addSteps(a){hap();const n=parseInt(lsR(dk('steps'))||'0')+a;const capped=Math.min(30000,n);lsW(dk('steps'),capped.toString());if(n>30000)toast(t('toast.stepsCap')||'⚠️ Max 30.000 passi');renderTrackers();toast(`+${a.toLocaleString()} → ${capped.toLocaleString()}`);}
 function toggleWk(){hap('medium');const n=gT('workout')>=1?0:1;sT('workout',n);renderTrackers();toast(t(n?'toast.wkCompletato':'toast.wkRimosso'));}
 function resetT(tp){hap();const prev=gT(tp);sT(tp,0);renderTrackers();showToast(t('toast.azzerato')+' — '+'<button onclick="sT(\''+tp+'\','+prev+');renderTrackers();closeToast()" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:inherit">'+t('toast.undo')+'</button>',4000);}
@@ -5415,14 +5481,27 @@ function resetT(tp){hap();const prev=gT(tp);sT(tp,0);renderTrackers();showToast(
 /* ═══════════════════════════════════════
    MEALS — dynamic meal count from plan
 ═══════════════════════════════════════ */
+let _daySelectorDietId=null;
 function buildDaySelector(){
-  const el=document.getElementById('day-sel');el.innerHTML='';
+  const el=document.getElementById('day-sel');
   const progStartMs=parseInt(lsR(SK.progStart)||0);
   const daysSinceStart=progStartMs?Math.floor((Date.now()-progStartMs)/86400000)+1:1;
   const autoDay=dietData.days.find(d=>d.d===daysSinceStart)?daysSinceStart:1;
   if(selDay===1)selDay=autoDay;
+  /* FIX14: only rebuild if diet changed, else just update active chip */
+  const _dietId=dietData?.metadata?.name||''+((dietData?.days||[]).length);
+  if(_daySelectorDietId===_dietId&&el.children.length===(dietData?.days||[]).length){
+    Array.from(el.children).forEach(b=>{
+      const _bd=parseInt(b.dataset.day||'0');
+      b.classList.toggle('on',_bd===selDay);
+    });
+    return;
+  }
+  _daySelectorDietId=_dietId;
+  el.innerHTML='';
   (dietData.days||[]).forEach(day=>{
     const b=document.createElement('button');b.textContent=`G${day.d}`;b.className='day-chip sn';
+    b.dataset.day=String(day.d);
     if(day.d===selDay)b.classList.add('on');
     b.onclick=()=>{hap();selDay=day.d;buildDaySelector();renderMeals();};
     el.appendChild(b);
@@ -5496,7 +5575,8 @@ function renderMeals(){
   const totalEl=document.getElementById('meals-total');if(totalEl)totalEl.textContent='/'+mNames.length;
   const dist=getAdaptedMealDistribution();
   const skipRates=getMealSkipRates();
-  cont.innerHTML=mNames.map((n,mealIdx)=>{
+  /* FIX5: build new HTML, then do selective update to preserve scroll/transitions */
+  const _newRows=mNames.map((n,mealIdx)=>{
     const meal=day[n];if(!meal)return'';
     const checked=lsR(mk(day.d,n))==='1';if(checked)done++;
     const _mType=canonicalMealType(n);const isHardcodedMeal=_mType==='breakfast'||_mType==='snack';
@@ -5525,9 +5605,9 @@ function renderMeals(){
           <button onclick="swapMealComponent(${day.d},'${sanitize(n)}','carb')" class="btn-xs-swap">${t('meal.swap.carb')}</button>
           <button onclick="regenSingleMeal(${day.d},'${sanitize(n)}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
         </div>`;
-    return `<div style="width:100%;">
+    return `<div style="width:100%;" data-meal-id="${sanitize(n)}" data-done="${checked?'1':'0'}">
       <button class="meal-row${checked?' done':''}" onclick="toggleMeal(${day.d},'${sanitize(n)}')"
-        aria-pressed="${checked}" aria-label="${sanitize(localizedMealName(n))}${checked?' '+t('meal.completed'):''}"
+        role="listitem" aria-pressed="${checked}" aria-label="${sanitize(localizedMealName(n))}${checked?' '+t('meal.completed'):''}"
         style="${bs}border-radius:var(--r);display:flex;align-items:flex-start;gap:12px;padding:13px;touch-action:manipulation;cursor:pointer;width:100%;text-align:left;">
         <div style="width:32px;height:32px;border-radius:var(--r2);border:1.5px solid ${checked?'var(--p)':'var(--line)'};background:${checked?'rgba(77,220,198,.10)':'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
           ${checked?`<span class="material-symbols-outlined sn" style="font-size:16px;color:var(--p);font-variation-settings:'FILL' 1;">check</span>`:''}
@@ -5540,6 +5620,20 @@ function renderMeals(){
       ${actionsHtml}
     </div>`;
   }).join('');
+  /* Selective DOM update */
+  const _existingRows=cont.querySelectorAll('[data-meal-id]');
+  const _newFrag=document.createElement('div');_newFrag.innerHTML=_newRows;
+  const _newDivs=_newFrag.querySelectorAll('[data-meal-id]');
+  if(_existingRows.length===_newDivs.length){
+    _existingRows.forEach((_ex,_i)=>{
+      const _nw=_newDivs[_i];
+      if(_ex.dataset.mealId!==_nw.dataset.mealId||_ex.dataset.done!==_nw.dataset.done){
+        _ex.outerHTML=_nw.outerHTML;
+      }
+    });
+  }else{
+    cont.innerHTML=_newRows;
+  }
   document.getElementById('meals-done').textContent=done;
   const dateEl=document.getElementById('oggi-date-label');
   if(dateEl)dateEl.textContent=new Date().toLocaleDateString(_lang==='en'?'en-US':'it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
@@ -5547,7 +5641,7 @@ function renderMeals(){
   if(pastiBar)pastiBar.style.width=(mNames.length>0?Math.round(done/mNames.length*100):0)+'%';
   renderKcalRing();
 }
-function toggleMeal(d,n){hap();const k=mk(d,n);const c=lsR(k)==='1';lsW(k,c?'0':'1');if(!c)toast(t('toast.mealMarcato',{n}));_tabDirty.oggi=true;renderMeals();}
+function toggleMeal(d,n){hap();const k=mk(d,n);const c=lsR(k)==='1';lsW(k,c?'0':'1');if(!c)toast(t('toast.mealMarcato',{n}));_tabDirty.oggi=true;scheduleRender(renderMeals);}
 
 /* ── Kcal ring: back-fill targetKcal for plans saved before this feature ──
    Called once in mountApp(). Uses base kcal (no modifier) to approximate
@@ -5567,7 +5661,7 @@ function migrateTargetKcal(){
       }
     });
   });
-  if(changed)try{lsW(SK.diet,JSON.stringify(dietData));}catch{}
+  if(changed)saveState(SK.diet,JSON.stringify(dietData));
 }
 
 /* ── Sum kcal from checked meals for the given day ──
@@ -5625,7 +5719,7 @@ function renderRefeed(){
     if(on)b.classList.add('rfon');else b.classList.remove('rfon');
   });
 }
-function toggleRefeed(){
+function toggleRefeed(){_macroCache=null;
   hap('medium');
   if(isRefeed())try{localStorage.removeItem(SK.refeed);}catch{}
   else lsW(SK.refeed,toISO());
@@ -5699,9 +5793,10 @@ function renderModDisplay(){
 }
 function applyMod(u){
   const MAX_UNITS=5,MIN_UNITS=-5;
+  _macroCache=null;
   hap();if(u===0){lsW(SK.mod,'0');toast(t('toast.modAzzerato'));}
   else{const n=Math.max(MIN_UNITS,Math.min(MAX_UNITS,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
-  renderModDisplay();renderMacros();renderCoach();renderMeals();
+  renderModDisplay();scheduleRender(renderMacros,renderCoach,renderMeals);
   const cur=getMod();
   const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_UNITS;
   const stepper=getEl('mod-stepper');
@@ -5763,6 +5858,7 @@ function _doResetProfile(keepLog){
   /* Restore kept data */
   Object.entries(snap).forEach(([k,v])=>{try{localStorage.setItem(k,v);}catch{}});
   /* Reset in-memory state */
+  _macroCache=null;
   if(bodyChart){bodyChart.destroy();bodyChart=null;}
   dietData=null;
   profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,sport:'fitness',trainTime:''};_sport='fitness';_trainTime='';
@@ -5774,8 +5870,9 @@ function _doResetProfile(keepLog){
   document.body.classList.add('onboarding-active');
   document.getElementById('app-shell').classList.remove('on');
   document.getElementById('onb-screen').classList.remove('on');
-  /* Go directly to profiler (skip slideshow since user already saw it) */
-  showOnb();
+  /* Show slideshow for returning users so they re-engage */
+  lsS(SK.onboardingDone,false);
+  showOnboarding();
   toast(keepLog?t('toast.pianoEl'):t('toast.profiloEl'));
 }
 function resetProfile(){
@@ -5947,8 +6044,9 @@ function importBackup(evt){
         catch(se){throw new Error(t('import.errPlan',{msg:se.message}));}
       }
 
-      /* ── Confirm before destructive operation ── */
-      if(!confirm(t('confirm.importa',{n:Object.keys(d).length})))return;
+      /* ── Confirm before destructive operation — FIX17: use showConfirm ── */
+      showConfirm(t('confirm.importa',{n:Object.keys(d).length}),()=>{
+      /* ── Safe restore: write new first, then clear old keys not in backup ── */
 
       /* ── Safe restore: write new first, then clear old keys not in backup ── */
       const oldKeys=[];
@@ -6000,6 +6098,7 @@ function importBackup(evt){
         if(p?.targetKcal){parsed.metadata.baseKcal=p.targetKcal;parsed.metadata.basePro=p.pro;parsed.metadata.baseCarbs=p.carbs;parsed.metadata.baseFat=p.fat;}
         dietData=parsed;mountApp();toast(t('toast.backupImp'));
       }else{dietData=null;showOnb();toast(t('toast.noPianoBackup'));}
+      }); // end showConfirm callback
 
     }catch(err){toast(`⚠️ ${err.message||t('toast.errExp')}`);}
   };
@@ -6101,8 +6200,8 @@ function swapMealComponent(dayNum, mealName, component){
     if(meal._meta)meal._meta[component]=nextFood;
   }
 
-  try{lsW(SK.diet,JSON.stringify(dietData));}catch{}
-  renderMeals();renderMacros();
+  saveState(SK.diet,JSON.stringify(dietData));
+  scheduleRender(renderMeals);renderMacros();
   toast(`${localizedMealName(mealName)}: ${t(component==='protein'?'meal.comp.protein':component==='carb'?'meal.comp.carb':'meal.comp.fat')} → ${localizeFoodLabel(FOOD_DB[nextFood]?.label||nextFood)}`);
 }
 
@@ -6111,6 +6210,7 @@ function regenSingleMeal(dayNum,mealName){
   const day=dietData.days.find(d=>d.d===dayNum);
   if(!day||!day[mealName])return;
   _regenSeed++; /* advance seed so breakfast/snack pick a different rotation variant */
+  lsW('ik-rseed',String(_regenSeed));
 
   const prof=getProfile();
   const prefs=getPrefs()||prefState;
@@ -6183,8 +6283,8 @@ function regenSingleMeal(dayNum,mealName){
     day[mealName]=meal;
   }
 
-  try{lsW(SK.diet,JSON.stringify(dietData));}catch{}
-  renderMeals();renderMacros();
+  saveState(SK.diet,JSON.stringify(dietData));
+  scheduleRender(renderMeals,renderMacros);
   toast(t('toast.rigenMeal',{meal:localizedMealName(mealName)}));
 }
 
@@ -6640,6 +6740,38 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 function showToast(html,dur){const t=document.getElementById('toast');t.innerHTML=html;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),dur||2600);}
 function closeToast(){const t=document.getElementById('toast');t.classList.remove('on');clearTimeout(t._t);}
 
+/* ── FIX16: Modal focus trap ── */
+let _modalTrigger=null;
+function trapFocus(modalEl){
+  const focusable=modalEl.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+  if(!focusable.length)return;
+  const first=focusable[0],last=focusable[focusable.length-1];
+  function _handler(e){
+    if(e.key!=='Tab')return;
+    if(e.shiftKey){if(document.activeElement===first){e.preventDefault();last.focus();}}
+    else{if(document.activeElement===last){e.preventDefault();first.focus();}}
+  }
+  modalEl._focusTrapHandler=_handler;
+  modalEl.addEventListener('keydown',_handler);
+  /* Focus first focusable element */
+  setTimeout(()=>{try{first.focus();}catch{}},50);
+}
+
+/* ── FIX11: RAF-batched render scheduler ── */
+let _rafPending=false;
+const _renderQueue=new Set();
+function scheduleRender(...fns){
+  fns.forEach(f=>{if(f)_renderQueue.add(f);});
+  if(!_rafPending){
+    _rafPending=true;
+    requestAnimationFrame(()=>{
+      _renderQueue.forEach(f=>{try{f();}catch(e){console.error('renderQ:',e);}});
+      _renderQueue.clear();
+      _rafPending=false;
+    });
+  }
+}
+
 
 /* ═══════════════════════════════════════
    GDPR & CONSENT MANAGEMENT
@@ -6775,14 +6907,23 @@ function openModal(name){
   const el=document.getElementById('modal-'+name);
   if(!el)return;
   if(name==='help')applyHelpModal();
+  _modalTrigger=document.activeElement;
   el.classList.add('on');
   document.body.style.overflow='hidden';
+  /* FIX16: focus trap */
+  const sheet=el.querySelector('.modal-sheet');
+  if(sheet)trapFocus(sheet);
 }
 function closeModal(id){
   const el=document.getElementById(id);
   if(!el)return;
+  /* FIX16: remove focus trap handler */
+  const sheet=el.querySelector('.modal-sheet');
+  if(sheet&&sheet._focusTrapHandler){sheet.removeEventListener('keydown',sheet._focusTrapHandler);delete sheet._focusTrapHandler;}
   el.classList.remove('on');
   document.body.style.overflow='';
+  /* Restore focus to trigger element */
+  if(_modalTrigger){try{_modalTrigger.focus();}catch{}}_modalTrigger=null;
 }
 function closeModalOnOverlay(e,name){
   if(e.target===document.getElementById(name))closeModal(name);
@@ -6803,7 +6944,10 @@ function toggleFaq(item){
 ═══════════════════════════════════════ */
 /* PWA */
 (()=>{
-  if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
+  if('serviceWorker'in navigator){
+    navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
+    navigator.serviceWorker.addEventListener('controllerchange',()=>window.location.reload());
+  }
 })();
 
 /* ── Shared boot sequence (after all gates are cleared) ── */
@@ -6842,63 +6986,85 @@ function acknowledgedPWA(){
 /* ═══════════════════════════════════════
    ONBOARDING SLIDESHOW
 ═══════════════════════════════════════ */
+/* ── ONBOARDING SLIDESHOW v2 — CSS class-toggle, 60fps, touch swipe, auto-progress ── */
 let _onbCur=0;
-const _ONB=[
-  {tk:'onb2.slide1'},{tk:'onb2.slide2'},{tk:'onb2.slide3'},
-  {tk:'onb2.slide4'},{tk:'onb2.slide5'},
-];
+const _ONB_LAST=4; /* 0-indexed last slide index (5 slides total) */
+let _onbAutoTimer=null;
+let _onbTouchX=0;
+
+/* Pure CSS class toggle — NO inline transform, NO pixel calc, NO rAF */
+function onbRender(idx){
+  _onbCur=idx;
+  const slides=document.getElementById('onboarding-slides');
+  if(slides) slides.className=idx===0?'':('slide'+(idx));
+  document.querySelectorAll('.onb-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  const last=idx===_ONB_LAST;
+  const skipBtn=document.getElementById('onb-skip-btn');
+  const prevBtn=document.getElementById('onb-prev-btn');
+  const nextBtn=document.getElementById('onb-next-btn');
+  /* Skip: always visible except on last slide */
+  if(skipBtn){skipBtn.style.visibility=last?'hidden':'visible';}
+  /* Back: hidden on first slide */
+  if(prevBtn){prevBtn.style.visibility=idx===0?'hidden':'visible';}
+  /* Next: becomes START NOW on last slide */
+  if(nextBtn){
+    nextBtn.textContent=last?t('onb2.start'):t('onb2.next');
+    nextBtn.onclick=last?onbFinish:onbNext;
+    nextBtn.className=last?'btn btn-primary sn':'btn btn-neon-o sn';
+    nextBtn.style.cssText=last
+      ?'height:50px;font-size:14px;padding:0 28px;border-radius:var(--r-pill);font-weight:800;'
+      :'height:44px;font-size:13px;padding:0 22px;border-radius:var(--r-pill);font-weight:700;';
+  }
+  /* Auto-progress: only slides 0-2, pause 3.5s */
+  _onbAutoClear();
+  if(idx<3){_onbAutoTimer=setTimeout(()=>onbNext(),3500);}
+}
+
+function _onbAutoClear(){if(_onbAutoTimer){clearTimeout(_onbAutoTimer);_onbAutoTimer=null;}}
+
 function showOnboarding(){
   const el=document.getElementById('onboarding-overlay');
-  if(!el){showOnb();return;}/* fallback: overlay not yet in DOM (parse order race) */
-  _ONB.forEach((_,i)=>{
+  if(!el){showOnb();return;}
+  /* Reset state for re-use after reset */
+  _onbCur=0;
+  el.style.display='flex';
+  /* Populate slide text */
+  for(let i=0;i<5;i++){
     const tt=document.getElementById(`onb-t${i}`);
     const tb=document.getElementById(`onb-b${i}`);
     if(tt) tt.textContent=t(`onb2.slide${i+1}.title`);
     if(tb) tb.textContent=t(`onb2.slide${i+1}.body`);
-  });
+  }
   const startBtn=document.getElementById('onb-start-btn');
-  if(startBtn) startBtn.textContent=t('onb2.start');
+  if(startBtn){startBtn.textContent=t('onb2.start');startBtn.setAttribute('aria-label',t('onb2.start'));}
   const skipBtn=document.getElementById('onb-skip-btn');
   if(skipBtn) skipBtn.textContent=t('onb2.skip');
-  const nextBtn=document.getElementById('onb-next-btn');
-  if(nextBtn) nextBtn.textContent=t('onb2.next');
   const prevBtn=document.getElementById('onb-prev-btn');
   if(prevBtn) prevBtn.textContent=t('onb2.prev');
-  el.style.display='flex';
-  _onbRender(0);
-}
-function _onbRender(idx){
-  _onbCur=idx;
-  const slides=document.getElementById('onboarding-slides');
+  /* Touch swipe support */
   const wrap=document.getElementById('onboarding-slides-wrap');
-  if(slides){
-    /* Use wrap pixel width for translate — guarantees correct offset even if
-       percentage resolution differs from viewport on some mobile browsers */
-    const slideW=(wrap?wrap.offsetWidth:window.innerWidth)||window.innerWidth;
-    slides.style.transform=`translateX(-${idx*slideW}px)`;
+  if(wrap&&!wrap._onbSwipeInit){
+    wrap._onbSwipeInit=true;
+    wrap.addEventListener('touchstart',e=>{_onbTouchX=e.touches[0].clientX;_onbAutoClear();},{passive:true});
+    wrap.addEventListener('touchend',e=>{
+      const dx=e.changedTouches[0].clientX-_onbTouchX;
+      if(Math.abs(dx)>44){dx<0?onbNext():onbPrev();}
+    },{passive:true});
   }
-  document.querySelectorAll('.onb-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
-  const last=idx===_ONB.length-1;
-  const skipBtn=document.getElementById('onb-skip-btn');
-  const prevBtn=document.getElementById('onb-prev-btn');
-  const nextBtn=document.getElementById('onb-next-btn');
-  if(skipBtn) skipBtn.style.display=last?'none':'';
-  if(prevBtn) prevBtn.style.visibility=idx===0?'hidden':'visible';
-  if(nextBtn) nextBtn.style.display=last?'none':'';
+  onbRender(0);
 }
-function onbNext(){if(_onbCur<_ONB.length-1)_onbRender(_onbCur+1);}
-function onbPrev(){if(_onbCur>0)_onbRender(_onbCur-1);}
-function onbSkip(){_onbFinish();}
+
+function onbNext(){if(_onbCur<_ONB_LAST){_onbAutoClear();onbRender(_onbCur+1);}}
+function onbPrev(){if(_onbCur>0){_onbAutoClear();onbRender(_onbCur-1);}}
+function onbSkip(){lsW('ik-onb-skip','1');_onbFinish();}
 function onbFinish(){_onbFinish();}
-/* Re-anchor slides on resize / orientation change */
-window.addEventListener('resize',()=>{
-  const ov=document.getElementById('onboarding-overlay');
-  if(ov&&ov.style.display==='flex')_onbRender(_onbCur);
-});
+
 function _onbFinish(){
+  _onbAutoClear();
+  lsW('ik-onb-complete','1');
   lsS(SK.onboardingDone,true);
   const el=document.getElementById('onboarding-overlay');
-  if(el) el.remove();
+  if(el){el.style.display='none';}
   _bootAfterGates();
 }
 
@@ -6909,7 +7075,10 @@ function selectLang(lang){
   _bootAfterLangGate();
 }
 
+let _booted=false;
 function _bootAfterLangGate(){
+  if(_booted)return;
+  _booted=true;
   /* PWA gate: force install-awareness on very first open */
   if(!localStorage.getItem('ik_pwa_seen')){
     document.getElementById('pwa-gate').classList.add('on');
@@ -6962,7 +7131,7 @@ function _bootAfterLangGate(){
   <div class="modal-drag-handle" aria-hidden="true"></div>
   <div class="modal-header">
     <span class="modal-title" id="prv-title">🛡 Privacy &amp; GDPR</span>
-    <button class="modal-close" onclick="closeModal('modal-privacy')" aria-label="Chiudi privacy"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    <button class="modal-close" onclick="closeModal('modal-privacy')" aria-label="Close privacy"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
   </div>
   <div class="modal-body">
 
@@ -7089,11 +7258,11 @@ function _bootAfterLangGate(){
 
     <!-- Consent management -->
     <div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:14px;margin-top:4px;">
-      <p class="prv-h2" style="margin-bottom:8px;">Gestione consenso</p>
+      <p class="prv-h2" id="prv-consent-mgmt-title" style="margin-bottom:8px;">Consent management</p>
       <p class="prv-p" style="margin-bottom:12px;" id="gdpr-status-text">—</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button onclick="gdprWithdraw()" class="btn btn-danger-o btn-xs sn" style="padding:0 14px;">Revoca consenso</button>
-        <button onclick="gdprAccept();closeModal('modal-privacy')" class="btn btn-neon-o btn-xs sn" style="padding:0 14px;">Rinnova consenso</button>
+        <button id="prv-revoke-btn" onclick="gdprWithdraw()" class="btn btn-danger-o btn-xs sn" style="padding:0 14px;">Revoke consent</button>
+        <button id="prv-renew-btn" onclick="gdprAccept();closeModal('modal-privacy')" class="btn btn-neon-o btn-xs sn" style="padding:0 14px;">Renew consent</button>
       </div>
     </div>
 
@@ -7109,8 +7278,8 @@ function _bootAfterLangGate(){
 <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="shopping-title">
   <div class="modal-drag-handle" aria-hidden="true"></div>
   <div class="modal-header">
-    <span class="modal-title" id="shopping-title">🛒 Lista della Spesa</span>
-    <button class="modal-close" onclick="closeModal('modal-shopping')" aria-label="Chiudi lista"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    <span class="modal-title" id="shopping-title">🛒 Shopping List</span>
+    <button class="modal-close" onclick="closeModal('modal-shopping')" aria-label="Close list"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
   </div>
   <div class="modal-body">
     <div id="shopping-content" class="shop-list">
@@ -7124,8 +7293,8 @@ function _bootAfterLangGate(){
 <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="help-title">
   <div class="modal-drag-handle" aria-hidden="true"></div>
   <div class="modal-header">
-    <span class="modal-title" id="help-title">❓ Aiuto &amp; FAQ</span>
-    <button class="modal-close" onclick="closeModal('modal-help')" aria-label="Chiudi aiuto"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    <span class="modal-title" id="help-title">❓ Help &amp; FAQ</span>
+    <button class="modal-close" onclick="closeModal('modal-help')" aria-label="Close help"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
   </div>
   <div class="modal-body">
 
