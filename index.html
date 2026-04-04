@@ -548,12 +548,42 @@ body.onboarding-active #onb-screen{
   overflow-y:scroll;-webkit-overflow-scrolling:touch;
 }
 #gdpr-gate.on{display:flex;}
+/* ═══════════════════════════════════════
+   LANGUAGE SELECTION GATE (absolute first open)
+═══════════════════════════════════════ */
+#lang-gate{
+  position:fixed;inset:0;z-index:980;
+  background:var(--bg);
+  padding:var(--sat) 0 var(--sab);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+}
+#lang-gate.on{display:flex;}
 </style>
 </head>
 <body class="onboarding-active">
 <div class="glow-a" aria-hidden="true"></div>
 <div class="glow-b" aria-hidden="true"></div>
 
+
+<!-- ══════════════════════════════════════
+     LANGUAGE SELECTION GATE — primissimo avvio assoluto
+══════════════════════════════════════ -->
+<div id="lang-gate">
+<div style="max-width:360px;width:100%;padding:0 28px;display:flex;flex-direction:column;align-items:center;gap:28px;">
+  <div style="width:64px;height:64px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.28);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+    <span class="material-symbols-outlined" style="color:var(--p);font-size:32px;font-variation-settings:'FILL' 1;">translate</span>
+  </div>
+  <h2 id="lang-gate-title" style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin:0;text-align:center;line-height:1.3;">Choose your language<br><span style="color:var(--muted);font-size:16px;font-weight:500;">Scegli la lingua</span></h2>
+  <div style="display:flex;flex-direction:column;gap:12px;width:100%;">
+    <button onclick="selectLang('it')" style="width:100%;height:56px;border-radius:var(--r-pill);background:var(--p);color:#003730;font-size:15px;font-weight:800;letter-spacing:.04em;border:none;cursor:pointer;touch-action:manipulation;display:flex;align-items:center;justify-content:center;gap:10px;">
+      <span style="font-size:22px;">🇮🇹</span> Italiano
+    </button>
+    <button onclick="selectLang('en')" style="width:100%;height:56px;border-radius:var(--r-pill);background:rgba(255,255,255,.07);border:1px solid var(--glass-stroke);color:var(--on);font-size:15px;font-weight:800;letter-spacing:.04em;cursor:pointer;touch-action:manipulation;display:flex;align-items:center;justify-content:center;gap:10px;">
+      <span style="font-size:22px;">🇬🇧</span> English
+    </button>
+  </div>
+</div>
+</div>
 
 <!-- ══════════════════════════════════════
      PWA INSTALL GATE — primissimo avvio
@@ -1946,6 +1976,9 @@ it:{
   'onb2.slide5.title':'Inizia oggi. Il tuo corpo non aspetta.',
   'onb2.slide5.body':'Inserisci i tuoi dati, scegli il piano e parti. Tutto offline, tutto tuo.',
   'confirm.cancel':'Annulla','confirm.ok':'Conferma',
+  'confirm.resetPlanOnly':'Rigenera solo il piano? Profilo e preferenze cancellati, log peso e check-in conservati.',
+  'confirm.resetAll':'Reset completo? Tutti i dati (peso, check-in, piano, profilo) saranno cancellati. Irreversibile.',
+  'lang.gate.title':'Scegli la lingua',
   'oggi.trackers.title':'Attività e Trackers',
   'oggi.kcal.target':'Target Giorno','oggi.kcal.totali':'Kcal totali','oggi.trackers':'Attività e Trackers',
   'oggi.kcal.pct':'{pct}% consumato',
@@ -1990,7 +2023,7 @@ it:{
   'faq.q.2':'Cosa fa il Modificatore AI?',
   'faq.a.2':'Il modificatore aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall\'inizio.',
   'faq.q.3':'Cos\'è il Refeed Day?',
-  'faq.a.3':'Refeed day: +880 kcal extra via 220g carbs only (riso, patate, avena). Proteine e grassi invariati. Ogni 7-10 giorni in Fase 2. Stimola la leptina (Dirlewanger 2000).',
+  'faq.a.3':'Un refeed è un giorno di aumento calorico controllato: +880 kcal, 220g carbs da riso, patate, avena per stimolare la leptina e prevenire l\'adattamento metabolico durante il taglio. Va pianificato ogni 7-10 giorni in Fase 2. Proteine e grassi invariati (Dirlewanger 2000).',
   'faq.q.4':'Come funziona il Coach AI?',
   'faq.a.4':'Il coach analizza: la tua curva di peso (ultimi 7 giorni), la variazione del girovita, l\'assunzione di acqua e sale, i giorni dall\'ultimo refeed, e la fase attiva. Sulla base di questi dati mostra un\'analisi contestuale: stallo metabolico, rischio catabolico, ricomposizione, ritenzione idrica o progressione ottimale. Tutto avviene localmente, senza AI esterna.',
   'faq.q.5':'Come faccio il backup e ripristino?',
@@ -2347,6 +2380,9 @@ en:{
   'onb2.slide5.title':'Start today. Your body won\'t wait.',
   'onb2.slide5.body':'Enter your data, pick a plan, and go. Fully offline, fully yours.',
   'confirm.cancel':'Cancel','confirm.ok':'Confirm',
+  'confirm.resetPlanOnly':'Regenerate plan only? Profile and preferences cleared, weight log and check-ins kept.',
+  'confirm.resetAll':'Full reset? All data (weight, check-ins, plan, profile) will be deleted. Irreversible.',
+  'lang.gate.title':'Choose your language',
   'oggi.trackers.title':'Activity & Trackers',
   'aria.day.prev':'Previous day','aria.day.next':'Next day',
   'aria.checkin.hunger':'Hunger (1–10)','aria.checkin.energy':'Energy (1–10)',
@@ -2390,7 +2426,7 @@ en:{
   'faq.q.2':'What does the AI Modifier do?',
   'faq.a.2':'The modifier raises or lowers the calorie target by 100 kcal per unit (±25g carbs). Use it for micro-adjustments when you notice a weight plateau, excessive hunger or low energy — without having to redo your profile from scratch.',
   'faq.q.3':'What is a Refeed Day?',
-  'faq.a.3':'Refeed day: +880 kcal extra via 220g carbs only (rice, potatoes, oats). Proteins and fats unchanged. Every 7-10 days in Phase 2. Stimulates leptin (Dirlewanger 2000).',
+  'faq.a.3':'A refeed is a day of controlled caloric increase: +880 kcal, 220g carbs from rice, potatoes, oats to stimulate leptin and prevent metabolic adaptation during a cut. Schedule every 7-10 days in Phase 2. Protein and fat unchanged (Dirlewanger 2000).',
   'faq.q.4':'How does the AI Coach work?',
   'faq.a.4':'The coach analyses: your weight curve (last 7 days), waist change, water and salt intake, days since the last refeed, and the active phase. Based on this data it shows a contextual insight: metabolic plateau, catabolic risk, recomposition, water retention or optimal progression. Everything runs locally, no external AI.',
   'faq.q.5':'How do I back up and restore my data?',
@@ -2486,6 +2522,9 @@ function setLang(lang){
   lsW(SK.lang,_lang);
   document.documentElement.lang=_lang;
   applyLang();
+  /* Force re-render all visible UI elements immediately */
+  renderCoach?.();renderMeals?.();renderMacros?.();renderSettings?.();
+  renderCheckinAnalytics?.();renderTrackers?.();
 }
 function initLang(){
   const s=lsR(SK.lang);
@@ -2715,6 +2754,10 @@ function applyTranslations(deferOffscreen){
   });
   /* Shopping button */
   document.querySelectorAll('button[onclick="openShoppingList()"]').forEach(b=>b.textContent=t('oggi.shopping'));
+  /* oggi pasto_empty placeholder */
+  const _emptyMeal=document.querySelector('#meals-list .muted.sn');
+  if(_emptyMeal&&(_emptyMeal.textContent.trim().startsWith('—')||_emptyMeal.textContent.trim().startsWith('-')))
+    _emptyMeal.textContent=t('oggi.pasto_empty');
   /* Day label */
   document.querySelectorAll('#scr-oggi .t-xxs.muted').forEach(e=>{
     if(e.textContent.trim()==='Giorno'||e.textContent.trim()==='Day')e.textContent=t('oggi.giorno');
@@ -3013,10 +3056,10 @@ function applyTranslations(deferOffscreen){
   if(_pwaTexts[4])_pwaTexts[4].innerHTML=t('pwa.android.step2');
   if(_pwaTexts[5])_pwaTexts[5].innerHTML=t('pwa.android.step3');
   /* confirm modal buttons */
-  const _cfCancelBtn=document.querySelector('#modal-confirm button[onclick="closeConfirm()"]');
-  if(_cfCancelBtn)_cfCancelBtn.textContent=t('confirm.cancel');
+  const _cfCancelBtn=document.getElementById('confirm-cancel-btn');
+  if(_cfCancelBtn&&!_cfCancelBtn.dataset.custom)_cfCancelBtn.textContent=t('confirm.cancel');
   const _cfOkBtn=document.getElementById('confirm-ok-btn');
-  if(_cfOkBtn)_cfOkBtn.textContent=t('confirm.ok');
+  if(_cfOkBtn&&!_cfOkBtn.dataset.custom)_cfOkBtn.textContent=t('confirm.ok');
   /* GDPR gate */
   const gdprTitle=document.querySelector('#gdpr-gate h2');if(gdprTitle)gdprTitle.textContent=t('gdpr.title');
   const gdprSub=document.querySelector('#gdpr-gate h2+p');if(gdprSub)gdprSub.textContent=t('gdpr.sub');
@@ -4842,7 +4885,7 @@ function runCalcAndGenerate(){
   let html='';
   mNames.forEach(mn=>{
     const meal=day1[mn];if(!meal)return;
-    html+=`<div class="plan-insight-row"><span class="material-symbols-outlined" style="font-size:16px;color:var(--p);flex-shrink:0;margin-top:1px;">restaurant</span><div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;">${mn}</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;">${meal.rest}</p></div></div>`;
+    html+=`<div class="plan-insight-row"><span class="material-symbols-outlined" style="font-size:16px;color:var(--p);flex-shrink:0;margin-top:1px;">restaurant</span><div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;">${localizedMealName(mn)}</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;">${meal.rest}</p></div></div>`;
   });
   previewEl.innerHTML=html;
   document.getElementById('plan-preview').style.display='block';
@@ -5209,21 +5252,34 @@ function buildDaySelector(){
 function canonicalMealType(name){
   const n=String(name||'').trim().toLowerCase();
   if(n==='colazione'||n==='breakfast')return'breakfast';
-  if(n.includes('spuntino')||n==='snack'||n==='merenda'||n==='morning snack'||n==='dinner snack')return'snack';
+  if(n.includes('spuntino')||n==='snack'||n==='merenda'||n==='morning snack'||n==='dinner snack'||n==='pre-workout snack'||n==='post-workout snack')return'snack';
   if(n==='pranzo'||n==='lunch')return'lunch';
   if(n==='cena'||n==='dinner')return'dinner';
   return null;
 }
 function localizedMealName(name){
-  const type=canonicalMealType(name);
-  if(!type)return name; /* custom/unknown name — return as-is */
-  const map={
-    breakfast:{it:'Colazione',en:'Breakfast'},
-    snack:    {it:'Spuntino', en:'Snack'},
-    lunch:    {it:'Pranzo',   en:'Lunch'},
-    dinner:   {it:'Cena',     en:'Dinner'},
-  };
-  return(map[type]||{})[_lang]||name;
+  const n=String(name||'').trim();
+  const nl=n.toLowerCase();
+  /* Exact / qualified matches first — preserve Pre/Post qualifier */
+  if(_lang==='en'){
+    if(nl==='colazione'||nl==='breakfast')   return'Breakfast';
+    if(nl==='spuntino pre'||nl==='morning snack') return'Pre-workout Snack';
+    if(nl==='spuntino post'||nl==='dinner snack') return'Post-workout Snack';
+    if(nl.includes('spuntino')||nl==='snack'||nl==='merenda') return'Snack';
+    if(nl==='pranzo'||nl==='lunch')          return'Lunch';
+    if(nl==='cena'||nl==='dinner')           return'Dinner';
+  } else {
+    /* Italian: keep original stored name (already Italian) */
+    if(nl==='breakfast')  return'Colazione';
+    if(nl==='morning snack') return'Spuntino Pre';
+    if(nl==='dinner snack')  return'Spuntino Post';
+    if(nl==='snack')      return'Spuntino';
+    if(nl==='lunch')      return'Pranzo';
+    if(nl==='dinner')     return'Cena';
+    /* Already Italian — return as-is */
+    return n;
+  }
+  return n; /* fallback: unknown name */
 }
 /* ── normalizePlanLabel: translate stored plan name via goal enum ── */
 function normalizePlanLabel(name,goal){
@@ -5470,9 +5526,33 @@ function applyMod(u){
 const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
 function clearAppData(){Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
 let _confirmCb=null;
-function showConfirm(msg,cb){getEl('confirm-msg').textContent=msg;_confirmCb=cb;getEl('modal-confirm').style.display='flex';}
-function closeConfirm(){getEl('modal-confirm').style.display='none';_confirmCb=null;}
-document.addEventListener('DOMContentLoaded',()=>{const okBtn=getEl('confirm-ok-btn');if(okBtn)okBtn.onclick=()=>{closeConfirm();_confirmCb&&_confirmCb();};},{once:true});
+function showConfirm(msg,cb){
+  const msgEl=getEl('confirm-msg');if(msgEl)msgEl.textContent=msg;
+  _confirmCb=cb;
+  /* Populate button text each time (language may have changed) */
+  const cancelBtn=getEl('confirm-cancel-btn');if(cancelBtn&&!cancelBtn.dataset.custom)cancelBtn.textContent=t('confirm.cancel');
+  const okBtn=getEl('confirm-ok-btn');if(okBtn&&!okBtn.dataset.custom)okBtn.textContent=t('confirm.ok');
+  getEl('modal-confirm').style.display='flex';
+}
+function closeConfirm(){
+  const modal=getEl('modal-confirm');if(!modal)return;
+  modal.style.display='none';_confirmCb=null;
+  /* Restore default two-button layout (cancel + ok) */
+  const btnRow=modal.querySelector('div[style*="gap:8px"]');
+  if(btnRow){
+    btnRow.innerHTML=
+      `<button onclick="closeConfirm()" class="btn btn-ghost" style="flex:1">${t('confirm.cancel')}</button>`+
+      `<button id="confirm-ok-btn" class="btn btn-danger-o" style="flex:1" onclick="closeConfirm();_confirmCb&&_confirmCb();">${t('confirm.ok')}</button>`;
+  }
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const okBtn=getEl('confirm-ok-btn');
+  if(okBtn)okBtn.onclick=()=>{closeConfirm();_confirmCb&&_confirmCb();};
+  /* Populate confirm button text on first load */
+  const cancelBtn=getEl('confirm-cancel-btn');
+  if(cancelBtn)cancelBtn.textContent=t('confirm.cancel');
+  if(okBtn)okBtn.textContent=t('confirm.ok');
+},{once:true});
 function updateWeight(){
   const v=parseFloat(getEl('inp-weight-upd').value);
   if(!v||v<40||v>250)return toast(t('toast.valoreNonValido'));
@@ -5486,18 +5566,66 @@ function updateWeight(){
   getEl('inp-weight-upd').value='';
   toast(t('toast.pesoAggiornato')||'✓ Peso aggiornato');
 }
+function _doResetProfile(keepLog){
+  /* Always keep lang; always clear profile+prefs+plan */
+  const keepKeys=keepLog
+    ?[SK.wLog,SK.checkins,'ik_streaks','ik_cal_'+new Date().toISOString().slice(0,7)]
+    :[];
+  /* Snapshot keys to keep */
+  const snap={};
+  keepKeys.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)snap[k]=v;});
+  /* Full clear (respects KEEP_PREFIX: ikgdpr, iklang, iknotif) */
+  try{clearAppData();}catch{}
+  /* Restore kept data */
+  Object.entries(snap).forEach(([k,v])=>{try{localStorage.setItem(k,v);}catch{}});
+  /* Reset in-memory state */
+  if(bodyChart){bodyChart.destroy();bodyChart=null;}
+  dietData=null;
+  profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,sport:'fitness',trainTime:''};_sport='fitness';_trainTime='';
+  prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
+  curStep=0;
+  for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===0);dot.classList.remove('completed');}}
+  const rc=document.getElementById('result-card');if(rc)rc.classList.remove('on');
+  /* Return to onboarding Step 1 */
+  document.body.classList.add('onboarding-active');
+  document.getElementById('app-shell').classList.remove('on');
+  document.getElementById('onb-screen').classList.remove('on');
+  /* Go directly to profiler (skip slideshow since user already saw it) */
+  showOnb();
+  toast(keepLog?t('toast.pianoEl'):t('toast.profiloEl'));
+}
 function resetProfile(){
-  showConfirm(t('confirm.deleteAll'),()=>{
-    try{clearAppData();}catch{}
-    if(bodyChart){bodyChart.destroy();bodyChart=null;}
-    dietData=null;
-    profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,sport:'fitness',trainTime:''};_sport='fitness';_trainTime='';
-    prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
-    curStep=0;
-    for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===0);dot.classList.remove('completed');}}
-    document.getElementById('result-card').classList.remove('on');
-    showOnb();toast(t('toast.profiloEl'));
-  });return;
+  /* Two-option confirm: plan-only or full reset */
+  const _inner=document.getElementById('modal-confirm')?.querySelector('.flex-inner')||null;
+  /* Use a custom two-button confirm */
+  const msgEl=document.getElementById('confirm-msg');
+  const okBtn=document.getElementById('confirm-ok-btn');
+  const modal=document.getElementById('modal-confirm');
+  if(!msgEl||!okBtn||!modal)return;
+  /* Build two-action layout */
+  /* Build two-action layout using LANG keys (no raw apostrophes) */
+  const _resetTitle=_lang==='it'?'Cosa vuoi fare?':'What would you like to do?';
+  const _resetSub=_lang==='it'?'Scegli un’opzione:':'Choose an option:';
+  const _resetPlanLabel=t('confirm.resetPlanOnly').split('?')[0]+'?';
+  const _resetAllLabel=_lang==='it'?'Reset completo':'Full reset';
+  msgEl.innerHTML='<strong style="font-size:13px;color:var(--on);display:block;margin-bottom:8px;">'+_resetTitle+'</strong>'
+    +'<span style="font-size:12px;color:var(--muted);">'+_resetSub+'</span>';
+  /* Replace the action row */
+  const btnRow=modal.querySelector('div[style*="gap:8px"]');
+  if(btnRow){
+    const _b1=document.createElement('button');
+    _b1.className='btn btn-ghost sn';_b1.style.cssText='flex:1;font-size:10px;';
+    _b1.textContent=_resetPlanLabel;
+    _b1.onclick=()=>{closeConfirm();_doResetProfile(true);};
+    const _b2=document.createElement('button');
+    _b2.className='btn btn-danger-o sn';_b2.style.cssText='flex:1;font-size:10px;';
+    _b2.textContent=_resetAllLabel;
+    _b2.onclick=()=>{closeConfirm();_doResetProfile(false);};
+    btnRow.innerHTML='';btnRow.appendChild(_b1);btnRow.appendChild(_b2);
+  }
+  _confirmCb=null;
+  modal.style.display='flex';
+  return;
 }
 function changeDiet(){
   showConfirm(t('confirm.deleteAll'),()=>{
@@ -5791,7 +5919,7 @@ function swapMealComponent(dayNum, mealName, component){
 
   try{lsW(SK.diet,JSON.stringify(dietData));}catch{}
   renderMeals();renderMacros();
-  toast(`${mealName}: ${t(component==='protein'?'meal.comp.protein':component==='carb'?'meal.comp.carb':'meal.comp.fat')} → ${localizeFoodLabel(FOOD_DB[nextFood]?.label||nextFood)}`);
+  toast(`${localizedMealName(mealName)}: ${t(component==='protein'?'meal.comp.protein':component==='carb'?'meal.comp.carb':'meal.comp.fat')} → ${localizeFoodLabel(FOOD_DB[nextFood]?.label||nextFood)}`);
 }
 
 function regenSingleMeal(dayNum,mealName){
@@ -5873,7 +6001,7 @@ function regenSingleMeal(dayNum,mealName){
 
   try{lsW(SK.diet,JSON.stringify(dietData));}catch{}
   renderMeals();renderMacros();
-  toast(t('toast.rigenMeal',{meal:mealName}));
+  toast(t('toast.rigenMeal',{meal:localizedMealName(mealName)}));
 }
 
 function openShoppingList(){
@@ -6347,7 +6475,8 @@ function gdprAccept(){
   try{localStorage.setItem(GDPR_KEY,JSON.stringify(rec));}catch{}
   document.getElementById('gdpr-gate').classList.remove('on');
   updateConsentUI();
-  // Proceed to onboarding if no data, or mount app if data exists
+  // Proceed to onboarding slideshow if first launch, else load app
+  if(lsG(SK.onboardingDone)!==true){showOnboarding();return;}
   const raw=localStorage.getItem(SK.diet);
   if(raw){
     try{
@@ -6485,6 +6614,12 @@ function acknowledgedPWA(){
   hap();
   localStorage.setItem('ik_pwa_seen','1');
   document.getElementById('pwa-gate').classList.remove('on');
+  /* Lang already selected at this point (lang-gate ran first) */
+  initLang();applyTranslations();
+  const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);
+  const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);
+  /* Check onboarding slideshow */
+  if(lsG(SK.onboardingDone)!==true){showOnboarding();return;}
   _bootAfterGates();
 }
 
@@ -6551,27 +6686,40 @@ function _onbFinish(){
   _bootAfterGates();
 }
 
-/* ENTRY POINT */
-(()=>{
-  initLang(); /* read ik_lang from localStorage, set _lang + html lang attr */
-  /* Apply translations to gate screens immediately */
-  applyTranslations();
-  const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);
-  const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);
+/* ── Language gate: shown once on absolute first open ── */
+function selectLang(lang){
+  setLang(lang);
+  document.getElementById('lang-gate').classList.remove('on');
+  _bootAfterLangGate();
+}
 
+function _bootAfterLangGate(){
   /* PWA gate: force install-awareness on very first open */
   if(!localStorage.getItem('ik_pwa_seen')){
     document.getElementById('pwa-gate').classList.add('on');
-    return; /* acknowledgedPWA() continues the boot flow */
+    return;
   }
-
   /* Onboarding slideshow: shown once on first launch */
   if(lsG(SK.onboardingDone)!==true){
     showOnboarding();
     return;
   }
-
   _bootAfterGates();
+}
+
+/* ENTRY POINT */
+(()=>{
+  /* Lang gate: absolute first priority — before everything else */
+  if(!lsR(SK.lang)){
+    document.getElementById('lang-gate').classList.add('on');
+    return; /* selectLang() continues boot */
+  }
+  initLang(); /* read ik_lang from localStorage, set _lang + html lang attr */
+  /* Apply translations to gate screens immediately */
+  applyTranslations();
+  const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);
+  const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);
+  _bootAfterLangGate();
 })();
 </script>
 
@@ -6584,8 +6732,8 @@ function _onbFinish(){
   <div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--rbox);padding:24px;max-width:320px;width:90%;display:flex;flex-direction:column;gap:16px">
     <p id="confirm-msg" class="sn" style="font-size:14px;font-weight:600;color:var(--on);margin:0;line-height:1.5"></p>
     <div style="display:flex;gap:8px">
-      <button onclick="closeConfirm()" class="btn btn-ghost" style="flex:1">Annulla</button>
-      <button id="confirm-ok-btn" class="btn btn-danger-o" style="flex:1">Conferma</button>
+      <button onclick="closeConfirm()" class="btn btn-ghost sn" style="flex:1" id="confirm-cancel-btn"></button>
+      <button id="confirm-ok-btn" class="btn btn-danger-o sn" style="flex:1"></button>
     </div>
   </div>
 </div>
@@ -6802,7 +6950,7 @@ function _onbFinish(){
           <span class="faq-q-text">Cos'è il Refeed Day?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Refeed day: +880 kcal extra via 220g carbs only (riso, patate, avena). Proteine e grassi invariati. Ogni 7-10 giorni in Fase 2. Stimola la leptina (Dirlewanger 2000).</div>
+        <div class="faq-answer">Un refeed è un giorno di aumento calorico controllato: +880 kcal, 220g carbs da riso, patate, avena per stimolare la leptina e prevenire l'adattamento metabolico durante il taglio. Va pianificato ogni 7-10 giorni in Fase 2. Proteine e grassi invariati (Dirlewanger 2000).</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
