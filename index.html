@@ -495,6 +495,20 @@ body.onboarding-active #onb-screen{
   font-size:10px;color:var(--dim);text-align:center;
   padding:16px 0 0;font-weight:500;
 }
+.help-features-list{display:flex;flex-direction:column;gap:10px}
+.help-feature-item{background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:12px}
+.help-feature-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.help-feature-ico{
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(77,220,198,.12);color:var(--p);flex-shrink:0
+}
+.help-feature-name{
+  font-size:12px;font-weight:700;color:var(--on);letter-spacing:.02em
+}
+.help-feature-desc{
+  font-size:11px;color:var(--muted);line-height:1.6;font-weight:500
+}
 
 /* ═══════════════════════════════════════
    GDPR CONSENT BANNER
@@ -2016,6 +2030,32 @@ it:{
   'set.danger.title':'Zona Pericolosa',
   'set.danger.warn':'Queste azioni sono irreversibili senza un backup.',
   'help.contact.sub.email':'Scrivici a <strong style="color:var(--p);">support&#64;ironkinetic.app</strong>',
+  'help.features.title':"Tutte le funzioni dell'app",
+  'help.features.sub':'Questa sezione spiega in modo semplice cosa fa ogni area di Iron Kinetic e come usarla al meglio.',
+  'help.feature.onboarding.title':'Onboarding e profilo',
+  'help.feature.onboarding.desc':'Alla prima apertura inserisci sesso biologico, età, altezza, peso, attività, obiettivo e preferenze alimentari. Questi dati servono per creare un piano nutrizionale personalizzato.',
+  'help.feature.tdee.title':'Calcolo TDEE e macro',
+  'help.feature.tdee.desc':"L'app stima metabolismo basale e dispendio giornaliero usando Katch-McArdle se inserisci la body fat, oppure Mifflin-St Jeor se non la inserisci. Da qui calcola calorie, proteine, carboidrati, grassi, acqua e fibra.",
+  'help.feature.mealplan.title':'Piano pasti personalizzato',
+  'help.feature.mealplan.desc':'Il piano viene generato in base a cibi preferiti, numero di pasti, gusto dominante e stile alimentare. Le porzioni vengono adattate per colpire i target giornalieri.',
+  'help.feature.circadian.title':'Timing dei pasti',
+  'help.feature.circadian.desc':"Se imposti l'orario di allenamento, l'app distribuisce meglio i carboidrati e segnala finestre pre-workout, post-workout e serali per migliorare energia e recupero.",
+  'help.feature.coach.title':'Kinetic Insight Coach',
+  'help.feature.coach.desc':'Il coach analizza peso, girovita, fame, energia, aderenza, digestione, acqua e sale. Poi mostra insight contestuali come ricomposizione, ritenzione idrica, deficit troppo alto o progresso ottimale.',
+  'help.feature.adaptive.title':'Adaptive Macro Engine',
+  'help.feature.adaptive.desc':"Quando rileva energia bassa, fame alta o plateau con buona aderenza, l'app suggerisce micro-modifiche caloriche temporanee per migliorare sostenibilità, recupero o ripresa del progresso.",
+  'help.feature.checkin.title':'Check-in giornaliero',
+  'help.feature.checkin.desc':'Ogni giorno puoi registrare fame, energia, aderenza, digestione e contesto della giornata. Questi segnali alimentano il coach e il motore adattivo.',
+  'help.feature.progress.title':'Progressi e analisi',
+  'help.feature.progress.desc':'La sezione Progresso raccoglie peso, girovita, calendario aderenza, trend dei check-in e impronta metabolica. Serve per capire se il piano sta funzionando davvero.',
+  'help.feature.prediction.title':'Curva predittiva del peso',
+  'help.feature.prediction.desc':"Con almeno 5 pesate, l'app stima l'andamento futuro del peso nelle settimane successive correggendo la proiezione per l'adattamento metabolico.",
+  'help.feature.shopping.title':'Lista della spesa',
+  'help.feature.shopping.desc':'Dal piano attivo puoi generare automaticamente una lista della spesa organizzata per categorie alimentari, utile per fare meal prep e spesa settimanale.',
+  'help.feature.privacy.title':'Privacy e backup',
+  'help.feature.privacy.desc':'I dati rimangono localmente sul tuo dispositivo. Puoi esportare un backup JSON e importarlo in seguito per ripristinare profilo, piano e storico.',
+  'help.feature.offline.title':'Offline e PWA',
+  'help.feature.offline.desc':'Iron Kinetic funziona offline e può essere installata come app. Questo permette accesso rapido, esperienza full-screen e utilizzo anche senza connessione.',
   'faq.q.0':'Come funziona il calcolo del TDEE?',
   'faq.a.0':'Se inserisci la percentuale di grasso corporeo, viene usata la formula <strong>Katch-McArdle</strong> basata sulla massa magra. Altrimenti viene usata la formula <strong>Mifflin-St Jeor</strong>. Il TDEE finale viene moltiplicato per un fattore di attività calcolato da allenamenti settimanali e passi giornalieri.',
   'faq.q.1':'Come viene generato il piano alimentare?',
@@ -2419,6 +2459,32 @@ en:{
   'set.danger.title':'Danger Zone',
   'set.danger.warn':'These actions are irreversible without a backup.',
   'help.contact.sub.email':'Reach us at <strong style="color:var(--p);">support&#64;ironkinetic.app</strong>',
+  'help.features.title':'All app features',
+  'help.features.sub':'This section explains in simple terms what each area of Iron Kinetic does and how to use it effectively.',
+  'help.feature.onboarding.title':'Onboarding and profile',
+  'help.feature.onboarding.desc':'At first launch you enter biological sex, age, height, weight, activity, goal, and food preferences. These data are used to create your personalised nutrition plan.',
+  'help.feature.tdee.title':'TDEE and macro calculation',
+  'help.feature.tdee.desc':'The app estimates basal metabolism and daily expenditure using Katch-McArdle if body fat is provided, or Mifflin-St Jeor if it is not. From this it calculates calories, protein, carbs, fat, water, and fibre.',
+  'help.feature.mealplan.title':'Personalised meal plan',
+  'help.feature.mealplan.desc':'The meal plan is generated from preferred foods, meal count, taste preference, and dietary style. Portions are adjusted to match your daily targets.',
+  'help.feature.circadian.title':'Meal timing',
+  'help.feature.circadian.desc':'If you set your training time, the app distributes carbs more intelligently and marks pre-workout, post-workout, and evening windows to improve energy and recovery.',
+  'help.feature.coach.title':'Kinetic Insight Coach',
+  'help.feature.coach.desc':'The coach analyses weight, waist, hunger, energy, adherence, digestion, water, and salt. It then shows contextual insights such as recomposition, water retention, excessive deficit, or optimal progress.',
+  'help.feature.adaptive.title':'Adaptive Macro Engine',
+  'help.feature.adaptive.desc':'When it detects low energy, high hunger, or a plateau with good adherence, the app suggests temporary calorie micro-adjustments to improve sustainability, recovery, or renewed progress.',
+  'help.feature.checkin.title':'Daily check-in',
+  'help.feature.checkin.desc':'Each day you can log hunger, energy, adherence, digestion, and daily context. These signals feed the coach and the adaptive engine.',
+  'help.feature.progress.title':'Progress and analytics',
+  'help.feature.progress.desc':'The Progress section collects weight, waist, adherence calendar, check-in trends, and metabolic fingerprint. It helps you understand whether the plan is truly working.',
+  'help.feature.prediction.title':'Predictive weight curve',
+  'help.feature.prediction.desc':'With at least 5 weigh-ins, the app estimates future weight trend over the following weeks and adjusts the projection for metabolic adaptation.',
+  'help.feature.shopping.title':'Shopping list',
+  'help.feature.shopping.desc':'From the active plan you can automatically generate a shopping list organised by food category, useful for meal prep and weekly grocery shopping.',
+  'help.feature.privacy.title':'Privacy and backup',
+  'help.feature.privacy.desc':'Your data stay locally on your device. You can export a JSON backup and import it later to restore profile, plan, and history.',
+  'help.feature.offline.title':'Offline and PWA',
+  'help.feature.offline.desc':'Iron Kinetic works offline and can be installed as an app. This gives you quick access, a full-screen experience, and usability even without connection.',
   'faq.q.0':'How is the TDEE calculated?',
   'faq.a.0':'If you enter your body fat percentage, the <strong>Katch-McArdle</strong> formula based on lean mass is used. Otherwise the <strong>Mifflin-St Jeor</strong> formula applies. The final TDEE is multiplied by an activity factor derived from weekly training sessions and daily step count.',
   'faq.q.1':'How is the meal plan generated?',
@@ -2531,6 +2597,34 @@ function initLang(){
   if(s==='en'||s==='it')_lang=s;
   else lsW(SK.lang,'en'); /* first visit: persist EN default */
   document.documentElement.lang=_lang;
+}
+const _HELP_FEATURES=[
+  {ico:'monitoring',     key:'help.feature.onboarding'},
+  {ico:'calculate',      key:'help.feature.tdee'},
+  {ico:'restaurant',     key:'help.feature.mealplan'},
+  {ico:'schedule',       key:'help.feature.circadian'},
+  {ico:'psychology',     key:'help.feature.coach'},
+  {ico:'tune',           key:'help.feature.adaptive'},
+  {ico:'monitor_weight', key:'help.feature.checkin'},
+  {ico:'insights',       key:'help.feature.progress'},
+  {ico:'trending_up',    key:'help.feature.prediction'},
+  {ico:'shopping_cart',  key:'help.feature.shopping'},
+  {ico:'privacy_tip',    key:'help.feature.privacy'},
+  {ico:'offline_bolt',   key:'help.feature.offline'},
+];
+function renderHelpFeatures(){
+  const el=document.getElementById('help-features-list');
+  if(!el)return;
+  el.innerHTML=_HELP_FEATURES.map(f=>`
+    <div class="help-feature-item">
+      <div class="help-feature-head">
+        <div class="help-feature-ico">
+          <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1;">${sanitize(f.ico)}</span>
+        </div>
+        <span class="help-feature-name sn">${sanitize(t(f.key+'.title'))}</span>
+      </div>
+      <p class="help-feature-desc sn">${sanitize(t(f.key+'.desc'))}</p>
+    </div>`).join('');
 }
 function applyTranslations(deferOffscreen){
   /* ── i18n static patch ── */
@@ -3135,6 +3229,12 @@ function applyTranslations(deferOffscreen){
   if(_prvSections[9])_prvSetSection(_prvSections[9],t('prv.s10.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s10.p');});
   if(_prvSections[10])_prvSetSection(_prvSections[10],t('prv.s11.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s11.p');});
   if(_prvSections[11])_prvSetSection(_prvSections[11],t('prv.contact.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.contact.p1');if(ps[1])ps[1].innerHTML=t('prv.contact.p2');});
+  /* ── Help feature guide ── */
+  const _hfTitle=document.getElementById('help-features-title');
+  if(_hfTitle)_hfTitle.textContent=t('help.features.title');
+  const _hfSub=document.getElementById('help-features-sub');
+  if(_hfSub)_hfSub.textContent=t('help.features.sub');
+  renderHelpFeatures();
   /* ── Help modal disclaimer ── */
   const _hdTitle=document.getElementById('help-disclaimer-title');if(_hdTitle)_hdTitle.textContent=t('help.disclaimer.title');
   const _hdText=document.getElementById('help-disclaimer-text');if(_hdText)_hdText.textContent=t('help.disclaimer.text');
@@ -3880,6 +3980,9 @@ function localizeFoodLabel(label=''){
     'Macinato magro':'Lean mince','Salmone al vapore':'Steamed salmon',
     'Tonno al naturale':'Tuna in water','Merluzzo al vapore':'Steamed cod',
     'Branzino al vapore':'Steamed sea bass','Gamberetti':'Shrimp',
+    'Platessa al vapore':'Steamed plaice','Orata al forno':'Baked sea bream',
+    'Sgombro al vapore':'Steamed mackerel','Sardine al naturale':'Sardines in water',
+    'Pesce spada alla griglia':'Grilled swordfish','Trota al vapore':'Steamed trout',
     'Uova intere':'Whole eggs',"Albume d'uovo":'Egg whites',
     'Bresaola':'Bresaola','Tofu':'Tofu','Tempeh':'Tempeh',
     'Seitan':'Seitan','Legumi misti':'Mixed legumes',
@@ -3896,6 +3999,7 @@ function localizeFoodLabel(label=''){
     'Burro di arachidi':'Peanut butter','Semi di chia':'Chia seeds',
     'Parmigiano grattugiato':'Grated parmesan','Yogurt greco 0%':'Greek yogurt 0%',
     'Skyr':'Skyr','Fiocchi di latte':'Cottage cheese','Ricotta':'Ricotta',
+    'Cioccolato fondente 85%':'Dark chocolate 85%',
   };
   if(_lang!=='en')return label;
   return map[label]||label;
@@ -3905,32 +4009,112 @@ function localizeFoodLabel(label=''){
    Splits on comma, localizes each token, rejoins. Does NOT mutate stored data. */
 function localizeMealRest(rest=''){
   if(!rest||_lang!=='en')return rest;
-  /* Apply the same localizeFoodLabel map word-by-word on each comma-segment */
   const map={
+    /* ── Proteins ── */
     'Petto di pollo':'Chicken breast','Coscia di pollo':'Chicken thigh',
     'Petto di tacchino':'Turkey breast','Manzo magrissimo':'Extra lean beef',
     'Macinato magro':'Lean mince','Salmone al vapore':'Steamed salmon',
+    'Salmone affumicato':'Smoked salmon',
     'Tonno al naturale':'Tuna in water','Merluzzo al vapore':'Steamed cod',
     'Branzino al vapore':'Steamed sea bass','Gamberetti':'Shrimp',
-    'Uova intere':'Whole eggs',"Albume d'uovo":'Egg whites',
+    'Platessa al vapore':'Steamed plaice','Orata al forno':'Baked sea bream',
+    'Sgombro al vapore':'Steamed mackerel','Sardine al naturale':'Sardines in water',
+    'Pesce spada alla griglia':'Grilled swordfish','Trota al vapore':'Steamed trout',
+    'Uova intere':'Whole eggs','Uova strapazzate':'Scrambled eggs',
+    'Uova sode':'Hard-boiled eggs',"Albume d'uovo":'Egg whites',
+    'Albume strapazzato':'Scrambled egg whites',
+    'Bresaola':'Bresaola','Tacchino':'Turkey',
+    'Tofu':'Tofu','Tempeh':'Tempeh','Seitan':'Seitan','Legumi misti':'Mixed legumes',
     'Yogurt greco 0%':'Greek yogurt 0%','Yogurt greco':'Greek yogurt',
+    'Yogurt bianco':'Plain yogurt','Yogurt senza lattosio':'Lactose-free yogurt',
     'Fiocchi di latte':'Cottage cheese','Parmigiano grattugiato':'Grated parmesan',
-    'Olio EVO':'Extra virgin olive oil','Mandorle':'Almonds',
-    'Noci':'Walnuts','Nocciole':'Hazelnuts','Pistacchi':'Pistachios',
-    'Burro di arachidi':'Peanut butter','Semi di chia':'Chia seeds',
+    'Ricotta':'Ricotta','Skyr':'Skyr',
+    /* ── Carbs ── */
     'Riso bianco cotto':'Cooked white rice','Riso basmati cotto':'Cooked basmati rice',
-    'Riso integrale cotto':'Cooked brown rice','Avena cotta':'Cooked oats',
+    'Riso integrale cotto':'Cooked brown rice','Riso soffiato':'Puffed rice',
+    'Avena senza glutine':'Gluten-free oats','Avena cotta':'Cooked oats','Avena':'Oats',
     'Gallette di riso':'Rice cakes','Pane integrale':'Wholegrain bread',
+    'Pane di segale':'Rye bread',
     'Patate lesse':'Boiled potatoes','Patate dolci al forno':'Baked sweet potatoes',
     'Frutta mista':'Mixed fruit','Quinoa cotta':'Cooked quinoa',
-    /* common free-text label fragments */
-    'Yogurt senza lattosio':'Lactose-free yogurt',
-    'Latte riso':'Rice milk','Latte avena':'Oat milk','Latte mandorla':'Almond milk',
+    'Farro secco':'Pearled spelt','Couscous cotto':'Cooked couscous',
+    'Orzo perlato cotto':'Cooked pearl barley','Wrap integrale':'Wholegrain wrap',
+    'Pasta integrale':'Wholegrain pasta',
+    /* ── Fats / dairy ── */
+    'Olio EVO':'Extra virgin olive oil','Avocado':'Avocado',
+    'Mandorle':'Almonds','Noci':'Walnuts','Nocciole':'Hazelnuts',
+    'Pistacchi':'Pistachios','Burro di arachidi':'Peanut butter',
+    'Burro di mandorle':'Almond butter','Semi di chia':'Chia seeds',
+    'Semi di lino':'Flaxseeds','Semi di canapa':'Hemp seeds',
+    'Semi di girasole':'Sunflower seeds','Semi di zucca':'Pumpkin seeds',
+    'Cioccolato fondente 85%':'Dark chocolate 85%',
+    'Hummus':'Hummus','Tahini':'Tahini','Olive':'Olives',
+    /* ── Plant milks ── */
+    'Latte vegetale':'Plant milk','Latte riso':'Rice milk',
+    'Latte avena':'Oat milk','Latte mandorla':'Almond milk',
     'Latte cocco':'Coconut milk','Bevanda soia':'Soy drink',
-    'Burro di mandorle':'Almond butter',
-    'Frutti di bosco':'Mixed berries',
-    'Riso soffiato':'Puffed rice',
-    'Ricotta':'Ricotta','Skyr':'Skyr','Tofu':'Tofu','Tempeh':'Tempeh','Seitan':'Seitan',
+    /* ── Fruit ── */
+    'Frutti di bosco':'Mixed berries','Fragole':'Strawberries',
+    'Mirtilli':'Blueberries','Banana matura':'Ripe banana','Banana':'Banana',
+    'Arancia':'Orange','Mela':'Apple','Pera':'Pear','Mango':'Mango',
+    'Pesche':'Peaches','Pomodori datterini':'Cherry tomatoes',
+    'Pomodorini':'Cherry tomatoes','Pomodori':'Tomatoes',
+    /* ── Vegetables — full strings from veggiesAll/veggiesIBS pools ── */
+    'Insalata di cetrioli e pomodori 160g':'Cucumber & tomato salad 160g',
+    'Rucola e pomodorini 110g':'Rocket & cherry tomatoes 110g',
+    'Cetrioli e pomodori 150g':'Cucumber & tomatoes 150g',
+    'Funghi champignon saltati 120g':'Sautéed button mushrooms 120g',
+    'Broccoli al vapore 130g':'Steamed broccoli 130g',
+    'Spinaci saltati 120g':'Sautéed spinach 120g',
+    'Zucchine grigliate 150g':'Grilled courgettes 150g',
+    'Asparagi al vapore 130g':'Steamed asparagus 130g',
+    'Cavolfiore al vapore 140g':'Steamed cauliflower 140g',
+    'Fagiolini 150g':'Green beans 150g','Fagiolini 130g':'Green beans 130g',
+    'Melanzane grigliate 150g':'Grilled aubergines 150g',
+    'Peperoni arrostiti 120g':'Roasted peppers 120g',
+    'Radicchio 100g':'Radicchio 100g',
+    'Insalata mista 130g':'Mixed salad 130g',
+    'Carote al vapore 130g':'Steamed carrots 130g',
+    'Pomodori datterini 150g':'Cherry tomatoes 150g',
+    'Bietola saltata 130g':'Sautéed Swiss chard 130g',
+    'Bietola al vapore 120g':'Steamed Swiss chard 120g',
+    'Finocchio al forno 140g':'Baked fennel 140g',
+    'Cavolo cappuccio 120g':'White cabbage 120g',
+    'Lattuga 100g':'Lettuce 100g',
+    'Pomodori datterini 120g':'Cherry tomatoes 120g',
+    'Cetrioli 130g':'Cucumber 130g','Cetrioli 100g':'Cucumber 100g',
+    'Sedano rapa 120g':'Celeriac 120g',
+    'Bok choy al vapore 130g':'Steamed bok choy 130g',
+    'Finocchio 120g':'Fennel 120g','Rucola 80g':'Rocket 80g',
+    /* ── Partial veggie labels (no qty — appear in breakfast strings) ── */
+    'Asparagi al vapore':'Steamed asparagus',
+    'Broccoli al vapore':'Steamed broccoli',
+    'Spinaci saltati':'Sautéed spinach',
+    'Zucchine grigliate':'Grilled courgettes',
+    'Fagiolini':'Green beans','Insalata mista':'Mixed salad',
+    'Carote crude':'Raw carrots','Carote al vapore':'Steamed carrots',
+    'Cetrioli':'Cucumber','Pomodori':'Tomatoes',
+    'Verdure crude miste':'Raw mixed vegetables',
+    'Ravanelli':'Radishes',
+    /* ── Breakfast / snack-specific fragments ── */
+    'Uova strapazzate 3':'3 scrambled eggs','Uova strapazzate 2':'2 scrambled eggs',
+    'Uova sode 2':'2 hard-boiled eggs',
+    'Latte riso 200ml':'Rice milk 200ml',
+    'Proteine vegetali':'Plant protein',
+    'Cannella q.b.':'Cinnamon to taste',
+    'Miele':'Honey','Miele 8g':'Honey 8g','Miele 6g':'Honey 6g',
+    'Frutta':'Fruit',
+    /* ── Parenthetical nutritional notes (keep in English) ── */
+    'TEF +25%':'TEF +25%',
+    'FODMAP-safe':'FODMAP-safe',
+    'fibra solubile':'soluble fibre','fibra, omega-3':'fibre, omega-3',
+    'omega-3, omega-9':'omega-3, omega-9','omega-3':'omega-3','omega-6':'omega-6',
+    'Ca++, omega-3':'Ca++, omega-3','Ca++, omega-6':'Ca++, omega-6',
+    'grassi mono':'monounsaturated fats','grassi insaturi':'unsaturated fats',
+    'proteine complete':'complete protein','proteina magra':'lean protein',
+    'indice glicemico basso':'low glycaemic index',
+    'flavonoidi':'flavonoids','potassio':'potassium',
+    'Zn, Mg':'Zn, Mg',
   };
   /* Replace all known Italian phrases, longest first to avoid partial matches */
   const sorted=Object.keys(map).sort((a,b)=>b.length-a.length);
@@ -6916,6 +7100,13 @@ function _bootAfterLangGate(){
     <div style="background:rgba(77,220,198,.06);border:1px solid rgba(77,220,198,.16);border-radius:var(--r2);padding:12px 14px;margin-bottom:16px;" class="row g3">
       <span class="material-symbols-outlined" style="color:var(--p);font-size:22px;flex-shrink:0;font-variation-settings:'FILL' 1;">offline_bolt</span>
       <p style="font-size:12px;color:var(--on);font-weight:600;line-height:1.5;margin:0;" class="sn">Iron Kinetic funziona completamente offline. Tutti i tuoi dati sono sul tuo dispositivo.</p>
+    </div>
+
+    <!-- Feature Guide -->
+    <div id="help-feature-guide" class="card" style="padding:16px;margin-bottom:16px">
+      <span class="sec-label" id="help-features-title"></span>
+      <p class="sn" id="help-features-sub" style="font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 14px"></p>
+      <div id="help-features-list" class="help-features-list"></div>
     </div>
 
     <!-- FAQ -->
