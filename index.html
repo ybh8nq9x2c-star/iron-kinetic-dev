@@ -2746,6 +2746,51 @@ function applyTranslations(deferOffscreen){
   const _cml=document.getElementById('chart-mode-label');
   if(_cml){const cur=_cml.dataset.mode||'weight';_cml.textContent=cur==='waist'?t('prog.chart.girovita'):t('prog.chart.peso');}
   /* ── end extra patches ── */
+  /* ── always-run modal patches (must re-fire on every lang switch) ── */
+  /* Help modal: title, close, offline card */
+  const _helpTitleEl=document.getElementById('help-title');
+  if(_helpTitleEl)_helpTitleEl.textContent=t('help.title');
+  const _helpCloseEl=document.querySelector('#modal-help .modal-close');
+  if(_helpCloseEl)_helpCloseEl.setAttribute('aria-label',t('modal.close.help'));
+  const _helpOfflineEl=document.querySelector('#modal-help .row.g3 p');
+  if(_helpOfflineEl)_helpOfflineEl.textContent=t('help.offline');
+  /* Help feature guide title + sub + items */
+  const _hfTitleAlways=document.getElementById('help-features-title');
+  if(_hfTitleAlways)_hfTitleAlways.textContent=t('help.features.title');
+  const _hfSubAlways=document.getElementById('help-features-sub');
+  if(_hfSubAlways)_hfSubAlways.textContent=t('help.features.sub');
+  renderHelpFeatures();
+  /* FAQ items */
+  document.querySelectorAll('#faq-list .faq-item').forEach((item,i)=>{
+    const qEl=item.querySelector('.faq-q-text');
+    const aEl=item.querySelector('.faq-answer');
+    if(qEl&&t('faq.q.'+i)!==('faq.q.'+i))qEl.textContent=t('faq.q.'+i);
+    if(aEl&&t('faq.a.'+i)!==('faq.a.'+i))aEl.innerHTML=t('faq.a.'+i);
+  });
+  /* Help contact card */
+  document.querySelectorAll('.help-contact-card p').forEach(p=>{
+    const v=p.textContent.trim();
+    if(v==='Hai altre domande?'||v==='Any other questions?')p.textContent=t('help.contact.title');
+    if(v.includes('Scrivici a')||v.includes('Reach us at')||v.includes('support@ironkinetic'))
+      p.innerHTML=t('help.contact.sub.email');
+  });
+  /* Help modal disclaimer */
+  const _hdTitleAlways=document.getElementById('help-disclaimer-title');
+  if(_hdTitleAlways)_hdTitleAlways.textContent=t('help.disclaimer.title');
+  const _hdTextAlways=document.getElementById('help-disclaimer-text');
+  if(_hdTextAlways)_hdTextAlways.textContent=t('help.disclaimer.text');
+  /* Shopping modal title + close + placeholder */
+  const _shTitleAlways=document.getElementById('shopping-title');
+  if(_shTitleAlways)_shTitleAlways.textContent=t('shopping.title');
+  const _shCloseAlways=document.querySelector('#modal-shopping .modal-close');
+  if(_shCloseAlways)_shCloseAlways.setAttribute('aria-label',t('modal.close.shopping'));
+  const _shopContentAlways=document.getElementById('shopping-content');
+  if(_shopContentAlways){
+    const _ph=_shopContentAlways.querySelector('.muted.sn');
+    if(_ph&&(_ph.textContent.trim()==='Carica un piano per generare la lista'||_ph.textContent.trim()==='Load a plan to generate the list'))
+      _ph.textContent=t('shopping.noPlan');
+  }
+  /* ── end always-run modal patches ── */
 
   if(_trApplied)return;_trApplied=true;
   /* Helper shortcuts */
@@ -3106,21 +3151,6 @@ function applyTranslations(deferOffscreen){
   const disclaimerText=document.getElementById('info-disclaimer-text');
   if(disclaimerText)disclaimerText.textContent=t('info.disclaimer.text');
   /* ── MODALS ── */
-  /* shopping modal title */
-  const shTitle=document.getElementById('shopping-title');if(shTitle)shTitle.textContent=t('shopping.title');
-  const shCloseBtn=document.querySelector('#modal-shopping .modal-close');
-  if(shCloseBtn)shCloseBtn.setAttribute('aria-label',t('modal.close.shopping'));
-  /* help modal title */
-  const helpTitle=document.getElementById('help-title');if(helpTitle)helpTitle.textContent=t('help.title');
-  const helpCloseBtn=document.querySelector('#modal-help .modal-close');
-  if(helpCloseBtn)helpCloseBtn.setAttribute('aria-label',t('modal.close.help'));
-  const helpOfflineEl=document.querySelector('#modal-help .row.g3 p');
-  if(helpOfflineEl)helpOfflineEl.textContent=t('help.offline');
-  /* help contact */
-  document.querySelectorAll('.help-contact-card p').forEach(p=>{
-    const v=p.textContent.trim();
-    if(v==='Hai altre domande?'||v==='Any other questions?')p.textContent=t('help.contact.title');
-  });
   /* privacy modal */
   const prvTitle=document.getElementById('prv-title');if(prvTitle)prvTitle.textContent=t('privacy.title');
   const prvCloseBtn=document.querySelector('#modal-privacy .modal-close');
@@ -3128,13 +3158,6 @@ function applyTranslations(deferOffscreen){
   const prvConsTitle=document.querySelector('#modal-privacy [style*="background:var(--s2)"] .prv-h2');
   if(prvConsTitle)prvConsTitle.textContent=t('privacy.consenso.title');
   document.querySelectorAll('button[onclick="gdprAccept();closeModal(\'modal-privacy\')"]').forEach(b=>b.textContent=t('privacy.consenso.rinnova'));
-  /* shopping list no-plan placeholder */
-  const shopContent=document.getElementById('shopping-content');
-  if(shopContent){
-    const placeholder=shopContent.querySelector('.muted.sn');
-    if(placeholder&&(placeholder.textContent.trim()==='Carica un piano per generare la lista'||placeholder.textContent.trim()==='Load a plan to generate the list'))
-      placeholder.textContent=t('shopping.noPlan');
-  }
   /* PWA gate */
   const pwaTitle=document.querySelector('#pwa-gate h2');if(pwaTitle)pwaTitle.textContent=t('pwa.title');
   const pwaSub=document.querySelector('#pwa-gate h2+p');if(pwaSub)pwaSub.textContent=t('pwa.sub');
@@ -3181,20 +3204,6 @@ function applyTranslations(deferOffscreen){
     if(p.textContent.includes('irreversibili')||p.textContent.includes('irreversible'))
       p.textContent=t('set.danger.warn');
   });
-  /* ── FAQ items (innerHTML — dev-defined LANG strings, no user input) ── */
-  const _faqItems=document.querySelectorAll('#faq-list .faq-item');
-  _faqItems.forEach((item,i)=>{
-    const qEl=item.querySelector('.faq-q-text');
-    const aEl=item.querySelector('.faq-answer');
-    if(qEl&&t('faq.q.'+i)!==('faq.q.'+i))qEl.textContent=t('faq.q.'+i);
-    if(aEl&&t('faq.a.'+i)!==('faq.a.'+i))aEl.innerHTML=t('faq.a.'+i);
-  });
-  /* ── Help contact email sub-line ── */
-  document.querySelectorAll('.help-contact-card p').forEach(p=>{
-    const v=p.textContent.trim();
-    if(v.includes('Scrivici a')||v.includes('Reach us at')||v.includes('support@ironkinetic'))
-      p.innerHTML=t('help.contact.sub.email');
-  });
   /* ── Privacy modal full content (innerHTML — dev-defined LANG strings) ── */
   const _pm=document.getElementById('modal-privacy');if(!_pm)return;
   const _prvBadge=_pm.querySelector('.prv-badge');if(_prvBadge)_prvBadge.textContent=t('prv.badge');
@@ -3229,15 +3238,6 @@ function applyTranslations(deferOffscreen){
   if(_prvSections[9])_prvSetSection(_prvSections[9],t('prv.s10.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s10.p');});
   if(_prvSections[10])_prvSetSection(_prvSections[10],t('prv.s11.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s11.p');});
   if(_prvSections[11])_prvSetSection(_prvSections[11],t('prv.contact.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.contact.p1');if(ps[1])ps[1].innerHTML=t('prv.contact.p2');});
-  /* ── Help feature guide ── */
-  const _hfTitle=document.getElementById('help-features-title');
-  if(_hfTitle)_hfTitle.textContent=t('help.features.title');
-  const _hfSub=document.getElementById('help-features-sub');
-  if(_hfSub)_hfSub.textContent=t('help.features.sub');
-  renderHelpFeatures();
-  /* ── Help modal disclaimer ── */
-  const _hdTitle=document.getElementById('help-disclaimer-title');if(_hdTitle)_hdTitle.textContent=t('help.disclaimer.title');
-  const _hdText=document.getElementById('help-disclaimer-text');if(_hdText)_hdText.textContent=t('help.disclaimer.text');
   }; /* end _offscreen */
   if(deferOffscreen)(window.requestIdleCallback||window.setTimeout)(_offscreen,{timeout:300});
   else _offscreen();
@@ -6738,11 +6738,43 @@ function updateConsentUI(){
 /* ═══════════════════════════════════════
    MODAL SYSTEM
 ═══════════════════════════════════════ */
+function applyHelpModal(){
+  /* Always re-applies all help modal text in current language — called on open */
+  const _ht=document.getElementById('help-title');
+  if(_ht)_ht.textContent=t('help.title');
+  const _hc=document.querySelector('#modal-help .modal-close');
+  if(_hc)_hc.setAttribute('aria-label',t('modal.close.help'));
+  const _ho=document.querySelector('#modal-help .row.g3 p');
+  if(_ho)_ho.textContent=t('help.offline');
+  const _hft=document.getElementById('help-features-title');
+  if(_hft)_hft.textContent=t('help.features.title');
+  const _hfs=document.getElementById('help-features-sub');
+  if(_hfs)_hfs.textContent=t('help.features.sub');
+  renderHelpFeatures();
+  document.querySelectorAll('#faq-list .faq-item').forEach((item,i)=>{
+    const qEl=item.querySelector('.faq-q-text');
+    const aEl=item.querySelector('.faq-answer');
+    if(qEl&&t('faq.q.'+i)!==('faq.q.'+i))qEl.textContent=t('faq.q.'+i);
+    if(aEl&&t('faq.a.'+i)!==('faq.a.'+i))aEl.innerHTML=t('faq.a.'+i);
+  });
+  document.querySelectorAll('.help-contact-card p').forEach(p=>{
+    const v=p.textContent.trim();
+    if(v==='Hai altre domande?'||v==='Any other questions?'||v.length<30)
+      p.textContent=t('help.contact.title');
+    if(v.includes('Scrivici')||v.includes('Reach us')||v.includes('support@'))
+      p.innerHTML=t('help.contact.sub.email');
+  });
+  const _hdt=document.getElementById('help-disclaimer-title');
+  if(_hdt)_hdt.textContent=t('help.disclaimer.title');
+  const _hdd=document.getElementById('help-disclaimer-text');
+  if(_hdd)_hdd.textContent=t('help.disclaimer.text');
+}
 function openModal(name){
   hap();
   updateConsentUI();
   const el=document.getElementById('modal-'+name);
   if(!el)return;
+  if(name==='help')applyHelpModal();
   el.classList.add('on');
   document.body.style.overflow='hidden';
 }
