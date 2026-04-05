@@ -1418,7 +1418,7 @@ body.onboarding-active #onb-screen{
         <div style="border-bottom:1px solid var(--line);">
           <button onclick="toggleAccordion('fase')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
             <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">timeline</span>
-            <span class="sn" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Fase Corrente</span>
+            <span class="sn" data-i18n="set.fase.title" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Fase Corrente</span>
             <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
           </button>
           <div id="acc-fase" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
@@ -1442,7 +1442,7 @@ body.onboarding-active #onb-screen{
         <div style="border-bottom:1px solid var(--line);">
           <button onclick="toggleAccordion('mod')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
             <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">tune</span>
-            <span class="sn" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Modificatore AI</span>
+            <span class="sn" data-i18n="set.mod.title" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Modificatore AI</span>
             <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
           </button>
           <div id="acc-mod" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
@@ -1465,14 +1465,14 @@ body.onboarding-active #onb-screen{
         <div style="border-bottom:1px solid var(--line);">
           <button onclick="toggleAccordion('dati')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
             <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">database</span>
-            <span class="sn" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Dati</span>
+            <span class="sn" data-i18n="set.dati.title" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Dati</span>
             <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
           </button>
           <div id="acc-dati" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
             <div style="padding:0 16px 16px;border-top:1px solid var(--line);">
               <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
-                <button onclick="exportData()" class="btn btn-ghost w100 sn">📦 Esporta Backup</button>
-                <button onclick="document.getElementById('imp-inp').click()" class="btn btn-ghost w100 sn">📥 Importa Backup</button>
+                <button id="btn-export-data" onclick="exportData()" class="btn btn-ghost w100 sn">📦 Esporta Backup</button>
+                <button id="btn-import-data" onclick="document.getElementById('imp-inp').click()" class="btn btn-ghost w100 sn">📥 Importa Backup</button>
                 <input type="file" id="imp-inp" accept=".json" style="display:none;" onchange="importBackup(event)"/>
               </div>
             </div>
@@ -1483,13 +1483,13 @@ body.onboarding-active #onb-screen{
         <div style="border-bottom:1px solid var(--line);">
           <button onclick="toggleAccordion('danger')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
             <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--red);">warning</span>
-            <span class="sn" style="font-size:13px;font-weight:700;color:var(--red);flex:1;">Zona Pericolosa</span>
+            <span class="sn" data-i18n="set.danger.title" style="font-size:13px;font-weight:700;color:var(--red);flex:1;">Zona Pericolosa</span>
             <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--red);transition:transform .2s;">chevron_right</span>
           </button>
           <div id="acc-danger" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
             <div style="padding:0 16px 16px;border-top:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.03);">
               <p class="sn t-xxs muted" style="margin:14px 0 10px;line-height:1.5;">Queste azioni sono irreversibili senza un backup.</p>
-              <button onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
+              <button id="btn-change-diet" onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
             </div>
           </div>
         </div>
@@ -2010,6 +2010,11 @@ it:{
   'onb2.slide5.title':'INIZIA ORA',
   'onb2.slide5.body':'Il tuo corpo non aspetta. Entra i dati → ottieni piano perfetto.',
   'confirm.cancel':'Annulla','confirm.ok':'Conferma',
+  'gdpr.confirm.title':'Revoca consenso',
+  'gdpr.confirm.body':'Tutti i dati locali verranno cancellati in modo permanente. Continuare?',
+  'gdpr.confirm.ok':'Revoca',
+  'gdpr.confirm.cancel':'Annulla',
+  'onb.label.age':'Età','onb.label.height':'Altezza','onb.label.weight':'Peso',
   'confirm.resetPlanOnly':'Rigenera solo il piano? Profilo e preferenze cancellati, log peso e check-in conservati.',
   'confirm.resetAll':'Reset completo? Tutti i dati (peso, check-in, piano, profilo) saranno cancellati. Irreversibile.',
   'lang.gate.title':'Scegli la lingua',
@@ -2440,6 +2445,11 @@ en:{
   'onb2.slide5.title':'START NOW',
   'onb2.slide5.body':'Your body won\'t wait. Enter your data → get the perfect plan.',
   'confirm.cancel':'Cancel','confirm.ok':'Confirm',
+  'gdpr.confirm.title':'Revoke consent',
+  'gdpr.confirm.body':'All local data will be permanently deleted. Continue?',
+  'gdpr.confirm.ok':'Revoke',
+  'gdpr.confirm.cancel':'Cancel',
+  'onb.label.age':'Age','onb.label.height':'Height','onb.label.weight':'Weight',
   'confirm.resetPlanOnly':'Regenerate plan only? Profile and preferences cleared, weight log and check-ins kept.',
   'confirm.resetAll':'Full reset? All data (weight, check-ins, plan, profile) will be deleted. Irreversible.',
   'lang.gate.title':'Choose your language',
@@ -2609,6 +2619,7 @@ function setLang(lang){
   _lang=(lang==='en')?'en':'it';
   lsW(SK.lang,_lang);
   document.documentElement.lang=_lang;
+  _mealRenderCache={}; /* FIX3: invalidate meal cache on lang change */
   applyLang();
   scheduleRender(renderCoach,renderMeals,renderMacros,renderSettings,renderCheckinAnalytics,renderTrackers);
 }
@@ -2693,18 +2704,10 @@ function applyTranslations(deferOffscreen){
   const _lL=document.getElementById('lang-label-txt');if(_lL)_lL.textContent=t('set.lang.label');
   const _mS=document.getElementById('mod-status');
   if(_mS&&(_mS.textContent.trim()==='Base invariata'||_mS.textContent.trim()==='Unchanged'))_mS.textContent=t('set.mod.base');
-  document.querySelectorAll('[onclick="exportData()"]').forEach(b=>b.textContent=t('set.dati.esporta'));
-  document.querySelectorAll('[onclick*="imp-inp"]').forEach(b=>b.textContent=t('set.dati.importa'));
+  document.getElementById('btn-export-data') && (document.getElementById('btn-export-data').textContent=t('set.dati.esporta'));
+  document.getElementById('btn-import-data') && (document.getElementById('btn-import-data').textContent=t('set.dati.importa'));
   document.querySelectorAll('[onclick="resetProfile()"]').forEach(b=>b.textContent=t('set.rigenera'));
-  document.querySelectorAll('[onclick="changeDiet()"]').forEach(b=>{if(b.textContent)b.textContent=t('set.dati.ricomincia')||b.textContent;});
-  document.querySelectorAll('button[onclick*="toggleAccordion"]').forEach(btn=>{
-    const sp=btn.querySelectorAll('span');if(sp.length<2)return;
-    const el=sp[1];const v=el.textContent.trim();
-    if(v==='Fase Corrente'||v==='Current Phase')el.textContent=t('set.fase.title');
-    else if(v==='Modificatore AI'||v==='AI Modifier')el.textContent=t('set.mod.title');
-    else if(v==='Dati'||v==='Data')el.textContent=t('set.dati.title');
-    else if(v==='Zona Pericolosa'||v==='Danger Zone')el.textContent=t('set.danger.title');
-  });
+  document.getElementById('btn-change-diet') && (document.getElementById('btn-change-diet').textContent=t('set.dati.ricomincia'));
   document.querySelectorAll('[onclick="applyMod(0)"]').forEach(b=>{if(b.textContent.includes('Reset')||b.textContent.includes('reset'))b.textContent=t('set.mod.reset');});
   document.querySelectorAll('[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
   /* danger zone accordion warning text */
@@ -3054,11 +3057,9 @@ function applyTranslations(deferOffscreen){
     regenBtn.textContent=t('set.rigenera');
   const modResetBtn=document.querySelector('button[onclick="applyMod(0)"]');
   if(modResetBtn)modResetBtn.textContent=t('set.mod.reset');
-  document.querySelectorAll('button[onclick="exportData()"]').forEach(b=>b.textContent=t('set.dati.esporta'));
-  const impBtn=document.querySelector('button[onclick="document.getElementById(\'imp-inp\').click()"]');
-  if(impBtn)impBtn.textContent=t('set.dati.importa');
-  const changeDietBtn=document.querySelector('button[onclick="changeDiet()"]');
-  if(changeDietBtn)changeDietBtn.textContent=t('set.dati.ricomincia');
+  const _btnExp=document.getElementById('btn-export-data');if(_btnExp)_btnExp.textContent=t('set.dati.esporta');
+  const _btnImp=document.getElementById('btn-import-data');if(_btnImp)_btnImp.textContent=t('set.dati.importa');
+  const _btnChg=document.getElementById('btn-change-diet');if(_btnChg)_btnChg.textContent=t('set.dati.ricomincia');
   document.querySelectorAll('button[onclick*="switchTab(\'info\')"]').forEach(b=>{
     const sp=b.querySelector('span:not(.material-symbols-outlined)');
     if(sp)sp.textContent=t('set.btn.privacy');else if(b.children.length<2)b.lastChild.textContent=' '+t('set.btn.privacy');
@@ -3177,6 +3178,7 @@ const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
    STATE
 ═══════════════════════════════════════ */
 let dietData=null,bodyChart=null,chartMode='weight',selDay=1,activeTab='oggi';
+let _mealRenderCache={}; /* FIX3: key→HTML cache for diff-patch render */
 let profState={sex:'M',age:null,height:null,weight:null,bf:null,
                workoutsWk:null,stepsDay:null,goal:null,goalMod:0,
                tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,
@@ -3452,22 +3454,48 @@ function renderFingerprint(){
   if(!fp){card.style.display='none';return;}
   card.style.display='block';
   const bar=(v,color)=>`<div style="height:6px;border-radius:3px;background:var(--s3);overflow:hidden;"><div style="width:${Math.min(100,Math.max(0,v))}%;height:100%;background:${color};border-radius:3px;transition:width .4s;"></div></div>`;
+  const tip=(key)=>`<button class="sn" onclick="showFingerprintTip('${key}')" style="background:none;border:none;color:var(--muted);font-size:11px;padding:0 0 0 4px;cursor:pointer;vertical-align:middle;line-height:1;" aria-label="Info">ⓘ</button>`;
   cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.efficienza')}</span>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.efficienza')}</span>${tip('efficiency')}
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--p);margin:2px 0 4px;">${fp.efficiency}%</p>
       ${bar(fp.efficiency,'var(--p)')}
       <p class="muted sn" style="font-size:10px;margin-top:4px;">${t('fp.rispostaDeficit')}</p></div>
-    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.adattamento')}</span>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.adattamento')}</span>${tip('adaptation')}
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--orange);margin:2px 0 4px;">${fp.adaptation}%</p>
       ${bar(fp.adaptation,'var(--orange)')}
       <p class="muted sn" style="font-size:10px;margin-top:4px;">${t('fp.riduzione')}</p></div>
-    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.risposta')}</span>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.risposta')}</span>${tip('response')}
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.responseDays}${t('fp.days')}</p>
       <p class="muted sn" style="font-size:10px;margin-top:2px;">${t('fp.segnale')}</p></div>
-    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.perditaReale')}</span>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.perditaReale')}</span>${tip('weekly')}
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.avgWeekly}kg/w</p>
       <p class="muted sn" style="font-size:10px;margin-top:2px;">${t('fp.mediaSettimanaleFP')}</p></div>
   </div>`;
+}
+
+/* ── FIX6: Metabolic Fingerprint tooltips ── */
+const FINGERPRINT_TIPS={
+  efficiency:{
+    it:'Quanto il tuo deficit calorico si traduce in perdita di peso reale. 100% = risposta ottimale al piano.',
+    en:'How much your caloric deficit translates into real weight loss. 100% = optimal response to the plan.'
+  },
+  adaptation:{
+    it:'Stima del rallentamento metabolico adattivo. 0% = nessun adattamento. 100% = metabolismo molto adattato.',
+    en:'Estimate of adaptive metabolic slowdown. 0% = no adaptation. 100% = highly adapted metabolism.'
+  },
+  response:{
+    it:'Giorni necessari perché il peso risponda ai cambiamenti del piano. Valori bassi indicano metabolismo reattivo.',
+    en:'Days needed for weight to respond to plan changes. Lower values mean a more reactive metabolism.'
+  },
+  weekly:{
+    it:'Media settimanale di perdita/guadagno di peso nelle ultime registrazioni.',
+    en:'Weekly average of weight loss/gain in recent log entries.'
+  }
+};
+function showFingerprintTip(key){
+  const tips=FINGERPRINT_TIPS[key];if(!tips)return;
+  const lang=lsR(SK.lang)==='en'?'en':'it';
+  showToast(tips[lang],4000);
 }
 
 /* ── Feature 4: Predictive Weight Curve ── */
@@ -4927,13 +4955,32 @@ function toggleFood(btn,food){
   }
 }
 
+/* FIX2: field-level validation with red border + focus */
+function validateOnbField(id,min,max,labelKey){
+  const el=document.getElementById(id);
+  if(!el)return true;
+  const v=parseFloat(el.value);
+  if(isNaN(v)||v<min||v>max){
+    el.style.borderColor='var(--red)';
+    el.focus();
+    showToast(`${t(labelKey)}: ${min}–${max}`);
+    setTimeout(()=>{el.style.borderColor='';},1800);
+    return false;
+  }
+  el.style.borderColor='';
+  return true;
+}
+
 function goStep(n){
   hap();
   if(n===1){
+    const ageOk=validateOnbField('f-age',16,80,'onb.label.age');
+    const heightOk=validateOnbField('f-height',140,220,'onb.label.height');
+    const weightOk=validateOnbField('f-weight',40,250,'onb.label.weight');
+    if(!ageOk||!heightOk||!weightOk){hap('error');return;}
     const age=parseFloat(document.getElementById('f-age').value);
     const h=parseFloat(document.getElementById('f-height').value);
     const w=parseFloat(document.getElementById('f-weight').value);
-    if(isNaN(age)||age<16||age>80||isNaN(h)||h<140||h>220||isNaN(w)||w<40||w>250){toast(t('toast.compilaCorpo'));hap('error');return;}
     profState.age=age;profState.height=h;profState.weight=w;
     const bf=parseFloat(document.getElementById('f-bf').value);
     profState.bf=(!isNaN(bf)&&bf>0)?bf:null;
@@ -5049,6 +5096,7 @@ function activateGeneratedPlan(){
   lsS(SK.sport,profState.sport);
   lsW(SK.trainTime,profState.trainTime);
   _macroCache=null;
+  _mealRenderCache={}; /* FIX3: new plan invalidates meal cache */
   lsS(SK.profile,profState);
   lsS(SK.prefs,prefState);
   const patched=applyProfileToMeta(plan);
@@ -5289,7 +5337,7 @@ function toggleTrackers(){
   const btn=getEl('trackers-toggle-btn');
   if(!b)return;
   const open=b.style.maxHeight!=='0px';
-  b.style.maxHeight=open?'0':'800px';
+  b.style.maxHeight=open?'0':b.scrollHeight+'px'; /* FIX5: use scrollHeight, no clip */
   if(c)c.style.transform=open?'rotate(180deg)':'';
   if(btn)btn.setAttribute('aria-expanded',String(!open));
 }
@@ -5299,7 +5347,7 @@ function shiftDay(delta){
   const idx=days.findIndex(d=>d.d===selDay);
   const next=days[idx+delta];
   if(!next)return;
-  hap();selDay=next.d;buildDaySelector();renderMeals();
+  hap();selDay=next.d;_mealRenderCache={};/* FIX3 */buildDaySelector();renderMeals();
 }
 function toggleInsight(){
   const card=getEl('personal-insight-card');
@@ -5484,6 +5532,19 @@ function normalizePlanLabel(name,goal){
 function getMealNames(){
   return dietData?.metadata?.mealNames||['Pranzo','Merenda','Cena'];
 }
+function getMealEmoji(name){
+  const _mt=canonicalMealType(name);
+  if(_mt==='breakfast')return'🌅';
+  if(_mt==='lunch')return'☀️';
+  if(_mt==='dinner')return'🌙';
+  if(_mt==='snack'){
+    const _n=String(name).toLowerCase();
+    if(_n.includes('pre')||_n.includes('morning'))return'⚡';
+    if(_n.includes('post'))return'🥤';
+    return'🍎';
+  }
+  return'🍽️';
+}
 function renderMeals(){
   document.querySelectorAll('button[onclick="openShoppingList()"]').forEach(b=>b.style.display=dietData?'':'none');
   if(!dietData)return;
@@ -5494,27 +5555,32 @@ function renderMeals(){
   const totalEl=document.getElementById('meals-total');if(totalEl)totalEl.textContent='/'+mNames.length;
   const dist=getAdaptedMealDistribution();
   const skipRates=getMealSkipRates();
-  /* FIX5: build new HTML, then do selective update to preserve scroll/transitions */
-  const _newRows=mNames.map((n,mealIdx)=>{
-    const meal=day[n];if(!meal)return'';
+  /* FIX3: key-based diff-patch render — only changed rows update, keyboard/scroll preserved */
+  /* Remove stale rows (plan changed) */
+  Object.keys(_mealRenderCache).forEach(k=>{
+    if(!k.startsWith(day.d+'_'))return;
+    const mealName=k.slice(String(day.d).length+1);
+    if(!mNames.includes(mealName)){
+      document.getElementById('meal-row-'+CSS.escape(mealName)+'-'+day.d)?.remove();
+      delete _mealRenderCache[k];
+    }
+  });
+  mNames.forEach((n,mealIdx)=>{
+    const meal=day[n];if(!meal)return;
     const checked=lsR(mk(day.d,n))==='1';if(checked)done++;
     const _mType=canonicalMealType(n);const isHardcodedMeal=_mType==='breakfast'||_mType==='snack';
     const totalDays=Object.keys(skipRates).length;const skipBadge=(skipRates[n]||0)>=0.6&&totalDays>=14?`<span style="font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--orange);margin-left:4px;">${_lang==='en'?'OFTEN SKIPPED':'SPESSO SALTATO'}</span>`:'';
     const fa=meal.carbSource?finalCarb(meal):null;
     const diff=fa!==null?fa-meal.baseAmount:0;
     const carbLabel=meal.carbSource?(localizeFoodLabel(FOOD_DB[meal.carbSource]?.label||meal.carbSource)):'';
-    /* Badge shows modifier delta for ALL meal types; carbLine only for computed main meals */
     const badge=(diff!==0&&meal.carbSource)?`<span class="mod-badge">${diff>0?'+':''}${diff}g ${sanitize(carbLabel)}</span>`:'';
     const carbLine=(fa!==null&&!isHardcodedMeal)?`<strong style="color:var(--on);">${fa}g ${sanitize(carbLabel)}</strong>, `:'';
     const circBadge=getCircadianTips(n,mealIdx,mNames.length);
     const synergy=!checked?calcSynergyScore(meal.rest):null;
     const synBadge=synergy?`<span style="font-size:11px;margin-left:3px;" title="${sanitize(synergy.label)}">${synergy.emoji}</span>`:'';
-    /* MISSING4: satiety badge — shown when food has satiety>=2.5 */
     const _satFood=meal._meta?.protein&&FOOD_DB[meal._meta.protein]?.satiety>=2.5?meal._meta.protein:meal._meta?.carb&&FOOD_DB[meal._meta.carb]?.satiety>=2.5?meal._meta.carb:null;
     const satietyBadge=_satFood?`<span style="font-size:11px;margin-left:3px;" title="Alto potere saziante">🪹</span>`:'';
     const bs=checked?'border:1px solid rgba(77,220,198,.22);background:rgba(77,220,198,.03);':'border:1px solid var(--line);background:var(--s1);';
-    /* Breakfast/snack use hardcoded string recipes — component swap is meaningless for them.
-       Show only the regen button to avoid misleading protein/carb swap labels. */
     const actionsHtml=isHardcodedMeal
       ?`<div class="meal-actions">
           <button onclick="regenSingleMeal(${day.d},'${sanitize(n)}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
@@ -5524,7 +5590,8 @@ function renderMeals(){
           <button onclick="swapMealComponent(${day.d},'${sanitize(n)}','carb')" class="btn-xs-swap">${t('meal.swap.carb')}</button>
           <button onclick="regenSingleMeal(${day.d},'${sanitize(n)}')" class="btn-xs-swap">${t('meal.swap.regen')}</button>
         </div>`;
-    return `<div style="width:100%;" data-meal-id="${sanitize(n)}" data-done="${checked?'1':'0'}">
+    const rowId='meal-row-'+n+'-'+day.d;
+    const newHTML=`<div id="${rowId}" style="width:100%;" data-meal-id="${sanitize(n)}" data-done="${checked?'1':'0'}">
       <button class="meal-row${checked?' done':''}" onclick="toggleMeal(${day.d},'${sanitize(n)}')"
         role="listitem" aria-pressed="${checked}" aria-label="${sanitize(localizedMealName(n))}${checked?' '+t('meal.completed'):''}"
         style="${bs}border-radius:var(--r);display:flex;align-items:flex-start;gap:12px;padding:13px;touch-action:manipulation;cursor:pointer;width:100%;text-align:left;">
@@ -5532,27 +5599,19 @@ function renderMeals(){
           ${checked?`<span class="material-symbols-outlined sn" style="font-size:16px;color:var(--p);font-variation-settings:'FILL' 1;">check</span>`:''}
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${sanitize(localizedMealName(n))}</span>${badge}${circBadge}${synBadge}${satietyBadge}${skipBadge}</div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${getMealEmoji(n)} ${sanitize(localizedMealName(n))}</span>${badge}${circBadge}${synBadge}${satietyBadge}${skipBadge}</div>
           <p class="meal-desc sn">${carbLine}${sanitize(localizeMealRest(meal.rest))}</p>
         </div>
       </button>
       ${actionsHtml}
     </div>`;
-  }).join('');
-  /* Selective DOM update */
-  const _existingRows=cont.querySelectorAll('[data-meal-id]');
-  const _newFrag=document.createElement('div');_newFrag.innerHTML=_newRows;
-  const _newDivs=_newFrag.querySelectorAll('[data-meal-id]');
-  if(_existingRows.length===_newDivs.length){
-    _existingRows.forEach((_ex,_i)=>{
-      const _nw=_newDivs[_i];
-      if(_ex.dataset.mealId!==_nw.dataset.mealId||_ex.dataset.done!==_nw.dataset.done){
-        _ex.outerHTML=_nw.outerHTML;
-      }
-    });
-  }else{
-    cont.innerHTML=_newRows;
-  }
+    const cacheKey=day.d+'_'+n;
+    if(_mealRenderCache[cacheKey]===newHTML)return; /* nothing changed — skip DOM write */
+    _mealRenderCache[cacheKey]=newHTML;
+    const existing=document.getElementById(rowId);
+    if(existing){existing.outerHTML=newHTML;}
+    else{cont.insertAdjacentHTML('beforeend',newHTML);}
+  });
   document.getElementById('meals-done').textContent=done;
   const dateEl=document.getElementById('oggi-date-label');
   if(dateEl)dateEl.textContent=new Date().toLocaleDateString(_lang==='en'?'en-US':'it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
@@ -5723,6 +5782,29 @@ function applyMod(u){
 }
 const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
 function clearAppData(){Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
+
+/* ── Custom confirm modal (FIX1) ── */
+function openConfirmModal(title,body,okLabel,cancelLabel,onOk){
+  document.getElementById('confirm-modal-title').textContent=title;
+  document.getElementById('confirm-modal-body').textContent=body;
+  const okBtn=document.getElementById('confirm-modal-ok');
+  const cancelBtn=document.getElementById('confirm-modal-cancel');
+  okBtn.textContent=okLabel;
+  cancelBtn.textContent=cancelLabel;
+  okBtn.onclick=()=>{closeConfirmModal();onOk();};
+  cancelBtn.onclick=closeConfirmModal;
+  const ov=document.getElementById('confirm-modal-overlay');
+  ov.style.display='flex';
+  requestAnimationFrame(()=>ov.classList.add('on'));
+  trapFocus(ov);
+}
+function closeConfirmModal(){
+  const ov=document.getElementById('confirm-modal-overlay');
+  if(!ov)return;
+  ov.classList.remove('on');
+  setTimeout(()=>{ov.style.display='none';},300);
+}
+
 let _confirmCb=null;
 function showConfirm(msg,cb){
   const msgEl=getEl('confirm-msg');if(msgEl)msgEl.textContent=msg;
@@ -5780,15 +5862,15 @@ function _doResetProfile(keepLog){
   _macroCache=null;
   if(bodyChart){bodyChart.destroy();bodyChart=null;}
   dietData=null;
-  profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,sport:'fitness',trainTime:''};
+  profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,sport:'strength',trainTime:''};
   prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
   curStep=0;
   for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===0);dot.classList.remove('completed');}}
   const rc=document.getElementById('result-card');if(rc)rc.classList.remove('on');
   /* Return to onboarding Step 1 */
-  document.body.classList.add('onboarding-active');
+  document.body.classList.remove('onboarding-active');
   document.getElementById('app-shell').classList.remove('on');
-  document.getElementById('onb-screen').classList.remove('on');
+  document.getElementById('onb-screen')?.classList.remove('on');
   /* Show slideshow for returning users so they re-engage */
   lsS(SK.onboardingDone,false);
   showOnboarding();
@@ -5943,8 +6025,21 @@ function switchChart(mode,btn){
 ═══════════════════════════════════════ */
 function exportData(){
   hap();try{
-    const snap={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);snap[k]=localStorage.getItem(k);}
-    const url=URL.createObjectURL(new Blob([JSON.stringify(snap,null,2)],{type:'application/json'}));
+    const exportObj={
+      _appVersion:'2.0.0',
+      _schemaVersion:1,
+      _exportedAt:toISO(),
+      profile:lsG(SK.profile),
+      prefs:lsG(SK.prefs),
+      diet:lsG(SK.diet),
+      wLog:lsG(SK.wLog),
+      checkins:lsG(SK.checkins),
+      phase:lsR(SK.phase),
+      mod:lsR(SK.mod),
+      refeed:lsR(SK.refeed),
+      streaks:localStorage.getItem('ik_streaks'),
+    };
+    const url=URL.createObjectURL(new Blob([JSON.stringify(exportObj,null,2)],{type:'application/json'}));
     const a=document.createElement('a');a.href=url;a.download=`ironkinetic_${toISO()}.json`;a.click();URL.revokeObjectURL(url);toast(t('toast.backupExp'));
   }catch{toast(t('toast.errExp'));}
 }
@@ -5956,27 +6051,44 @@ function importBackup(evt){
       const d=JSON.parse(e.target.result);
       if(typeof d!=='object'||Array.isArray(d))throw new Error(t('import.errFormat'));
 
+      /* ── B4B: Schema version guard ── */
+      if(d._schemaVersion&&d._schemaVersion>1){
+        showToast('Backup da versione più recente — aggiorna l\'app.');
+        return;
+      }
+
       /* ── Pre-flight validation: ensure the diet plan (if present) is schema-valid ── */
-      const rawDiet=d[SK.diet];
+      const rawDiet=d[SK.diet]||(d.diet?JSON.stringify(d.diet):null);
       if(rawDiet){
-        try{const parsed=JSON.parse(rawDiet);validateSchema(parsed);}
+        try{const parsed=typeof rawDiet==='string'?JSON.parse(rawDiet):rawDiet;validateSchema(parsed);}
         catch(se){throw new Error(t('import.errPlan',{msg:se.message}));}
       }
 
-      /* ── Confirm before destructive operation — FIX17: use showConfirm ── */
+      /* ── Confirm before destructive operation ── */
       showConfirm(t('confirm.importa',{n:Object.keys(d).length}),()=>{
-      /* ── Safe restore: write new first, then clear old keys not in backup ── */
 
-      /* ── Safe restore: write new first, then clear old keys not in backup ── */
-      const oldKeys=[];
-      for(let i=0;i<localStorage.length;i++)oldKeys.push(localStorage.key(i));
-      /* Write all backup keys */
-      Object.entries(d).forEach(([k,v])=>{try{localStorage.setItem(k,v);}catch{}});
-      /* Remove keys not in backup (stale state) */
-      oldKeys.forEach(k=>{if(!(k in d)){try{localStorage.removeItem(k);}catch{}}});
+      /* ── B4C: Handle structured export (new format) ── */
+      const isStructured=!!(d._appVersion||d._schemaVersion);
+      if(isStructured){
+        /* Write structured fields to localStorage */
+        if(d.profile)try{localStorage.setItem(SK.profile,JSON.stringify(d.profile));}catch{}
+        if(d.prefs)try{localStorage.setItem(SK.prefs,JSON.stringify(d.prefs));}catch{}
+        if(d.diet)try{localStorage.setItem(SK.diet,JSON.stringify(d.diet));}catch{}
+        if(d.wLog)try{localStorage.setItem(SK.wLog,JSON.stringify(d.wLog));}catch{}
+        if(d.checkins)try{localStorage.setItem(SK.checkins,JSON.stringify(d.checkins));}catch{}
+        if(d.phase)lsW(SK.phase,d.phase);
+        if(d.mod)lsW(SK.mod,d.mod);
+        if(d.refeed)lsW(SK.refeed,d.refeed);
+        if(d.streaks)try{localStorage.setItem('ik_streaks',d.streaks);}catch{}
+      }else{
+        /* Legacy flat format: write all keys directly */
+        const oldKeys=[];
+        for(let i=0;i<localStorage.length;i++)oldKeys.push(localStorage.key(i));
+        Object.entries(d).forEach(([k,v])=>{try{localStorage.setItem(k,v);}catch{}});
+        oldKeys.forEach(k=>{if(!(k in d)){try{localStorage.removeItem(k);}catch{}}});
+      }
 
       /* ── Migration guards: repair missing/malformed new keys ── */
-      /* ik_streaks: ensure correct structure */
       try{
         const raw=localStorage.getItem('ik_streaks');
         if(raw){
@@ -5989,7 +6101,6 @@ function importBackup(evt){
         }
       }catch{localStorage.removeItem('ik_streaks');}
 
-      /* ik_checkins: ensure array of objects with required fields */
       try{
         const raw=localStorage.getItem(SK.checkins);
         if(raw){
@@ -6000,7 +6111,6 @@ function importBackup(evt){
         }
       }catch{localStorage.removeItem(SK.checkins);}
 
-      /* ik_notif_schedule: ensure valid structure */
       try{
         const raw=localStorage.getItem('ik_notif_schedule');
         if(raw){
@@ -6015,7 +6125,8 @@ function importBackup(evt){
         const parsed=JSON.parse(planRaw);
         const p=getProfile();
         if(p?.targetKcal){parsed.metadata.baseKcal=p.targetKcal;parsed.metadata.basePro=p.pro;parsed.metadata.baseCarbs=p.carbs;parsed.metadata.baseFat=p.fat;}
-        dietData=parsed;mountApp();toast(t('toast.backupImp'));
+        /* B4D: versioned success toast */
+        dietData=parsed;mountApp();toast(t('toast.backupImp')+(d._exportedAt?` (${d._exportedAt})`:''));
       }else{dietData=null;showOnb();toast(t('toast.noPianoBackup'));}
       }); // end showConfirm callback
 
@@ -6659,10 +6770,10 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 function showToast(html,dur){const t=document.getElementById('toast');t.innerHTML=html;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),dur||2600);}
 function closeToast(){const t=document.getElementById('toast');t.classList.remove('on');clearTimeout(t._t);}
 
-/* ── FIX16: Modal focus trap ── */
+/* ── FIX16 / FIX4: Modal focus trap ── */
 let _modalTrigger=null;
 function trapFocus(modalEl){
-  const focusable=modalEl.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+  const focusable=modalEl.querySelectorAll('button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])');
   if(!focusable.length)return;
   const first=focusable[0],last=focusable[focusable.length-1];
   function _handler(e){
@@ -6672,9 +6783,22 @@ function trapFocus(modalEl){
   }
   modalEl._focusTrapHandler=_handler;
   modalEl.addEventListener('keydown',_handler);
-  /* Focus first focusable element */
   setTimeout(()=>{try{first.focus();}catch{}},50);
 }
+function releaseFocus(modalEl){
+  if(!modalEl)return;
+  if(modalEl._focusTrapHandler){
+    modalEl.removeEventListener('keydown',modalEl._focusTrapHandler);
+    modalEl._focusTrapHandler=null;
+  }
+}
+/* FIX4: Escape key closes any open modal */
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  const open=document.querySelector('.modal-overlay.on');
+  if(open){releaseFocus(open);open.classList.remove('on');setTimeout(()=>{open.style.display='none';},300);document.body.style.overflow='';}
+  if(_modalTrigger){try{_modalTrigger.focus();}catch{}}_modalTrigger=null;
+});
 
 /* ── FIX11: RAF-batched render scheduler ── */
 let _rafPending=false;
@@ -6725,16 +6849,22 @@ function gdprAccept(){
 }
 
 function gdprWithdraw(){
-  showConfirm(t('confirm.revocaConsenso'),()=>{
-    try{localStorage.removeItem(GDPR_KEY);}catch{}
-    updateConsentUI();
-    closeModal('modal-privacy');
-    document.getElementById('onb-screen').classList.remove('on');
-    document.getElementById('app-shell').classList.remove('on');
-    document.getElementById('gdpr-gate').classList.add('on');
-    applyTranslations();
-    toast(t('toast.consensoRevocato'));
-  });
+  openConfirmModal(
+    t('gdpr.confirm.title')||'Revoca consenso',
+    t('gdpr.confirm.body')||'Tutti i dati locali verranno cancellati in modo permanente. Continuare?',
+    t('gdpr.confirm.ok')||'Revoca',
+    t('gdpr.confirm.cancel')||'Annulla',
+    ()=>{
+      try{localStorage.removeItem(GDPR_KEY);}catch{}
+      updateConsentUI();
+      closeModal('modal-privacy');
+      document.getElementById('onb-screen').classList.remove('on');
+      document.getElementById('app-shell').classList.remove('on');
+      document.getElementById('gdpr-gate').classList.add('on');
+      applyTranslations();
+      toast(t('toast.consensoRevocato'));
+    }
+  );
 }
 
 function updateConsentUI(){
@@ -6805,12 +6935,10 @@ function openModal(name){
 function closeModal(id){
   const el=document.getElementById(id);
   if(!el)return;
-  /* FIX16: remove focus trap handler */
-  const sheet=el.querySelector('.modal-sheet');
-  if(sheet&&sheet._focusTrapHandler){sheet.removeEventListener('keydown',sheet._focusTrapHandler);delete sheet._focusTrapHandler;}
+  /* FIX4/FIX16: release focus trap */
+  releaseFocus(el.querySelector('.modal-sheet')||el);
   el.classList.remove('on');
   document.body.style.overflow='';
-  /* Restore focus to trigger element */
   if(_modalTrigger){try{_modalTrigger.focus();}catch{}}_modalTrigger=null;
 }
 function closeModalOnOverlay(e,name){
@@ -6899,6 +7027,7 @@ function onbRender(idx){
   if(nextBtn){
     nextBtn.textContent=last?t('onb2.start'):t('onb2.next');
     nextBtn.onclick=last?onbFinish:onbNext;
+    nextBtn.disabled=last;
     nextBtn.className=last?'btn btn-primary sn':'btn btn-neon-o sn';
     nextBtn.style.cssText=last
       ?'height:50px;font-size:14px;padding:0 28px;border-radius:var(--r-pill);font-weight:800;'
@@ -7303,6 +7432,27 @@ function _bootAfterLangGate(){
 
   </div>
 </div>
+</div>
+
+<!-- FIX1: Custom confirm modal overlay -->
+<div id="confirm-modal-overlay" class="modal-overlay" role="dialog"
+     aria-modal="true" aria-labelledby="confirm-modal-title"
+     style="display:none;">
+  <div class="modal-sheet" style="padding-bottom:max(env(safe-area-inset-bottom,0px),16px)">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <span class="modal-title sn" id="confirm-modal-title"></span>
+      <button class="modal-close sn" onclick="closeConfirmModal()" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" style="padding-top:8px">
+      <p id="confirm-modal-body" class="sn"
+         style="font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 20px"></p>
+      <div style="display:flex;gap:10px">
+        <button id="confirm-modal-cancel" class="btn btn-ghost w100 sn" style="flex:1"></button>
+        <button id="confirm-modal-ok" class="btn btn-danger-o w100 sn" style="flex:1"></button>
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>
