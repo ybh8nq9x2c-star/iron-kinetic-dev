@@ -809,7 +809,7 @@ body.onboarding-active #onb-screen{
     </div>
     <div>
       <label class="field-label" for="f-sport">Sport praticato</label>
-      <select class="inp" id="f-sport" onchange="_sport=this.value;profState.sport=this.value;" style="font-size:15px!important;color:var(--on);background:var(--s1);">
+      <select class="inp" id="f-sport" onchange="profState.sport=this.value;" style="font-size:15px!important;color:var(--on);background:var(--s1);">
         <option value="strength">💪 Forza / Potenza (Pesistica, Sprint)</option>
         <option value="endurance">🏃 Resistenza (Corsa, Ciclismo)</option>
         <option value="team">⚽ Sport di Squadra / Ibrido (Calcio, Basket, Rugby)</option>
@@ -820,7 +820,7 @@ body.onboarding-active #onb-screen{
     </div>
     <div>
       <label class="field-label" for="f-train-time">Orario di allenamento</label>
-      <input class="inp" id="f-train-time" type="time" onchange="_trainTime=this.value;profState.trainTime=this.value;" style="font-size:16px!important;color:var(--on);"/>
+      <input class="inp" id="f-train-time" type="time" onchange="profState.trainTime=this.value;" style="font-size:16px!important;color:var(--on);"/>
       <p style="font-size:10px;color:var(--dim);margin-top:5px;font-weight:500;line-height:1.5;" class="sn">⏱ Cruciale per il nutrient timing: i pasti pre/post-workout verranno calibrati su questo orario.</p>
     </div>
     <div class="row g2">
@@ -1042,6 +1042,7 @@ body.onboarding-active #onb-screen{
         </div>
         <div id="coach-streak-badge" style="position:absolute;top:14px;right:14px;"></div>
         <div id="coach-micro-badge" style="display:none;margin-top:10px;padding:8px 10px;border-radius:var(--r2);font-size:11px;font-weight:600;line-height:1.5;"></div>
+        <div id="coach-bodycomp-badge" style="display:none;margin-top:8px;padding:8px 10px;border-radius:var(--r2);font-size:11px;font-weight:600;line-height:1.5;"></div>
       </div>
 
       <!-- Adaptive Macro Engine Banner -->
@@ -1116,7 +1117,7 @@ body.onboarding-active #onb-screen{
         <!-- Header -->
         <div class="pasti-header">
           <div style="display:flex;align-items:center;gap:10px;">
-            <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);margin:0;">Pasti</p>
+            <p class="sn" data-i18n="oggi.pasti" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);margin:0;">Pasti</p>
             <div class="bar-track" style="width:44px;flex-shrink:0;"><div id="oggi-pasti-bar" class="bar-fill bfn" style="width:0%;transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
             <span style="color:var(--p);font-size:11px;font-weight:700;" class="sn" id="meals-done">0</span><span class="muted sn" style="font-size:11px;font-weight:600;" id="meals-total">/3</span>
           </div>
@@ -1149,7 +1150,7 @@ body.onboarding-active #onb-screen{
         <button onclick="toggleTrackers()" id="trackers-toggle-btn" aria-expanded="false" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;background:transparent;border:none;cursor:pointer;text-align:left;touch-action:manipulation;">
           <div style="display:flex;align-items:center;gap:8px;">
             <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);font-variation-settings:'FILL' 0;">monitoring</span>
-            <span class="t-xxs muted sn">Attività e Trackers</span>
+            <span class="t-xxs muted sn" data-i18n="oggi.trackers.title">Attività e Trackers</span>
           </div>
           <span class="material-symbols-outlined sn" id="trackers-chevron" style="transform:rotate(180deg)">expand_more</span>
         </button>
@@ -1202,7 +1203,7 @@ body.onboarding-active #onb-screen{
 
       <!-- 6. Check-in Card -->
       <div class="check-card" id="daily-check-card">
-        <div class="rowb"><span class="sec-label" style="margin-bottom:0;">Check-in giornaliero</span><span class="t-xxs muted">20 sec</span></div>
+        <div class="rowb"><span class="sec-label" data-i18n="oggi.checkin.title" style="margin-bottom:0;">Check-in giornaliero</span><span class="t-xxs muted">20 sec</span></div>
         <div class="range-row">
           <div class="range-wrap"><label class="field-label" for="ci-hunger">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-hunger">5</output></div>
           <div class="range-wrap"><label class="field-label" for="ci-energy">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-energy">6</output></div>
@@ -1248,10 +1249,10 @@ body.onboarding-active #onb-screen{
   <!-- PROGRESSO -->
   <div id="scr-prog" class="scr" style="display:none;">
     <div class="pg">
-      <p class="sec-title">Progresso</p>
+      <p class="sec-title" data-i18n="prog.title">Progresso</p>
       <!-- Registra -->
       <div class="card" style="padding:16px;">
-        <span class="sec-label">Registra</span>
+        <span class="sec-label" data-i18n="prog.registra">Registra</span>
         <div class="grid2" style="margin-bottom:10px;">
           <div><label class="field-label" for="log-w">Peso (kg)</label><input class="inp" id="log-w" type="number" step="0.1" min="30" max="300" placeholder="78.5" inputmode="decimal"/></div>
           <div><label class="field-label" for="log-wst">Girovita (cm)</label><input class="inp" id="log-wst" type="number" step="0.1" min="40" max="200" placeholder="84.0" inputmode="decimal"/></div>
@@ -1308,7 +1309,7 @@ body.onboarding-active #onb-screen{
       </div>
       <!-- Check-in analytics (unchanged) -->
       <div class="analytics-card" id="checkin-analytics-card">
-        <div class="rowb"><span class="sec-label" style="margin-bottom:0;">Trend check-in</span><span id="checkin-last7-lbl" class="t-xxs muted">ULTIMI 7 GIORNI</span></div>
+        <div class="rowb"><span class="sec-label" data-i18n="prog.checkin.title" style="margin-bottom:0;">Trend check-in</span><span id="checkin-last7-lbl" class="t-xxs muted">ULTIMI 7 GIORNI</span></div>
         <div class="analytics-bars">
           <div class="analytics-row"><span class="analytics-lab">Fame</span><div class="analytics-track"><div class="analytics-fill" id="an-hunger"></div></div><span class="analytics-val" id="an-hunger-v">--</span></div>
           <div class="analytics-row"><span class="analytics-lab">Energia</span><div class="analytics-track"><div class="analytics-fill" id="an-energy"></div></div><span class="analytics-val" id="an-energy-v">--</span></div>
@@ -1337,14 +1338,14 @@ body.onboarding-active #onb-screen{
 
       <!-- Calendario aderenza -->
       <div class="card" style="padding:14px;">
-        <span class="sec-label">Calendario Aderenza</span>
+        <span class="sec-label" data-i18n="prog.calendar.title">Calendario Aderenza</span>
         <p class="muted sn" style="font-size:10px;margin-bottom:12px;">Verde: ≥80% · Giallo: 40-80% · Rosso: &lt;40%</p>
         <div id="adherence-calendar"></div>
       </div>
 
       <!-- Promemoria -->
       <div class="card" style="padding:14px;">
-        <span class="sec-label">Promemoria Check-in</span>
+        <span class="sec-label" data-i18n="prog.notif.title">Promemoria Check-in</span>
         <p id="notif-status-txt" class="muted sn" style="font-size:11px;margin-bottom:10px;">Promemoria giornaliero per il check-in</p>
         <div class="row g2" style="margin-bottom:10px;align-items:center;">
           <span class="muted sn" style="font-size:11px;font-weight:600;">Ora:</span>
@@ -1357,7 +1358,7 @@ body.onboarding-active #onb-screen{
       <!-- Storico -->
       <div class="card" style="overflow:hidden;">
         <div style="padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;">
-          <span class="sec-label" style="margin-bottom:0;">Storico</span>
+          <span class="sec-label" data-i18n="prog.storico.title" style="margin-bottom:0;">Storico</span>
         </div>
         <div id="hist-list"><div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Nessuna voce —</span></div></div>
       </div>
@@ -1367,7 +1368,7 @@ body.onboarding-active #onb-screen{
   <!-- IMPOSTAZIONI -->
   <div id="scr-set" class="scr" style="display:none;">
     <div class="pg">
-      <p class="sec-title">Profilo</p>
+      <p class="sec-title" data-i18n="set.title">Profilo</p>
       <!-- Hero Metrics: Target TDEE with kcal progress ring + Base BMR -->
       <div class="prof-hero">
         <div>
@@ -1392,7 +1393,7 @@ body.onboarding-active #onb-screen{
       </div>
       <!-- Il Tuo Profilo -->
       <div class="card" style="padding:16px;">
-        <span class="sec-label">Il Tuo Profilo</span>
+        <span class="sec-label" data-i18n="set.profilo.title">Il Tuo Profilo</span>
         <p id="set-profile-text" class="sn" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;">—</p>
         <div id="weight-update-row" style="display:flex;gap:8px;margin-top:10px;align-items:center">
           <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="width:80px">
@@ -1406,7 +1407,7 @@ body.onboarding-active #onb-screen{
       </div>
       <!-- Piano Attivo -->
       <div class="card" style="padding:16px;">
-        <span class="sec-label">Piano Attivo</span>
+        <span class="sec-label" data-i18n="set.piano.title">Piano Attivo</span>
         <p id="set-plan-name" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);">—</p>
         <p id="set-plan-meta" class="t-xxs muted sn" style="margin-top:4px;">— fasi · — giorni</p>
       </div>
@@ -1524,7 +1525,7 @@ body.onboarding-active #onb-screen{
   <!-- INFO / PRIVACY / AIUTO -->
   <div id="scr-info" class="scr" style="display:none;">
     <div class="pg">
-      <p class="sec-title">Info</p>
+      <p class="sec-title" data-i18n="info.title">Info</p>
 
       <!-- Privacy e consenso -->
       <button onclick="openModal('privacy')" class="w100 sn" style="background:none;border:none;padding:0;text-align:left;cursor:pointer;touch-action:manipulation;">
@@ -1564,7 +1565,7 @@ body.onboarding-active #onb-screen{
 
       <!-- Status consenso -->
       <div class="card" style="padding:16px;">
-        <span class="sec-label" id="info-consent-status-lbl" style="margin-bottom:8px;">Consent status</span>
+        <span class="sec-label" id="info-consent-status-lbl" data-i18n="info.consenso.title" style="margin-bottom:8px;">Consent status</span>
         <div class="rowb" style="margin-bottom:12px;">
           <p style="font-size:13px;font-weight:600;color:var(--on);margin:0;" class="sn" id="info-consent-label">—</p>
           <span id="info-consent-badge" style="display:none;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:999px;"></span>
@@ -1578,7 +1579,7 @@ body.onboarding-active #onb-screen{
 
       <!-- App info -->
       <div class="card" style="padding:16px;">
-        <span class="sec-label" id="info-app-lbl" style="margin-bottom:8px;">Application</span>
+        <span class="sec-label" id="info-app-lbl" data-i18n="info.app.title" style="margin-bottom:8px;">Application</span>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <div class="rowb">
             <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Versione</span>
@@ -2602,17 +2603,14 @@ function t(key,vars={}){
 function applyLang(){
   _trApplied=false;
   applyTranslations();
-  renderMacros?.();renderTrackers?.();renderMeals?.();renderKcalRing?.();
-  renderCoach?.();renderSettings?.();renderCheckinAnalytics?.();renderFingerprint?.();
+  scheduleRender(renderMacros,renderTrackers,renderMeals,renderKcalRing,renderCoach,renderSettings,renderCheckinAnalytics,renderFingerprint);
 }
 function setLang(lang){
   _lang=(lang==='en')?'en':'it';
   lsW(SK.lang,_lang);
   document.documentElement.lang=_lang;
   applyLang();
-  /* Force re-render all visible UI elements immediately */
-  renderCoach?.();renderMeals?.();renderMacros?.();renderSettings?.();
-  renderCheckinAnalytics?.();renderTrackers?.();
+  scheduleRender(renderCoach,renderMeals,renderMacros,renderSettings,renderCheckinAnalytics,renderTrackers);
 }
 function initLang(){
   const s=lsR(SK.lang);
@@ -2655,44 +2653,6 @@ function applyTranslations(deferOffscreen){
   /* FIX7: generic data-i18n pass — replaces fragile text-matching */
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     el.textContent=t(el.dataset.i18n);
-  });
-  document.querySelectorAll('.t-xxs.muted').forEach(el=>{
-    const v=el.textContent.trim();
-    if(v==='Acqua'||v==='Water')el.textContent=t('oggi.acqua');
-    else if(v==='Sale'||v==='Salt')el.textContent=t('oggi.sale');
-    else if(v==='Passi'||v==='Steps')el.textContent=t('oggi.passi');
-    else if(v==='Workout')el.textContent=t('oggi.workout');
-    else if(v==='Attività e Trackers'||v==='Activity & Trackers')el.textContent=t('oggi.trackers');
-    else if(v==='Target Giorno'||v==='Daily Target')el.textContent=t('oggi.kcal.target');
-    else if(v==='Kcal totali'||v==='Total kcal')el.textContent=t('oggi.kcal.totali');
-    else if(v==='Ultimo peso'||v==='Last weight')el.textContent=t('prog.stat.ultimoPeso');
-    else if(v==='Variazione'||v==='Change')el.textContent=t('prog.stat.variazione');
-    else if(v==='Girovita'||v==='Waist')el.textContent=t('prog.stat.girovita');
-    else if(v==='Var. girovita'||v==='Waist change')el.textContent=t('prog.stat.varGirovita');
-    else if(v==='Base BMR')el.textContent=t('set.hero.bmr');
-    else if(v==='Target TDEE')el.textContent=t('set.hero.tdee');
-  });
-  document.querySelectorAll('.sec-label').forEach(el=>{
-    const v=el.textContent.trim();
-    if(v==='Registra'||v==='Log')el.textContent=t('prog.registra');
-    else if(v==='Storico'||v==='History')el.textContent=t('prog.storico.title');
-    else if(v==='Calendario Aderenza'||v==='Adherence Calendar')el.textContent=t('prog.calendar.title');
-    else if(v==='Promemoria Check-in'||v==='Check-in Reminder')el.textContent=t('prog.notif.title');
-    else if(v==='Trend check-in'||v==='Check-in trend')el.textContent=t('prog.checkin.title');
-    else if(v==='Il Tuo Profilo'||v==='Your Profile')el.textContent=t('set.profilo.title');
-    else if(v==='Piano Attivo'||v==='Active Plan')el.textContent=t('set.piano.title');
-    else if(v==='Stato consenso'||v==='Consent status')el.textContent=t('info.consenso.title');
-    else if(v==='Applicazione'||v==='Application')el.textContent=t('info.app.title');
-    else if(v==='Check-in giornaliero'||v==='Daily check-in')el.textContent=t('oggi.checkin.title');
-  });
-  document.querySelectorAll('.sec-title').forEach(el=>{
-    const v=el.textContent.trim();
-    if(v==='Progresso'||v==='Progress')el.textContent=t('prog.title');
-    else if(v==='Profilo'||v==='Profile')el.textContent=t('set.title');
-    else if(v==='Info')el.textContent=t('info.title');
-  });
-  document.querySelectorAll('.pasti-header p').forEach(el=>{
-    if(el.textContent.trim()==='Pasti'||el.textContent.trim()==='Meals')el.textContent=t('oggi.pasti');
   });
   ['ci-hunger','ci-energy','ci-adherence','ci-digestion'].forEach((id,i)=>{
     const keys=['oggi.checkin.fame','oggi.checkin.energia','oggi.checkin.aderenza','oggi.checkin.digestione'];
@@ -2817,6 +2777,36 @@ function applyTranslations(deferOffscreen){
       _ph.textContent=t('shopping.noPlan');
   }
   /* ── end always-run modal patches ── */
+  /* ── Privacy modal full content — always-run so lang switch works ── */
+  const _pm=document.getElementById('modal-privacy');
+  if(_pm){
+    const _prvBadge=_pm.querySelector('.prv-badge');if(_prvBadge)_prvBadge.textContent=t('prv.badge');
+    const _prvSections=_pm.querySelectorAll('.prv-section');
+    const _prvSetSection=(sec,hTxt,bodyFn)=>{if(!sec)return;const h=sec.querySelector('.prv-h2');if(h)h.innerHTML=hTxt;bodyFn(sec);};
+    const _s0=_pm.querySelector('.prv-highlight');
+    if(_s0){const h=_s0.querySelector('.prv-h2');if(h)h.innerHTML=t('prv.s0.h');const p=_s0.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s0.p');}
+    if(_prvSections[1])_prvSetSection(_prvSections[1],t('prv.s1.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s1.p');});
+    if(_prvSections[2])_prvSetSection(_prvSections[2],t('prv.s2.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s2.p');const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=t('prv.s2.li');});
+    if(_prvSections[3])_prvSetSection(_prvSections[3],t('prv.s3.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.s3.p1');if(ps[1])ps[1].innerHTML=t('prv.s3.p2');});
+    if(_prvSections[4])_prvSetSection(_prvSections[4],t('prv.s4.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.s4.p1');if(ps[1])ps[1].innerHTML=t('prv.s4.p2');const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=t('prv.s4.li');});
+    if(_prvSections[5])_prvSetSection(_prvSections[5],t('prv.s5.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s5.p');});
+    if(_prvSections[6])_prvSetSection(_prvSections[6],t('prv.s6.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.s6.p1');if(ps[1])ps[1].innerHTML=t('prv.s6.p2');const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=t('prv.s6.li');});
+    if(_prvSections[7])_prvSetSection(_prvSections[7],t('prv.s7.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s7.p');});
+    if(_prvSections[8])_prvSetSection(_prvSections[8],t('prv.s8.h'),s=>{
+      const items=s.querySelectorAll('.prv-right-item');
+      [0,1,2,3,4,5].forEach(i=>{
+        if(!items[i])return;
+        const ico=items[i].querySelector('.prv-right-ico');if(ico)ico.textContent=t('prv.s8.r'+i+'.ico');
+        const lbl=items[i].querySelector('.prv-right-label');if(lbl)lbl.textContent=t('prv.s8.r'+i+'.lbl');
+        const desc=items[i].querySelector('.prv-right-desc');if(desc)desc.textContent=t('prv.s8.r'+i+'.desc');
+      });
+    });
+    if(_prvSections[9])_prvSetSection(_prvSections[9],t('prv.s9.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s9.p');});
+    if(_prvSections[10])_prvSetSection(_prvSections[10],t('prv.s10.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s10.p');});
+    if(_prvSections[11])_prvSetSection(_prvSections[11],t('prv.s11.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s11.p');});
+    if(_prvSections[12])_prvSetSection(_prvSections[12],t('prv.contact.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.contact.p1');if(ps[1])ps[1].innerHTML=t('prv.contact.p2');});
+  }
+  /* ── end privacy modal always-run ── */
 
   if(_trApplied)return;_trApplied=true;
   /* Helper shortcuts */
@@ -2839,19 +2829,6 @@ function applyTranslations(deferOffscreen){
     else if(id.includes('pro'))sp.textContent=t('onb.result.proteine');
     else if(id.includes('carbs'))sp.textContent=t('onb.result.carbs');
     else if(id.includes('fat'))sp.textContent=t('onb.result.grassi');
-  });
-  /* water/salt/steps/workout */
-  nlTxt('#scr-oggi .card-ghost:nth-of-type(1) .t-xxs.muted','oggi.acqua');
-  document.querySelectorAll('.card-ghost').forEach(c=>{
-    const lbl=c.querySelector('.t-xxs.muted');if(!lbl)return;
-    const id=c.querySelector('[id^=water-]')?.id;
-    if(id)lbl.textContent=t('oggi.acqua');
-    const sid=c.querySelector('[id^=salt-]')?.id;
-    if(sid)lbl.textContent=t('oggi.sale');
-    const stepsEl=c.querySelector('#steps-val');
-    if(stepsEl)lbl.textContent=t('oggi.passi');
-    const wkEl=c.querySelector('#wk-ratio');
-    if(wkEl)lbl.textContent=t('oggi.workout');
   });
   /* check-in card labels */
   document.querySelectorAll('#daily-check-card .field-label').forEach(lbl=>{
@@ -2896,11 +2873,6 @@ function applyTranslations(deferOffscreen){
     _wkStatus.textContent=t('oggi.workout.nonFatto');
   /* mod badge */
   const modBadge=document.getElementById('m-mod-badge');if(modBadge)modBadge.textContent=t('oggi.mod.badge');
-  /* trackers toggle label */
-  document.querySelectorAll('#trackers-toggle-btn .t-xxs.muted').forEach(e=>{
-    if(e.textContent.trim()==='Attività e Trackers'||e.textContent.trim()==='Activity & Trackers')
-      e.textContent=t('oggi.trackers.title');
-  });
   /* day nav aria-labels */
   document.querySelector('button[onclick="shiftDay(-1)"]')?.setAttribute('aria-label',t('aria.day.prev'));
   document.querySelector('button[onclick="shiftDay(1)"]')?.setAttribute('aria-label',t('aria.day.next'));
@@ -2912,11 +2884,6 @@ function applyTranslations(deferOffscreen){
   if(rfTitle)rfTitle.textContent=t('oggi.refeed.title');
   const rfSub=document.querySelector('#refeed-card p.sn');
   if(rfSub)rfSub.textContent=t('oggi.refeed.sub');
-  /* Pasti section */
-  document.querySelectorAll('#scr-oggi > .pg > div > p').forEach(p=>{
-    if(p.textContent.trim()==='Pasti'||p.textContent.trim()==='Meals')
-      p.textContent=t('oggi.pasti');
-  });
   /* Shopping button */
   document.querySelectorAll('button[onclick="openShoppingList()"]').forEach(b=>b.textContent=t('oggi.shopping'));
   /* oggi pasto_empty placeholder */
@@ -3036,18 +3003,6 @@ function applyTranslations(deferOffscreen){
   /* ── OFF-SCREEN TABS: defer when called from boot, run immediately otherwise ── */
   const _offscreen=()=>{
   /* ── PROGRESS ── */
-  const progTitle=document.querySelector('#scr-prog .sec-title');
-  if(progTitle)progTitle.textContent=t('prog.title');
-  document.querySelectorAll('#scr-prog .sec-label').forEach(lbl=>{
-    const txt2=lbl.textContent.trim();
-    if(txt2==='Registra'||txt2==='Record')lbl.textContent=t('prog.registra');
-    else if(txt2==='Storico'||txt2==='History')lbl.textContent=t('prog.storico.title');
-    else if(txt2==='Calendario Aderenza'||txt2==='Adherence Calendar')lbl.textContent=t('prog.calendar.title');
-    else if(txt2==='Promemoria Check-in'||txt2==='Check-in Reminder')lbl.textContent=t('prog.notif.title');
-    else if(txt2.startsWith('Trend check-in')||txt2.startsWith('Check-in trend'))lbl.textContent=t('prog.checkin.title');
-    else if(txt2==='Report Settimanale'||txt2==='Weekly Report')lbl.textContent=t('weekly.report.title');
-    else if(txt2==='Impronta Metabolica'||txt2==='Metabolic Fingerprint')lbl.textContent=t('prog.fp.title');
-  });
   document.querySelectorAll('button[onclick="shareWeeklyReport()"]').forEach(b=>b.textContent=t('weekly.report.share'));
   document.querySelectorAll('#scr-prog .field-label').forEach(lbl=>{
     const f=lbl.getAttribute('for')||'';
@@ -3094,21 +3049,6 @@ function applyTranslations(deferOffscreen){
   const notifOraLbl=document.querySelector('#notif-hour')?.previousElementSibling;
   if(notifOraLbl)notifOraLbl.textContent=t('prog.notif.ora');
   /* ── SETTINGS ── */
-  const setTitle=document.querySelector('#scr-set .sec-title');
-  if(setTitle)setTitle.textContent=t('set.title');
-  document.querySelectorAll('#scr-set .sec-label').forEach(lbl=>{
-    const v=lbl.textContent.trim();
-    if(v==='Il Tuo Profilo'||v==='Your Profile')lbl.textContent=t('set.profilo.title');
-    else if(v==='Piano Attivo'||v==='Active Plan')lbl.textContent=t('set.piano.title');
-    else if(v==='Fase Corrente'||v==='Current Phase')lbl.textContent=t('set.fase.title');
-    else if(v==='Refeed Day')lbl.textContent=t('set.refeed.title');
-    else if(v==='Modificatore AI'||v==='AI Modifier')lbl.textContent=t('set.mod.title');
-    else if(v==='Dati'||v==='Data')lbl.textContent=t('set.dati.title');
-    else if(v==='Target TDEE')lbl.textContent=t('set.hero.tdee');
-    else if(v==='Base BMR')lbl.textContent=t('set.hero.bmr');
-    else if(v==='Lingua / Language')lbl.textContent=t('set.lang.label');
-    else if(v==='Zona Pericolosa'||v==='Danger Zone')lbl.textContent=t('set.danger.title');
-  });
   const regenBtn=document.querySelector('button[onclick="resetProfile()"]');
   if(regenBtn&&regenBtn.classList.contains('btn-danger-o')&&regenBtn.classList.contains('btn-xs'))
     regenBtn.textContent=t('set.rigenera');
@@ -3137,13 +3077,6 @@ function applyTranslations(deferOffscreen){
   const refeedFase2=document.querySelector('#set-refeed-card .t-xxs.muted');
   if(refeedFase2)refeedFase2.textContent=t('set.refeed.soloFase2');
   /* ── INFO ── */
-  const infoTitle=document.querySelector('#scr-info .sec-title');
-  if(infoTitle)infoTitle.textContent=t('info.title');
-  document.querySelectorAll('#scr-info .sec-label').forEach(lbl=>{
-    const v=lbl.textContent.trim();
-    if(v==='Stato consenso'||v==='Consent status')lbl.textContent=t('info.consenso.title');
-    else if(v==='Applicazione'||v==='Application')lbl.textContent=t('info.app.title');
-  });
   /* info cards */
   document.querySelectorAll('#scr-info .card p').forEach(p=>{
     const v=p.textContent.trim();
@@ -3227,40 +3160,6 @@ function applyTranslations(deferOffscreen){
     if(p.textContent.includes('irreversibili')||p.textContent.includes('irreversible'))
       p.textContent=t('set.danger.warn');
   });
-  /* ── Privacy modal full content (innerHTML — dev-defined LANG strings) ── */
-  const _pm=document.getElementById('modal-privacy');if(!_pm)return;
-  const _prvBadge=_pm.querySelector('.prv-badge');if(_prvBadge)_prvBadge.textContent=t('prv.badge');
-  /* section helpers */
-  const _prvSections=_pm.querySelectorAll('.prv-section');
-  const _prvSetSection=(sec,hTxt,bodyFn)=>{
-    if(!sec)return;
-    const h=sec.querySelector('.prv-h2');if(h)h.innerHTML=hTxt;
-    bodyFn(sec);
-  };
-  /* s0: summary highlight */
-  const _s0=_pm.querySelector('.prv-highlight');
-  if(_s0){const h=_s0.querySelector('.prv-h2');if(h)h.innerHTML=t('prv.s0.h');const p=_s0.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s0.p');}
-  /* sections 1-11 + contact */
-  if(_prvSections[0])_prvSetSection(_prvSections[0],t('prv.s1.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s1.p');});
-  if(_prvSections[1])_prvSetSection(_prvSections[1],t('prv.s2.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s2.p');const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=t('prv.s2.li');});
-  if(_prvSections[2])_prvSetSection(_prvSections[2],t('prv.s3.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.s3.p1');if(ps[1])ps[1].innerHTML=t('prv.s3.p2');});
-  if(_prvSections[3])_prvSetSection(_prvSections[3],t('prv.s4.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.s4.p1');if(ps[1])ps[1].innerHTML=t('prv.s4.p2');const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=t('prv.s4.li');});
-  if(_prvSections[4])_prvSetSection(_prvSections[4],t('prv.s5.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s5.p');});
-  if(_prvSections[5])_prvSetSection(_prvSections[5],t('prv.s6.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.s6.p1');if(ps[1])ps[1].innerHTML=t('prv.s6.p2');const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=t('prv.s6.li');});
-  if(_prvSections[6])_prvSetSection(_prvSections[6],t('prv.s7.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s7.p');});
-  if(_prvSections[7])_prvSetSection(_prvSections[7],t('prv.s8.h'),s=>{
-    const items=s.querySelectorAll('.prv-right-item');
-    [0,1,2,3,4,5].forEach(i=>{
-      if(!items[i])return;
-      const ico=items[i].querySelector('.prv-right-ico');if(ico)ico.textContent=t('prv.s8.r'+i+'.ico');
-      const lbl=items[i].querySelector('.prv-right-label');if(lbl)lbl.textContent=t('prv.s8.r'+i+'.lbl');
-      const desc=items[i].querySelector('.prv-right-desc');if(desc)desc.textContent=t('prv.s8.r'+i+'.desc');
-    });
-  });
-  if(_prvSections[8])_prvSetSection(_prvSections[8],t('prv.s9.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s9.p');});
-  if(_prvSections[9])_prvSetSection(_prvSections[9],t('prv.s10.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s10.p');});
-  if(_prvSections[10])_prvSetSection(_prvSections[10],t('prv.s11.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=t('prv.s11.p');});
-  if(_prvSections[11])_prvSetSection(_prvSections[11],t('prv.contact.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=t('prv.contact.p1');if(ps[1])ps[1].innerHTML=t('prv.contact.p2');});
   }; /* end _offscreen */
   if(deferOffscreen)(window.requestIdleCallback||window.setTimeout)(_offscreen,{timeout:300});
   else _offscreen();
@@ -3278,7 +3177,6 @@ const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
    STATE
 ═══════════════════════════════════════ */
 let dietData=null,bodyChart=null,chartMode='weight',selDay=1,activeTab='oggi';
-let _sport='strength',_trainTime='';
 let profState={sex:'M',age:null,height:null,weight:null,bf:null,
                workoutsWk:null,stepsDay:null,goal:null,goalMod:0,
                tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,
@@ -3301,21 +3199,28 @@ const mk=(d,n)=>`ik_ml_${toISO()}_d${d}_${n}`;
 
 /* Storage */
 const lsG=(k,fb=null)=>{try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):fb;}catch{return fb;}};
-const lsS=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));_tabDirty.oggi=true;_tabDirty.prog=true;_tabDirty.set=true;}catch(e){if(e.name==='QuotaExceededError'||e.code===22||e.code===1014){try{showToast(t('toast.storageQuota')||'⚠️ Spazio esaurito — esporta backup');}catch{}}}};
-/* lsR and lsW defined earlier (before first use) to avoid TDZ — see top of script */
-
-/* ── FIX4: atomic saveState wrapper ── */
-function saveState(key,value){
-  const prev=lsR(key);
+const lsS=(k,v)=>{
+  const _prev=localStorage.getItem(k);
   try{
-    lsW(key,typeof value==='string'?value:JSON.stringify(value));
+    localStorage.setItem(k,JSON.stringify(v));
+    const _tabMap={};
+    _tabMap[SK.diet]    =['oggi','prog','set'];
+    _tabMap[SK.profile] =['oggi','set'];
+    _tabMap[SK.prefs]   =['oggi','set'];
+    _tabMap[SK.checkins]=['prog'];
+    _tabMap[SK.wLog]    =['prog'];
+    _tabMap[SK.phase]   =['oggi','set'];
+    _tabMap[SK.mod]     =['oggi','set'];
+    const _targets=_tabMap[k]||['oggi','prog','set'];
+    _targets.forEach(tb=>{_tabDirty[tb]=true;});
   }catch(e){
-    if(e.name==='QuotaExceededError'){
+    if(e.name==='QuotaExceededError'||e.code===22||e.code===1014){
       try{showToast(t('toast.storageQuota'));}catch{}
-      try{if(prev!==null)lsW(key,prev);}catch{}
+      try{if(_prev!==null)localStorage.setItem(k,_prev);}catch{}
     }
   }
-}
+};
+/* lsR and lsW defined earlier (before first use) to avoid TDZ — see top of script */
 const getLog=()=>lsG(SK.wLog,[]);
 const saveLog=a=>lsS(SK.wLog,a);
 const getProfile=()=>lsG(SK.profile,null);
@@ -3339,7 +3244,7 @@ function totalModUnits(){let u=getMod();const p=getPhase();if(p===2&&isRefeed())
 let _macroCache=null,_macroCacheKey='';
 function calcMacros(){
   const p=getProfile();
-  const _ck=JSON.stringify({w:p?.weight,g:p?.goal,s:p?.sex,mod:getMod(),ref:isRefeed(),ph:getPhase(),base:baseKcal()});
+  const _ck=JSON.stringify({w:p?.weight,g:p?.goal,s:p?.sex,mod:getMod()??0,ref:isRefeed()?1:0,ph:getPhase()??1,base:baseKcal()});
   if(_macroCache&&_macroCacheKey===_ck)return _macroCache;
   const m=getMod(),phase=getPhase(),ref=(phase===2&&isRefeed()),rev=(phase===4?revWeeks():0);
   const prof=getProfile();
@@ -3865,7 +3770,7 @@ function calculateUserMacros(p){
     powerlifting:{proMin:1.7,proMax:2.4,carbMult:1.05,fatMult:1.0,palBoost:0.12,system:'ATP-CP / Forza Massimale'},
     combat:{proMin:2.0,proMax:2.4,carbMult:1.10,fatMult:0.95,palBoost:0.13,system:'Glicolitico / Fosfageno'},
   };
-  const _sportKey=p.sport||_sport||'fitness';
+  const _sportKey=p.sport||profState.sport||'fitness';
   const _sm=_sportTypes[_sportKey]||_sportTypes.fitness;
 
   /* ── PAL GRANULARE (5 livelli Harris-Benedict) + NEAT ──
@@ -5062,8 +4967,8 @@ function runCalcAndGenerate(){
   /* Capture sport and training time from onboarding inputs */
   const _sportEl=document.getElementById('f-sport');
   const _trainEl=document.getElementById('f-train-time');
-  if(_sportEl){_sport=_sportEl.value;profState.sport=_sport;}
-  if(_trainEl){_trainTime=_trainEl.value;profState.trainTime=_trainTime;}
+  if(_sportEl){profState.sport=_sportEl.value;}
+  if(_trainEl){profState.trainTime=_trainEl.value;}
 
   /* Must have at least something (pref or default) */
   const res=calculateUserMacros(profState);
@@ -5139,8 +5044,8 @@ function activateGeneratedPlan(){
   if(res.fatPct)profState.fatPct=res.fatPct;
   if(res.proPct)profState.proPct=res.proPct;
   /* Persist sport and training time */
-  profState.sport=profState.sport||_sport||'fitness';
-  profState.trainTime=profState.trainTime||_trainTime||'';
+  profState.sport=profState.sport||'fitness';
+  profState.trainTime=profState.trainTime||'';
   lsS(SK.sport,profState.sport);
   lsW(SK.trainTime,profState.trainTime);
   _macroCache=null;
@@ -5338,6 +5243,20 @@ function renderCoach(){
       _mrEl.style.display='block';
     }else{
       _mrEl.innerHTML='';_mrEl.style.display='none';
+    }
+  }
+  /* Body composition badge */
+  const _bcs=getBodyCompShift();
+  const _bcsEl=document.getElementById('coach-bodycomp-badge');
+  if(_bcsEl){
+    if(_bcs){
+      _bcsEl.style.background='rgba(77,220,198,.10)';
+      _bcsEl.style.border='1px solid rgba(77,220,198,.28)';
+      _bcsEl.style.color='var(--p)';
+      _bcsEl.textContent=t(_bcs.msg);
+      _bcsEl.style.display='block';
+    }else{
+      _bcsEl.style.display='none';
     }
   }
 }
@@ -5661,7 +5580,7 @@ function migrateTargetKcal(){
       }
     });
   });
-  if(changed)saveState(SK.diet,JSON.stringify(dietData));
+  if(changed)lsS(SK.diet,dietData);
 }
 
 /* ── Sum kcal from checked meals for the given day ──
@@ -5861,7 +5780,7 @@ function _doResetProfile(keepLog){
   _macroCache=null;
   if(bodyChart){bodyChart.destroy();bodyChart=null;}
   dietData=null;
-  profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,sport:'fitness',trainTime:''};_sport='fitness';_trainTime='';
+  profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,sport:'fitness',trainTime:''};
   prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
   curStep=0;
   for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===0);dot.classList.remove('completed');}}
@@ -5932,7 +5851,7 @@ function logMetric(){
   document.getElementById('log-w').blur();document.getElementById('log-wst').blur();
   renderProgress();renderCoach();renderMacros();
 }
-function deleteEntry(ts){if(!confirm(t('confirm.eliminaVoce')))return;saveLog(getLog().filter(e=>e.ts!==ts));renderProgress();renderCoach();toast(t('toast.voceEliminata'));}
+function deleteEntry(ts){showConfirm(t('confirm.eliminaVoce'),()=>{saveLog(getLog().filter(e=>e.ts!==ts));renderProgress();renderCoach();toast(t('toast.voceEliminata'));});}
 function renderProgressStats(){
   const log=getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1);
   if(log.length>=1){const last=log[log.length-1].weight;document.getElementById('st-w').textContent=`${last}kg`;if(log.length>=2){const d=(last-log[0].weight).toFixed(1);const el=document.getElementById('st-wdiff');el.textContent=`${d>0?'+':''}${d}kg`;el.style.color=d<=0?'var(--p)':'var(--red)';}}
@@ -6200,7 +6119,7 @@ function swapMealComponent(dayNum, mealName, component){
     if(meal._meta)meal._meta[component]=nextFood;
   }
 
-  saveState(SK.diet,JSON.stringify(dietData));
+  lsS(SK.diet,dietData);
   scheduleRender(renderMeals);renderMacros();
   toast(`${localizedMealName(mealName)}: ${t(component==='protein'?'meal.comp.protein':component==='carb'?'meal.comp.carb':'meal.comp.fat')} → ${localizeFoodLabel(FOOD_DB[nextFood]?.label||nextFood)}`);
 }
@@ -6283,7 +6202,7 @@ function regenSingleMeal(dayNum,mealName){
     day[mealName]=meal;
   }
 
-  saveState(SK.diet,JSON.stringify(dietData));
+  lsS(SK.diet,dietData);
   scheduleRender(renderMeals,renderMacros);
   toast(t('toast.rigenMeal',{meal:localizedMealName(mealName)}));
 }
@@ -6698,8 +6617,8 @@ function mountApp(){
   document.getElementById('log-date').value=toISO();
   /* Restore sport and trainTime state from persisted profile */
   const _mpProf=getProfile();
-  if(_mpProf?.sport){_sport=_mpProf.sport;profState.sport=_mpProf.sport;}
-  if(_mpProf?.trainTime){_trainTime=_mpProf.trainTime;profState.trainTime=_mpProf.trainTime;}
+  if(_mpProf?.sport){profState.sport=_mpProf.sport;}
+  if(_mpProf?.trainTime){profState.trainTime=_mpProf.trainTime;}
   const dow=new Date().getDay();const days=dietData.days||[];const match=days.find(d=>d.d===(dow===0?7:dow));
   selDay=(match||days[0]).d;
   /* Hide non-oggi screens before any render */
@@ -6719,8 +6638,8 @@ function mountApp(){
     migrateTargetKcal?.();
     try{restoreTodayCheckin?.();}catch{}
     requestIdleCallback
-      ?requestIdleCallback(()=>{renderSettings?.();buildDaySelector?.();renderFingerprint?.();renderWeeklyReport?.();})
-      :setTimeout(()=>{renderSettings?.();buildDaySelector?.();renderFingerprint?.();renderWeeklyReport?.();},80);
+      ?requestIdleCallback(()=>{renderSettings?.();buildDaySelector?.();scheduleRender(renderFingerprint,renderWeeklyReport);})
+      :setTimeout(()=>{renderSettings?.();buildDaySelector?.();scheduleRender(renderFingerprint,renderWeeklyReport);},80);
   });
 }
 
@@ -6806,16 +6725,16 @@ function gdprAccept(){
 }
 
 function gdprWithdraw(){
-  if(!confirm(t('confirm.revocaConsenso')))return;
-  try{localStorage.removeItem(GDPR_KEY);}catch{}
-  updateConsentUI();
-  // Close modals
-  closeModal('modal-privacy');
-  // Show gate
-  document.getElementById('onb-screen').classList.remove('on');
-  document.getElementById('app-shell').classList.remove('on');
-  document.getElementById('gdpr-gate').classList.add('on');
-  toast(t('toast.consensoRevocato'));
+  showConfirm(t('confirm.revocaConsenso'),()=>{
+    try{localStorage.removeItem(GDPR_KEY);}catch{}
+    updateConsentUI();
+    closeModal('modal-privacy');
+    document.getElementById('onb-screen').classList.remove('on');
+    document.getElementById('app-shell').classList.remove('on');
+    document.getElementById('gdpr-gate').classList.add('on');
+    applyTranslations();
+    toast(t('toast.consensoRevocato'));
+  });
 }
 
 function updateConsentUI(){
@@ -6870,43 +6789,12 @@ function updateConsentUI(){
 /* ═══════════════════════════════════════
    MODAL SYSTEM
 ═══════════════════════════════════════ */
-function applyHelpModal(){
-  /* Always re-applies all help modal text in current language — called on open */
-  const _ht=document.getElementById('help-title');
-  if(_ht)_ht.textContent=t('help.title');
-  const _hc=document.querySelector('#modal-help .modal-close');
-  if(_hc)_hc.setAttribute('aria-label',t('modal.close.help'));
-  const _ho=document.querySelector('#modal-help .row.g3 p');
-  if(_ho)_ho.textContent=t('help.offline');
-  const _hft=document.getElementById('help-features-title');
-  if(_hft)_hft.textContent=t('help.features.title');
-  const _hfs=document.getElementById('help-features-sub');
-  if(_hfs)_hfs.textContent=t('help.features.sub');
-  renderHelpFeatures();
-  document.querySelectorAll('#faq-list .faq-item').forEach((item,i)=>{
-    const qEl=item.querySelector('.faq-q-text');
-    const aEl=item.querySelector('.faq-answer');
-    if(qEl&&t('faq.q.'+i)!==('faq.q.'+i))qEl.textContent=t('faq.q.'+i);
-    if(aEl&&t('faq.a.'+i)!==('faq.a.'+i))aEl.innerHTML=t('faq.a.'+i);
-  });
-  document.querySelectorAll('.help-contact-card p').forEach(p=>{
-    const v=p.textContent.trim();
-    if(v==='Hai altre domande?'||v==='Any other questions?'||v.length<30)
-      p.textContent=t('help.contact.title');
-    if(v.includes('Scrivici')||v.includes('Reach us')||v.includes('support@'))
-      p.innerHTML=t('help.contact.sub.email');
-  });
-  const _hdt=document.getElementById('help-disclaimer-title');
-  if(_hdt)_hdt.textContent=t('help.disclaimer.title');
-  const _hdd=document.getElementById('help-disclaimer-text');
-  if(_hdd)_hdd.textContent=t('help.disclaimer.text');
-}
 function openModal(name){
   hap();
   updateConsentUI();
   const el=document.getElementById('modal-'+name);
   if(!el)return;
-  if(name==='help')applyHelpModal();
+  if(name==='help'||name==='privacy')applyTranslations();
   _modalTrigger=document.activeElement;
   el.classList.add('on');
   document.body.style.overflow='hidden';
@@ -6955,6 +6843,7 @@ function _bootAfterGates(){
   const consent=gdprStatus();
   if(!consent||!consent.accepted){
     document.getElementById('gdpr-gate').classList.add('on');
+    applyTranslations();
     return;
   }
   const raw=localStorage.getItem(SK.diet);
