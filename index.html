@@ -1365,17 +1365,17 @@ body.onboarding-active #onb-screen{
 
       <!-- Real TDEE Card -->
       <div class="card" id="real-tdee-card" style="padding:16px;display:none;">
-        <span class="sec-label" style="margin-bottom:10px;">TDEE Reale</span>
+        <span class="sec-label" data-i18n="tdee.card.title" style="margin-bottom:10px;">TDEE Reale</span>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
           <div>
-            <span class="t-xxs muted sn">TDEE REALE</span>
+            <span class="t-xxs muted sn" data-i18n="tdee.card.real">TDEE REALE</span>
             <p id="real-tdee-val" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--p);margin:4px 0 2px;line-height:1;">—</p>
-            <span class="t-xxs muted sn">kcal/giorno</span>
+            <span class="t-xxs muted sn" data-i18n="tdee.card.unit.kcal">kcal/giorno</span>
           </div>
           <div>
-            <span class="t-xxs muted sn">TREND PESO</span>
+            <span class="t-xxs muted sn" data-i18n="tdee.card.trend">TREND PESO</span>
             <p id="real-tdee-rate" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:4px 0 2px;line-height:1;">—</p>
-            <span class="t-xxs muted sn">kg/settimana</span>
+            <span class="t-xxs muted sn" data-i18n="tdee.card.unit.kgw">kg/settimana</span>
           </div>
         </div>
         <p id="real-tdee-note" class="sn" style="font-size:11px;color:var(--muted);line-height:1.5;margin:0;"></p>
@@ -2226,6 +2226,37 @@ it:{
   'today.action.done':'Ottimo lavoro!',
   'today.action.default':'Piano del giorno pronto',
   'prog.share':'Condividi progressi',
+  'phase.desc.dash1':'DASH fase 1: riduzione sodio 1500mg/die, potassio 4700mg.',
+  'phase.desc.dash2':'DASH fase 2: consolidamento, 5 porzioni frutta-verdura/die.',
+  'phase.desc.dash3':'Mantenimento DASH: monitoraggio PA e profilo lipidico.',
+  'phase.desc.adapt':'Fase adattamento {goal}.',
+  'phase.desc.optim':'Ottimizzazione progressiva: +100 kcal modulatore AI.',
+  'phase.desc.consol':'Consolidamento: fibra 25g/die, sodio 2g/die.',
+  'meal.satiety.title':'Alto potere saziante',
+  'meal.skip.badge':'SPESSO SALTATO',
+  'notif.checkin.body':'Momento del check-in! Come ti senti oggi?',
+  'notif.logging.body':'Ricorda di registrare il peso stamattina.',
+  'toast.reds.risk':'Rischio RED-S: calorie aumentate per sicurezza',
+  'toast.ea.floor':'Floor EA applicato: 30 kcal/kg massa magra',
+  'toast.backupVersion':'Backup da versione più recente — aggiorna l\'app.',
+  'autoadj.understood':'Capito',
+  'autoadj.slow_loss.body':'Perdi {rate} kg/sett vs target. Suggerito: {delta} kcal in meno.',
+  'autoadj.fast_loss.body':'Perdi {rate} kg/sett, troppo veloce. Suggerito: +{delta} kcal.',
+  'autoadj.maintain_drift.body':'Variazione {drift} kg/sett. Ribilancia le calorie.',
+  'autoadj.apply.kcal':'Applica ({sign}{delta} kcal)',
+  'today.action.weight.body':'Ultimo: {val}kg {arrow}',
+  'today.action.checkin.body':'Come ti senti oggi?',
+  'today.action.done.body':'Tutti i pasti completati',
+  'today.action.meals.body':'{done}/{total} pasti completati',
+  'today.action.weight.btn':'Peso',
+  'today.action.meals.btn':'Vedi pasti',
+  'tdee.card.title':'TDEE Reale',
+  'tdee.card.real':'TDEE REALE',
+  'tdee.card.trend':'TREND PESO',
+  'tdee.card.unit.kcal':'kcal/giorno',
+  'tdee.card.unit.kgw':'kg/settimana',
+  'tdee.card.note':'Basato su {n} rilevazioni. TDEE stimato dal tuo metabolismo reale.',
+  'tdee.card.note.low':' (min. 10 rilevazioni per alta affidabilità)',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -2670,6 +2701,37 @@ en:{
   'today.action.done':'Great job!',
   'today.action.default':"Today's plan ready",
   'prog.share':'Share progress',
+  'phase.desc.dash1':'DASH phase 1: sodium reduction 1500mg/day, potassium 4700mg.',
+  'phase.desc.dash2':'DASH phase 2: consolidation, 5 fruit-veg portions/day.',
+  'phase.desc.dash3':'DASH maintenance: blood pressure and lipid monitoring.',
+  'phase.desc.adapt':'Adaptation phase {goal}.',
+  'phase.desc.optim':'Progressive optimisation: +100 kcal AI modifier.',
+  'phase.desc.consol':'Consolidation: fibre 25g/day, sodium 2g/day.',
+  'meal.satiety.title':'High satiety food',
+  'meal.skip.badge':'OFTEN SKIPPED',
+  'notif.checkin.body':'Time for your check-in! How are you feeling today?',
+  'notif.logging.body':'Remember to log your weight this morning.',
+  'toast.reds.risk':'RED-S risk: calories increased for safety',
+  'toast.ea.floor':'EA safety floor applied: 30 kcal/kg FFM',
+  'toast.backupVersion':'Backup from a newer version — please update the app.',
+  'autoadj.understood':'Understood',
+  'autoadj.slow_loss.body':'Losing {rate} kg/wk vs target. Suggested: {delta} kcal less.',
+  'autoadj.fast_loss.body':'Losing {rate} kg/wk too fast. Suggested: +{delta} kcal.',
+  'autoadj.maintain_drift.body':'Drifting {drift} kg/wk. Rebalance your calories.',
+  'autoadj.apply.kcal':'Apply ({sign}{delta} kcal)',
+  'today.action.weight.body':'Last: {val}kg {arrow}',
+  'today.action.checkin.body':'How are you feeling today?',
+  'today.action.done.body':'All meals completed',
+  'today.action.meals.body':'{done}/{total} meals done',
+  'today.action.weight.btn':'Weight',
+  'today.action.meals.btn':'See meals',
+  'tdee.card.title':'Real TDEE',
+  'tdee.card.real':'REAL TDEE',
+  'tdee.card.trend':'WEIGHT TREND',
+  'tdee.card.unit.kcal':'kcal/day',
+  'tdee.card.unit.kgw':'kg/week',
+  'tdee.card.note':'Based on {n} readings. TDEE estimated from your real metabolism.',
+  'tdee.card.note.low':' (min. 10 readings for high reliability)',
 }
 };
 let _lang='en';
@@ -3495,29 +3557,26 @@ function runAutoAdjustEngine(){
 }
 function showAutoAdjustBanner(suggestion,tdeeData){
   const banner=document.getElementById('autoadj-banner');if(!banner)return;
-  const lang=lsR(SK.lang)==='en'?'en':'it';
-  const icon=document.getElementById('autoadj-icon');
-  const title=document.getElementById('autoadj-title');
-  const body=document.getElementById('autoadj-body');
+  const iconEl=document.getElementById('autoadj-icon');
+  const titleEl=document.getElementById('autoadj-title');
+  const bodyEl=document.getElementById('autoadj-body');
   const applyBtn=document.getElementById('autoadj-apply-btn');
-  const copy={
-    slow_loss:{icon:'🐢',
-      it:{title:'Perdita più lenta del previsto',body:`Perdi ${Math.abs(tdeeData.weeklyRate).toFixed(2)} kg/sett vs target. Suggerito: ${Math.abs(suggestion.deltaKcal)} kcal in meno.`},
-      en:{title:'Loss slower than expected',body:`Losing ${Math.abs(tdeeData.weeklyRate).toFixed(2)} kg/wk vs target. Suggested: ${Math.abs(suggestion.deltaKcal)} kcal less.`}},
-    fast_loss:{icon:'⚡',
-      it:{title:'Perdita più rapida del previsto',body:`Perdi ${Math.abs(tdeeData.weeklyRate).toFixed(2)} kg/sett, troppo veloce. Suggerito: +${suggestion.deltaKcal} kcal.`},
-      en:{title:'Loss faster than expected',body:`Losing ${Math.abs(tdeeData.weeklyRate).toFixed(2)} kg/wk too fast. Suggested: +${suggestion.deltaKcal} kcal.`}},
-    maintain_drift:{icon:'⚖️',
-      it:{title:'Peso in deriva sul mantenimento',body:`Variazione ${tdeeData.weeklyRate>0?'+':''}${tdeeData.weeklyRate.toFixed(2)} kg/sett. Ribilancia le calorie.`},
-      en:{title:'Weight drifting on maintenance',body:`Drifting ${tdeeData.weeklyRate>0?'+':''}${tdeeData.weeklyRate.toFixed(2)} kg/wk. Rebalance your calories.`}}
-  };
-  const c=copy[suggestion.reason];if(!c)return;
-  if(icon)icon.textContent=c.icon;
-  if(title)title.textContent=c[lang].title;
-  if(body)body.textContent=c[lang].body;
+  const icons={slow_loss:'🐢',fast_loss:'⚡',maintain_drift:'⚖️'};
+  const ico=icons[suggestion.reason];if(!ico)return;
+  const rate=Math.abs(tdeeData.weeklyRate).toFixed(2);
+  const delta=Math.abs(suggestion.deltaKcal);
+  const drift=(tdeeData.weeklyRate>0?'+':'')+tdeeData.weeklyRate.toFixed(2);
+  const bodyText=suggestion.reason==='maintain_drift'
+    ?t('autoadj.maintain_drift.body',{drift})
+    :suggestion.reason==='fast_loss'
+      ?t('autoadj.fast_loss.body',{rate,delta})
+      :t('autoadj.slow_loss.body',{rate,delta});
+  if(iconEl)iconEl.textContent=ico;
+  if(titleEl)titleEl.textContent=t('autoadj.'+suggestion.reason+'.title');
+  if(bodyEl)bodyEl.textContent=bodyText;
   if(applyBtn){
-    if(suggestion.units===0){applyBtn.textContent=lang==='en'?'Understood':'Capito';}
-    else{applyBtn.textContent=lang==='en'?`Apply (${suggestion.deltaKcal>0?'+':''}${suggestion.deltaKcal} kcal)`:`Applica (${suggestion.deltaKcal>0?'+':''}${suggestion.deltaKcal} kcal)`;}
+    if(suggestion.units===0){applyBtn.textContent=t('autoadj.understood');}
+    else{const sign=suggestion.deltaKcal>0?'+':'';applyBtn.textContent=t('autoadj.apply.kcal',{sign,delta:suggestion.deltaKcal});}
   }
   banner._suggestion=suggestion;banner.style.display='block';
 }
@@ -3733,7 +3792,6 @@ function renderRealTDEE(){
   const data=calcRealTDEE();
   if(!data){card.style.display='none';return;}
   card.style.display='block';
-  const lang=lsR(SK.lang)==='en'?'en':'it';
   const valEl=document.getElementById('real-tdee-val');
   const rateEl=document.getElementById('real-tdee-rate');
   const noteEl=document.getElementById('real-tdee-note');
@@ -3742,16 +3800,15 @@ function renderRealTDEE(){
     valEl.style.color=Math.abs(data.delta)<150?'var(--p)':data.delta>150?'var(--orange)':'var(--red)';
   }
   if(rateEl){
-    rateEl.textContent=(data.weeklyRate>=0?'+':'')+data.weeklyRate+' kg/'+(lang==='en'?'wk':'sett');
+    const wkLabel=t('tdee.card.unit.kgw').split('/')[1]||'wk';
+    rateEl.textContent=(data.weeklyRate>=0?'+':'')+data.weeklyRate+' kg/'+wkLabel;
     const prof=getProfile();const goal=prof?.goal||'maintain';
     const goalAligned=((goal==='cut'||goal==='cut_extreme'||goal==='recomp')&&data.weeklyRate<0)||((goal==='bulk')&&data.weeklyRate>0)||((goal==='maintain')&&Math.abs(data.weeklyRate)<0.2);
     rateEl.style.color=goalAligned?'#22c55e':'var(--on)';
   }
   if(noteEl){
-    let note=lang==='en'
-      ?`Based on ${data.dataPoints} readings. TDEE estimated from your real metabolism.`
-      :`Basato su ${data.dataPoints} rilevazioni. TDEE stimato dal tuo metabolismo reale.`;
-    if(!data.reliable)note+=lang==='en'?' (at least 10 readings needed for high reliability)':' (servono almeno 10 rilevazioni per alta affidabilità)';
+    let note=t('tdee.card.note',{n:data.dataPoints});
+    if(!data.reliable)note+=t('tdee.card.note.low');
     noteEl.textContent=note;
   }
 }
@@ -4030,8 +4087,8 @@ function calculateUserMacros(p){
     const _lbm=w*(1-parseFloat(p.bf)/100);
     if(_lbm>0){
       const ea=(targetKcal-eee)/_lbm;
-      if(ea<20){targetKcal=Math.round(20*_lbm+eee);showToast('⚠️ RED-S risk: calories increased for safety');}
-      else if(ea<30){targetKcal=Math.round(30*_lbm+eee);showToast('EA safety floor applied (30 kcal/kg FFM)');}
+      if(ea<20){targetKcal=Math.round(20*_lbm+eee);showToast(t('toast.reds.risk'));}
+      else if(ea<30){targetKcal=Math.round(30*_lbm+eee);showToast(t('toast.ea.floor'));}
     }
   }
 
@@ -4609,12 +4666,12 @@ function generatePersonalizedPlan(prof, prefs, macros){
 
   /* ── FASI del piano (adattate al protocollo) ── */
   const phases=isDASH
-    ?[{weeks:'1-4',cal:`${macros.targetKcal} kcal`,desc:'DASH fase 1: riduzione sodio <1500mg/die, potassio ≥4700mg.'},
-      {weeks:'5-8',cal:`${macros.targetKcal} kcal`,desc:'DASH fase 2: consolidamento, 5 porzioni frutta-verdura/die.'},
-      {weeks:'9+',  cal:`${macros.targetKcal} kcal`,desc:'Mantenimento DASH: monitoraggio PA e profilo lipidico.'}]
-    :[{weeks:'1-4',  cal:`${macros.targetKcal} kcal`,desc:`Fase adattamento — ${goalNameForPlan}.`},
-      {weeks:'5-8',  cal:`${macros.targetKcal-100}–${macros.targetKcal} kcal`,desc:'Ottimizzazione progressiva (±100 kcal modulatore AI).'},
-      {weeks:'9-15', cal:`${macros.targetKcal} kcal`,desc:'Consolidamento: fibra ≥25g/die, sodio <2g/die.'}];
+    ?[{weeks:'1-4',cal:`${macros.targetKcal} kcal`,desc:t('phase.desc.dash1')},
+      {weeks:'5-8',cal:`${macros.targetKcal} kcal`,desc:t('phase.desc.dash2')},
+      {weeks:'9+',  cal:`${macros.targetKcal} kcal`,desc:t('phase.desc.dash3')}]
+    :[{weeks:'1-4',  cal:`${macros.targetKcal} kcal`,desc:t('phase.desc.adapt',{goal:goalNameForPlan})},
+      {weeks:'5-8',  cal:`${macros.targetKcal-100}–${macros.targetKcal} kcal`,desc:t('phase.desc.optim')},
+      {weeks:'9-15', cal:`${macros.targetKcal} kcal`,desc:t('phase.desc.consol')}];
 
   return{
     metadata:{
@@ -5779,7 +5836,7 @@ function renderMeals(){
     const meal=day[n];if(!meal)return;
     const checked=lsR(mk(day.d,n))==='1';if(checked)done++;
     const _mType=canonicalMealType(n);const isHardcodedMeal=_mType==='breakfast'||_mType==='snack';
-    const totalDays=Object.keys(skipRates).length;const skipBadge=(skipRates[n]||0)>=0.6&&totalDays>=14?`<span style="font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--orange);margin-left:4px;">${_lang==='en'?'OFTEN SKIPPED':'SPESSO SALTATO'}</span>`:'';
+    const totalDays=Object.keys(skipRates).length;const skipBadge=(skipRates[n]||0)>=0.6&&totalDays>=14?`<span style="font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--orange);margin-left:4px;">${t('meal.skip.badge')}</span>`:'';
     const fa=meal.carbSource?finalCarb(meal):null;
     const diff=fa!==null?fa-meal.baseAmount:0;
     const carbLabel=meal.carbSource?(localizeFoodLabel(FOOD_DB[meal.carbSource]?.label||meal.carbSource)):'';
@@ -5789,7 +5846,7 @@ function renderMeals(){
     const synergy=!checked?calcSynergyScore(meal.rest):null;
     const synBadge=synergy?`<span style="font-size:11px;margin-left:3px;" title="${sanitize(synergy.label)}">${synergy.emoji}</span>`:'';
     const _satFood=meal._meta?.protein&&FOOD_DB[meal._meta.protein]?.satiety>=2.5?meal._meta.protein:meal._meta?.carb&&FOOD_DB[meal._meta.carb]?.satiety>=2.5?meal._meta.carb:null;
-    const satietyBadge=_satFood?`<span style="font-size:11px;margin-left:3px;" title="Alto potere saziante">🪹</span>`:'';
+    const satietyBadge=_satFood?`<span style="font-size:11px;margin-left:3px;" title="${t('meal.satiety.title')}">🪹</span>`:'';
     const bs=checked?'border:1px solid rgba(77,220,198,.22);background:rgba(77,220,198,.03);':'border:1px solid var(--line);background:var(--s1);';
     const actionsHtml=isHardcodedMeal
       ?`<div class="meal-actions">
@@ -5838,7 +5895,6 @@ function renderTodayAction(){
   const titleEl=document.getElementById('today-action-title');
   const bodyEl=document.getElementById('today-action-body');
   const btn=document.getElementById('today-action-btn');
-  const lang=lsR(SK.lang)==='en'?'en':'it';
   const log=getLog().sort((a,b)=>a.isoDate<b.isoDate?-1:1);
   const today=toISO();
   const hasWeightToday=log.some(e=>e.isoDate===today&&e.weight);
@@ -5852,27 +5908,27 @@ function renderTodayAction(){
     const last=log[log.length-1];const prev=log.length>=2?log[log.length-2]:null;
     const trend=prev?(Number(last.weight)<Number(prev.weight)?'↓':Number(last.weight)>Number(prev.weight)?'↑':'→'):'→';
     if(iconEl)iconEl.textContent='⚖️';
-    if(titleEl)titleEl.textContent=lang==='en'?t('today.action.weight'):t('today.action.weight');
-    if(bodyEl)bodyEl.textContent=`${lang==='en'?'Last:':'Ultimo:'} ${last.weight} kg ${trend}`;
-    if(btn){btn.style.display='';btn.textContent=lang==='en'?'Weight':'Peso';btn.onclick=()=>switchTab('prog');}
+    if(titleEl)titleEl.textContent=t('today.action.weight');
+    if(bodyEl)bodyEl.textContent=t('today.action.weight.body',{val:last.weight,arrow:trend});
+    if(btn){btn.style.display='';btn.textContent=t('today.action.weight.btn');btn.onclick=()=>switchTab('prog');}
     card.style.display='flex';
   }else if(!hasCheckinToday){
     if(iconEl)iconEl.textContent='📋';
     if(titleEl)titleEl.textContent=t('today.action.checkin');
-    if(bodyEl)bodyEl.textContent=lang==='en'?'How are you feeling today?':'Come ti senti oggi?';
+    if(bodyEl)bodyEl.textContent=t('today.action.checkin.body');
     if(btn){btn.style.display='';btn.textContent='Check-in';btn.onclick=()=>{document.getElementById('daily-check-card')?.scrollIntoView({behavior:'smooth'});};}
     card.style.display='flex';
   }else if(mealsTotal>0&&mealsDone>=mealsTotal){
     if(iconEl)iconEl.textContent='🎯';
     if(titleEl)titleEl.textContent=t('today.action.done');
-    if(bodyEl)bodyEl.textContent=lang==='en'?'All meals completed':'Tutti i pasti completati';
+    if(bodyEl)bodyEl.textContent=t('today.action.done.body');
     if(btn)btn.style.display='none';
     card.style.display='flex';
   }else{
     if(iconEl)iconEl.textContent='🍽️';
     if(titleEl)titleEl.textContent=t('today.action.default');
-    if(bodyEl)bodyEl.textContent=lang==='en'?`${mealsDone}/${mealsTotal} meals done`:`${mealsDone}/${mealsTotal} pasti completati`;
-    if(btn){btn.style.display='';btn.textContent=lang==='en'?'See meals':'Vedi pasti';btn.onclick=()=>{document.getElementById('meals-list')?.scrollIntoView({behavior:'smooth'});};}
+    if(bodyEl)bodyEl.textContent=t('today.action.meals.body',{done:mealsDone,total:mealsTotal});
+    if(btn){btn.style.display='';btn.textContent=t('today.action.meals.btn');btn.onclick=()=>{document.getElementById('meals-list')?.scrollIntoView({behavior:'smooth'});};}
     card.style.display='flex';
   }
 }
@@ -5992,6 +6048,16 @@ function toggleRefeed(){_macroCache=null;
 /* ═══════════════════════════════════════
    SETTINGS
 ═══════════════════════════════════════ */
+function getPhaseLiveDesc(phaseIndex){
+  const isD=dietData?.metadata?.clinical==='DASH';
+  const goal=dietData?.metadata?.goal||'maintain';
+  const goalLabel=t('goal.label.'+goal)||goal;
+  const descKeys=isD
+    ?['phase.desc.dash1','phase.desc.dash2','phase.desc.dash3']
+    :['phase.desc.adapt','phase.desc.optim','phase.desc.consol'];
+  const key=descKeys[Math.min(phaseIndex,descKeys.length-1)];
+  return t(key,{goal:goalLabel});
+}
 function renderSettings(){
   if(!dietData){const prof=getProfile();if(prof)_renderProfileCard(prof);return;}
   const m=dietData.metadata||{};
@@ -6348,7 +6414,7 @@ function importBackup(evt){
 
       /* ── B4B: Schema version guard ── */
       if(d._schemaVersion&&d._schemaVersion>1){
-        showToast('Backup da versione più recente — aggiorna l\'app.');
+        showToast(t('toast.backupVersion'));
         return;
       }
 
@@ -6846,8 +6912,8 @@ function scheduleLocalReminder(type,hour){
   if(next<=now) next.setDate(next.getDate()+1);
   const delay=next.getTime()-now.getTime();
   const labels={
-    checkin:{title:'Iron Kinetic ⚡',body:'Momento del check-in! Come ti senti oggi?'},
-    logging:{title:'Iron Kinetic 📊',body:'Ricorda di registrare il peso stamattina.'},
+    checkin:{title:'Iron Kinetic ⚡',body:t('notif.checkin.body')},
+    logging:{title:'Iron Kinetic 📊',body:t('notif.logging.body')},
   };
   const lbl=labels[type]||labels.checkin;
   setTimeout(()=>{
