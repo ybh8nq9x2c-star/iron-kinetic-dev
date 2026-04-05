@@ -6,8 +6,24 @@ const CACHE = 'iron-kinetic-v16';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.webmanifest'
+  './manifest.webmanifest',
+  './offline.html'
 ];
+
+/* OFFLINE_FALLBACK: create offline.html with:
+   <!DOCTYPE html><html><head><meta charset="utf-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1">
+   <title>Iron Kinetic — Offline</title>
+   <style>body{background:#0e0e0e;color:#4ddcc6;font-family:sans-serif;
+   display:flex;flex-direction:column;align-items:center;justify-content:center;
+   height:100vh;margin:0;text-align:center;gap:16px}
+   h1{font-size:22px;margin:0}p{color:rgba(199,196,216,.6);font-size:13px;margin:0}
+   </style></head><body>
+   <span style="font-size:48px">⚡</span>
+   <h1>Iron Kinetic</h1>
+   <p>Sei offline. Riconnettiti per sincronizzare.</p>
+   </body></html>
+*/
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -33,12 +49,13 @@ self.addEventListener('fetch', (event) => {
   // Only handle GET requests
   if (req.method !== 'GET') return;
 
-  // Navigation (page load): network-first, fall back to cached index.html
+  // Navigation (page load): network-first, fall back to cached index.html or offline.html
   if (req.mode === 'navigate') {
     event.respondWith(
       fetch(req)
         .catch(() =>
           caches.match('./index.html').then((r) => r || caches.match('/'))
+            .then((r) => r || caches.match('./offline.html'))
         )
     );
     return;
@@ -74,6 +91,6 @@ self.addEventListener('fetch', (event) => {
         return res;
       }).catch(() => null);
       return cached || networkFetch;
-    })
+    }).catch(() => caches.match('./offline.html'))
   );
 });
