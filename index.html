@@ -306,24 +306,27 @@ body.onboarding-active #onb-screen{
 }
 /* Title: centered, balanced wrapping */
 .onb-title{
-  font-size:22px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:24px;
   font-weight:700;
   color:var(--on);
-  line-height:1.3;
-  margin:0 0 14px;
+  line-height:1.25;
+  margin:0 0 10px;
   text-align:center;
   width:100%;
   max-width:320px;
+  letter-spacing:-.02em;
 }
 /* Body: centered, comfortable reading width */
 .onb-body{
   font-size:14px;
   color:var(--muted);
-  line-height:1.65;
+  line-height:1.6;
   text-align:center;
   margin:0;
   width:100%;
-  max-width:300px;
+  max-width:280px;
+  font-weight:500;
 }
 /* Progress dots row */
 .onb-dots{
@@ -336,12 +339,49 @@ body.onboarding-active #onb-screen{
   flex-shrink:0;
 }
 .onb-dot{
-  width:10px;height:10px;border-radius:50%;
-  background:var(--dim);
-  transition:background .25s,transform .25s,box-shadow .25s,width .25s;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--s3);
+  transition:background .25s,transform .25s,width .25s;
   display:block;flex-shrink:0;
 }
-.onb-dot.active{background:var(--p);transform:scale(1.3);box-shadow:0 0 8px rgba(77,220,198,.5);}
+.onb-dot.active{width:24px;border-radius:3px;background:var(--p);transform:none;box-shadow:0 0 8px rgba(77,220,198,.4);}
+.onb-dot.completed{background:rgba(77,220,198,.3);}
+/* Badge pill above title */
+.onb-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:14px;border:1px solid;}
+.onb-badge.teal{color:var(--p);border-color:rgba(77,220,198,.3);background:rgba(77,220,198,.08);}
+.onb-badge.blue{color:#60a5fa;border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.08);}
+.onb-badge.sec{color:var(--sec);border-color:rgba(192,193,255,.3);background:rgba(192,193,255,.08);}
+.onb-badge.gold{color:#fbbf24;border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.08);}
+.onb-badge.red{color:#f87171;border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.08);}
+/* Slide-level top accent bar */
+.onboarding-slide{position:relative;}
+.onboarding-slide::before{content:'';position:absolute;top:0;left:10%;right:10%;height:2px;border-radius:0 0 4px 4px;opacity:0;transition:opacity .4s ease;}
+.onboarding-slide.accent-teal::before{background:linear-gradient(90deg,transparent,var(--p),transparent);opacity:1;}
+.onboarding-slide.accent-blue::before{background:linear-gradient(90deg,transparent,#60a5fa,transparent);opacity:1;}
+.onboarding-slide.accent-sec::before{background:linear-gradient(90deg,transparent,var(--sec),transparent);opacity:1;}
+.onboarding-slide.accent-gold::before{background:linear-gradient(90deg,transparent,#fbbf24,transparent);opacity:1;}
+/* Bullet list inside slides */
+.onb-bullets{display:flex;flex-direction:column;gap:10px;margin-top:20px;width:100%;max-width:300px;text-align:left;}
+.onb-bullet{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--on-v);font-weight:500;line-height:1.45;}
+.onb-bullet-icon{flex-shrink:0;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:1px;}
+.onb-bullet-icon.teal{background:rgba(77,220,198,.12);color:var(--p);}
+.onb-bullet-icon.blue{background:rgba(96,165,250,.12);color:#60a5fa;}
+.onb-bullet-icon.sec{background:rgba(192,193,255,.12);color:var(--sec);}
+.onb-bullet-icon.gold{background:rgba(251,191,36,.12);color:#fbbf24;}
+/* Stat pills row */
+.onb-stats{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;justify-content:center;width:100%;max-width:300px;}
+.onb-stat{flex:1;min-width:80px;background:var(--s1);border:1px solid var(--line);border-radius:var(--r2);padding:10px 8px;text-align:center;}
+.onb-stat-val{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.03em;color:var(--p);line-height:1;display:block;}
+.onb-stat-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-top:4px;}
+/* Quote / testimonial style block */
+.onb-quote{background:var(--s1);border:1px solid var(--line);border-left:2px solid var(--p);border-radius:var(--r2);padding:12px 14px;margin-top:18px;width:100%;max-width:300px;text-align:left;}
+.onb-quote-text{font-size:12px;color:var(--on-v);line-height:1.55;font-style:italic;margin:0 0 6px;}
+.onb-quote-author{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0;}
+/* Emoji row for slide 4 */
+.onb-emoji-row{display:flex;gap:12px;justify-content:center;margin-bottom:20px;}
+.onb-emoji-row span{font-size:36px;line-height:1;}
+/* Step indicator hint */
+.onb-step-hint{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:18px;}
 /* Bottom nav: skip / back / next — balanced 3-column */
 .onb-nav{
   display:grid;
@@ -1676,41 +1716,95 @@ body.onboarding-active #onb-screen{
   <div id="onboarding-slides-wrap">
     <div id="onboarding-slides">
 
-      <!-- Slide 1 -->
-      <div class="onboarding-slide">
-        <div class="onb-emoji">🏋️‍♂️</div>
+      <!-- Slide 0 — accent-teal -->
+      <div class="onboarding-slide accent-teal">
+        <div class="onb-badge teal" id="onb-badge-0"></div>
+        <div class="onb-emoji" id="onb-e0"></div>
         <p class="onb-title" id="onb-t0"></p>
         <p class="onb-body" id="onb-b0"></p>
+        <div class="onb-bullets" id="onb-bl0">
+          <div class="onb-bullet">
+            <div class="onb-bullet-icon teal">✓</div>
+            <span id="onb-bl0-0"></span>
+          </div>
+          <div class="onb-bullet">
+            <div class="onb-bullet-icon teal">✓</div>
+            <span id="onb-bl0-1"></span>
+          </div>
+          <div class="onb-bullet">
+            <div class="onb-bullet-icon teal">✓</div>
+            <span id="onb-bl0-2"></span>
+          </div>
+        </div>
+        <p class="onb-step-hint" id="onb-hint0"></p>
       </div>
 
-      <!-- Slide 2 -->
-      <div class="onboarding-slide">
-        <div class="onb-emoji">✅</div>
+      <!-- Slide 1 — accent-blue -->
+      <div class="onboarding-slide accent-blue">
+        <div class="onb-badge blue" id="onb-badge-1"></div>
+        <div class="onb-emoji" id="onb-e1"></div>
         <p class="onb-title" id="onb-t1"></p>
         <p class="onb-body" id="onb-b1"></p>
+        <div class="onb-stats" id="onb-s1">
+          <div class="onb-stat">
+            <span class="onb-stat-val" id="onb-sv1-0"></span>
+            <span class="onb-stat-lbl" id="onb-sl1-0"></span>
+          </div>
+          <div class="onb-stat">
+            <span class="onb-stat-val" id="onb-sv1-1"></span>
+            <span class="onb-stat-lbl" id="onb-sl1-1"></span>
+          </div>
+          <div class="onb-stat">
+            <span class="onb-stat-val" id="onb-sv1-2"></span>
+            <span class="onb-stat-lbl" id="onb-sl1-2"></span>
+          </div>
+        </div>
       </div>
 
-      <!-- Slide 3 -->
-      <div class="onboarding-slide">
-        <div class="onb-emoji">⚡</div>
+      <!-- Slide 2 — accent-sec -->
+      <div class="onboarding-slide accent-sec">
+        <div class="onb-badge sec" id="onb-badge-2"></div>
+        <div class="onb-emoji" id="onb-e2"></div>
         <p class="onb-title" id="onb-t2"></p>
         <p class="onb-body" id="onb-b2"></p>
+        <div class="onb-bullets" id="onb-bl2">
+          <div class="onb-bullet">
+            <div class="onb-bullet-icon sec">→</div>
+            <span id="onb-bl2-0"></span>
+          </div>
+          <div class="onb-bullet">
+            <div class="onb-bullet-icon sec">→</div>
+            <span id="onb-bl2-1"></span>
+          </div>
+          <div class="onb-bullet">
+            <div class="onb-bullet-icon sec">→</div>
+            <span id="onb-bl2-2"></span>
+          </div>
+        </div>
       </div>
 
-      <!-- Slide 4 -->
-      <div class="onboarding-slide">
-        <div class="onb-emoji">📈</div>
+      <!-- Slide 3 — accent-gold -->
+      <div class="onboarding-slide accent-gold">
+        <div class="onb-badge gold" id="onb-badge-3"></div>
+        <div class="onb-emoji" id="onb-e3"></div>
         <p class="onb-title" id="onb-t3"></p>
         <p class="onb-body" id="onb-b3"></p>
+        <div class="onb-quote" id="onb-q3">
+          <p class="onb-quote-text" id="onb-qt3"></p>
+          <p class="onb-quote-author" id="onb-qa3"></p>
+        </div>
       </div>
 
-      <!-- Slide 5 — last: Start CTA replaces Next in the nav row -->
-      <div class="onboarding-slide">
-        <div class="onb-emoji">🎯</div>
+      <!-- Slide 4 — accent-teal — CTA finale -->
+      <div class="onboarding-slide accent-teal">
+        <div class="onb-emoji-row">
+          <span>🧬</span><span>🍽️</span><span>📈</span>
+        </div>
         <p class="onb-title" id="onb-t4"></p>
         <p class="onb-body" id="onb-b4"></p>
         <button id="onb-start-btn" class="btn btn-primary" onclick="onbFinish()" aria-label="Start"
           style="margin-top:28px;width:100%;max-width:300px;height:60px;font-size:16px;font-weight:800;letter-spacing:.08em;border-radius:var(--r-pill);box-shadow:0 8px 28px rgba(77,220,198,.35);"></button>
+        <p class="onb-step-hint" id="onb-hint4" style="margin-top:14px"></p>
       </div>
 
     </div>
@@ -2050,16 +2144,40 @@ it:{
   'coach.micro.b12med':'Vegano >21gg: integra B12 (2.4µg/die) e controlla ferro non-eme. Abbina vitamina C al pasto.',
   'coach.micro.b12high':'Vegano >60gg: verifica B12 sierica, ferritina e zinco. Deficit subclinici compromettono il recupero.',
   'onb2.skip':'Salta','onb2.next':'Avanti','onb2.prev':'← Indietro','onb2.start':'INIZIA ORA',
-  'onb2.slide1.title':'Finalmente un\'app che ti ASCOLTA',
-  'onb2.slide1.body':'Iron Kinetic adatta il piano al tuo corpo reale,\nnon a un modello generico.',
-  'onb2.slide2.title':'30 secondi al giorno',
-  'onb2.slide2.body':'Un check-in veloce. Il motore adattivo fa tutto il resto:\nkcal, macro, timing perfetto.',
-  'onb2.slide3.title':'Risultati PREDIBILI',
-  'onb2.slide3.body':'Sai esattamente dove sarai tra 30 giorni.\nLa curva predittiva non mente.',
-  'onb2.slide4.title':'Il piano si adatta a TE',
-  'onb2.slide4.body':'Plateau? Fame alta? L\'app rileva e corregge in tempo reale.',
-  'onb2.slide5.title':'INIZIA ORA',
-  'onb2.slide5.body':'Il tuo corpo non aspetta. Entra i dati → ottieni piano perfetto.',
+  'onb2.slide1.badge':'🔬 Nutrizione di precisione',
+  'onb2.slide1.emoji':'⚡',
+  'onb2.slide1.title':'Non un\'altra dieta.\nIl tuo piano.',
+  'onb2.slide1.body':'Costruito sui tuoi dati reali, non su medie generiche.',
+  'onb2.slide1.bl0':'Piano calorico personalizzato sul tuo TDEE',
+  'onb2.slide1.bl1':'Macros calcolati con formule EFSA e WHO',
+  'onb2.slide1.bl2':'Nessun dato inviato a server. Solo sul tuo dispositivo.',
+  'onb2.slide1.hint':'→ Setup in 3 minuti',
+  'onb2.slide2.badge':'📐 Formule validate',
+  'onb2.slide2.emoji':'🧬',
+  'onb2.slide2.title':'Più preciso di\nqualsiasi calcolatore online.',
+  'onb2.slide2.body':'Combina 3 equazioni metaboliche e dati sport-specifici.',
+  'onb2.slide2.sv0':'7',
+  'onb2.slide2.sl0':'Formule',
+  'onb2.slide2.sv1':'±50',
+  'onb2.slide2.sl1':'kcal precisione',
+  'onb2.slide2.sv2':'100%',
+  'onb2.slide2.sl2':'Offline',
+  'onb2.slide3.badge':'🤖 Piano adattivo',
+  'onb2.slide3.emoji':'📊',
+  'onb2.slide3.title':'Il piano si adatta\na come reagisce il tuo corpo.',
+  'onb2.slide3.body':'Non resti bloccato su numeri statici.',
+  'onb2.slide3.bl0':'TDEE reale calcolato dal tuo storico peso',
+  'onb2.slide3.bl1':'Suggerimenti auto se il progresso rallenta',
+  'onb2.slide3.bl2':'Modificatore manuale per refeed e pause',
+  'onb2.slide4.badge':'⏱ Tracking minimale',
+  'onb2.slide4.emoji':'✅',
+  'onb2.slide4.title':'Flessibile quanto\nla tua vita.',
+  'onb2.slide4.body':'Segna un pasto, pesa, fai check-in. Niente di più.',
+  'onb2.slide4.quote':'"Finalmente un\'app di nutrizione che non mi fa sentire in colpa se salto un pasto."',
+  'onb2.slide4.author':'— Feedback beta tester',
+  'onb2.slide5.title':'Inizia adesso.\nIn 3 minuti hai il tuo piano.',
+  'onb2.slide5.body':'Inserisci età, peso e obiettivo. Il motore fa il resto.',
+  'onb2.slide5.hint':'100% privato · solo sul tuo dispositivo',
   'confirm.cancel':'Annulla','confirm.ok':'Conferma',
   'gdpr.confirm.title':'Revoca consenso',
   'gdpr.confirm.body':'Tutti i dati locali verranno cancellati in modo permanente. Continuare?',
@@ -2526,16 +2644,40 @@ en:{
   'coach.micro.b12med':'Vegan >21 days: supplement B12 (2.4µg/day) and monitor non-haem iron. Pair vitamin C with meals.',
   'coach.micro.b12high':'Vegan >60 days: check serum B12, ferritin and zinc. Subclinical deficits impair recovery.',
   'onb2.skip':'Skip','onb2.next':'Next','onb2.prev':'← Back','onb2.start':'START NOW',
-  'onb2.slide1.title':'Finally an app that LISTENS to you',
-  'onb2.slide1.body':'Iron Kinetic adapts the plan to your real body,\nnot a generic template.',
-  'onb2.slide2.title':'30 seconds a day',
-  'onb2.slide2.body':'A quick check-in. The adaptive engine does the rest:\nkcal, macros, perfect timing.',
-  'onb2.slide3.title':'PREDICTABLE results',
-  'onb2.slide3.body':'You know exactly where you\'ll be in 30 days.\nThe predictive curve doesn\'t lie.',
-  'onb2.slide4.title':'The plan adapts to YOU',
-  'onb2.slide4.body':'Plateau? High hunger? The app detects and corrects in real time.',
-  'onb2.slide5.title':'START NOW',
-  'onb2.slide5.body':'Your body won\'t wait. Enter your data → get the perfect plan.',
+  'onb2.slide1.badge':'🔬 Precision nutrition',
+  'onb2.slide1.emoji':'⚡',
+  'onb2.slide1.title':'Not another diet app.\nYour actual plan.',
+  'onb2.slide1.body':'Built on your real data, not generic averages.',
+  'onb2.slide1.bl0':'Calorie target personalised to your TDEE',
+  'onb2.slide1.bl1':'Macros calculated with EFSA and WHO formulas',
+  'onb2.slide1.bl2':'No data sent to servers. Stays on your device.',
+  'onb2.slide1.hint':'→ Setup in 3 minutes',
+  'onb2.slide2.badge':'📐 Validated formulas',
+  'onb2.slide2.emoji':'🧬',
+  'onb2.slide2.title':'More accurate than any\nonline calculator.',
+  'onb2.slide2.body':'Combines 3 metabolic equations and sport-specific data.',
+  'onb2.slide2.sv0':'7',
+  'onb2.slide2.sl0':'Formulas',
+  'onb2.slide2.sv1':'±50',
+  'onb2.slide2.sl1':'kcal accuracy',
+  'onb2.slide2.sv2':'100%',
+  'onb2.slide2.sl2':'Offline',
+  'onb2.slide3.badge':'🤖 Adaptive plan',
+  'onb2.slide3.emoji':'📊',
+  'onb2.slide3.title':'The plan adapts\nto how your body responds.',
+  'onb2.slide3.body':'No more being stuck on static numbers.',
+  'onb2.slide3.bl0':'Real TDEE calculated from your weight history',
+  'onb2.slide3.bl1':'Automatic suggestions when progress stalls',
+  'onb2.slide3.bl2':'Manual modifier for refeed days and breaks',
+  'onb2.slide4.badge':'⏱ Minimal tracking',
+  'onb2.slide4.emoji':'✅',
+  'onb2.slide4.title':'As flexible as\nyour life.',
+  'onb2.slide4.body':'Log a meal, weigh in, check in. Nothing more.',
+  'onb2.slide4.quote':'"Finally a nutrition app that doesn\'t make me feel guilty for skipping a meal."',
+  'onb2.slide4.author':'— Beta tester feedback',
+  'onb2.slide5.title':'Start now.\nYour plan takes 3 minutes.',
+  'onb2.slide5.body':'Enter your age, weight and goal. The engine does the rest.',
+  'onb2.slide5.hint':'100% private · stays on your device',
   'confirm.cancel':'Cancel','confirm.ok':'Confirm',
   'gdpr.confirm.title':'Revoke consent',
   'gdpr.confirm.body':'All local data will be permanently deleted. Continue?',
@@ -7401,7 +7543,7 @@ function onbRender(idx){
   _onbCur=idx;
   const slides=document.getElementById('onboarding-slides');
   if(slides) slides.className=idx===0?'':('slide'+(idx));
-  document.querySelectorAll('.onb-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  document.querySelectorAll('.onb-dot').forEach((d,i)=>{d.classList.toggle('active',i===idx);d.classList.toggle('completed',i<idx);});
   const last=idx===_ONB_LAST;
   const skipBtn=document.getElementById('onb-skip-btn');
   const prevBtn=document.getElementById('onb-prev-btn');
@@ -7420,9 +7562,9 @@ function onbRender(idx){
       ?'height:50px;font-size:14px;padding:0 28px;border-radius:var(--r-pill);font-weight:800;'
       :'height:44px;font-size:13px;padding:0 22px;border-radius:var(--r-pill);font-weight:700;';
   }
-  /* Auto-progress: only slides 0-2, pause 3.5s */
+  /* Auto-progress: only slides 0-1, pause 3.8s — slide 2+ is manual */
   _onbAutoClear();
-  if(idx<3){_onbAutoTimer=setTimeout(()=>onbNext(),3500);}
+  if(idx<2){_onbAutoTimer=setTimeout(()=>onbNext(),3800);}
 }
 
 function _onbAutoClear(){if(_onbAutoTimer){clearTimeout(_onbAutoTimer);_onbAutoTimer=null;}}
@@ -7434,12 +7576,52 @@ function showOnboarding(){
   _onbCur=0;
   el.style.display='flex';
   /* Populate slide text */
-  for(let i=0;i<5;i++){
-    const tt=document.getElementById(`onb-t${i}`);
-    const tb=document.getElementById(`onb-b${i}`);
-    if(tt) tt.textContent=t(`onb2.slide${i+1}.title`);
-    if(tb) tb.textContent=t(`onb2.slide${i+1}.body`);
-  }
+  const _q=id=>document.getElementById(id);
+  /* Slide 0 */
+  if(_q('onb-badge-0'))_q('onb-badge-0').textContent=t('onb2.slide1.badge');
+  if(_q('onb-e0'))_q('onb-e0').textContent=t('onb2.slide1.emoji');
+  if(_q('onb-t0'))_q('onb-t0').textContent=t('onb2.slide1.title');
+  if(_q('onb-b0'))_q('onb-b0').textContent=t('onb2.slide1.body');
+  if(_q('onb-bl0-0'))_q('onb-bl0-0').textContent=t('onb2.slide1.bl0');
+  if(_q('onb-bl0-1'))_q('onb-bl0-1').textContent=t('onb2.slide1.bl1');
+  if(_q('onb-bl0-2'))_q('onb-bl0-2').textContent=t('onb2.slide1.bl2');
+  if(_q('onb-hint0'))_q('onb-hint0').textContent=t('onb2.slide1.hint');
+  /* Slide 1 */
+  if(_q('onb-badge-1'))_q('onb-badge-1').textContent=t('onb2.slide2.badge');
+  if(_q('onb-e1'))_q('onb-e1').textContent=t('onb2.slide2.emoji');
+  if(_q('onb-t1'))_q('onb-t1').textContent=t('onb2.slide2.title');
+  if(_q('onb-b1'))_q('onb-b1').textContent=t('onb2.slide2.body');
+  if(_q('onb-sv1-0'))_q('onb-sv1-0').textContent=t('onb2.slide2.sv0');
+  if(_q('onb-sl1-0'))_q('onb-sl1-0').textContent=t('onb2.slide2.sl0');
+  if(_q('onb-sv1-1'))_q('onb-sv1-1').textContent=t('onb2.slide2.sv1');
+  if(_q('onb-sl1-1'))_q('onb-sl1-1').textContent=t('onb2.slide2.sl1');
+  if(_q('onb-sv1-2'))_q('onb-sv1-2').textContent=t('onb2.slide2.sv2');
+  if(_q('onb-sl1-2'))_q('onb-sl1-2').textContent=t('onb2.slide2.sl2');
+  /* Slide 2 */
+  if(_q('onb-badge-2'))_q('onb-badge-2').textContent=t('onb2.slide3.badge');
+  if(_q('onb-e2'))_q('onb-e2').textContent=t('onb2.slide3.emoji');
+  if(_q('onb-t2'))_q('onb-t2').textContent=t('onb2.slide3.title');
+  if(_q('onb-b2'))_q('onb-b2').textContent=t('onb2.slide3.body');
+  if(_q('onb-bl2-0'))_q('onb-bl2-0').textContent=t('onb2.slide3.bl0');
+  if(_q('onb-bl2-1'))_q('onb-bl2-1').textContent=t('onb2.slide3.bl1');
+  if(_q('onb-bl2-2'))_q('onb-bl2-2').textContent=t('onb2.slide3.bl2');
+  /* Slide 3 */
+  if(_q('onb-badge-3'))_q('onb-badge-3').textContent=t('onb2.slide4.badge');
+  if(_q('onb-e3'))_q('onb-e3').textContent=t('onb2.slide4.emoji');
+  if(_q('onb-t3'))_q('onb-t3').textContent=t('onb2.slide4.title');
+  if(_q('onb-b3'))_q('onb-b3').textContent=t('onb2.slide4.body');
+  if(_q('onb-qt3'))_q('onb-qt3').textContent=t('onb2.slide4.quote');
+  if(_q('onb-qa3'))_q('onb-qa3').textContent=t('onb2.slide4.author');
+  /* Slide 4 */
+  if(_q('onb-t4'))_q('onb-t4').textContent=t('onb2.slide5.title');
+  if(_q('onb-b4'))_q('onb-b4').textContent=t('onb2.slide5.body');
+  if(_q('onb-hint4'))_q('onb-hint4').textContent=t('onb2.slide5.hint');
+  /* Convert \n to <br> in all titles */
+  ['onb-t0','onb-t1','onb-t2','onb-t3','onb-t4'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.innerHTML=el.textContent.replace(/\n/g,'<br>');
+  });
+  /* Buttons */
   const startBtn=document.getElementById('onb-start-btn');
   if(startBtn){startBtn.textContent=t('onb2.start');startBtn.setAttribute('aria-label',t('onb2.start'));}
   const skipBtn=document.getElementById('onb-skip-btn');
