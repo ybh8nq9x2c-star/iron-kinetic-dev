@@ -2072,7 +2072,7 @@ it:{
   'coach.msg.trend_iniz':'📊 −{rate} kg/sett stimato su {days} giorni ({cnt} pesate). Span troppo breve per un\'analisi affidabile — continua a registrare il peso per 7+ giorni.',
   'coach.msg.ricomp_attiva':'🔁 Peso stabile ±{rate} kg/sett, girovita −{waist} cm. Stai perdendo grasso e guadagnando massa simultaneamente. NON cambiare il piano.',
   'coach.msg.ritenzione':'💧 Sale oggi: {salt}g (≈{saltmg}mg Na+) vs acqua {water}L. Il peso è falsato dalla ritenzione. Bevi 500ml nelle prossime 2h. Il sodio sierico si normalizza in 12-24h con corretta idratazione.',
-  'coach.msg.ricarica':'🔥 {days} giorni in deficit: leptina in calo, adattamento metabolico. Refeed {urgenza} entro 1-2 giorni. Target: +880 kcal SOLO da carboidrati (220g riso, patate, avena). Grassi e proteine invariati.',
+  'coach.msg.ricarica':'🔥 {days} giorni in deficit: leptina in calo, adattamento metabolico. Refeed {urgenza} entro 1-2 giorni. Target: +880 kcal SOLO da carboidrati (220g {refeedFoods}). Grassi e proteine invariati.',
   'coach.msg.adatt_met':'⚡ Trend piatto ({cnt} rilevazioni). Il metabolismo si è adattato. Tre opzioni: (A) −100 kcal dai carboidrati serali, (B) +2.000 passi NEAT/die, (C) settimana refeed poi riprendi deficit.',
   'coach.msg.surplus_insuff':'⚡ Peso fermo da {cnt} rilevazioni. In bulk lean target: +0.15-0.30 kg/sett. Aggiungi 150-200 kcal da carboidrati (riso, avena). Se girovita cresce >0.5cm/sett, torna al mantenimento 1 settimana.',
   'coach.msg.deficit_ott':'🔥 −{rate} kg/sett: velocità ottimale ({min}–{max} kg/sett). Preservazione massa magra massimale. Piano perfettamente calibrato. Mantieni invariato.',
@@ -2082,11 +2082,11 @@ it:{
   'coach.msg.surplus_exc':'⚠️ +{rate} kg/sett: troppo veloce, rischio accumulo grasso. Riduci 200 kcal da carboidrati. Target: +0.15-0.25 kg/sett.',
   'coach.msg.peso_su':'⚠️ +{rate} kg/sett in {goal_lbl}. Controlla: (1) aderenza pasti, (2) ritenzione idrica (pesata al mattino a stomaco vuoto), (3) sodio assunto. Se confermato dopo 5gg, riduci 100 kcal da carbs.',
   'coach.msg.fame_pegg':'🍽 Fame {hunger}/10 e in aumento (trend +{trend}/die). Aderenza {adher}/10. Il deficit supera la tollerabilità individuale. {tip} Inizia ogni pasto con la proteina: satura prima i recettori della fame.',
-  'coach.msg.fame_strutt':'🍽 Fame {hunger}/10 + aderenza {adher}/10. Aggiungi 150–200g verdure fibrose (broccoli, cetrioli, spinaci) ai pasti principali: zero impatto calorico, sazietà volumetrica significativa. Proteine ad ogni pasto prima dei carbs.',
+  'coach.msg.fame_strutt':'🍽 Fame {hunger}/10 + aderenza {adher}/10. Aggiungi 150–200g verdure fibrose ({veggies}) ai pasti principali: zero impatto calorico, sazietà volumetrica significativa. Proteine ad ogni pasto prima dei carbs.',
   'coach.msg.energia_calo':'⚡ Energia {energy}/10 e in peggioramento (trend {trend}/die). Causa più probabile: carbs peri-workout insufficienti. Aggiungi 25–30g riso/avena 60min prima dell\'allenamento. Se persiste >5 giorni: verifica ferro, B12, vitamina D.',
   'coach.msg.energia_bassa':'⚡ Energia {energy}/10. Azione immediata: (1) +20g carbs peri-workout, (2) 500ml acqua adesso, (3) sonno priorità assoluta. Se <7h/notte, l\'adattamento calorico è impossibile.',
-  'coach.msg.dig_pegg':'🫁 Digestione {dig}/10 (trend {trend}/die). Protocollo 48h: riso bianco + pollo al vapore + zucchine. Elimina temporaneamente legumi, lattosio, farine integrali. Pasti più piccoli e frequenti riducono il carico digestivo.',
-  'coach.msg.dig_comp':'🫁 Digestione {dig}/10. Semplifica: riso bianco, carne bianca al vapore, elimina legumi e lattosio per 2 giorni. Riduci le porzioni del 20% e mastica lentamente.',
+  'coach.msg.dig_pegg':'🫁 Digestione {dig}/10 (trend {trend}/die). Protocollo 48h: {digestFoods}. Elimina temporaneamente legumi, lattosio, farine integrali. Pasti più piccoli e frequenti riducono il carico digestivo.',
+  'coach.msg.dig_comp':'🫁 Digestione {dig}/10. Semplifica: {digestFoods}, elimina legumi e lattosio per 2 giorni. Riduci le porzioni del 20% e mastica lentamente.',
   'coach.msg.ader_calo':'📉 Aderenza {adher}/10 e in calo ({trend}/die). Causa più comune: piano troppo rigido. Identifica i 2 pasti più difficili e semplificali: sostituisci con alternative rapide dallo stesso gruppo alimentare.{streakNote}',
   'coach.msg.segnali_ott':'✅ Aderenza {adher}/10, energia {energy}/10 — entrambi stabili o in miglioramento.{streak} Il piano funziona. Mantieni la stessa routine: la consistenza produce risultati composti nel tempo.',
   'coach.msg.ckd':'🫁 Piano calibrato per CKD (proteine ≤0.8g/kg). Monitora: edemi, pressione, potassio. Evita integratori proteici non prescritti. Aggiorna il medico ogni 3 mesi con creatinina ed eGFR.',
@@ -2212,6 +2212,9 @@ it:{
   'aria.meal.toggle':'Segna pasto completato',
   'aria.chart.weight':'Grafico peso','aria.chart.waist':'Grafico girovita','modal.close.help':'Chiudi aiuto','modal.close.privacy':'Chiudi privacy',
   'pwa.install.banner':'Installa Iron Kinetic','pwa.install.btn':'Installa',
+  'coach.foods.refeed':'riso, patate, avena',
+  'coach.foods.digest':'riso bianco, pollo al vapore, zucchine',
+  'coach.foods.veggies':'broccoli, cetrioli, spinaci',
   'pwa.ios.step1':'Tocca il pulsante <strong style="color:var(--p);">Condividi</strong> (rettangolo con freccia in su) nella barra di Safari',
   'pwa.ios.step2':'Scorri in basso e tocca <strong style="color:var(--p);">Aggiungi a schermata Home</strong>',
   'pwa.ios.step3':'Tocca <strong style="color:var(--p);">Aggiungi</strong> in alto a destra',
@@ -2273,7 +2276,7 @@ it:{
   'faq.q.2':'Cosa fa il Modificatore AI?',
   'faq.a.2':'Il modificatore aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall\'inizio.',
   'faq.q.3':'Cos\'è il Refeed Day?',
-  'faq.a.3':'Un refeed è un giorno di aumento calorico controllato: +880 kcal, 220g carbs da riso, patate, avena per stimolare la leptina e prevenire l\'adattamento metabolico durante il taglio. Va pianificato ogni 7-10 giorni in Fase 2. Proteine e grassi invariati (Dirlewanger 2000).',
+  'faq.a.3':'Un refeed è un giorno di aumento calorico controllato: +880 kcal, 220g carbs da {refeedFoods} per stimolare la leptina e prevenire l\'adattamento metabolico durante il taglio. Va pianificato ogni 7-10 giorni in Fase 2. Proteine e grassi invariati (Dirlewanger 2000).',
   'faq.q.4':'Come funziona il Coach AI?',
   'faq.a.4':'Il coach analizza: la tua curva di peso (ultimi 7 giorni), la variazione del girovita, l\'assunzione di acqua e sale, i giorni dall\'ultimo refeed, e la fase attiva. Sulla base di questi dati mostra un\'analisi contestuale: stallo metabolico, rischio catabolico, ricomposizione, ritenzione idrica o progressione ottimale. Tutto avviene localmente, senza AI esterna.',
   'faq.q.5':'Come faccio il backup e ripristino?',
@@ -2580,7 +2583,7 @@ en:{
   'coach.msg.trend_iniz':'📊 −{rate} kg/week estimated over {days} days ({cnt} weigh-ins). Span too short for reliable analysis — keep logging weight for 7+ days.',
   'coach.msg.ricomp_attiva':'🔁 Weight stable ±{rate} kg/week, waist −{waist} cm. You\'re losing fat and gaining muscle simultaneously. Do NOT change the plan.',
   'coach.msg.ritenzione':'💧 Salt today: {salt}g (≈{saltmg}mg Na+) vs water {water}L. Weight is skewed by retention. Drink 500ml in the next 2h. Serum sodium normalises in 12-24h with proper hydration.',
-  'coach.msg.ricarica':'🔥 {days} days in deficit: leptin dropping, metabolic adaptation. {urgenza} refeed within 1-2 days. Target: +880 kcal from carbs ONLY (220g rice, potatoes, oats). Fats and protein unchanged.',
+  'coach.msg.ricarica':'🔥 {days} days in deficit: leptin dropping, metabolic adaptation. {urgenza} refeed within 1-2 days. Target: +880 kcal from carbs ONLY (220g {refeedFoods}). Fats and protein unchanged.',
   'coach.msg.adatt_met':'⚡ Flat trend ({cnt} readings). Your metabolism has adapted. Three options: (A) −100 kcal from evening carbs, (B) +2,000 NEAT steps/day, (C) refeed week then resume deficit.',
   'coach.msg.surplus_insuff':'⚡ Weight stuck for {cnt} readings. Lean bulk target: +0.15-0.30 kg/week. Add 150-200 kcal from carbs (rice, oats). If waist grows >0.5cm/week, return to maintenance for 1 week.',
   'coach.msg.deficit_ott':'🔥 −{rate} kg/week: optimal rate ({min}–{max} kg/week). Maximum lean mass preservation. Plan perfectly calibrated. Keep unchanged.',
@@ -2590,11 +2593,11 @@ en:{
   'coach.msg.surplus_exc':'⚠️ +{rate} kg/week: too fast, fat gain risk. Cut 200 kcal from carbs. Target: +0.15-0.25 kg/week.',
   'coach.msg.peso_su':'⚠️ +{rate} kg/week in {goal_lbl}. Check: (1) meal adherence, (2) water retention (weigh in the morning fasted), (3) sodium intake. If confirmed after 5 days, cut 100 kcal from carbs.',
   'coach.msg.fame_pegg':'🍽 Hunger {hunger}/10 and rising (trend +{trend}/day). Adherence {adher}/10. The deficit exceeds individual tolerance. {tip} Start every meal with protein: saturates hunger receptors first.',
-  'coach.msg.fame_strutt':'🍽 Hunger {hunger}/10 + adherence {adher}/10. Add 150–200g fibrous vegetables (broccoli, cucumber, spinach) to main meals: zero caloric impact, significant volumetric satiety. Protein at every meal before carbs.',
+  'coach.msg.fame_strutt':'🍽 Hunger {hunger}/10 + adherence {adher}/10. Add 150–200g fibrous vegetables ({veggies}) to main meals: zero caloric impact, significant volumetric satiety. Protein at every meal before carbs.',
   'coach.msg.energia_calo':'⚡ Energy {energy}/10 and worsening (trend {trend}/day). Most likely cause: insufficient peri-workout carbs. Add 25–30g rice/oats 60min before training. If it persists >5 days: check iron, B12, vitamin D.',
   'coach.msg.energia_bassa':'⚡ Energy {energy}/10. Immediate action: (1) +20g peri-workout carbs, (2) 500ml water now, (3) sleep absolute priority. If <7h/night, caloric adaptation is impossible.',
-  'coach.msg.dig_pegg':'🫁 Digestion {dig}/10 (trend {trend}/day). 48h protocol: white rice + steamed chicken + courgette. Temporarily eliminate legumes, lactose, wholegrains. Smaller, more frequent meals reduce digestive load.',
-  'coach.msg.dig_comp':'🫁 Digestion {dig}/10. Simplify: white rice, steamed white meat, eliminate legumes and lactose for 2 days. Reduce portions by 20% and chew slowly.',
+  'coach.msg.dig_pegg':'🫁 Digestion {dig}/10 (trend {trend}/day). 48h protocol: {digestFoods}. Temporarily eliminate legumes, lactose, wholegrains. Smaller, more frequent meals reduce digestive load.',
+  'coach.msg.dig_comp':'🫁 Digestion {dig}/10. Simplify: {digestFoods}, eliminate legumes and lactose for 2 days. Reduce portions by 20% and chew slowly.',
   'coach.msg.ader_calo':'📉 Adherence {adher}/10 and dropping ({trend}/day). Most common cause: plan too rigid. Identify the 2 hardest meals and simplify them: replace with quick alternatives from the same food group.{streakNote}',
   'coach.msg.segnali_ott':'✅ Adherence {adher}/10, energy {energy}/10 — both stable or improving.{streak} The plan is working. Keep the same routine: consistency produces compound results over time.',
   'coach.msg.ckd':'🫁 Plan calibrated for CKD (protein ≤0.8g/kg). Monitor: oedema, blood pressure, potassium. Avoid unprescribed protein supplements. Update your doctor every 3 months with creatinine and eGFR.',
@@ -2718,6 +2721,9 @@ en:{
   'aria.meal.toggle':'Mark meal completed',
   'aria.chart.weight':'Weight chart','aria.chart.waist':'Waist chart','modal.close.help':'Close help','modal.close.privacy':'Close privacy',
   'pwa.install.banner':'Install Iron Kinetic','pwa.install.btn':'Install',
+  'coach.foods.refeed':'rice, potatoes, oats',
+  'coach.foods.digest':'white rice, steamed chicken, zucchini',
+  'coach.foods.veggies':'broccoli, cucumber, spinach',
   'pwa.ios.step1':'Tap the <strong style="color:var(--p);">Share</strong> button (rectangle with arrow pointing up) in the Safari bar',
   'pwa.ios.step2':'Scroll down and tap <strong style="color:var(--p);">Add to Home Screen</strong>',
   'pwa.ios.step3':'Tap <strong style="color:var(--p);">Add</strong> in the top right',
@@ -2780,7 +2786,7 @@ en:{
   'faq.q.2':'What does the AI Modifier do?',
   'faq.a.2':'The modifier raises or lowers the calorie target by 100 kcal per unit (±25g carbs). Use it for micro-adjustments when you notice a weight plateau, excessive hunger or low energy — without having to redo your profile from scratch.',
   'faq.q.3':'What is a Refeed Day?',
-  'faq.a.3':'A refeed is a day of controlled caloric increase: +880 kcal, 220g carbs from rice, potatoes, oats to stimulate leptin and prevent metabolic adaptation during a cut. Schedule every 7-10 days in Phase 2. Protein and fat unchanged (Dirlewanger 2000).',
+  'faq.a.3':'A refeed is a day of controlled caloric increase: +880 kcal, 220g carbs from {refeedFoods} to stimulate leptin and prevent metabolic adaptation during a cut. Schedule every 7-10 days in Phase 2. Protein and fat unchanged (Dirlewanger 2000).',
   'faq.q.4':'How does the AI Coach work?',
   'faq.a.4':'The coach analyses: your weight curve (last 7 days), waist change, water and salt intake, days since the last refeed, and the active phase. Based on this data it shows a contextual insight: metabolic plateau, catabolic risk, recomposition, water retention or optimal progression. Everything runs locally, no external AI.',
   'faq.q.5':'How do I back up and restore my data?',
@@ -3053,7 +3059,7 @@ function applyTranslations(deferOffscreen){
     const qEl=item.querySelector('.faq-q-text');
     const aEl=item.querySelector('.faq-answer');
     if(qEl&&t('faq.q.'+i)!==('faq.q.'+i))qEl.textContent=t('faq.q.'+i);
-    if(aEl&&t('faq.a.'+i)!==('faq.a.'+i))aEl.innerHTML=sanitize(t('faq.a.'+i));
+    if(aEl&&t('faq.a.'+i)!==('faq.a.'+i))aEl.innerHTML=sanitize(t('faq.a.'+i,{refeedFoods:t('coach.foods.refeed')}));
   });
   /* Help contact card */
   document.querySelectorAll('.help-contact-card p').forEach(p=>{
@@ -5263,7 +5269,7 @@ function analyzeState(){
     const urgenzaKey=daysSinceRefeed>14?'coach.urgenza.urgente':'coach.urgenza.programmato';
     return{ico:'local_fire_department',ib:'#F97316',gl:'rgba(249,115,22,.24)',br:'#FB923C',
       lbl:t('coach.lbl.ricarica'),
-      msg:t('coach.msg.ricarica',{days:daysSinceRefeed,urgenza:t(urgenzaKey)})};
+      msg:t('coach.msg.ricarica',{days:daysSinceRefeed,urgenza:t(urgenzaKey),refeedFoods:t('coach.foods.refeed')})};
   }
 
   /* 5a. STALLO per obiettivo */
@@ -5329,7 +5335,7 @@ function analyzeState(){
     if(avgHunger>=7.5&&(avgAdherence===null||avgAdherence<=6)){
       return{ico:'restaurant',ib:'#F97316',gl:'rgba(249,115,22,.22)',br:'#FB923C',
         lbl:t('coach.lbl.fame_strutt'),
-        msg:t('coach.msg.fame_strutt',{hunger:avgHunger.toFixed(1),adher:avgAdherence?.toFixed(1)||'—'})};
+        msg:t('coach.msg.fame_strutt',{hunger:avgHunger.toFixed(1),adher:avgAdherence?.toFixed(1)||'—',veggies:t('coach.foods.veggies')})};
     }
     /* 6c. Energy very low and still falling */
     if(avgEnergy!==null&&avgEnergy<=4&&sEnergy<-0.3){
@@ -5347,12 +5353,12 @@ function analyzeState(){
     if(avgDigestion!==null&&avgDigestion<=4&&sDigestion<-0.3){
       return{ico:'healing',ib:'#8B5CF6',gl:'rgba(139,92,246,.22)',br:'#A78BFA',
         lbl:t('coach.lbl.dig_pegg'),
-        msg:t('coach.msg.dig_pegg',{dig:avgDigestion.toFixed(1),trend:sDigestion.toFixed(2)})};
+        msg:t('coach.msg.dig_pegg',{dig:avgDigestion.toFixed(1),trend:sDigestion.toFixed(2),digestFoods:t('coach.foods.digest')})};
     }
     if(avgDigestion!==null&&avgDigestion<=3.5){
       return{ico:'healing',ib:'#8B5CF6',gl:'rgba(139,92,246,.22)',br:'#A78BFA',
         lbl:t('coach.lbl.dig_comp'),
-        msg:t('coach.msg.dig_comp',{dig:avgDigestion.toFixed(1)})};
+        msg:t('coach.msg.dig_comp',{dig:avgDigestion.toFixed(1),digestFoods:t('coach.foods.digest')})};
     }
     /* 6f. Adherence falling sharply → motivational + practical */
     if(avgAdherence!==null&&avgAdherence<6&&sAdherence<-0.4){
@@ -6038,7 +6044,7 @@ function normalizePlanLabel(name,goal){
   return name||'';
 }
 function getMealNames(){
-  return dietData?.metadata?.mealNames||['Pranzo','Merenda','Cena'];
+  return dietData?.metadata?.mealNames||['Breakfast','Lunch','Dinner'];
 }
 function getMealEmoji(name){
   const _mt=canonicalMealType(name);
