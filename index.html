@@ -1914,6 +1914,12 @@ it:{
   'onb.result.proteine':'Proteine','onb.result.carbs':'Carbs','onb.result.grassi':'Grassi',
   'onb.result.detail':'Dettaglio calcolo','onb.result.preview':'Il Tuo Piano — Anteprima',
   'onb.btn.attiva':'✅ Attiva questo piano',
+  'onb.field.sport':'Sport praticato',
+  'onb.field.trainTime':'Orario di allenamento',
+  'onb.field.trainTime.hint':'⏱ Cruciale per il nutrient timing: i pasti pre/post-workout verranno calibrati su questo orario.',
+  'onb.btn.generating':'⟳ Generazione...',
+  'meal.colazione':'Colazione','meal.pranzo':'Pranzo','meal.cena':'Cena',
+  'meal.spuntino':'Spuntino','meal.spuntino.pre':'Spuntino Pre','meal.spuntino.post':'Spuntino Post',
   'oggi.pasti':'Pasti','oggi.pasto_empty':'— Genera il tuo piano dall\'onboarding —',
   'oggi.giorno':'Giorno','oggi.acqua':'Acqua','oggi.sale':'Sale','oggi.passi':'Passi','oggi.workout':'Workout',
   'oggi.workout.fatto':'Fatto ✓','oggi.workout.completato':'✓ Completato','oggi.workout.nonFatto':'Non fatto',
@@ -2413,6 +2419,12 @@ en:{
   'onb.result.proteine':'Protein','onb.result.carbs':'Carbs','onb.result.grassi':'Fat',
   'onb.result.detail':'Calculation detail','onb.result.preview':'Your Plan — Preview',
   'onb.btn.attiva':'✅ Activate this plan',
+  'onb.field.sport':'Sport type',
+  'onb.field.trainTime':'Training time',
+  'onb.field.trainTime.hint':'⏱ Crucial for nutrient timing: pre/post-workout meals will be scheduled around this time.',
+  'onb.btn.generating':'⟳ Generating...',
+  'meal.colazione':'Breakfast','meal.pranzo':'Lunch','meal.cena':'Dinner',
+  'meal.spuntino':'Snack','meal.spuntino.pre':'Pre-workout Snack','meal.spuntino.post':'Post-workout Snack',
   'oggi.pasti':'Meals','oggi.pasto_empty':'— Generate your plan in onboarding —',
   'oggi.giorno':'Day','oggi.acqua':'Water','oggi.sale':'Salt','oggi.passi':'Steps','oggi.workout':'Workout',
   'oggi.workout.fatto':'Done ✓','oggi.workout.completato':'✓ Done','oggi.workout.nonFatto':'Not done',
@@ -3194,6 +3206,8 @@ function applyTranslations(deferOffscreen){
     else if(f==='f-bf'||v.includes('Grasso corporeo')||v.includes('Body fat'))lbl.textContent=t('onb.field.bf');
     else if(v==='Allenamenti / settimana'||v==='Training sessions / week')lbl.textContent=t('onb.field.allenamenti');
     else if(v==='Passi giornalieri medi'||v==='Average daily steps')lbl.textContent=t('onb.field.passi');
+    else if(f==='f-sport'||v==='Sport praticato'||v==='Sport type')lbl.textContent=t('onb.field.sport');
+    else if(f==='f-train-time'||v==='Orario di allenamento'||v==='Training time')lbl.textContent=t('onb.field.trainTime');
     else if(v==='Obiettivo primario'||v==='Primary goal')lbl.textContent=t('onb.field.obiettivo');
     else if(v.includes('pasti al giorno')||v==='Number of meals per day')lbl.textContent=t('onb.field.pasti');
     else if(v==='Gusto prevalente'||v==='Taste preference')lbl.textContent=t('onb.field.gusto');
@@ -3202,7 +3216,7 @@ function applyTranslations(deferOffscreen){
     else if(v.includes('Protocollo clinico')||v.includes('Clinical condition'))lbl.textContent=t('onb.field.clinical');
     else if(v==='Proteine preferite'||v==='Preferred proteins')lbl.textContent=t('onb.cibi.proteine');
     else if(v==='Carboidrati preferiti'||v==='Preferred carbs')lbl.textContent=t('onb.cibi.carb');
-    else if(v==='Grassi preferiti'||v==='Preferred fats')lbl.textContent=t('onb.cibi.grassi');
+    else if(v==='Grassi preferiti'||v==='Preferred fats'||v==='Grassi e altro'||v==='Fats & other')lbl.textContent=t('onb.cibi.grassi');
     else if(v.includes('altri cibi')||v.includes('other foods'))lbl.textContent=t('onb.cibi.extra');
   });
   /* Placeholders */
@@ -3240,6 +3254,76 @@ function applyTranslations(deferOffscreen){
   /* Cibi sub */
   const _cibiSub=document.querySelector('#step-4>.sn');
   if(_cibiSub)_cibiSub.textContent=t('onb.cibi.sub');
+  /* Training time hint */
+  const _trainInput=document.getElementById('f-train-time');
+  const _trainHint=_trainInput?.nextElementSibling;
+  if(_trainHint&&_trainHint.tagName==='P')_trainHint.textContent=t('onb.field.trainTime.hint');
+  /* Sport select options */
+  const _fSport=document.getElementById('f-sport');
+  if(_fSport){
+    const _sportOpts=_lang==='en'?[
+      '💪 Strength / Power (Weightlifting, Sprint)',
+      '🏃 Endurance (Running, Cycling)',
+      '⚽ Team / Hybrid Sports (Football, Basketball, Rugby)',
+      '🏋️ General Fitness',
+      '🏆 Powerlifting / Olympic Weightlifting',
+      '🥊 Combat Sports (MMA, Boxing, Judo)'
+    ]:[
+      '💪 Forza / Potenza (Pesistica, Sprint)',
+      '🏃 Resistenza (Corsa, Ciclismo)',
+      '⚽ Sport di Squadra / Ibrido (Calcio, Basket, Rugby)',
+      '🏋️ Fitness Generale',
+      '🏆 Powerlifting / Sollevamento Pesi',
+      '🥊 Sport da Combattimento (MMA, Boxe, Judo)'
+    ];
+    _fSport.querySelectorAll('option').forEach((opt,i)=>{if(_sportOpts[i])opt.textContent=_sportOpts[i];});
+  }
+  /* Clinical hint — re-apply on lang switch */
+  const _clinHintEl=document.getElementById('clinical-hint');
+  if(_clinHintEl){
+    const _cv=profState.clinical;
+    _clinHintEl.textContent=_cv?t('clinical.hint.'+_cv)||'':t('clinical.hint.none');
+  }
+  /* Food chip labels (step-4) */
+  const _chipEN={
+    'pollo':'🍗 Chicken','coscia pollo':'🍗 Chicken thigh','tacchino':'🦃 Turkey',
+    'manzo':'🥩 Beef','salmone':'🐟 Salmon','tonno':'🐠 Tuna','merluzzo':'🐡 Cod',
+    'branzino':'🐟 Sea bass','platessa':'🐠 Plaice','sgombro':'🐟 Mackerel',
+    'trota':'🐡 Trout','gamberetti':'🦐 Prawns','uova':'🥚 Eggs','albume':'⬜ Egg whites',
+    'tofu':'🧊 Tofu','legumi':'🫘 Legumes',
+    'riso':'🍚 Rice','riso basmati':'🍚 Basmati rice','riso integrale':'🌾 Brown rice',
+    'pasta':'🍝 Pasta','patate':'🥔 Potatoes','patate dolci':'🍠 Sweet potatoes',
+    'pane':'🍞 Bread','avena':'🌾 Oats','quinoa':'🌿 Quinoa','farro':'🌾 Spelt',
+    'couscous':'🌾 Couscous','orzo':'🌾 Barley','mais':'🌽 Corn','polenta':'🟡 Polenta',
+    'frutta':'🍎 Fruit','avocado':'🥑 Avocado','olio oliva':'🫒 Olive oil',
+    'mandorle':'🌰 Almonds','noci':'🥜 Walnuts','nocciole':'🌰 Hazelnuts',
+    'pistacchi':'🟢 Pistachios','burro arachidi':'🥜 Peanut butter','tahini':'🫙 Tahini',
+    'semi chia':'🌱 Chia seeds','semi lino':'🌱 Flaxseeds','olive':'🫒 Olives',
+    'yogurt greco':'🍶 Greek yogurt','ricotta':'🧀 Ricotta',
+    'fiocchi latte':'🥛 Cottage cheese','cioccolato fondente':'🍫 Dark chocolate'
+  };
+  const _chipIT={
+    'pollo':'🍗 Pollo','coscia pollo':'🍗 Coscia pollo','tacchino':'🦃 Tacchino',
+    'manzo':'🥩 Manzo','salmone':'🐟 Salmone','tonno':'🐠 Tonno','merluzzo':'🐡 Merluzzo',
+    'branzino':'🐟 Branzino','platessa':'🐠 Platessa','sgombro':'🐟 Sgombro',
+    'trota':'🐡 Trota','gamberetti':'🦐 Gamberetti','uova':'🥚 Uova','albume':'⬜ Albume',
+    'tofu':'🧊 Tofu','legumi':'🫘 Legumi',
+    'riso':'🍚 Riso','riso basmati':'🍚 Riso basmati','riso integrale':'🌾 Riso integrale',
+    'pasta':'🍝 Pasta','patate':'🥔 Patate','patate dolci':'🍠 Patate dolci',
+    'pane':'🍞 Pane','avena':'🌾 Avena','quinoa':'🌿 Quinoa','farro':'🌾 Farro',
+    'couscous':'🌾 Couscous','orzo':'🌾 Orzo','mais':'🌽 Mais','polenta':'🟡 Polenta',
+    'frutta':'🍎 Frutta','avocado':'🥑 Avocado','olio oliva':'🫒 Olio EVO',
+    'mandorle':'🌰 Mandorle','noci':'🥜 Noci','nocciole':'🌰 Nocciole',
+    'pistacchi':'🟢 Pistacchi','burro arachidi':'🥜 Burro arachidi','tahini':'🫙 Tahini',
+    'semi chia':'🌱 Semi chia','semi lino':'🌱 Semi lino','olive':'🫒 Olive',
+    'yogurt greco':'🍶 Yogurt greco','ricotta':'🧀 Ricotta',
+    'fiocchi latte':'🥛 Fiocchi latte','cioccolato fondente':'🍫 Cioccolato'
+  };
+  const _chipMap=_lang==='en'?_chipEN:_chipIT;
+  document.querySelectorAll('#step-4 .food-tag[onclick*="toggleFood"]').forEach(btn=>{
+    const _m=(btn.getAttribute('onclick')||'').match(/toggleFood\(this,'([^']+)'\)/);
+    if(_m&&_chipMap[_m[1]])btn.textContent=_chipMap[_m[1]];
+  });
   /* Onb nav buttons */
   document.querySelectorAll('#onb-screen .onb-step .btn-ghost[onclick*="goStep"]').forEach(btn=>btn.textContent=t('onb.btn.indietro'));
   document.querySelectorAll('#onb-screen .onb-step .btn-primary').forEach(btn=>{
@@ -4680,6 +4764,15 @@ function resolveExtraFoods(extraFoodsStr){
    Include: TEF-aware distribution, FODMAP filter,
    fibra target, varietà proteica 48h, DASH portions
 ══════════════════════════════════════════════════════ */
+function getLocalMealNames(n){
+  const map={
+    2:[t('meal.pranzo'),t('meal.cena')],
+    3:[t('meal.colazione'),t('meal.pranzo'),t('meal.cena')],
+    4:[t('meal.colazione'),t('meal.pranzo'),t('meal.spuntino'),t('meal.cena')],
+    5:[t('meal.colazione'),t('meal.pranzo'),t('meal.spuntino.pre'),t('meal.cena'),t('meal.spuntino.post')],
+  };
+  return map[n]||map[3];
+}
 function generatePersonalizedPlan(prof, prefs, macros){
   const w    =parseFloat(prof.weight)||80;
   const goal =prof.goal||'maintain';
@@ -4746,13 +4839,7 @@ function generatePersonalizedPlan(prof, prefs, macros){
   const secondaryCarb=carbsList[1]||primaryCarb;
 
   /* Nomi pasti per numero scelto */
-  const mealNames={
-    2:['Pranzo','Cena'],
-    3:['Colazione','Pranzo','Cena'],
-    4:['Colazione','Pranzo','Spuntino','Cena'],
-    5:['Colazione','Pranzo','Spuntino Pre','Cena','Spuntino Post'],
-  };
-  const mNames=mealNames[mealsN]||mealNames[3];
+  const mNames=getLocalMealNames(mealsN);
 
   /* ── DISTRIBUZIONE KCAL per pasto (TEF-aware) ──
      Colazione: 20-25% — proteine elevate stabilizzano glicemia
@@ -5406,7 +5493,7 @@ function runCalcAndGenerate(){
   hap('medium');
   const _genBtn=document.querySelector('button[onclick="runCalcAndGenerate()"]');
   const _genBtnTxt=_genBtn?.textContent;
-  if(_genBtn){_genBtn.disabled=true;_genBtn.textContent='⟳ Generazione...';}
+  if(_genBtn){_genBtn.disabled=true;_genBtn.textContent=t('onb.btn.generating');}
   prefState.extraFoods=document.getElementById('f-extra-foods').value||'';
   prefState.intolerances=document.getElementById('f-intolerances').value||'';
 
