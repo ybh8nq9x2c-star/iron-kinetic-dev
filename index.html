@@ -235,6 +235,10 @@ body.onboarding-active #onb-screen{
 .streak-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);padding:6px 10px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.06em;color:#f97316;margin-top:8px;}
 .streak-badge .fire{font-size:12px;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}.rfon{animation:none;}.bar-fill,.result-card{transition:none;}}
+/* ── Trend blur overlay ── */
+#scr-prog{position:relative;}
+#scr-prog-blur-overlay{display:none;position:absolute;inset:0;z-index:5;background:rgba(14,14,14,.55);backdrop-filter:blur(8px) saturate(120%);-webkit-backdrop-filter:blur(8px) saturate(120%);border-radius:var(--r);pointer-events:none;}
+#scr-prog-blur-overlay.on{display:block;}
 /* ── Trackers collapsible ── */
 #trackers-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
 #trackers-chevron{transition:transform .25s ease;color:var(--muted);font-size:18px;}
@@ -1083,7 +1087,50 @@ body.onboarding-active #onb-screen{
         <p class="sec-label" style="margin-bottom:10px;">Il Tuo Piano — Anteprima</p>
         <div id="plan-preview-content"></div>
       </div>
-      <button class="btn btn-primary w100 sn" style="margin-top:14px;" onclick="activateGeneratedPlan()">✅ Attiva questo piano</button>
+
+      <!-- Freemium paywall choice (shown after plan generation) -->
+      <div id="onb-paywall-choice" style="display:none;margin-top:16px;">
+        <!-- Blurred Trend preview card -->
+        <div style="background:rgba(77,220,198,.04);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);padding:14px;margin-bottom:14px;position:relative;overflow:hidden;">
+          <div style="filter:blur(6px);opacity:.4;pointer-events:none;margin-bottom:8px;">
+            <div style="height:80px;background:linear-gradient(135deg,rgba(77,220,198,.15) 0%,rgba(77,220,198,.04) 100%);border-radius:8px;display:flex;align-items:flex-end;padding:8px;gap:3px;">
+              <div style="flex:1;background:var(--p);border-radius:3px 3px 0 0;height:40%;"></div>
+              <div style="flex:1;background:var(--p);border-radius:3px 3px 0 0;height:60%;"></div>
+              <div style="flex:1;background:var(--p);border-radius:3px 3px 0 0;height:45%;"></div>
+              <div style="flex:1;background:var(--p);border-radius:3px 3px 0 0;height:75%;"></div>
+              <div style="flex:1;background:var(--p);border-radius:3px 3px 0 0;height:55%;"></div>
+              <div style="flex:1;background:var(--p);border-radius:3px 3px 0 0;height:80%;"></div>
+              <div style="flex:1;background:var(--p);border-radius:3px 3px 0 0;height:65%;"></div>
+            </div>
+          </div>
+          <div style="position:absolute;top:14px;left:14px;right:14px;bottom:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
+            <div style="width:36px;height:36px;background:rgba(77,220,198,.12);border:1px solid rgba(77,220,198,.28);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;font-variation-settings:'FILL' 1;">lock</span>
+            </div>
+            <p id="onb-trend-lock-title" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--on);margin:0;text-align:center;">Trend — sblocca l'analisi avanzata</p>
+            <p id="onb-trend-lock-sub" style="font-size:11px;color:var(--muted);margin:0;text-align:center;line-height:1.5;max-width:240px;">Predictive Curve, Metabolic Fingerprint, Weekly Report e molto altro</p>
+          </div>
+        </div>
+        <!-- Feature pills -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;justify-content:center;">
+          <span style="background:rgba(77,220,198,.08);border:1px solid rgba(77,220,198,.18);border-radius:999px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--p);letter-spacing:.06em;">📈 Predictive Curve</span>
+          <span style="background:rgba(77,220,198,.08);border:1px solid rgba(77,220,198,.18);border-radius:999px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--p);letter-spacing:.06em;">🧬 Fingerprint</span>
+          <span style="background:rgba(77,220,198,.08);border:1px solid rgba(77,220,198,.18);border-radius:999px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--p);letter-spacing:.06em;">📊 Weekly Report</span>
+          <span style="background:rgba(77,220,198,.08);border:1px solid rgba(77,220,198,.18);border-radius:999px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--p);letter-spacing:.06em;">🛒 Shopping List</span>
+        </div>
+        <!-- Pricing CTAs -->
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€4,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;">Cancella sempre</span></button>
+          <button onclick="startCheckout('lifetime')" style="flex:1;background:rgba(77,220,198,.08);color:var(--p);border:1px solid rgba(77,220,198,.25);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€49 una volta<br><span style="font-weight:400;font-size:10px;opacity:.7;">🔥 Accesso vita</span></button>
+        </div>
+        <!-- Trial CTA -->
+        <button id="onb-activate-plan-btn" onclick="activatePlanAndContinue()" class="btn btn-ghost w100" style="height:44px;font-size:12px;color:var(--muted);margin-bottom:4px;">
+          <span id="onb-trial-btn-txt">Continua con prova gratuita 7 giorni</span>
+        </button>
+        <p style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;margin:0;">
+          <span id="onb-trial-note">Trend attivo per 7 giorni, poi solo il piano base è gratuito</span>
+        </p>
+      </div>
     </div>
 
   </div>
@@ -1342,6 +1389,19 @@ body.onboarding-active #onb-screen{
 
   <!-- PROGRESSO -->
   <div id="scr-prog" class="scr" style="display:none;">
+    <!-- Blur overlay for trial/expired -->
+    <div id="scr-prog-blur-overlay">
+      <div style="position:sticky;top:var(--page-top);z-index:6;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(14,14,14,.7);border-bottom:1px solid rgba(77,220,198,.2);pointer-events:auto;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="material-symbols-outlined" style="color:var(--p);font-size:18px;font-variation-settings:'FILL' 1;">lock</span>
+          <div>
+            <p id="trend-blur-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0;line-height:1.3;">Prova gratuita attiva</p>
+            <p id="trend-blur-days" style="font-size:10px;color:var(--muted);margin:0;"></p>
+          </div>
+        </div>
+        <button onclick="openPaywall('Trend')" style="background:var(--p);color:#003730;border:none;border-radius:var(--r-pill);height:32px;padding:0 14px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;pointer-events:auto;"><span id="trend-blur-cta">Sblocca</span></button>
+      </div>
+    </div>
     <div id="trend-lock-banner">
       <span style="font-size:13px;color:#ccc;">🔒 Trend scaduto — <button onclick="openPaywall('Trend')" style="background:none;border:none;color:#4ddcc6;font-weight:700;cursor:pointer;font-size:13px;">Sblocca ora</button></span>
     </div>
@@ -1952,6 +2012,7 @@ async function initTrend(){
     const lb=document.getElementById('trend-lock-banner');
     if(lb)lb.style.display=trendAccess.access?'none':'block';
   }
+  applyTrendBlurOverlay();
   if(trendAccess.mode==='trial'&&trendAccess.daysLeft===1)
     setTimeout(()=>showTrialExpiringSoon(),3000);
 }
@@ -2196,6 +2257,16 @@ it:{
   'onb.result.proteine':'Proteine','onb.result.carbs':'Carbs','onb.result.grassi':'Grassi',
   'onb.result.detail':'Dettaglio calcolo','onb.result.preview':'Il Tuo Piano — Anteprima',
   'onb.btn.attiva':'✅ Attiva questo piano',
+  'onb.paywall.lockTitle':'Trend — sblocca l\'analisi avanzata',
+  'onb.paywall.lockSub':'Predictive Curve, Metabolic Fingerprint, Weekly Report e molto altro',
+  'onb.paywall.trial':'Continua con prova gratuita 7 giorni',
+  'onb.paywall.trialNote':'Trend attivo per 7 giorni, poi solo il piano base è gratuito',
+  'trend.blur.trialActive':'Prova gratuita attiva',
+  'trend.blur.lastDay':'Ultimo giorno di prova',
+  'trend.blur.daysLeft':'{n} giorni rimasti',
+  'trend.blur.expired':'Prova scaduta',
+  'trend.blur.expiredSub':'Sblocca Trend per continuare',
+  'trend.blur.cta':'Sblocca',
   'onb.field.sport':'Sport praticato',
   'onb.field.trainTime':'Orario di allenamento',
   'onb.field.trainTime.hint':'⏱ Cruciale per il nutrient timing: i pasti pre/post-workout verranno calibrati su questo orario.',
@@ -2710,6 +2781,16 @@ en:{
   'onb.result.proteine':'Protein','onb.result.carbs':'Carbs','onb.result.grassi':'Fat',
   'onb.result.detail':'Calculation detail','onb.result.preview':'Your Plan — Preview',
   'onb.btn.attiva':'✅ Activate this plan',
+  'onb.paywall.lockTitle':'Trend — unlock advanced analytics',
+  'onb.paywall.lockSub':'Predictive Curve, Metabolic Fingerprint, Weekly Report and more',
+  'onb.paywall.trial':'Continue with 7-day free trial',
+  'onb.paywall.trialNote':'Trend active for 7 days, then only the base plan is free',
+  'trend.blur.trialActive':'Free trial active',
+  'trend.blur.lastDay':'Last day of trial',
+  'trend.blur.daysLeft':'{n} days remaining',
+  'trend.blur.expired':'Trial expired',
+  'trend.blur.expiredSub':'Unlock Trend to continue',
+  'trend.blur.cta':'Unlock',
   'onb.field.sport':'Sport type',
   'onb.field.trainTime':'Training time',
   'onb.field.trainTime.hint':'⏱ Crucial for nutrient timing: pre/post-workout meals will be scheduled around this time.',
@@ -3637,7 +3718,6 @@ function applyTranslations(deferOffscreen){
   document.querySelectorAll('#onb-screen .onb-step .btn-primary').forEach(btn=>{
     const oc=btn.getAttribute('onclick')||'';
     if(oc.includes('runCalcAndGenerate'))btn.textContent=t('onb.btn.genera');
-    else if(oc.includes('activateGeneratedPlan'))btn.textContent=t('onb.btn.attiva');
     else if(btn.id==='to-step3-btn'||oc.includes('goStep'))btn.textContent=t('onb.btn.avanti');
   });
   /* Result card labels */
@@ -5872,6 +5952,16 @@ function runCalcAndGenerate(){
   document.getElementById('plan-preview').style.display='block';
   document.getElementById('result-card').classList.add('on');
 
+  /* Show freemium paywall choice, apply i18n */
+  const _pwEl=document.getElementById('onb-paywall-choice');
+  if(_pwEl){
+    _pwEl.style.display='block';
+    const _lt=document.getElementById('onb-trend-lock-title');if(_lt)_lt.textContent=t('onb.paywall.lockTitle');
+    const _ls=document.getElementById('onb-trend-lock-sub');if(_ls)_ls.textContent=t('onb.paywall.lockSub');
+    const _tb=document.getElementById('onb-trial-btn-txt');if(_tb)_tb.textContent=t('onb.paywall.trial');
+    const _tn=document.getElementById('onb-trial-note');if(_tn)_tn.textContent=t('onb.paywall.trialNote');
+  }
+
   /* Store temporarily */
   window._pendingPlan=plan;
   window._pendingRes=res;
@@ -5909,6 +5999,39 @@ function activateGeneratedPlan(){
   dietData=patched;
   mountApp();
   toast(t('toast.pianoAttivato'));
+}
+
+function activatePlanAndContinue(){
+  hap('medium');
+  /* Start 7-day trial if not already running */
+  if(!localStorage.getItem('ik_trial_start'))localStorage.setItem('ik_trial_start',Date.now().toString());
+  activateGeneratedPlan();
+}
+
+function applyTrendBlurOverlay(){
+  const overlay=document.getElementById('scr-prog-blur-overlay');
+  if(!overlay)return;
+  const titleEl=document.getElementById('trend-blur-title');
+  const daysEl=document.getElementById('trend-blur-days');
+  const ctaEl=document.getElementById('trend-blur-cta');
+  if(trendAccess.mode==='paid'){
+    overlay.classList.remove('on');
+    overlay.style.pointerEvents='none';
+  } else if(trendAccess.mode==='trial'&&trendAccess.access){
+    overlay.classList.add('on');
+    overlay.style.pointerEvents='auto';
+    overlay.style.background='rgba(14,14,14,.55)';
+    if(titleEl)titleEl.textContent=t('trend.blur.trialActive');
+    if(daysEl)daysEl.textContent=trendAccess.daysLeft===1?t('trend.blur.lastDay'):t('trend.blur.daysLeft').replace('{n}',trendAccess.daysLeft);
+    if(ctaEl)ctaEl.textContent=t('trend.blur.cta');
+  } else {
+    overlay.classList.add('on');
+    overlay.style.pointerEvents='auto';
+    overlay.style.background='rgba(14,14,14,.80)';
+    if(titleEl)titleEl.textContent=t('trend.blur.expired');
+    if(daysEl)daysEl.textContent=t('trend.blur.expiredSub');
+    if(ctaEl)ctaEl.textContent=t('trend.blur.cta');
+  }
 }
 
 /* ═══════════════════════════════════════
@@ -7622,7 +7745,7 @@ const TABS=['oggi','prog','set','info'];
 function switchTab(name){
   if(!dietData&&name!=='oggi'&&name!=='info')return;hap();activeTab=name;
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
-  if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';}
+  if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';applyTrendBlurOverlay();}
   if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
   if(name==='set'&&_tabDirty.set){renderSettings();renderKcalRing();_tabDirty.set=false;}
   if(name==='info'){updateConsentUI();}
