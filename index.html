@@ -1873,7 +1873,7 @@ window.onerror=(msg,src,line)=>{
   return false;
 };
 /* ── FIX 1: sanitize helper ── */
-function sanitize(s){if(!s||typeof s!=='string')return '';const d=document.createElement('div');d.textContent=s;return d.innerHTML.replace(/[\r\n\t]+/g,' ').trim();}
+function sanitize(s){if(s==null)return '';const str=String(s);const d=document.createElement('div');d.textContent=str;return d.innerHTML.replace(/[\r\n\t]+/g,' ').trim();}
 /* ═══════════════════════════════════════
    KEYS
 ═══════════════════════════════════════ */
@@ -6573,13 +6573,9 @@ function renderHistList(){
 function renderChart(data){
   const cv=document.getElementById('wChart');const wrap=document.getElementById('wChart-wrap');const em=document.getElementById('chart-empty');
   if(!cv||!wrap||!em)return;
-  /* CDN guard: if Chart.js not loaded yet (deferred), retry once after load */
+  /* CDN guard: load Chart.js on demand then re-render */
   if(typeof Chart==='undefined'){
-    if(!renderChart._retried){
-      renderChart._retried=true;
-      const s=document.querySelector('script[src*="chart.js"]');
-      if(s)s.addEventListener('load',()=>{renderChart._retried=false;renderChart(data);},{once:true});
-    }
+    lazyLoadChartJs(()=>renderChart(data));
     em.style.display='block';wrap.style.display='none';return;
   }
   const isW=chartMode==='waist';
