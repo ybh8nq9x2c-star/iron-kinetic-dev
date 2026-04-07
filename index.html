@@ -2026,10 +2026,8 @@ function showTrialExpiringSoon(){
 /* ── Google OAuth ── */
 async function signInWithGoogle(){
   if(!sb){showToast('Auth non configurata');return;}
-  const{error}=await sb.auth.signInWithOAuth({
-    provider:'google',
-    options:{redirectTo:window.location.origin+window.location.pathname}
-  });
+  /* No explicit redirectTo — Supabase uses Site URL configured in dashboard */
+  const{error}=await sb.auth.signInWithOAuth({provider:'google'});
   if(error)showToast(error.message);
 }
 async function signInWithGoogleFromOnboarding(){
