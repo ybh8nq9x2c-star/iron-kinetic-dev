@@ -633,7 +633,13 @@ body.onboarding-active #onb-screen{
 .coach-ico-warning{background:rgba(255,159,10,.12);color:var(--orange);}
 .coach-ico-danger{background:rgba(255,59,48,.12);color:var(--red);}
 .coach-ico-info{background:rgba(10,132,255,.12);color:var(--blue);}
+.pw-feat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;font-size:12px;color:#ccc;font-weight:500;}
+#paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9999;align-items:flex-end;justify-content:center;}
+#paywall-sheet{background:#1c1b19;border-radius:20px 20px 0 0;padding:32px 24px 48px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
+#trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.stripe.com/v3/"></script>
 </head>
 <body class="onboarding-active">
 <div class="glow-a" aria-hidden="true"></div>
@@ -1316,6 +1322,9 @@ body.onboarding-active #onb-screen{
 
   <!-- PROGRESSO -->
   <div id="scr-prog" class="scr" style="display:none;">
+    <div id="trend-lock-banner">
+      <span style="font-size:13px;color:#ccc;">🔒 Trend scaduto — <button onclick="openPaywall('Trend')" style="background:none;border:none;color:#4ddcc6;font-weight:700;cursor:pointer;font-size:13px;">Sblocca ora</button></span>
+    </div>
     <div class="pg">
       <p class="sec-title" data-i18n="prog.title">Progresso</p>
       <!-- Registra -->
@@ -1863,6 +1872,148 @@ body.onboarding-active #onb-screen{
 
 <script>
 'use strict';
+
+/* ══════════════════════════════════════════════════════
+   TREND FREEMIUM — Supabase + Stripe
+   Replace placeholder values before deploying.
+══════════════════════════════════════════════════════ */
+const SUPABASE_URL='YOUR_SUPABASE_URL';
+const SUPABASE_KEY='YOUR_SUPABASE_ANON_KEY';
+const TRIAL_DAYS=7;
+const STRIPE_MONTHLY='price_MONTHLY_ID';
+const STRIPE_LIFETIME='price_LIFETIME_ID';
+const STRIPE_PK='pk_live_YOUR_KEY';
+
+/* Supabase client — graceful no-op if CDN blocked */
+const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}catch{return null;}})();
+
+/* Global trend access state — optimistic default so first paint shows features */
+let trendAccess={access:true,mode:'trial',daysLeft:TRIAL_DAYS};
+
+/* Sync check for anonymous users (no network needed) */
+function _checkTrendLocal(){
+  const stored=localStorage.getItem('ik_trial_start');
+  if(!stored){localStorage.setItem('ik_trial_start',String(Date.now()));return{access:true,mode:'trial',daysLeft:TRIAL_DAYS};}
+  const elapsed=(Date.now()-parseInt(stored,10))/86400000;
+  const left=Math.max(0,TRIAL_DAYS-elapsed);
+  return{access:left>0,mode:'trial',daysLeft:Math.ceil(left)};
+}
+
+async function getUser(){
+  if(!sb)return null;
+  try{const{data:{user}}=await sb.auth.getUser();return user;}catch{return null;}
+}
+
+async function checkTrendAccess(){
+  const user=await getUser();
+  if(!user)return _checkTrendLocal();
+  /* Paid-user override via localStorage (set on Stripe success return) */
+  if(localStorage.getItem('ik_trend_active')==='1')return{access:true,mode:'paid'};
+  try{
+    const{data}=await sb.from('users').select('trend_active,trial_end').eq('id',user.id).single();
+    if(data?.trend_active)return{access:true,mode:'paid'};
+    if(data?.trial_end&&new Date(data.trial_end)>new Date()){
+      const left=Math.ceil((new Date(data.trial_end)-new Date())/86400000);
+      return{access:true,mode:'trial',daysLeft:left};
+    }
+  }catch{}
+  return{access:false,mode:'expired'};
+}
+
+async function initTrend(){
+  /* Synchronous local check first so UI is correct before network */
+  trendAccess=_checkTrendLocal();
+  updateTrendBadge();
+  /* Then async Supabase check (refines if logged in) */
+  const remote=await checkTrendAccess();
+  if(JSON.stringify(remote)!==JSON.stringify(trendAccess)){
+    trendAccess=remote;
+    updateTrendBadge();
+    const lb=document.getElementById('trend-lock-banner');
+    if(lb)lb.style.display=trendAccess.access?'none':'block';
+  }
+  if(trendAccess.mode==='trial'&&trendAccess.daysLeft===1)
+    setTimeout(()=>showTrialExpiringSoon(),3000);
+}
+
+function updateTrendBadge(){
+  const badge=document.getElementById('trend-access-badge');
+  if(!badge)return;
+  if(trendAccess.mode==='paid'){badge.textContent='✦ TREND';badge.style.color='#4ddcc6';}
+  else if(trendAccess.mode==='trial'){badge.textContent=`⏱ ${trendAccess.daysLeft}gg`;badge.style.color='#f5a623';}
+  else{badge.textContent='🔒 TREND';badge.style.color='#666';}
+}
+
+/* Gate wrapper — user-triggered actions open paywall; auto-renders just skip */
+function requireTrend(fn,featureName='',autoRender=false){
+  if(trendAccess.access){fn();return;}
+  if(!autoRender)openPaywall(featureName);
+}
+
+function openPaywall(featureName=''){
+  const overlay=document.getElementById('paywall-overlay');
+  const sheet=document.getElementById('paywall-sheet');
+  const badge=document.getElementById('pw-trial-badge');
+  const daysEl=document.getElementById('pw-days-left');
+  if(!overlay)return;
+  overlay.style.display='flex';
+  if(trendAccess.mode==='trial'&&trendAccess.daysLeft>0){
+    badge.style.display='block';
+    daysEl.textContent=String(trendAccess.daysLeft);
+  }else{badge.style.display='none';}
+  requestAnimationFrame(()=>{sheet.style.transform='translateY(0)';});
+  document.body.style.overflow='hidden';
+}
+
+function closePaywall(){
+  const sheet=document.getElementById('paywall-sheet');
+  if(sheet)sheet.style.transform='translateY(100%)';
+  setTimeout(()=>{
+    const o=document.getElementById('paywall-overlay');
+    if(o)o.style.display='none';
+    document.body.style.overflow='';
+  },350);
+}
+
+async function startCheckout(plan){
+  if(typeof Stripe==='undefined'){showToast('Stripe non disponibile');return;}
+  const stripe=Stripe(STRIPE_PK);
+  const priceId=plan==='lifetime'?STRIPE_LIFETIME:STRIPE_MONTHLY;
+  const user=await getUser();
+  const{error}=await stripe.redirectToCheckout({
+    lineItems:[{price:priceId,quantity:1}],
+    mode:plan==='lifetime'?'payment':'subscription',
+    successUrl:window.location.origin+window.location.pathname+'?trend=success',
+    cancelUrl:window.location.href,
+    customerEmail:user?.email||undefined,
+  });
+  if(error)showToast(error.message);
+}
+
+async function openAuthModal(){
+  const email=prompt(_lang==='it'?'Inserisci la tua email per accedere:':'Enter your email to sign in:');
+  if(!email||!email.includes('@'))return;
+  if(!sb){showToast('Auth non configurata');return;}
+  const{error}=await sb.auth.signInWithOtp({email});
+  if(error)showToast(error.message);
+  else showToast('✉️ Link di accesso inviato a '+email);
+}
+
+function showTrialExpiringSoon(){
+  showToast('⏱ Ultimo giorno di prova — sblocca Trend per continuare',5000);
+}
+
+/* Handle Stripe success redirect */
+(()=>{
+  if(new URLSearchParams(location.search).get('trend')==='success'){
+    localStorage.setItem('ik_trend_active','1');
+    trendAccess={access:true,mode:'paid'};
+    history.replaceState({},'',location.pathname);
+    /* Toast shown after app mounts */
+    window._trendActivatedMsg=true;
+  }
+})();
+
 /* ── FIX 5: global error handler ── */
 window.addEventListener('unhandledrejection',e=>{
   console.error('Unhandled:',e.reason);
@@ -3721,19 +3872,21 @@ function getProgressiveProRate(base,goal,startMs){if(goal!=='cut_extreme'&&goal!
 
 /* ── Feature 1: Adaptive Macro Engine ── */
 function runAdaptiveEngine(){
-  if(lsR(SK_ADAPTIVE)===toISO())return;
-  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
-  if(arr.length<3)return;
-  const recent=arr.slice(0,5);
-  const avgE=avg(recent.map(c=>+(c.energy||5)));
-  const avgH=avg(recent.map(c=>+(c.hunger||5)));
-  const avgA=avg(recent.map(c=>+(c.adherence||5)));
-  let rule=null;
-  if(avgE<5){rule={key:'adaptive.rule.lowEnergy',delta:100};}
-  else if(avgE>=7&&avgH<=4&&avgA>=8){rule={key:'adaptive.rule.canIntensify',delta:-100};}
-  else if(detectStall()&&avgA>=7){rule={key:'adaptive.rule.stallingRefeed',delta:200};}
-  else if(avgH>7&&avgA<6){rule={key:'adaptive.rule.hungerAdher',delta:150};}
-  if(rule)showAdaptiveBanner(rule);
+  requireTrend(()=>{
+    if(lsR(SK_ADAPTIVE)===toISO())return;
+    let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
+    if(arr.length<3)return;
+    const recent=arr.slice(0,5);
+    const avgE=avg(recent.map(c=>+(c.energy||5)));
+    const avgH=avg(recent.map(c=>+(c.hunger||5)));
+    const avgA=avg(recent.map(c=>+(c.adherence||5)));
+    let rule=null;
+    if(avgE<5){rule={key:'adaptive.rule.lowEnergy',delta:100};}
+    else if(avgE>=7&&avgH<=4&&avgA>=8){rule={key:'adaptive.rule.canIntensify',delta:-100};}
+    else if(detectStall()&&avgA>=7){rule={key:'adaptive.rule.stallingRefeed',delta:200};}
+    else if(avgH>7&&avgA<6){rule={key:'adaptive.rule.hungerAdher',delta:150};}
+    if(rule)showAdaptiveBanner(rule);
+  },'Adaptive Engine',true);
 }
 function showAdaptiveBanner(rule){
   const banner=document.getElementById('adaptive-banner');
@@ -3745,14 +3898,16 @@ function showAdaptiveBanner(rule){
   banner.style.display='block';
 }
 function applyAdaptiveSuggestion(){
-  const banner=document.getElementById('adaptive-banner');
-  if(!banner||!banner._rule)return;
-  const units=Math.round(banner._rule.delta/100);
-  lsS(SK.mod,String(getMod()+units));
-  banner.style.display='none';
-  lsS(SK_ADAPTIVE,toISO());
-  renderMacros();renderMeals();renderKcalRing();
-  toast(t('adaptive.toast.applied',{delta:banner._rule.delta>0?'+'+banner._rule.delta:banner._rule.delta}));
+  requireTrend(()=>{
+    const banner=document.getElementById('adaptive-banner');
+    if(!banner||!banner._rule)return;
+    const units=Math.round(banner._rule.delta/100);
+    lsS(SK.mod,String(getMod()+units));
+    banner.style.display='none';
+    lsS(SK_ADAPTIVE,toISO());
+    renderMacros();renderMeals();renderKcalRing();
+    toast(t('adaptive.toast.applied',{delta:banner._rule.delta>0?'+'+banner._rule.delta:banner._rule.delta}));
+  },'Adaptive Engine');
 }
 function dismissAdaptive(){
   const banner=document.getElementById('adaptive-banner');
@@ -3907,6 +4062,7 @@ function calcMetabolicFingerprint(){
   return{efficiency,adaptation,responseDays,avgWeekly};
 }
 function renderFingerprint(){
+  requireTrend(()=>{
   const card=document.getElementById('fingerprint-card');
   const cont=document.getElementById('fingerprint-content');
   if(!card||!cont)return;
@@ -3931,6 +4087,7 @@ function renderFingerprint(){
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.avgWeekly}kg/w</p>
       <p class="muted sn" style="font-size:10px;margin-top:2px;">${t('fp.mediaSettimanaleFP')}</p></div>
   </div>`;
+  },'Metabolic Fingerprint',true);
 }
 
 /* ── FIX6: Metabolic Fingerprint tooltips ── */
@@ -3985,6 +4142,7 @@ function calcPredictiveCurve(){
   return{points,slope,lastWeight};
 }
 function renderPredictionChart(){
+  requireTrend(()=>{
   const cv=document.getElementById('wChart');const wrap=document.getElementById('wChart-wrap');const em=document.getElementById('chart-empty');
   const predTxt=document.getElementById('prediction-text');
   const predSum=document.getElementById('prediction-summary');
@@ -4029,6 +4187,7 @@ function renderPredictionChart(){
       });
     }));
   });
+  },'Predictive Curve');
 }
 
 function renderRealTDEE(){
@@ -4110,6 +4269,7 @@ function generateReportInsight(rep){
   return parts.join(' ')||t('weekly.insight.default');
 }
 function renderWeeklyReport(){
+  requireTrend(()=>{
   const card=document.getElementById('weekly-report-card');
   const cont=document.getElementById('weekly-report-content');
   if(!card||!cont)return;
@@ -4133,6 +4293,7 @@ function renderWeeklyReport(){
       <span class="t-xxs muted sn">${t('weekly.report.label.pasti')}</span></div>
   </div>
   <p class="sn" style="font-size:12px;color:var(--muted);line-height:1.55;">${sanitize(insight)}</p>`;
+  },'Weekly Report',true);
 }
 function shareWeeklyReport(){
   hap();
@@ -6089,7 +6250,7 @@ function renderMeals(){
     const carbLabel=meal.carbSource?(localizeFoodLabel(FOOD_DB[meal.carbSource]?.label||meal.carbSource)):'';
     const badge=(diff!==0&&meal.carbSource)?`<span class="mod-badge">${diff>0?'+':''}${diff}g ${sanitize(carbLabel)}</span>`:'';
     const carbLine=(fa!==null&&!isHardcodedMeal)?`<strong style="color:var(--on);">${fa}g ${sanitize(carbLabel)}</strong>, `:'';
-    const circBadge=getCircadianTips(n,mealIdx,mNames.length);
+    const circBadge=trendAccess.access?getCircadianTips(n,mealIdx,mNames.length):'';
     const synergy=!checked?calcSynergyScore(meal.rest):null;
     const synBadge=synergy?`<span style="font-size:11px;margin-left:3px;" title="${sanitize(synergy.label)}">${synergy.emoji}</span>`:'';
     const _satFood=meal._meta?.protein&&FOOD_DB[meal._meta.protein]?.satiety>=2.5?meal._meta.protein:meal._meta?.carb&&FOOD_DB[meal._meta.carb]?.satiety>=2.5?meal._meta.carb:null;
@@ -6284,12 +6445,15 @@ function renderRefeed(){
     if(on)b.classList.add('rfon');else b.classList.remove('rfon');
   });
 }
-function toggleRefeed(){_macroCache=null;
-  hap('medium');
-  if(isRefeed())try{localStorage.removeItem(SK.refeed);}catch{}
-  else lsW(SK.refeed,toISO());
-  renderRefeed();renderMacros();renderCoach();renderMeals();
-  toast(t(isRefeed()?'toast.refeedOn':'toast.refeedOff'));
+function toggleRefeed(){
+  requireTrend(()=>{
+    _macroCache=null;
+    hap('medium');
+    if(isRefeed())try{localStorage.removeItem(SK.refeed);}catch{}
+    else lsW(SK.refeed,toISO());
+    renderRefeed();renderMacros();renderCoach();renderMeals();
+    toast(t(isRefeed()?'toast.refeedOn':'toast.refeedOff'));
+  },'Refeed AI');
 }
 
 /* ═══════════════════════════════════════
@@ -6759,6 +6923,7 @@ function validateSchema(obj){
    MEAL SUBSTITUTIONS & SHOPPING LIST
 ═══════════════════════════════════════ */
 function swapMealComponent(dayNum, mealName, component){
+  requireTrend(()=>{
   if(!dietData||!dietData.days)return;
   const day=dietData.days.find(d=>d.d===dayNum);
   if(!day||!day[mealName])return;
@@ -6842,9 +7007,11 @@ function swapMealComponent(dayNum, mealName, component){
   lsS(SK.diet,dietData);
   scheduleRender(renderMeals);renderMacros();
   toast(`${localizedMealName(mealName)}: ${t(component==='protein'?'meal.comp.protein':component==='carb'?'meal.comp.carb':'meal.comp.fat')} → ${localizeFoodLabel(FOOD_DB[nextFood]?.label||nextFood)}`);
+  },'Meal Swap');
 }
 
 function regenSingleMeal(dayNum,mealName){
+  requireTrend(()=>{
   if(!dietData||!dietData.days)return;
   const day=dietData.days.find(d=>d.d===dayNum);
   if(!day||!day[mealName])return;
@@ -6925,9 +7092,11 @@ function regenSingleMeal(dayNum,mealName){
   lsS(SK.diet,dietData);
   scheduleRender(renderMeals,renderMacros);
   toast(t('toast.rigenMeal',{meal:localizedMealName(mealName)}));
+  },'Meal Swap');
 }
 
 function openShoppingList(){
+  requireTrend(()=>{
   const shopEl=document.getElementById('shopping-content');
   if(!shopEl)return;
 
@@ -6952,6 +7121,7 @@ function openShoppingList(){
 
   shopEl.innerHTML=html;
   openModal('shopping');
+  },'Shopping List');
 }
 
 function generateShoppingList(){
@@ -7313,6 +7483,7 @@ const TABS=['oggi','prog','set','info'];
 function switchTab(name){
   if(!dietData&&name!=='oggi'&&name!=='info')return;hap();activeTab=name;
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
+  if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';}
   if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
   if(name==='set'&&_tabDirty.set){renderSettings();renderKcalRing();_tabDirty.set=false;}
   if(name==='info'){updateConsentUI();}
@@ -7364,6 +7535,12 @@ function mountApp(){
     requestIdleCallback
       ?requestIdleCallback(()=>{renderSettings?.();buildDaySelector?.();scheduleRender(renderFingerprint,renderWeeklyReport);})
       :setTimeout(()=>{renderSettings?.();buildDaySelector?.();scheduleRender(renderFingerprint,renderWeeklyReport);},80);
+  });
+  /* Init Trend access (async — local check is already done at script load) */
+  initTrend().then(()=>{
+    const lb=document.getElementById('trend-lock-banner');
+    if(lb)lb.style.display=trendAccess.access?'none':'block';
+    if(window._trendActivatedMsg){window._trendActivatedMsg=false;toast('✨ Trend attivato! Benvenuto.');}
   });
 }
 
@@ -8144,6 +8321,32 @@ function _bootAfterLangGate(){
         <button id="confirm-modal-ok" class="btn btn-danger-o w100 sn" style="flex:1"></button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ── PAYWALL OVERLAY ── -->
+<div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic Trend">
+  <div id="paywall-sheet">
+    <button onclick="closePaywall()" aria-label="Chiudi" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;color:#aaa;cursor:pointer;font-size:18px;line-height:1;">×</button>
+    <div id="pw-trial-badge" style="display:none;background:rgba(77,220,198,.12);color:#4ddcc6;font-size:11px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:999px;width:fit-content;margin:0 auto 16px;">⏱ <span id="pw-days-left"></span> GIORNI RIMASTI</div>
+    <div style="width:56px;height:56px;background:rgba(77,220,198,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+      <span class="material-symbols-outlined" style="color:#4ddcc6;font-size:28px;">trending_up</span>
+    </div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:#fff;margin:0 0 8px;">Iron Kinetic Trend</h2>
+    <p style="font-size:13px;color:#888;text-align:center;line-height:1.6;margin:0 0 24px;">Il tuo metabolismo ha dati reali. Sbloccali.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
+      <div class="pw-feat">📈 Predictive Curve</div>
+      <div class="pw-feat">🧬 Metabolic Fingerprint</div>
+      <div class="pw-feat">📊 Weekly Report</div>
+      <div class="pw-feat">🕐 Circadian Timing</div>
+      <div class="pw-feat">🔄 Adaptive Engine</div>
+      <div class="pw-feat">🛒 Shopping List</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:16px;">
+      <button onclick="startCheckout('monthly')" style="flex:1;background:#4ddcc6;color:#000;border:none;border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">€4,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.7;">Cancella sempre</span></button>
+      <button onclick="startCheckout('lifetime')" style="flex:1;background:rgba(77,220,198,.08);color:#4ddcc6;border:1px solid rgba(77,220,198,.25);border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">€49 una volta<br><span style="font-weight:400;font-size:11px;opacity:.7;">🔥 Solo 100 posti</span></button>
+    </div>
+    <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:#888;font-size:12px;cursor:pointer;padding:8px;">Hai già un account? <span style="color:#4ddcc6;">Accedi</span></button>
   </div>
 </div>
 
