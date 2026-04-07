@@ -514,6 +514,17 @@ body.onboarding-active #onb-screen{
 .prv-right-ico{font-size:18px;margin-bottom:4px;display:block;}
 .prv-right-label{font-size:10px;font-weight:700;color:var(--on);letter-spacing:.02em;display:block;margin-bottom:2px;}
 .prv-right-desc{font-size:10px;color:var(--muted);font-weight:500;line-height:1.4;}
+.prv-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:11px;}
+.prv-table th{background:var(--s2);color:var(--p);font-weight:700;text-align:left;padding:7px 8px;border:1px solid var(--line);letter-spacing:.05em;font-size:10px;text-transform:uppercase;}
+.prv-table td{padding:7px 8px;border:1px solid var(--line);color:var(--muted);vertical-align:top;line-height:1.5;}
+.prv-table td strong{color:var(--on);font-weight:700;}
+.prv-table tr:nth-child(even) td{background:rgba(255,255,255,.015);}
+.prv-processor{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+.prv-proc-item{background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 12px;}
+.prv-proc-name{font-size:12px;font-weight:700;color:var(--on);margin-bottom:3px;}
+.prv-proc-role{font-size:11px;color:var(--muted);line-height:1.5;}
+.prv-proc-note{font-size:10px;color:var(--dim);margin-top:4px;}
+.prv-proc-link{font-size:10px;color:var(--p);text-decoration:none;}
 
 /* Help content styles */
 .faq-item{
@@ -751,15 +762,15 @@ body.onboarding-active #onb-screen{
     <div style="background:rgba(77,220,198,.06);border:1px solid rgba(77,220,198,.16);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;">
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">smartphone</span>
-        <div><p id="gdpr-p1-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Data stays on your device</p><p id="gdpr-p1-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Weight, measurements and meal plan stay in your local browser (localStorage). No data sent to external servers.</p></div>
+        <div><p id="gdpr-p1-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Dati sanitari — Art. 9 GDPR</p><p id="gdpr-p1-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Peso, misure e grasso corporeo sono dati relativi alla salute. Elaborati esclusivamente per il piano nutrizionale, con tuo esplicito consenso. Utenti anonimi: localStorage. Utenti con account: stato su Supabase (EU).</p></div>
       </div>
       <div class="row g3">
-        <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">healing</span>
-        <div><p id="gdpr-p2-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Health data — GDPR Art. 9</p><p id="gdpr-p2-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Weight and body fat are health-related data. Processing occurs <em>exclusively</em> to provide the service you requested, with your explicit consent.</p></div>
+        <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">account_circle</span>
+        <div><p id="gdpr-p2-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Login Google — dati raccolti</p><p id="gdpr-p2-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Il login tramite Google trasmette a Iron Kinetic nome, email e avatar. Nessun dato sanitario condiviso con Google.</p></div>
       </div>
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">block</span>
-        <div><p id="gdpr-p3-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Zero third-party cookies</p><p id="gdpr-p3-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">No tracking, analytics or advertising cookies. No sharing with third parties.</p></div>
+        <div><p id="gdpr-p3-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Zero cookie di tracking · Stripe per pagamenti</p><p id="gdpr-p3-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Nessun cookie di profilazione, analytics o advertising. Pagamenti Trend gestiti da Stripe — nessun dato sanitario condiviso.</p></div>
       </div>
     </div>
 
@@ -2250,12 +2261,12 @@ it:{
   'info.disclaimer.title':'⚕️ Avviso medico importante',
   'info.disclaimer.text':'Iron Kinetic è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
   'gdpr.title':'Privacy & Consenso','gdpr.sub':'Prima di iniziare, ti informiamo su come trattiamo i tuoi dati.',
-  'gdpr.p1.title':'Dati solo sul tuo dispositivo',
-  'gdpr.p1.sub':'Peso, misure e piano alimentare rimangono nel tuo browser locale (localStorage). Nessun dato inviato a server esterni.',
-  'gdpr.p2.title':'Dati sanitari (art. 9 GDPR)',
-  'gdpr.p2.sub':'Peso e grasso corporeo sono dati relativi alla salute. Il trattamento avviene <em>esclusivamente</em> per fornirti il servizio richiesto, con tuo esplicito consenso.',
-  'gdpr.p3.title':'Zero cookie di terze parti',
-  'gdpr.p3.sub':'Nessun cookie di tracking, analytics o advertising. Nessuna condivisione con terzi.',
+  'gdpr.p1.title':'Dati sanitari — Art. 9 GDPR',
+  'gdpr.p1.sub':'Peso, misure e grasso corporeo sono <em>dati relativi alla salute</em>. Elaborati <em>esclusivamente</em> per calcolare il tuo piano nutrizionale, con tuo esplicito consenso. Utenti anonimi: tutto in localStorage. Utenti con account: stato abbonamento su Supabase (EU).',
+  'gdpr.p2.title':'Login Google — dati raccolti',
+  'gdpr.p2.sub':'Il login tramite Google trasmette a Iron Kinetic nome, email e avatar. Questi dati sono conservati su Supabase esclusivamente per gestire l\'account. Nessun dato sanitario viene condiviso con Google.',
+  'gdpr.p3.title':'Zero cookie di tracking · Stripe per pagamenti',
+  'gdpr.p3.sub':'Nessun cookie di profilazione, analytics o advertising. I pagamenti Trend sono gestiti da Stripe — nessun dato sanitario viene condiviso con Stripe.',
   'gdpr.btn.accetta':'✓ Accetta e Continua','gdpr.btn.leggi':'Leggi l\'Informativa Privacy completa',
   'gdpr.footer':'Cliccando <strong style="color:var(--on)">Accetta e Continua</strong> acconsenti al trattamento dei dati come descritto nell\'<button onclick="openModal(\'privacy\')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:\'Manrope\',sans-serif;">Informativa Privacy</button>.<br>Puoi revocare il consenso in qualsiasi momento da <em>Profilo → Privacy</em>.',
   'pwa.title':'Aggiungi alla Schermata Home',
@@ -2554,45 +2565,43 @@ it:{
   'faq.a.8':'Sì. Iron Kinetic è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un\'app nativa, anche offline.',
   'faq.q.9':'I miei dati vengono inviati da qualche parte?',
   'faq.a.9':'No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server, account o sincronizzazione cloud. L\'unica eccezione sono le richieste di font e icone a Google (Google Fonts/Material Symbols) che non trasmettono i tuoi dati personali.',
-  'prv.badge':'Aggiornata: Gennaio 2025 · Conforme GDPR (Reg. UE 2016/679)',
-  'prv.s0.h':'📱 In sintesi: i tuoi dati restano sul tuo dispositivo',
-  'prv.s0.p':'Iron Kinetic è un\'app offline-first. Tutti i tuoi dati (peso, misure, piano alimentare, check-in) vengono salvati <strong>esclusivamente nel localStorage del tuo browser</strong>. Non esistono account utente, non esistono server dove vengono inviati i tuoi dati, non viene effettuato nessun tracking.',
+  'prv.badge':'Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003',
+  'prv.s0.h':'🛡 In sintesi',
+  'prv.s0.p':'Iron Kinetic raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.',
   'prv.s1.h':'1. Titolare del trattamento',
-  'prv.s1.p':'<strong>Iron Kinetic</strong><br>Email: privacy&#64;ironkinetic.app<br>Per qualsiasi richiesta relativa ai tuoi dati, contattaci all\'indirizzo sopra indicato.',
-  'prv.s2.h':'2. Dati trattati e finalità',
-  'prv.s2.p':'L\'app tratta, <em>localmente sul tuo dispositivo</em>, le seguenti categorie di dati:',
-  'prv.s2.li':'<li><strong>Dati anagrafici e fisici</strong> (età, altezza, peso, sesso biologico, grasso corporeo): necessari per il calcolo del TDEE e dei macronutrienti personalizzati.</li><li><strong>Dati relativi alla salute</strong> ex art. 9 GDPR (peso corporeo, percentuale di grasso, girovita): trattati sulla base del tuo consenso esplicito, esclusivamente per fornirti il servizio di coaching nutrizionale.</li><li><strong>Dati sulle abitudini alimentari</strong> (preferenze alimentari, intolleranze, numero di pasti): utilizzati per generare il piano nutrizionale personalizzato.</li><li><strong>Dati di attività quotidiana</strong> (passi, workout): utilizzati per il coaching giornaliero.</li><li><strong>Check-in giornalieri</strong> (fame, energia, aderenza, digestione): utilizzati per l\'analisi dei trend e i suggerimenti contestuali.</li>',
-  'prv.s3.h':'3. Base giuridica del trattamento',
-  'prv.s3.p1':'Il trattamento dei dati ordinari è basato sul <strong>contratto</strong> (art. 6 par. 1 lett. b GDPR): i dati sono necessari per erogare il servizio richiesto.',
-  'prv.s3.p2':'Il trattamento dei <strong>dati relativi alla salute</strong> (art. 9 GDPR) è basato sul <strong>tuo consenso esplicito</strong> (art. 9 par. 2 lett. a GDPR), prestato al primo avvio dell\'app e sempre revocabile.',
-  'prv.s4.h':'4. Archiviazione e sicurezza',
-  'prv.s4.p1':'<strong>Nessun dato viene trasmesso a server esterni.</strong> Tutti i dati sono conservati nel localStorage del tuo dispositivo tramite l\'API Web Storage standard.',
-  'prv.s4.p2':'La sicurezza dei dati dipende dalla protezione del tuo dispositivo (codice di sblocco, cifratura). Ti consigliamo di:',
-  'prv.s4.li':'<li>Mantenere il dispositivo protetto da accessi non autorizzati.</li><li>Usare la funzione <em>Esporta Backup</em> per conservare una copia sicura dei tuoi dati.</li><li>Non utilizzare l\'app su dispositivi condivisi senza cancellare i dati dopo l\'uso.</li>',
-  'prv.s5.h':'5. Conservazione dei dati',
-  'prv.s5.p':'I dati rimangono sul tuo dispositivo finché non li elimini tu. Puoi cancellare tutti i tuoi dati in qualsiasi momento tramite <em>Profilo → Ricomincia da capo</em> oppure svuotando i dati del sito nelle impostazioni del tuo browser.',
-  'prv.s6.h':'6. Condivisione con terze parti',
-  'prv.s6.p1':'I tuoi dati personali <strong>non vengono condivisi con nessuna terza parte</strong>.',
-  'prv.s6.p2':'L\'app utilizza le seguenti risorse esterne, senza trasmissione di dati personali:',
-  'prv.s6.li':'<li><strong>Google Fonts</strong> (fonts.googleapis.com): caricamento dei font Space Grotesk e Manrope. Google potrebbe registrare l\'indirizzo IP richiedente.</li><li><strong>Chart.js via jsDelivr</strong> (cdn.jsdelivr.net): libreria grafica. Nessun dato personale trasmesso.</li><li><strong>Material Symbols</strong> (Google): icone vettoriali. Stesse condizioni di Google Fonts.</li>',
-  'prv.s7.h':'7. Trasferimento verso paesi terzi',
-  'prv.s7.p':'I dati personali conservati localmente non sono soggetti a trasferimento verso paesi terzi. Le richieste verso Google Fonts potrebbero coinvolgere server al di fuori dello Spazio Economico Europeo; tali trasferimenti sono regolati dalle Clausole Contrattuali Standard della Commissione UE.',
-  'prv.s8.h':'8. I tuoi diritti (artt. 15–22 GDPR)',
-  'prv.s8.r0.ico':'👁','prv.s8.r0.lbl':'Accesso','prv.s8.r0.desc':'Puoi vedere tutti i tuoi dati direttamente nell\'app (sezione Profilo).',
-  'prv.s8.r1.ico':'✏️','prv.s8.r1.lbl':'Rettifica','prv.s8.r1.desc':'Puoi modificare i tuoi dati in qualsiasi momento dall\'app.',
-  'prv.s8.r2.ico':'🗑','prv.s8.r2.lbl':'Cancellazione','prv.s8.r2.desc':'Usa "Ricomincia da capo" per cancellare tutti i dati.',
-  'prv.s8.r3.ico':'📦','prv.s8.r3.lbl':'Portabilità','prv.s8.r3.desc':'Esporta i tuoi dati in formato JSON leggibile.',
-  'prv.s8.r4.ico':'🚫','prv.s8.r4.lbl':'Revoca consenso','prv.s8.r4.desc':'Revoca consenso da Profilo → Privacy.',
-  'prv.s8.r5.ico':'⚖️','prv.s8.r5.lbl':'Reclamo','prv.s8.r5.desc':'Puoi proporre reclamo al Garante Privacy italiano (gpdp.it).',
-  'prv.s9.h':'9. Cookie e tecnologie di tracciamento',
-  'prv.s9.p':'<strong>Iron Kinetic non utilizza cookie.</strong> I dati sono conservati tramite Web Storage API (localStorage), che non è soggetta alla Direttiva Cookie 2002/58/CE ma rientra nel perimetro del GDPR per i dati personali in essa contenuti.',
-  'prv.s10.h':'10. Avviso per i minori',
-  'prv.s10.p':'Il servizio è destinato a persone di età non inferiore a 16 anni. L\'app non raccoglie consapevolmente dati di minori di 16 anni. Se sei un genitore e ritieni che tuo figlio abbia utilizzato il servizio, contattaci per la cancellazione dei dati.',
-  'prv.s11.h':'11. Modifiche alla presente informativa',
-  'prv.s11.p':'Eventuali modifiche saranno comunicate tramite aggiornamento dell\'app. La data di ultimo aggiornamento è indicata in cima a questo documento.',
-  'prv.contact.h':'Contatti e reclami',
-  'prv.contact.p1':'Per esercitare i tuoi diritti o per qualsiasi domanda: <strong>privacy&#64;ironkinetic.app</strong>',
-  'prv.contact.p2':'Autorità di controllo: <strong>Garante per la protezione dei dati personali</strong><br>Piazza Venezia 11 — 00187 Roma · <a href="https://gpdp.it" style="color:var(--p);">gpdp.it</a>',
+  'prv.s1.name':'[iron kinetic tm]',
+  'prv.s1.addr':'[strada di caprile 30]',
+  'prv.s1.email':'[pisicollo@gmail.com]',
+  'prv.s1.country':'Italia',
+  'prv.s2.h':'2. Dati raccolti e finalità',
+  'prv.s2.p':'La seguente tabella descrive ogni categoria di dato trattato, la finalità, la base giuridica e il periodo di conservazione.',
+  'prv.s3.h':'3. Dati sanitari — Art. 9 GDPR',
+  'prv.s3.p1':'Peso corporeo, percentuale di grasso corporeo e misure corporee (girovita) costituiscono dati relativi alla salute ai sensi dell\'art. 9 GDPR.',
+  'prv.s3.p2':'Base giuridica: consenso esplicito (art. 9 par. 2 lett. a GDPR), prestato al primo avvio e sempre revocabile da Profilo → Privacy. Questi dati sono elaborati esclusivamente nel localStorage o, per utenti registrati, su Supabase con crittografia in transito (TLS). Non sono mai condivisi con Stripe, Google Analytics o altri terzi.',
+  'prv.s4.h':'4. Responsabili del trattamento (sub-processor)',
+  'prv.s5.h':'5. Utenti anonimi (senza account)',
+  'prv.s5.p':'Se non crei un account Google, nessun dato lascia il tuo dispositivo. Piano, peso, check-in e preferenze restano nel localStorage. Vengono cancellati svuotando i dati del sito o tramite Profilo → Ricomincia da capo.',
+  'prv.s6.h':'6. Cookie e tracciamento',
+  'prv.s6.p':'Iron Kinetic non utilizza cookie di profilazione. Nessun analytics. Nessun advertising. Nessun pixel di tracciamento. Il solo storage utilizzato è il localStorage del browser (Web Storage API). Gli utenti autenticati ricevono un cookie di sessione tecnico da Supabase, necessario per mantenere il login.',
+  'prv.s7.h':'7. I tuoi diritti (artt. 15–22 GDPR)',
+  'prv.s7.r0.ico':'👁','prv.s7.r0.lbl':'Accesso (Art.15)','prv.s7.r0.desc':'Richiedi copia dei dati che ti riguardano scrivendo all\'email del titolare.',
+  'prv.s7.r1.ico':'✏️','prv.s7.r1.lbl':'Rettifica (Art.16)','prv.s7.r1.desc':'Correggi i tuoi dati in qualsiasi momento dall\'app.',
+  'prv.s7.r2.ico':'🗑','prv.s7.r2.lbl':'Cancellazione (Art.17)','prv.s7.r2.desc':'Usa "Ricomincia da capo" o scrivi per cancellare account e dati.',
+  'prv.s7.r3.ico':'⏸','prv.s7.r3.lbl':'Limitazione (Art.18)','prv.s7.r3.desc':'Chiedi sospensione del trattamento scrivendo all\'email del titolare.',
+  'prv.s7.r4.ico':'📦','prv.s7.r4.lbl':'Portabilità (Art.20)','prv.s7.r4.desc':'Esporta i tuoi dati in formato JSON leggibile tramite l\'app.',
+  'prv.s7.r5.ico':'🚫','prv.s7.r5.lbl':'Opposizione (Art.21)','prv.s7.r5.desc':'Opponiti al trattamento scrivendo all\'email del titolare.',
+  'prv.s7.r6.ico':'🔓','prv.s7.r6.lbl':'Revoca consenso (Art.7)','prv.s7.r6.desc':'Revoca da Profilo → Privacy in qualsiasi momento.',
+  'prv.s7.r7.ico':'⚖️','prv.s7.r7.lbl':'Reclamo al Garante','prv.s7.r7.desc':'Proponi reclamo al Garante Privacy (www.garanteprivacy.it).',
+  'prv.s8.h':'8. Età minima',
+  'prv.s8.p':'Il servizio è riservato a utenti di età ≥ 16 anni (GDPR art. 8; D.Lgs. 196/2003 mod. D.Lgs. 101/2018). Non raccogliamo consapevolmente dati di minori di 16 anni. Se sei un genitore/tutore e ritieni che un minore abbia usato il servizio, scrivici per la cancellazione immediata dei dati.',
+  'prv.s9.h':'9. Trasferimenti internazionali',
+  'prv.s9.p':'Supabase e Stripe hanno sede negli USA. I trasferimenti sono coperti da Clausole Contrattuali Standard (SCC) della Commissione UE. Google LLC è soggetta alle stesse SCC nell\'ambito del Data Privacy Framework UE–USA.',
+  'prv.s10.h':'10. Modifiche alla presente informativa',
+  'prv.s10.p':'In caso di modifiche sostanziali, gli utenti verranno notificati tramite avviso nell\'app. Data ultimo aggiornamento: Aprile 2026.',
+  'prv.contact.h':'Contatti e Autorità di Controllo',
+  'prv.contact.p1':'Per esercitare i tuoi diritti o per qualsiasi domanda: [pisicollo@gmail.com]',
+  'prv.contact.p2':'Autorità di controllo: Garante per la protezione dei dati personali — Piazza Venezia 11, 00187 Roma',
+  'prv.th.data':'Dato','prv.th.purpose':'Finalità','prv.th.basis':'Base giuridica','prv.th.retention':'Conservazione',
   'help.disclaimer.title':'⚕️ Avviso medico importante',
   'help.disclaimer.text':'Iron Kinetic è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
   'weekly.report.title':'Report Settimanale',
@@ -2767,12 +2776,12 @@ en:{
   'info.disclaimer.title':'⚕️ Medical disclaimer',
   'info.disclaimer.text':'Iron Kinetic is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
   'gdpr.title':'Privacy & Consent','gdpr.sub':'Before you start, here\'s how we handle your data.',
-  'gdpr.p1.title':'Data stays on your device',
-  'gdpr.p1.sub':'Weight, measurements and meal plan are stored locally in your browser (localStorage). No data is sent to external servers.',
-  'gdpr.p2.title':'Health data — GDPR Art. 9',
-  'gdpr.p2.sub':'Weight and body fat are health-related data. Processing happens <em>exclusively</em> to deliver the service you requested, with your explicit consent.',
-  'gdpr.p3.title':'Zero third-party cookies',
-  'gdpr.p3.sub':'No tracking, analytics or advertising cookies. No data sharing with third parties.',
+  'gdpr.p1.title':'Health data — GDPR Art. 9',
+  'gdpr.p1.sub':'Weight, measurements and body fat are <em>health-related data</em>. Processed <em>exclusively</em> to calculate your nutrition plan, with your explicit consent. Anonymous users: everything in localStorage. Account users: subscription state on Supabase (EU).',
+  'gdpr.p2.title':'Google login — data collected',
+  'gdpr.p2.sub':'Signing in with Google shares your name, email and avatar with Iron Kinetic. Stored in Supabase solely for account management. No health data is shared with Google.',
+  'gdpr.p3.title':'Zero tracking cookies · Stripe for payments',
+  'gdpr.p3.sub':'No profiling, analytics or advertising cookies. Trend payments are handled by Stripe — no health data is shared with Stripe.',
   'gdpr.btn.accetta':'✓ Accept & Continue','gdpr.btn.leggi':'Read the full Privacy Policy',
   'gdpr.footer':'By clicking <strong style="color:var(--on)">Accept &amp; Continue</strong> you consent to data processing as described in the <button onclick="openModal(\'privacy\')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:\'Manrope\',sans-serif;">Privacy Policy</button>.<br>You can revoke consent at any time from <em>Profile → Privacy</em>.',
   'pwa.title':'Add to Home Screen',
@@ -3070,45 +3079,43 @@ en:{
   'faq.a.8':'Yes. Iron Kinetic is a Progressive Web App (PWA). On iPhone/iPad: open in Safari → Share → "Add to Home Screen". On Android: open in Chrome → "⋮" menu → "Add to Home Screen". It will work like a native app, even offline.',
   'faq.q.9':'Is my data sent anywhere?',
   'faq.a.9':'No. All data (weight, plan, check-ins, preferences) stays in your device\'s localStorage. There are no servers, accounts or cloud sync. The only exception are font and icon requests to Google (Google Fonts/Material Symbols), which do not transmit your personal data.',
-  'prv.badge':'Updated: January 2025 · GDPR compliant (EU Reg. 2016/679)',
-  'prv.s0.h':'📱 In short: your data stays on your device',
-  'prv.s0.p':'Iron Kinetic is an offline-first app. All your data (weight, measurements, meal plan, check-ins) is saved <strong>exclusively in your browser\'s localStorage</strong>. There are no user accounts, no servers where your data is sent, and no tracking of any kind.',
+  'prv.badge':'Updated: April 2026 · GDPR (EU Reg. 2016/679) · D.Lgs. 196/2003',
+  'prv.s0.h':'🛡 In short',
+  'prv.s0.p':'Iron Kinetic collects only the data strictly necessary to provide the service. Anonymous users keep all data in the browser localStorage. Google-account users sync account state and subscription via Supabase (EU). No health data is ever shared with third parties. Zero tracking cookies.',
   'prv.s1.h':'1. Data controller',
-  'prv.s1.p':'<strong>Iron Kinetic</strong><br>Email: privacy&#64;ironkinetic.app<br>For any request regarding your data, contact us at the address above.',
-  'prv.s2.h':'2. Data processed and purposes',
-  'prv.s2.p':'The app processes, <em>locally on your device</em>, the following categories of data:',
-  'prv.s2.li':'<li><strong>Biographical and physical data</strong> (age, height, weight, biological sex, body fat): required to calculate your personalised TDEE and macronutrients.</li><li><strong>Health-related data</strong> under GDPR Art. 9 (body weight, body fat percentage, waist): processed on the basis of your explicit consent, exclusively to provide the nutritional coaching service.</li><li><strong>Dietary habit data</strong> (food preferences, intolerances, number of meals): used to generate your personalised nutrition plan.</li><li><strong>Daily activity data</strong> (steps, workouts): used for daily coaching.</li><li><strong>Daily check-ins</strong> (hunger, energy, adherence, digestion): used for trend analysis and contextual suggestions.</li>',
-  'prv.s3.h':'3. Legal basis for processing',
-  'prv.s3.p1':'The processing of ordinary data is based on <strong>contract</strong> (GDPR Art. 6(1)(b)): the data is necessary to deliver the requested service.',
-  'prv.s3.p2':'The processing of <strong>health-related data</strong> (GDPR Art. 9) is based on <strong>your explicit consent</strong> (GDPR Art. 9(2)(a)), given at first launch and always revocable.',
-  'prv.s4.h':'4. Storage and security',
-  'prv.s4.p1':'<strong>No data is transmitted to external servers.</strong> All data is stored in your device\'s localStorage via the standard Web Storage API.',
-  'prv.s4.p2':'Data security depends on your device protection (lock code, encryption). We recommend:',
-  'prv.s4.li':'<li>Keep your device protected from unauthorised access.</li><li>Use the <em>Export Backup</em> function to keep a safe copy of your data.</li><li>Do not use the app on shared devices without clearing data afterwards.</li>',
-  'prv.s5.h':'5. Data retention',
-  'prv.s5.p':'Data stays on your device until you delete it. You can delete all your data at any time via <em>Profile → Start over</em> or by clearing the site data in your browser settings.',
-  'prv.s6.h':'6. Sharing with third parties',
-  'prv.s6.p1':'Your personal data is <strong>not shared with any third party</strong>.',
-  'prv.s6.p2':'The app uses the following external resources, without transmitting personal data:',
-  'prv.s6.li':'<li><strong>Google Fonts</strong> (fonts.googleapis.com): loading Space Grotesk and Manrope fonts. Google may log the requesting IP address.</li><li><strong>Chart.js via jsDelivr</strong> (cdn.jsdelivr.net): charting library. No personal data transmitted.</li><li><strong>Material Symbols</strong> (Google): vector icons. Same conditions as Google Fonts.</li>',
-  'prv.s7.h':'7. Transfers to third countries',
-  'prv.s7.p':'Locally stored personal data is not subject to transfer to third countries. Requests to Google Fonts may involve servers outside the European Economic Area; such transfers are governed by the EU Commission\'s Standard Contractual Clauses.',
-  'prv.s8.h':'8. Your rights (GDPR Arts. 15–22)',
-  'prv.s8.r0.ico':'👁','prv.s8.r0.lbl':'Access','prv.s8.r0.desc':'You can view all your data directly in the app (Profile section).',
-  'prv.s8.r1.ico':'✏️','prv.s8.r1.lbl':'Rectification','prv.s8.r1.desc':'You can edit your data at any time from the app.',
-  'prv.s8.r2.ico':'🗑','prv.s8.r2.lbl':'Erasure','prv.s8.r2.desc':'Use "Start over" to delete all data.',
-  'prv.s8.r3.ico':'📦','prv.s8.r3.lbl':'Portability','prv.s8.r3.desc':'Export your data in readable JSON format.',
-  'prv.s8.r4.ico':'🚫','prv.s8.r4.lbl':'Revoke consent','prv.s8.r4.desc':'Revoke consent from Profile → Privacy.',
-  'prv.s8.r5.ico':'⚖️','prv.s8.r5.lbl':'Complaint','prv.s8.r5.desc':'You can lodge a complaint with your national data protection authority.',
-  'prv.s9.h':'9. Cookies and tracking technologies',
-  'prv.s9.p':'<strong>Iron Kinetic does not use cookies.</strong> Data is stored via the Web Storage API (localStorage), which is not subject to the Cookie Directive 2002/58/EC but falls within the scope of the GDPR for the personal data it contains.',
-  'prv.s10.h':'10. Notice for minors',
-  'prv.s10.p':'The service is intended for people aged 16 or over. The app does not knowingly collect data from users under 16. If you are a parent and believe your child has used the service, contact us for data deletion.',
-  'prv.s11.h':'11. Changes to this policy',
-  'prv.s11.p':'Any changes will be communicated via an app update. The date of the last update is shown at the top of this document.',
-  'prv.contact.h':'Contact and complaints',
-  'prv.contact.p1':'To exercise your rights or for any questions: <strong>privacy&#64;ironkinetic.app</strong>',
-  'prv.contact.p2':'Supervisory authority: <strong>Information Commissioner\'s Office</strong> (or your national DPA) · <a href="https://gpdp.it" style="color:var(--p);">gpdp.it</a>',
+  'prv.s1.name':'[iron kinetic tm]',
+  'prv.s1.addr':'[strada di caprile 30]',
+  'prv.s1.email':'[pisicollo@gmail.com]',
+  'prv.s1.country':'Italy',
+  'prv.s2.h':'2. Data collected and purposes',
+  'prv.s2.p':'The table below describes each category of data processed, its purpose, legal basis, and retention period.',
+  'prv.s3.h':'3. Health data — GDPR Art. 9',
+  'prv.s3.p1':'Body weight, body fat percentage, and body measurements (waist) constitute health-related data under GDPR Art. 9.',
+  'prv.s3.p2':'Legal basis: explicit consent (GDPR Art. 9(2)(a)), given at first launch and always revocable from Profile → Privacy. This data is processed exclusively in localStorage or, for registered users, in Supabase with encryption in transit (TLS). It is never shared with Stripe, Google Analytics, or any other third party.',
+  'prv.s4.h':'4. Data processors (sub-processors)',
+  'prv.s5.h':'5. Anonymous users (no account)',
+  'prv.s5.p':'If you do not create a Google account, no data leaves your device. Plan, weight, check-ins and preferences stay in localStorage. They are deleted by clearing site data or via Profile → Start over.',
+  'prv.s6.h':'6. Cookies and tracking',
+  'prv.s6.p':'Iron Kinetic does not use profiling cookies. No analytics. No advertising. No tracking pixels. The only storage used is the browser localStorage (Web Storage API). Authenticated users receive a technical session cookie from Supabase, required to maintain the login.',
+  'prv.s7.h':'7. Your rights (GDPR Arts. 15–22)',
+  'prv.s7.r0.ico':'👁','prv.s7.r0.lbl':'Access (Art.15)','prv.s7.r0.desc':'Request a copy of your data by emailing the controller.',
+  'prv.s7.r1.ico':'✏️','prv.s7.r1.lbl':'Rectification (Art.16)','prv.s7.r1.desc':'Correct your data at any time from within the app.',
+  'prv.s7.r2.ico':'🗑','prv.s7.r2.lbl':'Erasure (Art.17)','prv.s7.r2.desc':'Use "Start over" or email us to delete your account and data.',
+  'prv.s7.r3.ico':'⏸','prv.s7.r3.lbl':'Restriction (Art.18)','prv.s7.r3.desc':'Request suspension of processing by emailing the controller.',
+  'prv.s7.r4.ico':'📦','prv.s7.r4.lbl':'Portability (Art.20)','prv.s7.r4.desc':'Export your data in readable JSON format via the app.',
+  'prv.s7.r5.ico':'🚫','prv.s7.r5.lbl':'Objection (Art.21)','prv.s7.r5.desc':'Object to processing by emailing the controller.',
+  'prv.s7.r6.ico':'🔓','prv.s7.r6.lbl':'Withdraw consent (Art.7)','prv.s7.r6.desc':'Withdraw from Profile → Privacy at any time.',
+  'prv.s7.r7.ico':'⚖️','prv.s7.r7.lbl':'Lodge a complaint','prv.s7.r7.desc':'Lodge a complaint with your national DPA (Italy: www.garanteprivacy.it).',
+  'prv.s8.h':'8. Minimum age',
+  'prv.s8.p':'The service is intended for users aged 16 or over (GDPR Art. 8; D.Lgs. 196/2003 as amended). We do not knowingly collect data from users under 16. If you are a parent/guardian and believe a minor has used the service, contact us for immediate data deletion.',
+  'prv.s9.h':'9. International transfers',
+  'prv.s9.p':'Supabase and Stripe are based in the USA. Transfers are covered by EU Commission Standard Contractual Clauses (SCCs). Google LLC is subject to the same SCCs under the EU–USA Data Privacy Framework.',
+  'prv.s10.h':'10. Changes to this policy',
+  'prv.s10.p':'In case of material changes, users will be notified via an in-app notice. Last updated: April 2026.',
+  'prv.contact.h':'Contact & Supervisory Authority',
+  'prv.contact.p1':'To exercise your rights or for any questions: [pisicollo@gmail.com]',
+  'prv.contact.p2':'Supervisory authority: Garante per la protezione dei dati personali — Piazza Venezia 11, 00187 Rome, Italy',
+  'prv.th.data':'Data','prv.th.purpose':'Purpose','prv.th.basis':'Legal basis','prv.th.retention':'Retention',
   'help.disclaimer.title':'⚕️ Medical disclaimer',
   'help.disclaimer.text':'Iron Kinetic is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
   'weekly.report.title':'Weekly Report',
@@ -3365,31 +3372,39 @@ function applyTranslations(deferOffscreen){
   /* ── Privacy modal full content — always-run so lang switch works ── */
   const _pm=document.getElementById('modal-privacy');
   if(_pm){
-    const _prvBadge=_pm.querySelector('.prv-badge');if(_prvBadge)_prvBadge.textContent=t('prv.badge');
-    const _prvSections=_pm.querySelectorAll('.prv-section');
-    const _prvSetSection=(sec,hTxt,bodyFn)=>{if(!sec)return;const h=sec.querySelector('.prv-h2');if(h)h.innerHTML=sanitize(hTxt);bodyFn(sec);};
-    const _s0=_pm.querySelector('.prv-highlight');
-    if(_s0){const h=_s0.querySelector('.prv-h2');if(h)h.innerHTML=sanitize(t('prv.s0.h'));const p=_s0.querySelector('.prv-p');if(p)p.innerHTML=sanitize(t('prv.s0.p'));}
-    if(_prvSections[1])_prvSetSection(_prvSections[1],t('prv.s1.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=sanitize(t('prv.s1.p'));});
-    if(_prvSections[2])_prvSetSection(_prvSections[2],t('prv.s2.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=sanitize(t('prv.s2.p'));const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=sanitize(t('prv.s2.li'));});
-    if(_prvSections[3])_prvSetSection(_prvSections[3],t('prv.s3.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=sanitize(t('prv.s3.p1'));if(ps[1])ps[1].innerHTML=sanitize(t('prv.s3.p2'));});
-    if(_prvSections[4])_prvSetSection(_prvSections[4],t('prv.s4.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=sanitize(t('prv.s4.p1'));if(ps[1])ps[1].innerHTML=sanitize(t('prv.s4.p2'));const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=sanitize(t('prv.s4.li'));});
-    if(_prvSections[5])_prvSetSection(_prvSections[5],t('prv.s5.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=sanitize(t('prv.s5.p'));});
-    if(_prvSections[6])_prvSetSection(_prvSections[6],t('prv.s6.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=sanitize(t('prv.s6.p1'));if(ps[1])ps[1].innerHTML=sanitize(t('prv.s6.p2'));const ul=s.querySelector('.prv-list');if(ul)ul.innerHTML=sanitize(t('prv.s6.li'));});
-    if(_prvSections[7])_prvSetSection(_prvSections[7],t('prv.s7.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=sanitize(t('prv.s7.p'));});
-    if(_prvSections[8])_prvSetSection(_prvSections[8],t('prv.s8.h'),s=>{
-      const items=s.querySelectorAll('.prv-right-item');
-      [0,1,2,3,4,5].forEach(i=>{
-        if(!items[i])return;
-        const ico=items[i].querySelector('.prv-right-ico');if(ico)ico.textContent=t('prv.s8.r'+i+'.ico');
-        const lbl=items[i].querySelector('.prv-right-label');if(lbl)lbl.textContent=t('prv.s8.r'+i+'.lbl');
-        const desc=items[i].querySelector('.prv-right-desc');if(desc)desc.textContent=t('prv.s8.r'+i+'.desc');
-      });
-    });
-    if(_prvSections[9])_prvSetSection(_prvSections[9],t('prv.s9.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=sanitize(t('prv.s9.p'));});
-    if(_prvSections[10])_prvSetSection(_prvSections[10],t('prv.s10.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=sanitize(t('prv.s10.p'));});
-    if(_prvSections[11])_prvSetSection(_prvSections[11],t('prv.s11.h'),s=>{const p=s.querySelector('.prv-p');if(p)p.innerHTML=sanitize(t('prv.s11.p'));});
-    if(_prvSections[12])_prvSetSection(_prvSections[12],t('prv.contact.h'),s=>{const ps=s.querySelectorAll('.prv-p');if(ps[0])ps[0].innerHTML=sanitize(t('prv.contact.p1'));if(ps[1])ps[1].innerHTML=sanitize(t('prv.contact.p2'));});
+    const _pt=(id,key)=>{const e=document.getElementById(id);if(e)e.textContent=t(key);};
+    /* Badge */
+    _pt('prv-badge-txt','prv.badge');
+    /* Section 0 — summary */
+    _pt('prv-s0-h','prv.s0.h'); _pt('prv-s0-p','prv.s0.p');
+    /* Section 1 — controller */
+    _pt('prv-s1-h','prv.s1.h'); _pt('prv-s1-name','prv.s1.name');
+    _pt('prv-s1-addr','prv.s1.addr'); _pt('prv-s1-email','prv.s1.email');
+    _pt('prv-s1-country','prv.s1.country');
+    /* Section 2 — data table (headers localized) */
+    _pt('prv-s2-h','prv.s2.h'); _pt('prv-s2-p','prv.s2.p');
+    const _tbl=document.getElementById('prv-s2-table');
+    if(_tbl){const _ths=_tbl.querySelectorAll('th');const _thKeys=['prv.th.data','prv.th.purpose','prv.th.basis','prv.th.retention'];_ths.forEach((th,i)=>{if(_thKeys[i])th.textContent=t(_thKeys[i]);});}
+    /* Section 3 — health data */
+    _pt('prv-s3-h','prv.s3.h'); _pt('prv-s3-p1','prv.s3.p1'); _pt('prv-s3-p2','prv.s3.p2');
+    /* Section 4 — processors */
+    _pt('prv-s4-h','prv.s4.h');
+    /* Section 5 — anon */
+    _pt('prv-s5-h','prv.s5.h'); _pt('prv-s5-p','prv.s5.p');
+    /* Section 6 — cookies */
+    _pt('prv-s6-h','prv.s6.h'); _pt('prv-s6-p','prv.s6.p');
+    /* Section 7 — rights grid */
+    _pt('prv-s7-h','prv.s7.h');
+    const _grid=document.getElementById('prv-s7-grid');
+    if(_grid){const items=_grid.querySelectorAll('.prv-right-item');[0,1,2,3,4,5,6,7].forEach(i=>{if(!items[i])return;const ico=items[i].querySelector('.prv-right-ico');if(ico)ico.textContent=t('prv.s7.r'+i+'.ico');const lbl=items[i].querySelector('.prv-right-label');if(lbl)lbl.textContent=t('prv.s7.r'+i+'.lbl');const desc=items[i].querySelector('.prv-right-desc');if(desc)desc.textContent=t('prv.s7.r'+i+'.desc');});}
+    /* Section 8 — age */
+    _pt('prv-s8-h','prv.s8.h'); _pt('prv-s8-p','prv.s8.p');
+    /* Section 9 — transfers */
+    _pt('prv-s9-h','prv.s9.h'); _pt('prv-s9-p','prv.s9.p');
+    /* Section 10 — changes */
+    _pt('prv-s10-h','prv.s10.h'); _pt('prv-s10-p','prv.s10.p');
+    /* Contacts */
+    _pt('prv-contact-h','prv.contact.h'); _pt('prv-contact-p1','prv.contact.p1'); _pt('prv-contact-p2','prv.contact.p2');
   }
   /* ── end privacy modal always-run ── */
 
@@ -8152,134 +8167,167 @@ function _bootAfterLangGate(){
   </div>
   <div class="modal-body">
 
-    <div class="prv-badge">Aggiornata: Gennaio 2025 · Conforme GDPR (Reg. UE 2016/679)</div>
+    <!-- Badge -->
+    <div class="prv-badge" id="prv-badge-txt">Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003</div>
 
+    <!-- Section 0 — Summary -->
     <div class="prv-section">
       <div class="prv-highlight">
-        <p class="prv-h2" style="margin-bottom:6px;">📱 In sintesi: i tuoi dati restano sul tuo dispositivo</p>
-        <p class="prv-p">Iron Kinetic è un'app offline-first. Tutti i tuoi dati (peso, misure, piano alimentare, check-in) vengono salvati <strong>esclusivamente nel localStorage del tuo browser</strong>. Non esistono account utente, non esistono server dove vengono inviati i tuoi dati, non viene effettuato nessun tracking.</p>
+        <p class="prv-h2" id="prv-s0-h" style="margin-bottom:6px;">🛡 In sintesi</p>
+        <p class="prv-p" id="prv-s0-p">Iron Kinetic raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.</p>
       </div>
     </div>
 
+    <!-- Section 1 — Titolare -->
     <div class="prv-section">
-      <p class="prv-h2">1. Titolare del trattamento</p>
-      <p class="prv-p"><strong>Iron Kinetic</strong><br>Email: privacy&#64;ironkinetic.app<br>Per qualsiasi richiesta relativa ai tuoi dati, contattaci all'indirizzo sopra indicato.</p>
+      <p class="prv-h2" id="prv-s1-h">1. Titolare del trattamento</p>
+      <p class="prv-p">
+        <strong id="prv-s1-name">[iron kinetic tm]</strong><br>
+        <span id="prv-s1-addr">[strada di caprile 30]</span><br>
+        Email: <strong id="prv-s1-email">[pisicollo@gmail.com]</strong><br>
+        Paese: <span id="prv-s1-country">Italia</span>
+      </p>
     </div>
 
+    <!-- Section 2 — Dati raccolti -->
     <div class="prv-section">
-      <p class="prv-h2">2. Dati trattati e finalità</p>
-      <p class="prv-p">L'app tratta, <em>localmente sul tuo dispositivo</em>, le seguenti categorie di dati:</p>
-      <ul class="prv-list">
-        <li><strong>Dati anagrafici e fisici</strong> (età, altezza, peso, sesso biologico, grasso corporeo): necessari per il calcolo del TDEE e dei macronutrienti personalizzati.</li>
-        <li><strong>Dati relativi alla salute</strong> ex art. 9 GDPR (peso corporeo, percentuale di grasso, girovita): trattati sulla base del tuo consenso esplicito, esclusivamente per fornirti il servizio di coaching nutrizionale.</li>
-        <li><strong>Dati sulle abitudini alimentari</strong> (preferenze alimentari, intolleranze, numero di pasti): utilizzati per generare il piano nutrizionale personalizzato.</li>
-        <li><strong>Dati di attività quotidiana</strong> (passi, workout): utilizzati per il coaching giornaliero.</li>
-        <li><strong>Check-in giornalieri</strong> (fame, energia, aderenza, digestione): utilizzati per l'analisi dei trend e i suggerimenti contestuali.</li>
-      </ul>
+      <p class="prv-h2" id="prv-s2-h">2. Dati raccolti e finalità</p>
+      <p class="prv-p" id="prv-s2-p">La seguente tabella descrive ogni categoria di dato trattato, la finalità, la base giuridica e il periodo di conservazione.</p>
+      <table class="prv-table" id="prv-s2-table">
+        <thead>
+          <tr>
+            <th>Dato</th><th>Finalità</th><th>Base giuridica</th><th>Conservazione</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Email, nome, avatar</strong><br>(Google OAuth)</td>
+            <td>Autenticazione account</td>
+            <td>Consenso<br>Art.6(1)(a)</td>
+            <td>Fino a cancellazione account</td>
+          </tr>
+          <tr>
+            <td><strong>Peso, BF%, misure</strong><br>⚠️ Dati sanitari Art.9</td>
+            <td>Calcolo piano nutrizionale</td>
+            <td>Consenso esplicito<br>Art.9(2)(a)</td>
+            <td>localStorage / Supabase fino a reset</td>
+          </tr>
+          <tr>
+            <td><strong>Piano alimentare, check-in, macros</strong></td>
+            <td>Erogazione del servizio</td>
+            <td>Esecuzione contratto<br>Art.6(1)(b)</td>
+            <td>Fino a cancellazione</td>
+          </tr>
+          <tr>
+            <td><strong>Email per pagamenti</strong></td>
+            <td>Gestione abbonamento Trend</td>
+            <td>Esecuzione contratto<br>Art.6(1)(b)</td>
+            <td>Secondo policy Stripe</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
+    <!-- Section 3 — Dati sanitari Art.9 -->
     <div class="prv-section">
-      <p class="prv-h2">3. Base giuridica del trattamento</p>
-      <p class="prv-p">Il trattamento dei dati ordinari è basato sul <strong>contratto</strong> (art. 6 par. 1 lett. b GDPR): i dati sono necessari per erogare il servizio richiesto.</p>
-      <p class="prv-p">Il trattamento dei <strong>dati relativi alla salute</strong> (art. 9 GDPR) è basato sul <strong>tuo consenso esplicito</strong> (art. 9 par. 2 lett. a GDPR), prestato al primo avvio dell'app e sempre revocabile.</p>
+      <p class="prv-h2" id="prv-s3-h">3. Dati sanitari — Art. 9 GDPR</p>
+      <div class="prv-highlight" style="border-color:rgba(255,159,10,.3);background:rgba(255,159,10,.06);">
+        <p class="prv-p" style="color:var(--on);" id="prv-s3-p1">Peso corporeo, percentuale di grasso corporeo e misure corporee (girovita) costituiscono <strong>dati relativi alla salute</strong> ai sensi dell'art. 9 GDPR.</p>
+      </div>
+      <p class="prv-p" id="prv-s3-p2">Base giuridica: <strong>consenso esplicito</strong> (art. 9 par. 2 lett. a GDPR), prestato al primo avvio e sempre revocabile da <em>Profilo → Privacy</em>. Questi dati sono elaborati esclusivamente nel localStorage o, per utenti registrati, su Supabase con crittografia in transito (TLS). Non sono mai condivisi con Stripe, Google Analytics o altri terzi.</p>
     </div>
 
+    <!-- Section 4 — Sub-processor -->
     <div class="prv-section">
-      <p class="prv-h2">4. Archiviazione e sicurezza</p>
-      <p class="prv-p"><strong>Nessun dato viene trasmesso a server esterni.</strong> Tutti i dati sono conservati nel localStorage del tuo dispositivo tramite l'API Web Storage standard.</p>
-      <p class="prv-p">La sicurezza dei dati dipende dalla protezione del tuo dispositivo (codice di sblocco, cifratura). Ti consigliamo di:</p>
-      <ul class="prv-list">
-        <li>Mantenere il dispositivo protetto da accessi non autorizzati.</li>
-        <li>Usare la funzione <em>Esporta Backup</em> per conservare una copia sicura dei tuoi dati.</li>
-        <li>Non utilizzare l'app su dispositivi condivisi senza cancellare i dati dopo l'uso.</li>
-      </ul>
-    </div>
-
-    <div class="prv-section">
-      <p class="prv-h2">5. Conservazione dei dati</p>
-      <p class="prv-p">I dati rimangono sul tuo dispositivo finché non li elimini tu. Puoi cancellare tutti i tuoi dati in qualsiasi momento tramite <em>Profilo → Ricomincia da capo</em> oppure svuotando i dati del sito nelle impostazioni del tuo browser.</p>
-    </div>
-
-    <div class="prv-section">
-      <p class="prv-h2">6. Condivisione con terze parti</p>
-      <p class="prv-p">I tuoi dati personali <strong>non vengono condivisi con nessuna terza parte</strong>.</p>
-      <p class="prv-p">L'app utilizza le seguenti risorse esterne, senza trasmissione di dati personali:</p>
-      <ul class="prv-list">
-        <li><strong>Google Fonts</strong> (fonts.googleapis.com): caricamento dei font Space Grotesk e Manrope. Google potrebbe registrare l'indirizzo IP richiedente.</li>
-        <li><strong>Chart.js via jsDelivr</strong> (cdn.jsdelivr.net): libreria grafica. Nessun dato personale trasmesso.</li>
-        <li><strong>Material Symbols</strong> (Google): icone vettoriali. Stesse condizioni di Google Fonts.</li>
-      </ul>
-    </div>
-
-    <div class="prv-section">
-      <p class="prv-h2">7. Trasferimento verso paesi terzi</p>
-      <p class="prv-p">I dati personali conservati localmente non sono soggetti a trasferimento verso paesi terzi. Le richieste verso Google Fonts potrebbero coinvolgere server al di fuori dello Spazio Economico Europeo; tali trasferimenti sono regolati dalle Clausole Contrattuali Standard della Commissione UE.</p>
-    </div>
-
-    <div class="prv-section">
-      <p class="prv-h2">8. I tuoi diritti (artt. 15–22 GDPR)</p>
-      <div class="prv-rights-grid">
-        <div class="prv-right-item">
-          <span class="prv-right-ico">👁</span>
-          <span class="prv-right-label">Accesso</span>
-          <span class="prv-right-desc">Puoi vedere tutti i tuoi dati direttamente nell'app (sezione Profilo).</span>
+      <p class="prv-h2" id="prv-s4-h">4. Responsabili del trattamento (sub-processor)</p>
+      <div class="prv-processor" id="prv-s4-list">
+        <div class="prv-proc-item">
+          <div class="prv-proc-name">Supabase Inc. (USA)</div>
+          <div class="prv-proc-role">Autenticazione account e database utenti (stato abbonamento, email). Nessun dato sanitario trasferito.</div>
+          <div class="prv-proc-note">DPA conforme GDPR · Regione EU (eu-central-1)</div>
+          <a href="https://supabase.com/privacy" class="prv-proc-link" target="_blank" rel="noopener">supabase.com/privacy</a>
         </div>
-        <div class="prv-right-item">
-          <span class="prv-right-ico">✏️</span>
-          <span class="prv-right-label">Rettifica</span>
-          <span class="prv-right-desc">Puoi modificare i tuoi dati in qualsiasi momento dall'app.</span>
+        <div class="prv-proc-item">
+          <div class="prv-proc-name">Stripe Inc. (USA)</div>
+          <div class="prv-proc-role">Elaborazione pagamenti abbonamento Trend. Riceve solo email e dati di fatturazione. <strong>Nessun dato sanitario.</strong></div>
+          <div class="prv-proc-note">PCI-DSS Level 1 · SCC GDPR</div>
+          <a href="https://stripe.com/privacy" class="prv-proc-link" target="_blank" rel="noopener">stripe.com/privacy</a>
         </div>
-        <div class="prv-right-item">
-          <span class="prv-right-ico">🗑</span>
-          <span class="prv-right-label">Cancellazione</span>
-          <span class="prv-right-desc">Usa "Ricomincia da capo" per cancellare tutti i dati.</span>
+        <div class="prv-proc-item">
+          <div class="prv-proc-name">Google LLC (USA)</div>
+          <div class="prv-proc-role">OAuth 2.0 login — condivide con Iron Kinetic nome, email e avatar. Non riceve dati sanitari.</div>
+          <div class="prv-proc-note">Soggetto a Google Privacy Policy</div>
+          <a href="https://policies.google.com/privacy" class="prv-proc-link" target="_blank" rel="noopener">policies.google.com/privacy</a>
         </div>
-        <div class="prv-right-item">
-          <span class="prv-right-ico">📦</span>
-          <span class="prv-right-label">Portabilità</span>
-          <span class="prv-right-desc">Esporta i tuoi dati in formato JSON leggibile.</span>
-        </div>
-        <div class="prv-right-item">
-          <span class="prv-right-ico">🚫</span>
-          <span class="prv-right-label">Revoca consenso</span>
-          <span class="prv-right-desc">Revoca consenso da Profilo → Privacy.</span>
-        </div>
-        <div class="prv-right-item">
-          <span class="prv-right-ico">⚖️</span>
-          <span class="prv-right-label">Reclamo</span>
-          <span class="prv-right-desc">Puoi proporre reclamo al Garante Privacy italiano (gpdp.it).</span>
+        <div class="prv-proc-item">
+          <div class="prv-proc-name">Railway (USA) — hosting</div>
+          <div class="prv-proc-role">Hosting statico del file index.html. Non elabora né archivia dati utente.</div>
+          <div class="prv-proc-note">Server statico, nessuna elaborazione server-side</div>
+          <a href="https://railway.com/legal/privacy" class="prv-proc-link" target="_blank" rel="noopener">railway.com/legal/privacy</a>
         </div>
       </div>
     </div>
 
+    <!-- Section 5 — Utenti anonimi -->
     <div class="prv-section">
-      <p class="prv-h2">9. Cookie e tecnologie di tracciamento</p>
-      <p class="prv-p"><strong>Iron Kinetic non utilizza cookie.</strong> I dati sono conservati tramite Web Storage API (localStorage), che non è soggetta alla Direttiva Cookie 2002/58/CE ma rientra nel perimetro del GDPR per i dati personali in essa contenuti.</p>
+      <p class="prv-h2" id="prv-s5-h">5. Utenti anonimi (senza account)</p>
+      <p class="prv-p" id="prv-s5-p">Se non crei un account Google, <strong>nessun dato lascia il tuo dispositivo</strong>. Piano, peso, check-in e preferenze restano nel localStorage. Vengono cancellati svuotando i dati del sito o tramite <em>Profilo → Ricomincia da capo</em>.</p>
     </div>
 
+    <!-- Section 6 — Cookie -->
     <div class="prv-section">
-      <p class="prv-h2">10. Avviso per i minori</p>
-      <p class="prv-p">Il servizio è destinato a persone di età non inferiore a 16 anni. L'app non raccoglie consapevolmente dati di minori di 16 anni. Se sei un genitore e ritieni che tuo figlio abbia utilizzato il servizio, contattaci per la cancellazione dei dati.</p>
+      <p class="prv-h2" id="prv-s6-h">6. Cookie e tracciamento</p>
+      <p class="prv-p" id="prv-s6-p"><strong>Zero cookie di profilazione.</strong> Zero analytics. Zero advertising. Zero pixel di tracciamento. Il solo storage utilizzato è il localStorage del browser (Web Storage API). Gli utenti autenticati ricevono un cookie di sessione tecnico da Supabase, necessario per mantenere il login.</p>
     </div>
 
+    <!-- Section 7 — Diritti -->
     <div class="prv-section">
-      <p class="prv-h2">11. Modifiche alla presente informativa</p>
-      <p class="prv-p">Eventuali modifiche saranno comunicate tramite aggiornamento dell'app. La data di ultimo aggiornamento è indicata in cima a questo documento.</p>
+      <p class="prv-h2" id="prv-s7-h">7. I tuoi diritti (artt. 15–22 GDPR)</p>
+      <p class="prv-p" style="margin-bottom:10px;">Per esercitare qualsiasi diritto scrivi a <strong>[pisicollo@gmail.com]</strong>.</p>
+      <div class="prv-rights-grid" id="prv-s7-grid">
+        <div class="prv-right-item"><span class="prv-right-ico">👁</span><span class="prv-right-label">Accesso (Art.15)</span><span class="prv-right-desc">Richiedi copia dei dati che ti riguardano scrivendo al titolare.</span></div>
+        <div class="prv-right-item"><span class="prv-right-ico">✏️</span><span class="prv-right-label">Rettifica (Art.16)</span><span class="prv-right-desc">Correggi i tuoi dati in qualsiasi momento dall'app.</span></div>
+        <div class="prv-right-item"><span class="prv-right-ico">🗑</span><span class="prv-right-label">Cancellazione (Art.17)</span><span class="prv-right-desc">Usa "Ricomincia da capo" o scrivi per cancellare account e dati.</span></div>
+        <div class="prv-right-item"><span class="prv-right-ico">⏸</span><span class="prv-right-label">Limitazione (Art.18)</span><span class="prv-right-desc">Chiedi sospensione del trattamento scrivendo al titolare.</span></div>
+        <div class="prv-right-item"><span class="prv-right-ico">📦</span><span class="prv-right-label">Portabilità (Art.20)</span><span class="prv-right-desc">Esporta i tuoi dati in formato JSON leggibile tramite l'app.</span></div>
+        <div class="prv-right-item"><span class="prv-right-ico">🚫</span><span class="prv-right-label">Opposizione (Art.21)</span><span class="prv-right-desc">Opponiti al trattamento scrivendo al titolare.</span></div>
+        <div class="prv-right-item"><span class="prv-right-ico">🔓</span><span class="prv-right-label">Revoca consenso (Art.7)</span><span class="prv-right-desc">Revoca da Profilo → Privacy in qualsiasi momento.</span></div>
+        <div class="prv-right-item"><span class="prv-right-ico">⚖️</span><span class="prv-right-label">Reclamo al Garante</span><span class="prv-right-desc">Proponi reclamo al Garante Privacy (www.garanteprivacy.it).</span></div>
+      </div>
     </div>
 
+    <!-- Section 8 — Età minima -->
     <div class="prv-section">
-      <p class="prv-h2">Contatti e reclami</p>
-      <p class="prv-p">Per esercitare i tuoi diritti o per qualsiasi domanda: <strong>privacy&#64;ironkinetic.app</strong></p>
-      <p class="prv-p">Autorità di controllo: <strong>Garante per la protezione dei dati personali</strong><br>Piazza Venezia 11 — 00187 Roma · <a href="https://gpdp.it" style="color:var(--p);">gpdp.it</a></p>
+      <p class="prv-h2" id="prv-s8-h">8. Età minima</p>
+      <p class="prv-p" id="prv-s8-p">Il servizio è riservato a utenti di età <strong>≥ 16 anni</strong> (GDPR art. 8; D.Lgs. 196/2003 mod. D.Lgs. 101/2018). Non raccogliamo consapevolmente dati di minori di 16 anni. Se sei un genitore/tutore e ritieni che un minore abbia usato il servizio, scrivici per la cancellazione immediata dei dati.</p>
+    </div>
+
+    <!-- Section 9 — Trasferimenti internazionali -->
+    <div class="prv-section">
+      <p class="prv-h2" id="prv-s9-h">9. Trasferimenti internazionali</p>
+      <p class="prv-p" id="prv-s9-p">Supabase e Stripe hanno sede negli USA. I trasferimenti sono coperti da <strong>Clausole Contrattuali Standard (SCC)</strong> della Commissione UE. Google LLC è soggetta alle stesse SCC nell'ambito del Data Privacy Framework UE–USA.</p>
+    </div>
+
+    <!-- Section 10 — Modifiche -->
+    <div class="prv-section">
+      <p class="prv-h2" id="prv-s10-h">10. Modifiche alla presente informativa</p>
+      <p class="prv-p" id="prv-s10-p">In caso di modifiche sostanziali, gli utenti verranno notificati tramite avviso nell'app. Data ultimo aggiornamento: <strong>Aprile 2026</strong>.</p>
+    </div>
+
+    <!-- Contacts -->
+    <div class="prv-section">
+      <p class="prv-h2" id="prv-contact-h">Contatti e Autorità di Controllo</p>
+      <p class="prv-p" id="prv-contact-p1">Per esercitare i tuoi diritti o per qualsiasi domanda: <strong>[pisicollo@gmail.com]</strong></p>
+      <p class="prv-p" id="prv-contact-p2">Autorità di controllo: <strong>Garante per la protezione dei dati personali</strong><br>Piazza Venezia 11 — 00187 Roma<br><a href="https://www.garanteprivacy.it" style="color:var(--p);" target="_blank" rel="noopener">www.garanteprivacy.it</a></p>
     </div>
 
     <!-- Consent management -->
     <div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:14px;margin-top:4px;">
-      <p class="prv-h2" id="prv-consent-mgmt-title" style="margin-bottom:8px;">Consent management</p>
+      <p class="prv-h2" id="prv-consent-mgmt-title" style="margin-bottom:8px;">Gestione consenso</p>
       <p class="prv-p" style="margin-bottom:12px;" id="gdpr-status-text">—</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button id="prv-revoke-btn" onclick="gdprWithdraw()" class="btn btn-danger-o btn-xs sn" style="padding:0 14px;">Revoke consent</button>
-        <button id="prv-renew-btn" onclick="gdprAccept();closeModal('modal-privacy')" class="btn btn-neon-o btn-xs sn" style="padding:0 14px;">Renew consent</button>
+        <button id="prv-revoke-btn" onclick="gdprWithdraw()" class="btn btn-danger-o btn-xs sn" style="padding:0 14px;">Revoca consenso</button>
+        <button id="prv-renew-btn" onclick="gdprAccept();closeModal('modal-privacy')" class="btn btn-neon-o btn-xs sn" style="padding:0 14px;">Rinnova consenso</button>
       </div>
     </div>
 
