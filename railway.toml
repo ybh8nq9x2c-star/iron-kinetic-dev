@@ -1,7 +1,5 @@
 [build]
-builder = "nixpacks"
-buildCommand = "npm install"
+builder = "dockerfile"
 
 [deploy]
-startCommand = "node node_modules/.bin/serve -s . -p $PORT --no-clipboard"
 restartPolicyType = "on_failure"
