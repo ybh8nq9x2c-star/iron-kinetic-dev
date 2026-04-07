@@ -637,6 +637,15 @@ body.onboarding-active #onb-screen{
 #paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9999;align-items:flex-end;justify-content:center;}
 #paywall-sheet{background:#1c1b19;border-radius:20px 20px 0 0;padding:32px 24px 48px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
 #trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
+/* ── Post-onboarding auth gate ── */
+#post-onb-auth-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.90);backdrop-filter:blur(18px);z-index:10001;align-items:flex-end;justify-content:center;}
+#post-onb-auth-sheet{background:var(--s1);border-radius:28px 28px 0 0;padding:36px 24px 52px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .42s cubic-bezier(0.16,1,0.3,1);}
+#post-onb-auth-overlay.on{display:flex;}
+#post-onb-auth-overlay.on #post-onb-auth-sheet{transform:translateY(0);}
+.gauth-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#fff;color:#1a1a1a;border:none;border-radius:14px;padding:15px 20px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;letter-spacing:-.01em;transition:opacity .15s;-webkit-tap-highlight-color:transparent;}
+.gauth-btn:active{opacity:.82;}
+.gauth-skip-btn{display:block;width:100%;background:none;border:1px solid var(--line);border-radius:14px;padding:14px 20px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Manrope',sans-serif;transition:color .15s;-webkit-tap-highlight-color:transparent;}
+.gauth-skip-btn:active{color:var(--on);}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.stripe.com/v3/"></script>
@@ -2003,6 +2012,102 @@ function showTrialExpiringSoon(){
   showToast('⏱ Ultimo giorno di prova — sblocca Trend per continuare',5000);
 }
 
+/* ── Google OAuth ── */
+async function signInWithGoogle(){
+  if(!sb){showToast('Auth non configurata');return;}
+  const{error}=await sb.auth.signInWithOAuth({
+    provider:'google',
+    options:{redirectTo:window.location.origin+window.location.pathname}
+  });
+  if(error)showToast(error.message);
+}
+async function signInWithGoogleFromOnboarding(){
+  try{localStorage.setItem('ik_auth_origin','post_onboarding');}catch{}
+  await signInWithGoogle();
+}
+
+/* ── Post-onboarding auth gate ── */
+function openPostOnboardingAuthGate(){
+  const ov=document.getElementById('post-onb-auth-overlay');
+  if(!ov)return;
+  /* Localize content before showing */
+  const tit=document.getElementById('ponb-title');const sub=document.getElementById('ponb-sub');
+  const gcta=document.getElementById('ponb-gcta');const skip=document.getElementById('ponb-skip');
+  const note=document.getElementById('ponb-note');const badge=document.getElementById('ponb-badge');
+  if(tit)tit.textContent=t('postAuth.title');
+  if(sub)sub.textContent=t('postAuth.sub');
+  if(gcta)gcta.textContent=t('postAuth.cta.google');
+  if(skip)skip.textContent=t('postAuth.cta.skip');
+  if(note)note.textContent=t('postAuth.note');
+  if(badge)badge.textContent=t('postAuth.badge');
+  ov.classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function closePostOnboardingAuthGate(){
+  const ov=document.getElementById('post-onb-auth-overlay');
+  if(!ov)return;
+  ov.classList.remove('on');
+  document.body.style.overflow='';
+}
+function continueWithoutAccount(){
+  try{localStorage.setItem('ik_auth_skipped','1');}catch{}
+  try{localStorage.removeItem('ik_auth_origin');}catch{}
+  closePostOnboardingAuthGate();
+  _bootAfterGates();
+}
+
+/* ── Sync Supabase user row on login ── */
+async function syncUserAfterLogin(user){
+  if(!sb||!user)return;
+  try{
+    const{error}=await sb.from('users').upsert({id:user.id,email:user.email},{onConflict:'id'});
+    if(!error){
+      /* Mirror paid status locally if Supabase says active */
+      const{data}=await sb.from('users').select('trend_active').eq('id',user.id).single();
+      if(data?.trend_active){localStorage.setItem('ik_trend_active','1');trendAccess={access:true,mode:'paid'};}
+    }
+  }catch{}
+}
+
+/* ── Auth state listener (set up once at boot) ── */
+function _initAuthListener(){
+  if(!sb)return;
+  sb.auth.onAuthStateChange(async(event,session)=>{
+    if(event==='SIGNED_IN'&&session?.user){
+      await syncUserAfterLogin(session.user);
+      const origin=localStorage.getItem('ik_auth_origin');
+      if(origin==='post_onboarding'){
+        try{localStorage.removeItem('ik_auth_origin');}catch{}
+        closePostOnboardingAuthGate();
+        _bootAfterGates();
+        setTimeout(()=>showToast(t('toast.loginOk')),400);
+      }
+      initTrend();
+    }
+  });
+}
+
+/* ── Handle OAuth redirect return ── */
+async function _resumePostOnboardingOrBoot(){
+  const origin=localStorage.getItem('ik_auth_origin');
+  if(origin==='post_onboarding'&&sb){
+    try{
+      const{data:{session}}=await sb.auth.getSession();
+      if(session?.user){
+        await syncUserAfterLogin(session.user);
+        try{localStorage.removeItem('ik_auth_origin');}catch{}
+        _bootAfterGates();
+        setTimeout(()=>showToast(t('toast.loginOk')),400);
+        return;
+      }
+    }catch{}
+    /* Session not ready yet — show gate again so user can retry or skip */
+    openPostOnboardingAuthGate();
+    return;
+  }
+  _bootAfterGates();
+}
+
 /* Handle Stripe success redirect */
 (()=>{
   if(new URLSearchParams(location.search).get('trend')==='success'){
@@ -2545,6 +2650,13 @@ it:{
   'tdee.card.unit.kgw':'kg/settimana',
   'tdee.card.note':'Basato su {n} rilevazioni. TDEE stimato dal tuo metabolismo reale.',
   'tdee.card.note.low':' (min. 10 rilevazioni per alta affidabilità)',
+  'postAuth.title':'Salva il tuo percorso',
+  'postAuth.sub':'Accedi con Google per sincronizzare piano, prova gratuita e Trend su tutti i dispositivi.',
+  'postAuth.cta.google':'Continua con Google',
+  'postAuth.cta.skip':'Continua senza account',
+  'postAuth.note':'Puoi collegare l\'account anche più tardi',
+  'postAuth.badge':'Consigliato',
+  'toast.loginOk':'✓ Accesso effettuato',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -3055,6 +3167,13 @@ en:{
   'tdee.card.unit.kgw':'kg/week',
   'tdee.card.note':'Based on {n} readings. TDEE estimated from your real metabolism.',
   'tdee.card.note.low':' (min. 10 readings for high reliability)',
+  'postAuth.title':'Save your journey',
+  'postAuth.sub':'Sign in with Google to sync your plan, free trial, and Trend across all devices.',
+  'postAuth.cta.google':'Continue with Google',
+  'postAuth.cta.skip':'Continue without account',
+  'postAuth.note':'You can connect your account later',
+  'postAuth.badge':'Recommended',
+  'toast.loginOk':'✓ Signed in',
 }
 };
 let _lang='en';
@@ -7952,7 +8071,8 @@ function _onbFinish(){
   lsS(SK.onboardingDone,true);
   const el=document.getElementById('onboarding-overlay');
   if(el){el.style.display='none';}
-  _bootAfterGates();
+  /* Show Google auth gate before entering the app */
+  openPostOnboardingAuthGate();
 }
 
 /* ── Language gate: shown once on absolute first open ── */
@@ -7976,7 +8096,8 @@ function _bootAfterLangGate(){
     showOnboarding();
     return;
   }
-  _bootAfterGates();
+  /* Onboarding done — check for post-onboarding auth return or proceed normally */
+  _resumePostOnboardingOrBoot();
 }
 
 /* ENTRY POINT */
@@ -7991,6 +8112,8 @@ function _bootAfterLangGate(){
   applyTranslations();
   const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);
   const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);
+  /* Auth listener must be active before any gate so OAuth redirect is caught */
+  _initAuthListener();
   _bootAfterLangGate();
 })();
 </script>
@@ -8347,6 +8470,27 @@ function _bootAfterLangGate(){
       <button onclick="startCheckout('lifetime')" style="flex:1;background:rgba(77,220,198,.08);color:#4ddcc6;border:1px solid rgba(77,220,198,.25);border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">€49 una volta<br><span style="font-weight:400;font-size:11px;opacity:.7;">🔥 Solo 100 posti</span></button>
     </div>
     <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:#888;font-size:12px;cursor:pointer;padding:8px;">Hai già un account? <span style="color:#4ddcc6;">Accedi</span></button>
+  </div>
+</div>
+
+<!-- ── POST-ONBOARDING AUTH GATE ── -->
+<div id="post-onb-auth-overlay" aria-modal="true" role="dialog" aria-labelledby="ponb-title">
+  <div id="post-onb-auth-sheet">
+    <div style="width:40px;height:4px;background:rgba(77,220,198,.3);border-radius:2px;margin:0 auto 28px;"></div>
+    <div style="text-align:center;margin-bottom:16px;">
+      <span id="ponb-badge" style="display:inline-block;background:rgba(77,220,198,.12);color:var(--p);font-size:10px;font-weight:800;letter-spacing:.12em;padding:4px 12px;border-radius:999px;text-transform:uppercase;">Consigliato</span>
+    </div>
+    <div style="width:60px;height:60px;background:linear-gradient(135deg,rgba(77,220,198,.18),rgba(77,220,198,.06));border-radius:18px;border:1px solid rgba(77,220,198,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+      <span class="material-symbols-outlined" style="color:var(--p);font-size:28px;font-variation-settings:'FILL' 1;">cloud_sync</span>
+    </div>
+    <h2 id="ponb-title" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 10px;letter-spacing:-.02em;">Salva il tuo percorso</h2>
+    <p id="ponb-sub" style="font-size:13px;color:var(--muted);text-align:center;line-height:1.65;margin:0 0 28px;padding:0 8px;">Accedi con Google per sincronizzare piano, prova gratuita e Trend su tutti i dispositivi.</p>
+    <button class="gauth-btn" onclick="signInWithGoogleFromOnboarding()" id="ponb-gcta" style="margin-bottom:12px;">
+      <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Continua con Google
+    </button>
+    <button class="gauth-skip-btn" onclick="continueWithoutAccount()" id="ponb-skip">Continua senza account</button>
+    <p id="ponb-note" style="font-size:11px;color:var(--dim);text-align:center;margin:14px 0 0;line-height:1.5;">Puoi collegare l'account anche più tardi</p>
   </div>
 </div>
 
