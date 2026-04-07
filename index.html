@@ -2108,8 +2108,9 @@ async function _resumePostOnboardingOrBoot(){
         return;
       }
     }catch{}
-    /* No valid session — must sign in */
-    openPostOnboardingAuthGate();
+    /* No valid session — replay slideshow so auth gate follows naturally at the end */
+    lsS(SK.onboardingDone,false);
+    showOnboarding();
     return;
   }
   /* Supabase unavailable (CDN failed) — proceed to avoid bricking the app */
