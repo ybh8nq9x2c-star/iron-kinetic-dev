@@ -1119,9 +1119,13 @@ body.onboarding-active #onb-screen{
           <span style="background:rgba(77,220,198,.08);border:1px solid rgba(77,220,198,.18);border-radius:999px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--p);letter-spacing:.06em;">🛒 Shopping List</span>
         </div>
         <!-- Pricing CTAs -->
+        <button onclick="startCheckout('annual')" style="width:100%;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:13px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;margin-bottom:8px;position:relative;">
+          <span style="position:absolute;top:7px;right:10px;background:rgba(0,55,48,.2);font-size:8px;font-weight:800;letter-spacing:.06em;padding:2px 6px;border-radius:99px;">BEST VALUE</span>
+          €3,33/mese · €39,99/anno<br><span style="font-weight:500;font-size:10px;opacity:.8;">Risparmia il 33%</span>
+        </button>
         <div style="display:flex;gap:8px;margin-bottom:10px;">
-          <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€4,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;">Cancella sempre</span></button>
-          <button onclick="startCheckout('lifetime')" style="flex:1;background:rgba(77,220,198,.08);color:var(--p);border:1px solid rgba(77,220,198,.25);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€49 una volta<br><span style="font-weight:400;font-size:10px;opacity:.7;">🔥 Accesso vita</span></button>
+          <button onclick="startCheckout('monthly')" style="flex:1;background:rgba(77,220,198,.08);color:var(--p);border:1px solid rgba(77,220,198,.2);border-radius:var(--r);padding:12px 6px;font-weight:700;font-size:11px;letter-spacing:.02em;cursor:pointer;line-height:1.3;">€4,99/mese<br><span style="font-weight:400;font-size:9px;opacity:.7;">Mensile</span></button>
+          <button onclick="startCheckout('lifetime')" style="flex:1;background:rgba(192,193,255,.06);color:var(--sec);border:1px solid rgba(192,193,255,.18);border-radius:var(--r);padding:12px 6px;font-weight:700;font-size:11px;letter-spacing:.02em;cursor:pointer;line-height:1.3;">€49 una volta<br><span style="font-weight:400;font-size:9px;opacity:.7;">Accesso vita</span></button>
         </div>
         <!-- Trial CTA -->
         <button id="onb-activate-plan-btn" onclick="activatePlanAndContinue()" class="btn btn-ghost w100" style="height:44px;font-size:12px;color:var(--muted);margin-bottom:4px;">
@@ -1655,6 +1659,7 @@ body.onboarding-active #onb-screen{
                 <button id="btn-export-data" onclick="exportData()" class="btn btn-ghost w100 sn">📦 Esporta Backup</button>
                 <button id="btn-import-data" onclick="document.getElementById('imp-inp').click()" class="btn btn-ghost w100 sn">📥 Importa Backup</button>
                 <input type="file" id="imp-inp" accept=".json" style="display:none;" onchange="importBackup(event)"/>
+                <button id="btn-billing-portal" onclick="openBillingPortal()" class="btn btn-ghost w100 sn" style="display:none;">💳 Gestisci Abbonamento</button>
               </div>
             </div>
           </div>
@@ -1961,6 +1966,7 @@ const SUPABASE_URL='https://qfmyhgrrkshcqxrwbyle.supabase.co';
 const SUPABASE_KEY='sb_publishable_6Qf4v09R4G1_y0-GMxDZ8w_JV7GXnPB';
 const TRIAL_DAYS=7;
 const STRIPE_MONTHLY='price_1TJVc6J1bJ8OCtTAnDcsUnSm';
+const STRIPE_ANNUAL='price_annual_placeholder'; /* Set real Stripe annual price ID */
 const STRIPE_LIFETIME='price_1TJVc7J1bJ8OCtTAbZv41Ozc';
 const STRIPE_PK='pk_test_51TJVZHJ1bJ8OCtTAl4a9GDyO4vUeVen8jmLNgs5y4HcQy9m4x7TIWs98ZHpM0tZAPuTKMvVGU9MYByy7hO7FHK0z007ML5cdeP';
 
@@ -1970,44 +1976,58 @@ const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}catc
 /* Global trend access state — optimistic default so first paint shows features */
 let trendAccess={access:true,mode:'trial',daysLeft:TRIAL_DAYS};
 
-/* Sync check for anonymous users (no network needed) */
-function _checkTrendLocal(){
-  const stored=localStorage.getItem('ik_trial_start');
-  if(!stored){localStorage.setItem('ik_trial_start',String(Date.now()));return{access:true,mode:'trial',daysLeft:TRIAL_DAYS};}
-  const elapsed=(Date.now()-parseInt(stored,10))/86400000;
-  const left=Math.max(0,TRIAL_DAYS-elapsed);
-  return{access:left>0,mode:'trial',daysLeft:Math.ceil(left)};
-}
-
 async function getUser(){
   if(!sb)return null;
   try{const{data:{user}}=await sb.auth.getUser();return user;}catch{return null;}
 }
 
-async function checkTrendAccess(){
+/* CANONICAL entitlement engine — Supabase is truth, localStorage is ephemeral UI cache */
+async function getEntitlementState(){
   const user=await getUser();
-  if(!user)return _checkTrendLocal();
-  /* Paid-user override via localStorage (set on Stripe success return) */
-  if(localStorage.getItem('ik_trend_active')==='1')return{access:true,mode:'paid'};
+  if(!user){
+    /* Anonymous path — local trial only */
+    const stored=localStorage.getItem('ik_trial_start');
+    if(!stored){localStorage.setItem('ik_trial_start',String(Date.now()));return{access:true,mode:'trial',daysLeft:TRIAL_DAYS,anonymous:true};}
+    const elapsed=(Date.now()-parseInt(stored,10))/86400000;
+    const left=Math.max(0,TRIAL_DAYS-elapsed);
+    return{access:left>0,mode:left>0?'trial':'expired',daysLeft:Math.ceil(left),anonymous:true};
+  }
+  /* Authenticated path — always verify from Supabase */
   try{
-    const{data}=await sb.from('users').select('trend_active,trial_end').eq('id',user.id).single();
-    if(data?.trend_active)return{access:true,mode:'paid'};
+    const{data}=await sb.from('users').select('trend_active,plan,subscription_status,trial_end,current_period_end,cancel_at_period_end').eq('id',user.id).single();
+    if(data?.trend_active&&data?.plan!=='free'){
+      return{access:true,mode:'paid',plan:data.plan,status:data.subscription_status,periodEnd:data.current_period_end,cancelAtPeriodEnd:data.cancel_at_period_end||false};
+    }
+    /* Grace period: past_due keeps access while Stripe retries */
+    if(data?.subscription_status==='past_due'){
+      return{access:true,mode:'grace',plan:data.plan,status:'past_due'};
+    }
+    /* Server-side trial */
     if(data?.trial_end&&new Date(data.trial_end)>new Date()){
       const left=Math.ceil((new Date(data.trial_end)-new Date())/86400000);
       return{access:true,mode:'trial',daysLeft:left};
     }
-  }catch{}
-  return{access:false,mode:'expired'};
+    return{access:false,mode:'expired'};
+  }catch{
+    /* Network error — use short-lived localStorage cache (1 hour max) */
+    try{
+      const c=JSON.parse(localStorage.getItem('ik_ent_cache')||'null');
+      if(c&&c.ts&&Date.now()-c.ts<3600000)return c.state;
+    }catch{}
+    return{access:false,mode:'expired'};
+  }
 }
 
+/* Keep legacy name for internal callers */
+const checkTrendAccess=getEntitlementState;
+
 async function initTrend(){
-  /* Synchronous local check first so UI is correct before network */
-  trendAccess=_checkTrendLocal();
-  updateTrendBadge();
-  /* Then async Supabase check (refines if logged in) */
-  const remote=await checkTrendAccess();
-  if(JSON.stringify(remote)!==JSON.stringify(trendAccess)){
-    trendAccess=remote;
+  /* Canonical server-side check — Supabase is the single source of truth */
+  const state=await getEntitlementState();
+  /* Write to short-lived cache so offline reads stay consistent for ≤1h */
+  try{localStorage.setItem('ik_ent_cache',JSON.stringify({ts:Date.now(),state}));}catch{}
+  if(JSON.stringify(state)!==JSON.stringify(trendAccess)){
+    trendAccess=state;
     updateTrendBadge();
     const lb=document.getElementById('trend-lock-banner');
     if(lb)lb.style.display=trendAccess.access?'none':'block';
@@ -2015,6 +2035,8 @@ async function initTrend(){
   applyTrendBlurOverlay();
   if(trendAccess.mode==='trial'&&trendAccess.daysLeft===1)
     setTimeout(()=>showTrialExpiringSoon(),3000);
+  if(trendAccess.mode==='grace')
+    setTimeout(()=>showToast(t('trend.grace.toast'),6000),2000);
 }
 
 function updateTrendBadge(){
@@ -2022,6 +2044,7 @@ function updateTrendBadge(){
   if(!badge)return;
   if(trendAccess.mode==='paid'){badge.textContent='✦ TREND';badge.style.color='#4ddcc6';}
   else if(trendAccess.mode==='trial'){badge.textContent=`⏱ ${trendAccess.daysLeft}gg`;badge.style.color='#f5a623';}
+  else if(trendAccess.mode==='grace'){badge.textContent='⚠ RINNOVO';badge.style.color='#FF9F0A';}
   else{badge.textContent='🔒 TREND';badge.style.color='#666';}
 }
 
@@ -2057,18 +2080,51 @@ function closePaywall(){
 }
 
 async function startCheckout(plan){
-  if(typeof Stripe==='undefined'){showToast('Stripe non disponibile');return;}
-  const stripe=Stripe(STRIPE_PK);
-  const priceId=plan==='lifetime'?STRIPE_LIFETIME:STRIPE_MONTHLY;
+  /* Require login — subscription state must be server-side */
   const user=await getUser();
-  const{error}=await stripe.redirectToCheckout({
-    lineItems:[{price:priceId,quantity:1}],
-    mode:plan==='lifetime'?'payment':'subscription',
-    successUrl:window.location.origin+window.location.pathname+'?trend=success',
-    cancelUrl:window.location.href,
-    customerEmail:user?.email||undefined,
-  });
-  if(error)showToast(error.message);
+  if(!user){
+    showToast(t('trend.loginRequired'));
+    setTimeout(openPostOnboardingAuthGate,400);
+    return;
+  }
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    if(!session){showToast(t('trend.loginRequired'));return;}
+    showToast('⏳ '+(t('toast.checkoutPreparing')||'Preparazione checkout…'));
+    const res=await fetch(SUPABASE_URL+'/functions/v1/create-checkout-session',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_KEY},
+      body:JSON.stringify({plan}),
+    });
+    const json=await res.json();
+    if(json.error||!json.url){showToast(json.error||'Checkout non disponibile');return;}
+    window.location.href=json.url;
+  }catch(err){
+    console.error('startCheckout:',err);
+    showToast(t('toast.errore')||'Checkout non disponibile');
+  }
+}
+
+/* Open Stripe Billing Portal to manage/cancel subscription */
+async function openBillingPortal(){
+  const user=await getUser();
+  if(!user){showToast(t('trend.loginRequired'));return;}
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    if(!session)return;
+    showToast('⏳ '+(t('toast.checkoutPreparing')||'Apertura portale…'));
+    const res=await fetch(SUPABASE_URL+'/functions/v1/create-portal-session',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_KEY},
+      body:JSON.stringify({}),
+    });
+    const json=await res.json();
+    if(json.error||!json.url){showToast(json.error||'Portale non disponibile');return;}
+    window.location.href=json.url;
+  }catch(err){
+    console.error('openBillingPortal:',err);
+    showToast('Portale non disponibile');
+  }
 }
 
 async function openAuthModal(){
@@ -2123,13 +2179,17 @@ function closePostOnboardingAuthGate(){
 async function syncUserAfterLogin(user){
   if(!sb||!user)return;
   try{
-    const{error}=await sb.from('users').upsert({id:user.id,email:user.email},{onConflict:'id'});
-    if(!error){
-      /* Mirror paid status locally if Supabase says active */
-      const{data}=await sb.from('users').select('trend_active').eq('id',user.id).single();
-      if(data?.trend_active){localStorage.setItem('ik_trend_active','1');trendAccess={access:true,mode:'paid'};}
-    }
-  }catch{}
+    /* Upsert core identity — do NOT overwrite billing fields */
+    await sb.from('users').upsert({id:user.id,email:user.email},{onConflict:'id',ignoreDuplicates:false});
+    /* Set trial_end only if user has never had one (first login) */
+    const trialEnd=new Date(Date.now()+TRIAL_DAYS*86400000).toISOString();
+    await sb.from('users').update({trial_end:trialEnd}).eq('id',user.id).is('trial_end',null);
+    /* Canonical entitlement state — invalidate old localStorage cache */
+    localStorage.removeItem('ik_ent_cache');
+    trendAccess=await getEntitlementState();
+    try{localStorage.setItem('ik_ent_cache',JSON.stringify({ts:Date.now(),state:trendAccess}));}catch{}
+    updateTrendBadge();
+  }catch(e){console.error('syncUserAfterLogin:',e);}
 }
 
 /* ── Auth state listener (set up once at boot) ── */
@@ -2187,16 +2247,38 @@ async function _resumePostOnboardingOrBoot(){
   _bootAfterGates();
 }
 
-/* Handle Stripe success redirect */
+/* Handle Stripe post-checkout redirect — poll Supabase until webhook confirms */
 (()=>{
-  if(new URLSearchParams(location.search).get('trend')==='success'){
-    localStorage.setItem('ik_trend_active','1');
-    trendAccess={access:true,mode:'paid'};
+  if(new URLSearchParams(location.search).get('trend')==='verifying'){
     history.replaceState({},'',location.pathname);
-    /* Toast shown after app mounts */
-    window._trendActivatedMsg=true;
+    window._trendVerifying=true;
+  }
+  /* Legacy ?trend=success (fallback) */
+  if(new URLSearchParams(location.search).get('trend')==='success'){
+    history.replaceState({},'',location.pathname);
+    window._trendVerifying=true;
   }
 })();
+
+/* Poll Supabase after Stripe redirect — webhook may take a few seconds */
+async function _verifyTrendAfterCheckout(){
+  let attempts=0;const MAX=10;
+  const poll=async()=>{
+    attempts++;
+    localStorage.removeItem('ik_ent_cache');
+    const state=await getEntitlementState();
+    if(state.mode==='paid'){
+      trendAccess=state;
+      try{localStorage.setItem('ik_ent_cache',JSON.stringify({ts:Date.now(),state}));}catch{}
+      updateTrendBadge();applyTrendBlurOverlay?.();
+      showToast('✦ '+(t('trend.activated')||'Trend attivato!'));
+      return;
+    }
+    if(attempts<MAX)setTimeout(poll,2000);
+    else showToast(t('trend.activating')||'✓ Pagamento ricevuto — Trend si attiva a breve',6000);
+  };
+  setTimeout(poll,1500); /* Give webhook 1.5s head start */
+}
 
 /* ── FIX 5: global error handler ── */
 window.addEventListener('unhandledrejection',e=>{
@@ -2267,6 +2349,11 @@ it:{
   'trend.blur.expired':'Prova scaduta',
   'trend.blur.expiredSub':'Sblocca Trend per continuare',
   'trend.blur.cta':'Sblocca',
+  'trend.loginRequired':'Accedi con Google per sbloccare Trend',
+  'trend.activated':'✦ Trend attivato! Benvenuto.',
+  'trend.activating':'✓ Pagamento ricevuto — Trend si attiva a breve',
+  'trend.grace.toast':'⚠ Problema di pagamento — aggiorna il metodo di pagamento per continuare',
+  'toast.checkoutPreparing':'Preparazione checkout…',
   'onb.field.sport':'Sport praticato',
   'onb.field.trainTime':'Orario di allenamento',
   'onb.field.trainTime.hint':'⏱ Cruciale per il nutrient timing: i pasti pre/post-workout verranno calibrati su questo orario.',
@@ -2791,6 +2878,11 @@ en:{
   'trend.blur.expired':'Trial expired',
   'trend.blur.expiredSub':'Unlock Trend to continue',
   'trend.blur.cta':'Unlock',
+  'trend.loginRequired':'Sign in with Google to unlock Trend',
+  'trend.activated':'✦ Trend activated! Welcome.',
+  'trend.activating':'✓ Payment received — Trend activates shortly',
+  'trend.grace.toast':'⚠ Payment issue — update your payment method to continue',
+  'toast.checkoutPreparing':'Preparing checkout…',
   'onb.field.sport':'Sport type',
   'onb.field.trainTime':'Training time',
   'onb.field.trainTime.hint':'⏱ Crucial for nutrient timing: pre/post-workout meals will be scheduled around this time.',
@@ -6033,6 +6125,11 @@ function applyTrendBlurOverlay(){
   if(trendAccess.mode==='paid'){
     overlay.classList.remove('on');
     overlay.style.pointerEvents='none';
+  } else if(trendAccess.mode==='grace'){
+    /* past_due — keep access but warn about payment retry */
+    overlay.classList.remove('on');
+    overlay.style.pointerEvents='none';
+    /* warn badge is set by updateTrendBadge */
   } else if(trendAccess.mode==='trial'&&trendAccess.access){
     overlay.classList.add('on');
     overlay.style.pointerEvents='auto';
@@ -6772,6 +6869,9 @@ function renderSettings(){
   const prof=getProfile();if(prof)_renderProfileCard(prof);
   _renderPrefsCard();
   if(document.getElementById('hdr-plan')){const _pn=normalizePlanLabel(m.name,m.goal);document.getElementById('hdr-plan').textContent=_pn;document.getElementById('hdr-plan').style.display=_pn?'block':'none';}
+  /* Show billing portal button only for paying subscribers */
+  const _bpBtn=document.getElementById('btn-billing-portal');
+  if(_bpBtn)_bpBtn.style.display=(trendAccess.mode==='paid'||trendAccess.mode==='grace')?'flex':'none';
 }
 function _renderProfileCard(prof){
   /* Hero metrics */
@@ -7828,11 +7928,11 @@ function mountApp(){
       ?requestIdleCallback(()=>{renderSettings?.();buildDaySelector?.();scheduleRender(renderFingerprint,renderWeeklyReport);},{timeout:500})
       :setTimeout(()=>{renderSettings?.();buildDaySelector?.();scheduleRender(renderFingerprint,renderWeeklyReport);},300);
   });
-  /* Init Trend access (async — local check is already done at script load) */
+  /* Init Trend access — Supabase is canonical source of truth */
   initTrend().then(()=>{
     const lb=document.getElementById('trend-lock-banner');
     if(lb)lb.style.display=trendAccess.access?'none':'block';
-    if(window._trendActivatedMsg){window._trendActivatedMsg=false;toast('✨ Trend attivato! Benvenuto.');}
+    if(window._trendVerifying){window._trendVerifying=false;_verifyTrendAfterCheckout();}
   });
 }
 
@@ -8658,9 +8758,9 @@ function _bootAfterLangGate(){
     <div style="width:56px;height:56px;background:rgba(77,220,198,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
       <span class="material-symbols-outlined" style="color:#4ddcc6;font-size:28px;">trending_up</span>
     </div>
-    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:#fff;margin:0 0 8px;">Iron Kinetic Trend</h2>
-    <p style="font-size:13px;color:#888;text-align:center;line-height:1.6;margin:0 0 24px;">Il tuo metabolismo ha dati reali. Sbloccali.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:#fff;margin:0 0 6px;">Iron Kinetic Trend</h2>
+    <p style="font-size:13px;color:#888;text-align:center;line-height:1.6;margin:0 0 20px;">Il tuo metabolismo ha dati reali. Sbloccali.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;">
       <div class="pw-feat">📈 Predictive Curve</div>
       <div class="pw-feat">🧬 Metabolic Fingerprint</div>
       <div class="pw-feat">📊 Weekly Report</div>
@@ -8668,11 +8768,17 @@ function _bootAfterLangGate(){
       <div class="pw-feat">🔄 Adaptive Engine</div>
       <div class="pw-feat">🛒 Shopping List</div>
     </div>
-    <div style="display:flex;gap:10px;margin-bottom:16px;">
-      <button onclick="startCheckout('monthly')" style="flex:1;background:#4ddcc6;color:#000;border:none;border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">€4,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.7;">Cancella sempre</span></button>
-      <button onclick="startCheckout('lifetime')" style="flex:1;background:rgba(77,220,198,.08);color:#4ddcc6;border:1px solid rgba(77,220,198,.25);border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">€49 una volta<br><span style="font-weight:400;font-size:11px;opacity:.7;">🔥 Solo 100 posti</span></button>
+    <!-- Best value: Annual -->
+    <button onclick="startCheckout('annual')" style="width:100%;background:linear-gradient(135deg,#4ddcc6,#3bbfac);color:#003730;border:none;border-radius:12px;padding:16px;font-weight:800;font-size:15px;cursor:pointer;line-height:1.4;margin-bottom:8px;position:relative;overflow:hidden;">
+      <span style="position:absolute;top:8px;right:12px;background:rgba(0,55,48,.25);color:#003730;font-size:9px;font-weight:800;letter-spacing:.08em;padding:2px 8px;border-radius:99px;">BEST VALUE</span>
+      €3,33/mese · €39,99/anno<br><span style="font-weight:500;font-size:11px;opacity:.8;">Risparmia il 33% · Cancella quando vuoi</span>
+    </button>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button onclick="startCheckout('monthly')" style="flex:1;background:rgba(77,220,198,.1);color:#4ddcc6;border:1px solid rgba(77,220,198,.25);border-radius:12px;padding:13px 8px;font-weight:700;font-size:13px;cursor:pointer;line-height:1.4;">€4,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;">Mensile · Cancella sempre</span></button>
+      <button onclick="startCheckout('lifetime')" style="flex:1;background:rgba(192,193,255,.08);color:#c0c1ff;border:1px solid rgba(192,193,255,.2);border-radius:12px;padding:13px 8px;font-weight:700;font-size:13px;cursor:pointer;line-height:1.4;">€49 una volta<br><span style="font-weight:400;font-size:10px;opacity:.7;">Accesso a vita</span></button>
     </div>
-    <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:#888;font-size:12px;cursor:pointer;padding:8px;">Hai già un account? <span style="color:#4ddcc6;">Accedi</span></button>
+    <p style="font-size:10px;color:rgba(199,196,216,.4);text-align:center;margin:0 0 10px;line-height:1.5;">Pagamento sicuro via Stripe · Annulla in qualsiasi momento</p>
+    <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:#888;font-size:12px;cursor:pointer;padding:6px;">Hai già un account? <span style="color:#4ddcc6;">Accedi</span></button>
   </div>
 </div>
 
