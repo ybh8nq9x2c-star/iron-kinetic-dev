@@ -1877,12 +1877,12 @@ body.onboarding-active #onb-screen{
    TREND FREEMIUM — Supabase + Stripe
    Replace placeholder values before deploying.
 ══════════════════════════════════════════════════════ */
-const SUPABASE_URL='YOUR_SUPABASE_URL';
-const SUPABASE_KEY='YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL='YOUR_SUPABASE_URL';       // TODO: paste your Supabase project URL
+const SUPABASE_KEY='YOUR_SUPABASE_ANON_KEY';  // TODO: paste your Supabase anon/public key
 const TRIAL_DAYS=7;
-const STRIPE_MONTHLY='price_MONTHLY_ID';
-const STRIPE_LIFETIME='price_LIFETIME_ID';
-const STRIPE_PK='pk_live_YOUR_KEY';
+const STRIPE_MONTHLY='price_1TJVc6J1bJ8OCtTAnDcsUnSm';
+const STRIPE_LIFETIME='price_1TJVc7J1bJ8OCtTAbZv41Ozc';
+const STRIPE_PK='pk_test_51TJVZHJ1bJ8OCtTAl4a9GDyO4vUeVen8jmLNgs5y4HcQy9m4x7TIWs98ZHpM0tZAPuTKMvVGU9MYByy7hO7FHK0z007ML5cdeP';
 
 /* Supabase client — graceful no-op if CDN blocked */
 const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}catch{return null;}})();
