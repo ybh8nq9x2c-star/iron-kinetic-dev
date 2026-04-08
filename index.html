@@ -2000,7 +2000,6 @@ async function getUser(){
 async function checkTrendAccess(){
   const user=await getUser();
   if(!user)return _checkTrendLocal();
-  if(localStorage.getItem('ik_trend_active')==='1')return{access:true,mode:'paid'};
   try{
     const{data}=await sb.from('users')
       .select('trend_active,trial_end,grace_period_until,plan')
@@ -2198,7 +2197,7 @@ async function syncUserAfterLogin(user){
     if(!error){
       /* Mirror paid status locally if Supabase says active */
       const{data}=await sb.from('users').select('trend_active').eq('id',user.id).single();
-      if(data?.trend_active){localStorage.setItem('ik_trend_active','1');trendAccess={access:true,mode:'paid'};}
+      if(data?.trend_active){trendAccess={access:true,mode:'paid'};}
     }
   }catch{}
 }
@@ -2258,14 +2257,31 @@ async function _resumePostOnboardingOrBoot(){
   _bootAfterGates();
 }
 
-/* Handle Stripe success redirect */
+/* Handle Stripe success redirect — poll server for confirmation */
 (()=>{
   if(new URLSearchParams(location.search).get('trend')==='success'){
-    localStorage.setItem('ik_trend_active','1');
-    trendAccess={access:true,mode:'paid'};
     history.replaceState({},'',location.pathname);
-    /* Toast shown after app mounts */
-    window._trendActivatedMsg=true;
+    window._trendPolling=true;
+    /* Show processing toast, then poll Supabase for up to 60s */
+    const pollTrendActivation=async()=>{
+      const user=await getUser();
+      if(!user){window._trendActivatedMsg='Processing... refresh shortly';return;}
+      for(let i=0;i<12;i++){ // 12 x 5s = 60s
+        try{
+          const{data}=await sb.from('users').select('trend_active').eq('id',user.id).single();
+          if(data?.trend_active){
+            trendAccess={access:true,mode:'paid'};
+            updateTrendBadge();
+            window._trendActivatedMsg=true;
+            return;
+          }
+        }catch{}
+        await new Promise(r=>setTimeout(r,5000));
+      }
+      window._trendActivatedMsg='Payment still processing — refresh to check status';
+    };
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(pollTrendActivation,2000));
+    else setTimeout(pollTrendActivation,2000);
   }
 })();
 
