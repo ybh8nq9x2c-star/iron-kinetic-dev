@@ -652,6 +652,10 @@ body.onboarding-active #onb-screen{
 #paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9999;align-items:flex-end;justify-content:center;}
 #paywall-sheet{background:#1c1b19;border-radius:20px 20px 0 0;padding:32px 24px 48px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
 #trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
+#scr-prog.locked-trend{display:flex!important;flex-direction:column;min-height:calc(100vh - 140px);}
+#scr-prog.locked-trend .pg{flex:1;display:flex;flex-direction:column;}
+#trend-lock-banner.locked-card{flex-direction:column;margin:auto 0;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px 16px;}
+[onclick*="startCheckout"]:disabled{cursor:not-allowed;pointer-events:none;}
 /* ── Post-onboarding auth gate ── */
 #post-onb-auth-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.90);backdrop-filter:blur(18px);z-index:10001;align-items:flex-end;justify-content:center;}
 #post-onb-auth-sheet{background:var(--s1);border-radius:28px 28px 0 0;padding:36px 24px 52px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .42s cubic-bezier(0.16,1,0.3,1);}
@@ -1395,15 +1399,15 @@ body.onboarding-active #onb-screen{
         <div style="display:flex;align-items:center;gap:8px;">
           <span class="material-symbols-outlined" style="color:var(--p);font-size:18px;font-variation-settings:'FILL' 1;">lock</span>
           <div>
-            <p id="trend-blur-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0;line-height:1.3;">Prova gratuita attiva</p>
+            <p id="trend-blur-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0;line-height:1.3;"></p>
             <p id="trend-blur-days" style="font-size:10px;color:var(--muted);margin:0;"></p>
           </div>
         </div>
-        <button onclick="openPaywall('Trend')" style="background:var(--p);color:#003730;border:none;border-radius:var(--r-pill);height:32px;padding:0 14px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;pointer-events:auto;"><span id="trend-blur-cta">Sblocca</span></button>
+        <button onclick="openPaywall('Trend')" style="background:var(--p);color:#003730;border:none;border-radius:var(--r-pill);height:32px;padding:0 14px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;pointer-events:auto;"><span id="trend-blur-cta"></span></button>
       </div>
     </div>
     <div id="trend-lock-banner">
-      <span style="font-size:13px;color:#ccc;">🔒 Trend scaduto — <button onclick="openPaywall('Trend')" style="background:none;border:none;color:#4ddcc6;font-weight:700;cursor:pointer;font-size:13px;">Sblocca ora</button></span>
+    </div>
     </div>
     <div class="pg">
       <p class="sec-title" data-i18n="prog.title">Progresso</p>
@@ -1973,6 +1977,7 @@ const SUPABASE_KEY='sb_publishable_6Qf4v09R4G1_y0-GMxDZ8w_JV7GXnPB';
 const TRIAL_DAYS=7;
 const STRIPE_MONTHLY='price_1TJVc6J1bJ8OCtTAnDcsUnSm';
 const STRIPE_LIFETIME='price_1TJVc7J1bJ8OCtTAbZv41Ozc';
+const STRIPE_ANNUAL='STRIPE_PRICE_ANNUAL_PLACEHOLDER';
 const STRIPE_PK='pk_test_51TJVZHJ1bJ8OCtTAl4a9GDyO4vUeVen8jmLNgs5y4HcQy9m4x7TIWs98ZHpM0tZAPuTKMvVGU9MYByy7hO7FHK0z007ML5cdeP';
 
 /* Supabase client — graceful no-op if CDN blocked */
@@ -2040,6 +2045,7 @@ async function initTrend(){
     if(lb)lb.style.display=trendAccess.access?'none':'block';
   }
   applyTrendBlurOverlay();
+  syncTrendLockCopy();
   if(trendAccess.mode==='trial'&&trendAccess.daysLeft===1)
     setTimeout(()=>showTrialExpiringSoon(),3000);
 }
@@ -2089,34 +2095,47 @@ function closePaywall(){
 }
 
 async function startCheckout(plan){
-  const user=await getUser();
-  if(!user||!sb){
-    if(typeof Stripe==='undefined'){showToast('Stripe non disponibile');return;}
-    const stripe=Stripe(STRIPE_PK);
-    const priceId=plan==='lifetime'?STRIPE_LIFETIME:STRIPE_MONTHLY;
-    const{error}=await stripe.redirectToCheckout({
-      lineItems:[{price:priceId,quantity:1}],
-      mode:plan==='lifetime'?'payment':'subscription',
-      successUrl:window.location.origin+window.location.pathname+'?trend=success',
-      cancelUrl:window.location.href,
-      customerEmail:user?.email||undefined,
-    });
-    if(error)showToast(error.message);
-    return;
-  }
+  const btns=document.querySelectorAll('[onclick*="startCheckout"]');
+  btns.forEach(b=>{b.disabled=true;b.style.opacity='0.6';});
   try{
-    const{data:{session}}=await sb.auth.getSession();
-    const token=session?.access_token;
-    if(!token){showToast('Sessione scaduta');return;}
-    const res=await fetch(SUPABASE_URL+'/functions/v1/create-checkout-session',{
-      method:'POST',
-      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-      body:JSON.stringify({price_tier:plan}),
-    });
-    const json=await res.json();
-    if(json.url)window.location.href=json.url;
-    else showToast(json.error||'Errore checkout');
-  }catch(e){showToast('Errore: '+e.message);}
+    const user=await getUser();
+    const session=await sb?.auth.getSession();
+    const accessToken=session?.data?.session?.access_token;
+    const planMap={
+      monthly:{priceId:STRIPE_MONTHLY,mode:'subscription'},
+      annual:{priceId:STRIPE_ANNUAL,mode:'subscription'},
+      lifetime:{priceId:STRIPE_LIFETIME,mode:'payment'}
+    };
+    const selected=planMap[plan]||planMap.monthly;
+    const res=await fetch(
+      SUPABASE_URL+'/functions/v1/create-checkout-session',
+      {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer '+(accessToken||SUPABASE_KEY),
+          'apikey':SUPABASE_KEY
+        },
+        body:JSON.stringify({
+          priceId:selected.priceId,
+          mode:selected.mode,
+          successUrl:window.location.origin+window.location.pathname+'?trend=success',
+          cancelUrl:window.location.href,
+          customerEmail:user?.email||null
+        })
+      }
+    );
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      throw new Error(err.error||'Checkout error '+res.status);
+    }
+    const data=await res.json();
+    if(!data?.url)throw new Error('No checkout URL returned');
+    window.location.href=data.url;
+  }catch(err){
+    showToast(err?.message||'Errore checkout');
+    btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
+  }
 }
 
 async function openBillingPortal(){
@@ -3980,6 +3999,7 @@ function applyTranslations(deferOffscreen){
   }; /* end _offscreen */
   if(deferOffscreen)(window.requestIdleCallback||window.setTimeout)(_offscreen,{timeout:300});
   else _offscreen();
+  syncTrendLockCopy();
 }
 
 const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
@@ -6119,6 +6139,54 @@ function applyTrendBlurOverlay(){
   }
 }
 
+function syncTrendLockCopy(){
+  const lockBanner=document.getElementById('trend-lock-banner');
+  const blurTitle=document.getElementById('trend-blur-title');
+  const blurDays=document.getElementById('trend-blur-days');
+  const blurCta=document.getElementById('trend-blur-cta');
+  if(blurCta)blurCta.textContent=t('trend.blur.cta');
+  if(trendAccess?.access){
+    if(lockBanner)lockBanner.style.display='none';
+    updateTrendLockedLayout();
+    return;
+  }
+  if(blurTitle){
+    if(trendAccess?.mode==='trial'&&trendAccess?.daysLeft>1){
+      blurTitle.textContent=t('trend.blur.trialActive');
+    }else if(trendAccess?.mode==='trial'&&trendAccess?.daysLeft===1){
+      blurTitle.textContent=t('trend.blur.lastDay');
+    }else{
+      blurTitle.textContent=t('trend.blur.expired');
+    }
+  }
+  if(blurDays){
+    if(trendAccess?.mode==='trial'&&trendAccess?.daysLeft>1){
+      blurDays.textContent=t('trend.blur.daysLeft').replace('{n}',trendAccess.daysLeft);
+    }else{
+      blurDays.textContent=t('trend.blur.expiredSub');
+    }
+  }
+  if(lockBanner){
+    lockBanner.innerHTML=`
+      <span style="font-size:13px;color:#ccc">${sanitize(t('trend.blur.expired'))}</span>
+      <button onclick="openPaywall('Trend')" style="background:none;border:none;color:#4ddcc6;font-weight:700;cursor:pointer;font-size:13px">
+        ${sanitize(t('trend.blur.cta'))}
+      </button>
+    `;
+    lockBanner.style.display='flex';
+  }
+  updateTrendLockedLayout();
+}
+
+function updateTrendLockedLayout(){
+  const scr=document.getElementById('scr-prog');
+  const banner=document.getElementById('trend-lock-banner');
+  if(!scr||!banner)return;
+  const locked=!trendAccess?.access;
+  scr.classList.toggle('locked-trend',locked);
+  banner.classList.toggle('locked-card',locked);
+}
+
 /* ═══════════════════════════════════════
    CHECK-IN
 ═══════════════════════════════════════ */
@@ -7844,7 +7912,7 @@ const TABS=['oggi','prog','set','info'];
 function switchTab(name){
   if(!dietData&&name!=='oggi'&&name!=='info')return;hap();activeTab=name;
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
-  if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';applyTrendBlurOverlay();}
+  if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';applyTrendBlurOverlay();syncTrendLockCopy();}
   if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
   if(name==='set'&&_tabDirty.set){renderSettings();renderKcalRing();_tabDirty.set=false;}
   if(name==='info'){updateConsentUI();}
