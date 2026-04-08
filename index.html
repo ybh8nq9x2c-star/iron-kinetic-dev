@@ -1975,9 +1975,6 @@ body.onboarding-active #onb-screen{
 const SUPABASE_URL='https://qfmyhgrrkshcqxrwbyle.supabase.co';
 const SUPABASE_KEY='sb_publishable_6Qf4v09R4G1_y0-GMxDZ8w_JV7GXnPB';
 const TRIAL_DAYS=7;
-const STRIPE_MONTHLY='price_1TJVc6J1bJ8OCtTAnDcsUnSm';
-const STRIPE_LIFETIME='price_1TJVc7J1bJ8OCtTAbZv41Ozc';
-const STRIPE_ANNUAL='STRIPE_PRICE_ANNUAL_PLACEHOLDER';
 const STRIPE_PK='pk_test_51TJVZHJ1bJ8OCtTAl4a9GDyO4vUeVen8jmLNgs5y4HcQy9m4x7TIWs98ZHpM0tZAPuTKMvVGU9MYByy7hO7FHK0z007ML5cdeP';
 
 /* Supabase client — graceful no-op if CDN blocked */
@@ -2095,34 +2092,24 @@ function closePaywall(){
 }
 
 async function startCheckout(plan){
+  const user=await getUser();
+  if(!user||!sb){showToast(t('toast.loginRequired')||'Accedi per procedere al checkout');openAuthModal();return;}
   const btns=document.querySelectorAll('[onclick*="startCheckout"]');
   btns.forEach(b=>{b.disabled=true;b.style.opacity='0.6';});
   try{
-    const user=await getUser();
-    const session=await sb?.auth.getSession();
-    const accessToken=session?.data?.session?.access_token;
-    const planMap={
-      monthly:{priceId:STRIPE_MONTHLY,mode:'subscription'},
-      annual:{priceId:STRIPE_ANNUAL,mode:'subscription'},
-      lifetime:{priceId:STRIPE_LIFETIME,mode:'payment'}
-    };
-    const selected=planMap[plan]||planMap.monthly;
+    const{data:{session}}=await sb.auth.getSession();
+    const accessToken=session?.access_token;
+    if(!accessToken){showToast(t('toast.sessionExpired')||'Sessione scaduta, riaccedi');return;}
     const res=await fetch(
       SUPABASE_URL+'/functions/v1/create-checkout-session',
       {
         method:'POST',
         headers:{
           'Content-Type':'application/json',
-          'Authorization':'Bearer '+(accessToken||SUPABASE_KEY),
+          'Authorization':'Bearer '+accessToken,
           'apikey':SUPABASE_KEY
         },
-        body:JSON.stringify({
-          priceId:selected.priceId,
-          mode:selected.mode,
-          successUrl:window.location.origin+window.location.pathname+'?trend=success',
-          cancelUrl:window.location.href,
-          customerEmail:user?.email||null
-        })
+        body:JSON.stringify({price_tier:plan||'monthly'})
       }
     );
     if(!res.ok){
