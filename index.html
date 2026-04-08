@@ -3999,7 +3999,6 @@ function applyTranslations(deferOffscreen){
   }; /* end _offscreen */
   if(deferOffscreen)(window.requestIdleCallback||window.setTimeout)(_offscreen,{timeout:300});
   else _offscreen();
-  syncTrendLockCopy();
 }
 
 const SK={diet:'app_diet_data',phase:'ik_phase',mod:'ik_modifier',
@@ -6140,6 +6139,9 @@ function applyTrendBlurOverlay(){
 }
 
 function syncTrendLockCopy(){
+  // Only run when Trend/Progress screen is actually active
+  const scrProg=document.getElementById('scr-prog');
+  if(!scrProg||scrProg.style.display==='none')return;
   const lockBanner=document.getElementById('trend-lock-banner');
   const blurTitle=document.getElementById('trend-blur-title');
   const blurDays=document.getElementById('trend-blur-days');
@@ -7910,8 +7912,9 @@ function updateAdherenceCalendar(){
 ═══════════════════════════════════════ */
 const TABS=['oggi','prog','set','info'];
 function switchTab(name){
-  if(!dietData&&name!=='oggi'&&name!=='info')return;hap();activeTab=name;
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
+  const progOverlay=document.getElementById('scr-prog-blur-overlay');
+  if(progOverlay)progOverlay.style.display=name==='prog'?'':'none';
   if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';applyTrendBlurOverlay();syncTrendLockCopy();}
   if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
   if(name==='set'&&_tabDirty.set){renderSettings();renderKcalRing();_tabDirty.set=false;}
@@ -7969,6 +7972,9 @@ function mountApp(){
   initTrend().then(()=>{
     const lb=document.getElementById('trend-lock-banner');
     if(lb)lb.style.display=trendAccess.access?'none':'block';
+    // Hide prog overlay on boot since initial tab is not 'prog'
+    const progOverlay=document.getElementById('scr-prog-blur-overlay');
+    if(progOverlay)progOverlay.style.display='none';
     if(window._trendActivatedMsg){window._trendActivatedMsg=false;toast('✨ Trend attivato! Benvenuto.');}
   });
 }
