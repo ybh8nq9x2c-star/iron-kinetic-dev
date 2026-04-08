@@ -1793,7 +1793,7 @@ body.onboarding-active #onb-screen{
           </div>
           <div class="rowb">
             <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Dati su server</span>
-            <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn">Nessuno ✓</span>
+             <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn" id="info-server-data">Nessuno ✓</span>
           </div>
           <div class="rowb">
             <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Cookie</span>
@@ -2222,7 +2222,7 @@ function _initAuthListener(){
         setTimeout(()=>showToast(t('toast.loginOk')),400);
       }
       initTrend();
-    }
+      updateServerDataLabel?.();
   });
 }
 
@@ -2302,6 +2302,17 @@ window.onerror=(msg,src,line)=>{
   if(typeof Sentry!=='undefined')try{Sentry.captureException(new Error(msg+' at '+src+':'+line));}catch{}
   return false;
 };
+/* ── FIX: server data label updater ── */
+function updateServerDataLabel(){
+  const el=document.getElementById('info-server-data');
+  if(!el)return;
+  if(typeof sb==='undefined'||!sb){el.textContent=t('info.serverData.anon')||'Nessuno ✓';return;}
+  sb.auth.getUser().then(u=>{
+    if(u.data?.user)el.textContent=t('info.serverData.authed')||'Supabase (EU)';
+    else el.textContent=t('info.serverData.anon')||'Nessuno ✓';
+  }).catch(()=>{el.textContent=t('info.serverData.anon')||'Nessuno ✓';});
+}
+
 /* ── FIX 1: sanitize helper ── */
 function sanitize(s){if(s==null)return '';const str=String(s);const d=document.createElement('div');d.textContent=str;return d.innerHTML.replace(/[\r\n\t]+/g,' ').trim();}
 /* ═══════════════════════════════════════
@@ -2420,6 +2431,7 @@ it:{
   'info.consenso.revoca':'Revoca consenso','info.consenso.dettagli':'Dettagli privacy',
   'info.app.title':'Applicazione','info.app.versione':'Versione','info.app.storage':'Storage',
   'info.app.server':'Dati su server','info.app.server.val':'Nessuno ✓',
+  'info.serverData.authed':'Supabase (EU)','info.serverData.anon':'Nessuno ✓',
   'info.app.cookie':'Cookie','info.app.cookie.val':'Zero ✓',
   'info.app.tracking':'Tracking','info.app.tracking.val':'Nessuno ✓',
   'info.disclaimer.title':'⚕️ Avviso medico importante',
@@ -2948,6 +2960,7 @@ en:{
   'info.consenso.revoca':'Revoke consent','info.consenso.dettagli':'Privacy details',
   'info.app.title':'Application','info.app.versione':'Version','info.app.storage':'Storage',
   'info.app.server':'Server data','info.app.server.val':'None ✓',
+  'info.serverData.authed':'Supabase (EU)','info.serverData.anon':'None ✓',
   'info.app.cookie':'Cookies','info.app.cookie.val':'Zero ✓',
   'info.app.tracking':'Tracking','info.app.tracking.val':'None ✓',
   'info.disclaimer.title':'⚕️ Medical disclaimer',
@@ -7968,7 +7981,7 @@ function mountApp(){
     renderCoach?.();renderRefeed?.();renderPersonalInsight?.();
     updateAdherenceCalendar?.();renderCalendar?.();
     renderCheckinAnalytics?.();runAdaptiveEngine?.();
-    updateConsentUI?.();updateStreaks?.();updateNotifUI?.();
+    updateConsentUI?.();updateStreaks?.();updateNotifUI?.();updateServerDataLabel?.();
     migrateTargetKcal?.();
     try{restoreTodayCheckin?.();}catch{}
     try{runAutoAdjustEngine?.();}catch(e){}
