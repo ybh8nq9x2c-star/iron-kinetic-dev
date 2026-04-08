@@ -2099,33 +2099,48 @@ function closePaywall(){
 }
 
 async function startCheckout(plan){
-  const user=await getUser();
-  if(!user||!sb){showToast(t('toast.loginRequired')||'Accedi per procedere al checkout');openAuthModal();return;}
   const btns=document.querySelectorAll('[onclick*="startCheckout"]');
   btns.forEach(b=>{b.disabled=true;b.style.opacity='0.6';});
   try{
-    const{data:{session}}=await sb.auth.getSession();
-    const accessToken=session?.access_token;
-    if(!accessToken){showToast(t('toast.sessionExpired')||'Sessione scaduta, riaccedi');return;}
-    const res=await fetch(
-      SUPABASE_URL+'/functions/v1/create-checkout-session',
-      {
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization':'Bearer '+accessToken,
-          'apikey':SUPABASE_KEY
-        },
-        body:JSON.stringify({price_tier:plan||'monthly'})
+    const user=await getUser();
+    const session=await sb?.auth.getSession();
+    const accessToken=session?.data?.session?.access_token;
+    if(accessToken&&user){
+      /* Server-side checkout for authenticated users */
+      const res=await fetch(
+        SUPABASE_URL+'/functions/v1/create-checkout-session',
+        {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'Authorization':'Bearer '+accessToken,
+            'apikey':SUPABASE_KEY
+          },
+          body:JSON.stringify({price_tier:plan||'monthly'})
+        }
+      );
+      if(!res.ok){
+        const err=await res.json().catch(()=>({}));
+        throw new Error(err.error||'Checkout error '+res.status);
       }
-    );
-    if(!res.ok){
-      const err=await res.json().catch(()=>({}));
-      throw new Error(err.error||'Checkout error '+res.status);
+      const data=await res.json();
+      if(!data?.url)throw new Error('No checkout URL returned');
+      window.location.href=data.url;
+    }else{
+      /* Fallback: client-side Stripe checkout for anonymous users */
+      if(typeof Stripe==='undefined'){showToast('Stripe non disponibile');return;}
+      const priceMap={monthly:'price_1TJy0qJYTPcSrsvtmBIyqDmu',annual:'price_1TJy0qJYTPcSrsvtqITsBfl0',lifetime:'price_1TJy0rJYTPcSrsvttxySfxQk'};
+      const priceId=priceMap[plan]||priceMap.monthly;
+      const stripe=Stripe(STRIPE_PK);
+      const{error}=await stripe.redirectToCheckout({
+        lineItems:[{price:priceId,quantity:1}],
+        mode:plan==='lifetime'?'payment':'subscription',
+        successUrl:window.location.origin+window.location.pathname+'?trend=success',
+        cancelUrl:window.location.href,
+        customerEmail:user?.email||undefined,
+      });
+      if(error)throw new Error(error.message);
     }
-    const data=await res.json();
-    if(!data?.url)throw new Error('No checkout URL returned');
-    window.location.href=data.url;
   }catch(err){
     showToast(err?.message||'Errore checkout');
     btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
