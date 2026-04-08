@@ -791,6 +791,10 @@ body.onboarding-active #onb-screen{
   </div>
 
   <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+    <label style="display:flex;align-items:center;gap:8px;margin:12px 0;font-size:13px;color:var(--fg);cursor:pointer">
+      <input type="checkbox" id="gdpr-age-confirm" style="width:18px;height:18px;accent-color:var(--p)">
+      <span data-i18n="gdpr.ageConfirm">Confermo di avere almeno 16 anni</span>
+    </label>
     <button id="gdpr-accept-btn" onclick="gdprAccept()" class="btn btn-primary w100 sn" style="height:52px;font-size:13px;">✓ Accept &amp; Continue</button>
     <button id="gdpr-read-btn" onclick="openModal('privacy')" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;">Read the full Privacy Policy</button>
     <p style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;" class="sn">
@@ -2428,6 +2432,7 @@ it:{
   'gdpr.p3.title':'Zero cookie di tracking · Stripe per pagamenti',
   'gdpr.p3.sub':'Nessun cookie di profilazione, analytics o advertising. I pagamenti Trend sono gestiti da Stripe — nessun dato sanitario viene condiviso con Stripe.',
   'gdpr.btn.accetta':'✓ Accetta e Continua','gdpr.btn.leggi':'Leggi l\'Informativa Privacy completa',
+  'gdpr.ageConfirm':'Confermo di avere almeno 16 anni','gdpr.ageConfirm.required':'Conferma di avere almeno 16 anni',
   'gdpr.footer':'Cliccando <strong style="color:var(--on)">Accetta e Continua</strong> acconsenti al trattamento dei dati come descritto nell\'<button onclick="openModal(\'privacy\')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:\'Manrope\',sans-serif;">Informativa Privacy</button>.<br>Puoi revocare il consenso in qualsiasi momento da <em>Profilo → Privacy</em>.',
   'pwa.title':'Aggiungi alla Schermata Home',
   'pwa.sub':'Per la migliore esperienza, installa Iron Kinetic come app sul tuo dispositivo. Funziona offline, si apre come una vera app e non occupa spazio.',
@@ -2955,6 +2960,7 @@ en:{
   'gdpr.p3.title':'Zero tracking cookies · Stripe for payments',
   'gdpr.p3.sub':'No profiling, analytics or advertising cookies. Trend payments are handled by Stripe — no health data is shared with Stripe.',
   'gdpr.btn.accetta':'✓ Accept & Continue','gdpr.btn.leggi':'Read the full Privacy Policy',
+  'gdpr.ageConfirm':'I confirm I am at least 16 years old','gdpr.ageConfirm.required':'Please confirm you are at least 16 years old',
   'gdpr.footer':'By clicking <strong style="color:var(--on)">Accept &amp; Continue</strong> you consent to data processing as described in the <button onclick="openModal(\'privacy\')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:\'Manrope\',sans-serif;">Privacy Policy</button>.<br>You can revoke consent at any time from <em>Profile → Privacy</em>.',
   'pwa.title':'Add to Home Screen',
   'pwa.sub':'For the best experience, install Iron Kinetic as an app on your device. Works offline, opens like a real app, and takes no storage.',
@@ -8056,6 +8062,8 @@ function gdprStatus(){
 }
 
 function gdprAccept(){
+  const ageCb=document.getElementById('gdpr-age-confirm');
+  if(ageCb&&!ageCb.checked){showToast(t('gdpr.ageConfirm.required')||'Please confirm your age');return;}
   const rec={accepted:true,date:toISO(),ts:Date.now(),version:'1.0'};
   try{localStorage.setItem(GDPR_KEY,JSON.stringify(rec));}catch{}
   document.getElementById('gdpr-gate').classList.remove('on');
