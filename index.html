@@ -667,9 +667,9 @@ body.onboarding-active #onb-screen{
 .gauth-skip-btn:active{color:var(--on);}
 </style>
 <!-- Supabase: kept synchronous — inline boot depends on `supabase` global at parse time -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="https://js.stripe.com/v3/"></script>
-<script defer src="https://browser.sentry-cdn.com/8.13.0/bundle.tracing.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
+<script defer src="https://js.stripe.com/v3/" integrity="sha384-6fqKlmX+g92zPQYudcAesaq44GuuyWEYo3yugHilyWQ1WuYvjGE80tjELeDrba1b" crossorigin="anonymous"></script>
+<script defer src="https://browser.sentry-cdn.com/8.13.0/bundle.tracing.min.js" integrity="sha384-0YohlrzdhGO81o6MqwpgXfqbvuKV5lSBVh5u0cawd/jCBdhuMALsDYh8VxPACmeW" crossorigin="anonymous"></script>
 <script>try{if(typeof Sentry!=='undefined'){Sentry.init({dsn:'https://examplePublicKey@o0.ingest.sentry.io/0',release:'iron-kinetic@1.0.0',tracesSampleRate:0.1,environment:location.hostname.includes('railway')?'production':'development'});}}catch(e){console.warn('Sentry init failed:',e);}</script>
 </head>
 <body class="onboarding-active">
