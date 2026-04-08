@@ -668,6 +668,8 @@ body.onboarding-active #onb-screen{
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://browser.sentry-cdn.com/8.13.0/bundle.tracing.min.js" crossorigin="anonymous"></script>
+<script>try{if(typeof Sentry!=='undefined'){Sentry.init({dsn:'https://examplePublicKey@o0.ingest.sentry.io/0',release:'iron-kinetic@1.0.0',tracesSampleRate:0.1,environment:location.hostname.includes('railway')?'production':'development'});}}catch(e){console.warn('Sentry init failed:',e);}</script>
 </head>
 <body class="onboarding-active">
 <div class="glow-a" aria-hidden="true"></div>
@@ -2285,13 +2287,15 @@ async function _resumePostOnboardingOrBoot(){
   }
 })();
 
-/* ── FIX 5: global error handler ── */
+/* ── FIX 5: global error handler (Sentry-aware) ── */
 window.addEventListener('unhandledrejection',e=>{
   console.error('Unhandled:',e.reason);
+  if(typeof Sentry!=='undefined')try{Sentry.captureException(e.reason);}catch{}
   try{showToast(t('toast.errore'));}catch{}
 });
 window.onerror=(msg,src,line)=>{
   console.error('Error:',msg,src,line);
+  if(typeof Sentry!=='undefined')try{Sentry.captureException(new Error(msg+' at '+src+':'+line));}catch{}
   return false;
 };
 /* ── FIX 1: sanitize helper ── */
