@@ -2224,6 +2224,7 @@ function _initAuthListener(){
       }
       initTrend();
       updateServerDataLabel?.();
+    }
   });
 }
 
@@ -3544,7 +3545,7 @@ function applyTranslations(deferOffscreen){
     const v=p.textContent.trim();
     if(v==='Hai altre domande?'||v==='Any other questions?')p.textContent=t('help.contact.title');
     if(v.includes('Scrivici a')||v.includes('Reach us at')||v.includes('support@ironkinetic'))
-      p.innerHTML=sanitize(t('help.contact.sub.email'));
+      p.innerHTML=t('help.contact.sub.email');
   });
   /* Help modal disclaimer */
   const _hdTitleAlways=document.getElementById('help-disclaimer-title');
@@ -4414,21 +4415,20 @@ function renderFingerprint(){
   const bar=(v,color)=>`<div style="height:6px;border-radius:3px;background:var(--s3);overflow:hidden;"><div style="width:${Math.min(100,Math.max(0,v))}%;height:100%;background:${color};border-radius:3px;transition:width .4s;"></div></div>`;
   const tip=(key)=>`<button class="sn" onclick="showFingerprintTip('${key}')" style="background:none;border:none;color:var(--muted);font-size:11px;padding:0 0 0 4px;cursor:pointer;vertical-align:middle;line-height:1;" aria-label="Info">ⓘ</button>`;
   cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-  cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${sanitize(t('fp.efficienza'))}</span>${tip('efficiency')}
-      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--p);margin:2px 0 4px;">${sanitize(fp.efficiency)}%</p>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.efficienza')}</span>${tip('efficiency')}
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--p);margin:2px 0 4px;">${fp.efficiency}%</p>
       ${bar(fp.efficiency,'var(--p)')}
-      <p class="muted sn" style="font-size:10px;margin-top:4px;">${sanitize(t('fp.rispostaDeficit'))}</p></div>
-    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${sanitize(t('fp.adattamento'))}</span>${tip('adaptation')}
-      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--orange);margin:2px 0 4px;">${sanitize(fp.adaptation)}%</p>
+      <p class="muted sn" style="font-size:10px;margin-top:4px;">${t('fp.rispostaDeficit')}</p></div>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.adattamento')}</span>${tip('adaptation')}
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--orange);margin:2px 0 4px;">${fp.adaptation}%</p>
       ${bar(fp.adaptation,'var(--orange)')}
-      <p class="muted sn" style="font-size:10px;margin-top:4px;">${sanitize(t('fp.riduzione'))}</p></div>
-    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${sanitize(t('fp.risposta'))}</span>${tip('response')}
-      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${sanitize(fp.responseDays)}${sanitize(t('fp.days'))}</p>
-      <p class="muted sn" style="font-size:10px;margin-top:2px;">${sanitize(t('fp.segnale'))}</p></div>
-    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${sanitize(t('fp.perditaReale'))}</span>${tip('weekly')}
-      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${sanitize(fp.avgWeekly)}kg/w</p>
-      <p class="muted sn" style="font-size:10px;margin-top:2px;">${sanitize(t('fp.mediaSettimanaleFP'))}</p></div>
+      <p class="muted sn" style="font-size:10px;margin-top:4px;">${t('fp.riduzione')}</p></div>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.risposta')}</span>${tip('response')}
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.responseDays}${t('fp.days')}</p>
+      <p class="muted sn" style="font-size:10px;margin-top:2px;">${t('fp.segnale')}</p></div>
+    <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.perditaReale')}</span>${tip('weekly')}
+      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.avgWeekly}kg/w</p>
+      <p class="muted sn" style="font-size:10px;margin-top:2px;">${t('fp.mediaSettimanaleFP')}</p></div>
   </div>`;
   },'Metabolic Fingerprint',true);
 }
@@ -6078,7 +6078,7 @@ function runCalcAndGenerate(){
   let html='';
   mNames.forEach(mn=>{
     const meal=day1[mn];if(!meal)return;
-    html+=`<div class="plan-insight-row"><span class="material-symbols-outlined" style="font-size:16px;color:var(--p);flex-shrink:0;margin-top:1px;">restaurant</span><div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;">${sanitize(localizedMealName(mn))}</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;">${sanitize(meal.rest)}</p></div></div>`;
+    html+=`<div class="plan-insight-row"><span class="material-symbols-outlined" style="font-size:16px;color:var(--p);flex-shrink:0;margin-top:1px;">restaurant</span><div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;">${localizedMealName(mn)}</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;">${meal.rest}</p></div></div>`;
   });
   previewEl.innerHTML=html;
   document.getElementById('plan-preview').style.display='block';
@@ -7037,8 +7037,8 @@ function closeConfirm(){
   const btnRow=modal.querySelector('div[style*="gap:8px"]');
   if(btnRow){
     btnRow.innerHTML=
-      `<button onclick="closeConfirm()" class="btn btn-ghost" style="flex:1">${sanitize(t('confirm.cancel'))}</button>`+
-      `<button id="confirm-ok-btn" class="btn btn-danger-o" style="flex:1" onclick="closeConfirm();_confirmCb&&_confirmCb();">${sanitize(t('confirm.ok'))}</button>`;
+      `<button onclick="closeConfirm()" class="btn btn-ghost" style="flex:1">${t('confirm.cancel')}</button>`+
+      `<button id="confirm-ok-btn" class="btn btn-danger-o" style="flex:1" onclick="closeConfirm();_confirmCb&&_confirmCb();">${t('confirm.ok')}</button>`;
   }
 }
 document.addEventListener('DOMContentLoaded',()=>{
@@ -7106,8 +7106,8 @@ function resetProfile(){
   const _resetSub=_lang==='it'?'Scegli un’opzione:':'Choose an option:';
   const _resetPlanLabel=t('confirm.resetPlanOnly').split('?')[0]+'?';
   const _resetAllLabel=_lang==='it'?'Reset completo':'Full reset';
-  msgEl.innerHTML='<strong style="font-size:13px;color:var(--on);display:block;margin-bottom:8px;">'+sanitize(_resetTitle)+'</strong>'
-    +'<span style="font-size:12px;color:var(--muted);">'+sanitize(_resetSub)+'</span>';
+  msgEl.innerHTML='<strong style="font-size:13px;color:var(--on);display:block;margin-bottom:8px;">'+_resetTitle+'</strong>'
+    +'<span style="font-size:12px;color:var(--muted);">'+_resetSub+'</span>';
   /* Replace the action row */
   const btnRow=modal.querySelector('div[style*="gap:8px"]');
   if(btnRow){
@@ -7574,7 +7574,11 @@ function openShoppingList(){
       html+=`<div class="shop-cat">${t('shop.cat.'+cat)}</div>`;
       categories[cat].forEach(item=>{
         html+=`<div class="shop-item"><span>${localizeFoodLabel(item.name)||item.name}</span><span class="shop-item-qty">${item.qty.toFixed(0)}g</span></div>`;
-        html+=`<div class="shop-item"><span>${sanitize(localizeFoodLabel(item.name)||item.name)}</span><span class="shop-item-qty">${sanitize(item.qty.toFixed(0))}g</span></div>`;
+      });
+    }
+  });
+
+  shopEl.innerHTML=html;
   openModal('shopping');
   },'Shopping List');
 }

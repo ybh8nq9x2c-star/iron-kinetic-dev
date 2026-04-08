@@ -1,0 +1,27 @@
+{
+  "project": "Iron Kinetic",
+  "date": "2026-04-08",
+  "verdict": "NOT READY",
+  "overall_score": 2.2,
+  "max_score": 5.0,
+  "domains": {
+    "A_product_ux": { "score": 3.0, "status": "NEEDS WORK", "key_issue": "Mixed IT/EN strings, 98 static untranslated elements" },
+    "B_billing_payments": { "score": 0.5, "status": "CRITICAL", "key_issue": "Checkout protocol mismatch, test keys, EF not deployed" },
+    "C_auth_identity": { "score": 3.5, "status": "GOOD", "key_issue": "Google OAuth works, session handling solid" },
+    "D_supabase_security": { "score": 2.0, "status": "WEAK", "key_issue": "RLS self-update hole, localStorage bypass" },
+    "E_app_security": { "score": 1.5, "status": "WEAK", "key_issue": "13 unsanitized innerHTML, no CSP, no SRI" },
+    "F_pwa_offline": { "score": 3.0, "status": "GOOD", "key_issue": "Solid SW, offline works, manifest lang hardcoded" },
+    "G_performance": { "score": 2.0, "status": "WEAK", "key_issue": "8843-line monolith, eager CDN loads" },
+    "H_observability": { "score": 0.5, "status": "CRITICAL", "key_issue": "No monitoring, no error tracking, no runbook" },
+    "I_legal_privacy": { "score": 3.5, "status": "GOOD", "key_issue": "GDPR gate works, age verification missing" }
+  },
+  "gates": {
+    "pass": 4,
+    "warn": 2,
+    "fail": 11,
+    "unknown": 4
+  },
+  "blockers_critical": 5,
+  "blockers_high": 8,
+  "estimated_remediation_hours": "12-18"
+}

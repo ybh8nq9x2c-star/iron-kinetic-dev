@@ -38,3 +38,5 @@ stitch/
 
 # Logs
 *.log
+.a0proj/
+supabase/.temp/
