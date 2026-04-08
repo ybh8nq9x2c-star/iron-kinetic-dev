@@ -2032,8 +2032,9 @@ async function checkTrendAccess(){
 }
 
 async function initTrend(){
-  /* Synchronous local check first so UI is correct before network */
-  trendAccess=_checkTrendLocal();
+  /* Keep optimistic trial default until server responds — prevents flash of expired state */
+  const user=await getUser();
+  if(!user)trendAccess=_checkTrendLocal();
   updateTrendBadge();
   const subMgmt=document.getElementById('set-sub-manage');
   if(subMgmt)subMgmt.style.display=trendAccess.mode==='paid'?'block':'none';
