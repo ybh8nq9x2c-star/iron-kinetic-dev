@@ -1591,6 +1591,17 @@ body.onboarding-active #onb-screen{
         <span class="sec-label" data-i18n="set.piano.title">Piano Attivo</span>
         <p id="set-plan-name" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);">—</p>
         <p id="set-plan-meta" class="t-xxs muted sn" style="margin-top:4px;">— fasi · — giorni</p>
+        <div id="set-sub-manage" style="display:none;margin-top:16px;padding:16px;background:rgba(77,220,198,.06);border:1px solid rgba(77,220,198,.15);border-radius:var(--r);">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <p style="font-size:13px;font-weight:700;color:var(--p);margin:0;">✦ Trend Attivo</p>
+              <p id="set-sub-status" style="font-size:11px;color:var(--muted);margin:4px 0 0;">—</p>
+            </div>
+            <button onclick="openBillingPortal()" class="btn btn-ghost btn-xs sn" style="padding:0 16px;border-color:var(--p);color:var(--p);">
+              Gestisci
+            </button>
+          </div>
+        </div>
       </div>
       <!-- Accordion Menu -->
       <div style="background:var(--s1);border:1px solid var(--line);border-radius:var(--rbox);overflow:hidden;">
@@ -1987,11 +1998,23 @@ async function getUser(){
 async function checkTrendAccess(){
   const user=await getUser();
   if(!user)return _checkTrendLocal();
-  /* Paid-user override via localStorage (set on Stripe success return) */
   if(localStorage.getItem('ik_trend_active')==='1')return{access:true,mode:'paid'};
   try{
-    const{data}=await sb.from('users').select('trend_active,trial_end').eq('id',user.id).single();
-    if(data?.trend_active)return{access:true,mode:'paid'};
+    const{data}=await sb.from('users')
+      .select('trend_active,trial_end,grace_period_until,plan')
+      .eq('id',user.id).single();
+    if(data?.trend_active){
+      if(data.grace_period_until){
+        const graceEnd=new Date(data.grace_period_until);
+        if(graceEnd>new Date()){
+          const hoursLeft=Math.ceil((graceEnd-new Date())/(3600000));
+          return{access:true,mode:'grace',hoursLeft,plan:data.plan||'monthly'};
+        }
+        localStorage.removeItem('ik_trend_active');
+        return{access:false,mode:'expired',reason:'grace_expired'};
+      }
+      return{access:true,mode:'paid',plan:data.plan||'monthly'};
+    }
     if(data?.trial_end&&new Date(data.trial_end)>new Date()){
       const left=Math.ceil((new Date(data.trial_end)-new Date())/86400000);
       return{access:true,mode:'trial',daysLeft:left};
@@ -2004,6 +2027,10 @@ async function initTrend(){
   /* Synchronous local check first so UI is correct before network */
   trendAccess=_checkTrendLocal();
   updateTrendBadge();
+  const subMgmt=document.getElementById('set-sub-manage');
+  if(subMgmt)subMgmt.style.display=trendAccess.mode==='paid'?'block':'none';
+  const subStatus=document.getElementById('set-sub-status');
+  if(subStatus&&trendAccess.mode==='paid')subStatus.textContent=t('set.sub.active');
   /* Then async Supabase check (refines if logged in) */
   const remote=await checkTrendAccess();
   if(JSON.stringify(remote)!==JSON.stringify(trendAccess)){
@@ -2021,7 +2048,12 @@ function updateTrendBadge(){
   const badge=document.getElementById('trend-access-badge');
   if(!badge)return;
   if(trendAccess.mode==='paid'){badge.textContent='✦ TREND';badge.style.color='#4ddcc6';}
-  else if(trendAccess.mode==='trial'){badge.textContent=`⏱ ${trendAccess.daysLeft}gg`;badge.style.color='#f5a623';}
+  else if(trendAccess.mode==='grace'){
+    badge.textContent='⚠️ TREND';badge.style.color='#f5a623';
+    const hours=trendAccess.hoursLeft||48;
+    showToast('⚠️ Pagamento in ritardo — accesso attivo per altre '+hours+' ore',8000);
+  }
+  else if(trendAccess.mode==='trial'){badge.textContent='⏱ '+trendAccess.daysLeft+'gg';badge.style.color='#f5a623';}
   else{badge.textContent='🔒 TREND';badge.style.color='#666';}
 }
 
@@ -2057,18 +2089,52 @@ function closePaywall(){
 }
 
 async function startCheckout(plan){
-  if(typeof Stripe==='undefined'){showToast('Stripe non disponibile');return;}
-  const stripe=Stripe(STRIPE_PK);
-  const priceId=plan==='lifetime'?STRIPE_LIFETIME:STRIPE_MONTHLY;
   const user=await getUser();
-  const{error}=await stripe.redirectToCheckout({
-    lineItems:[{price:priceId,quantity:1}],
-    mode:plan==='lifetime'?'payment':'subscription',
-    successUrl:window.location.origin+window.location.pathname+'?trend=success',
-    cancelUrl:window.location.href,
-    customerEmail:user?.email||undefined,
-  });
-  if(error)showToast(error.message);
+  if(!user||!sb){
+    if(typeof Stripe==='undefined'){showToast('Stripe non disponibile');return;}
+    const stripe=Stripe(STRIPE_PK);
+    const priceId=plan==='lifetime'?STRIPE_LIFETIME:STRIPE_MONTHLY;
+    const{error}=await stripe.redirectToCheckout({
+      lineItems:[{price:priceId,quantity:1}],
+      mode:plan==='lifetime'?'payment':'subscription',
+      successUrl:window.location.origin+window.location.pathname+'?trend=success',
+      cancelUrl:window.location.href,
+      customerEmail:user?.email||undefined,
+    });
+    if(error)showToast(error.message);
+    return;
+  }
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    const token=session?.access_token;
+    if(!token){showToast('Sessione scaduta');return;}
+    const res=await fetch(SUPABASE_URL+'/functions/v1/create-checkout-session',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({price_tier:plan}),
+    });
+    const json=await res.json();
+    if(json.url)window.location.href=json.url;
+    else showToast(json.error||'Errore checkout');
+  }catch(e){showToast('Errore: '+e.message);}
+}
+
+async function openBillingPortal(){
+  const user=await getUser();
+  if(!user||!sb){showToast('Accedi per gestire l\'abbonamento');return;}
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    const token=session?.access_token;
+    if(!token){showToast('Sessione scaduta, riaccedi');return;}
+    const res=await fetch(SUPABASE_URL+'/functions/v1/create-portal-session',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    });
+    const json=await res.json();
+    if(json.url)window.location.href=json.url;
+    else showToast(json.error||'Errore portal');
+  }catch(e){showToast('Errore: '+e.message);}
+}
 }
 
 async function openAuthModal(){
@@ -2743,6 +2809,9 @@ it:{
   'postAuth.note':'Account Google richiesto per accedere all\'app',
   'postAuth.badge':'Consigliato',
   'toast.loginOk':'✓ Accesso effettuato',
+  'set.sub.active':'Abbonamento Trend attivo',
+  'set.sub.grace':'Pagamento in ritardo — accesso temporaneo',
+},
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -3267,6 +3336,9 @@ en:{
   'postAuth.note':'Google account required to access the app',
   'postAuth.badge':'Recommended',
   'toast.loginOk':'✓ Signed in',
+  'set.sub.active':'Trend subscription active',
+  'set.sub.grace':'Payment overdue — temporary access',
+}
 }
 };
 let _lang='en';
