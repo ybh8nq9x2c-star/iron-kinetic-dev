@@ -2135,7 +2135,6 @@ async function openBillingPortal(){
     else showToast(json.error||'Errore portal');
   }catch(e){showToast('Errore: '+e.message);}
 }
-}
 
 async function openAuthModal(){
   const email=prompt(_lang==='it'?'Inserisci la tua email per accedere:':'Enter your email to sign in:');
@@ -2812,7 +2811,6 @@ it:{
   'set.sub.active':'Abbonamento Trend attivo',
   'set.sub.grace':'Pagamento in ritardo — accesso temporaneo',
 },
-},
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
   'onb.step0.title':'Your Body','onb.step0.sub':'Enter your physical data to calculate your personalised TDEE.',
@@ -3338,7 +3336,6 @@ en:{
   'toast.loginOk':'✓ Signed in',
   'set.sub.active':'Trend subscription active',
   'set.sub.grace':'Payment overdue — temporary access',
-}
 }
 };
 let _lang='en';
