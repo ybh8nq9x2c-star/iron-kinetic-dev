@@ -2338,6 +2338,12 @@ async function startCheckout(plan){
           await _clientSideCheckout(plan,userEmail);
           return;
         }
+        if(res.status===401||res.status===403){
+          showToast('Sessione scaduta — riaccedi e riprova',4000);
+          btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
+          if(typeof signInWithGoogle==='function')signInWithGoogle();
+          return;
+        }
         throw new Error(errBody.error||'Checkout error '+res.status);
       }
       const data=await res.json();
