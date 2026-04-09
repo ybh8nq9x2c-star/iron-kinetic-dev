@@ -1610,7 +1610,7 @@ body.onboarding-active #onb-screen{
           <!-- SVG Ring -->
           <div style="position:relative;flex-shrink:0;width:72px;height:72px">
             <svg width="72" height="72" viewBox="0 0 44 44" style="transform:rotate(-90deg)">
-              <circle cx="22" cy="22" r="17" class="ring-track"/>
+              <circle cx="22" cy="22" r="17" class="ring-track" style="stroke-width:3"/>
               <circle cx="22" cy="22" r="17" id="sub-ring-fill"
                 stroke="var(--p)" fill="none"
                 stroke-width="3" stroke-linecap="round"
@@ -2110,6 +2110,30 @@ function updateSubManagementCard(){
   const progRgt = document.getElementById('sub-prog-right');
   const progBar = document.getElementById('sub-prog-bar');
   const ctaWrap = document.getElementById('sub-cta-wrap');
+
+  // Mostra login prompt se utente non autenticato (PRIMA del guard DOM)
+  if(!sb){
+    if(ctaWrap)ctaWrap.innerHTML=`
+      <p style="font-size:11px;color:var(--muted);margin:0 0 8px;line-height:1.5">
+        Accedi con Google per gestire l'abbonamento e sincronizzare Trend su tutti i dispositivi.
+      </p>
+      <button onclick="signInWithGoogle()" class="btn btn-primary w100"
+        style="font-size:12px;height:46px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Accedi con Google
+      </button>`;
+    if(badge){
+      badge.textContent='ACCEDI';
+      badge.style.cssText='font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:rgba(191,90,242,.12);color:var(--sec);border:1px solid rgba(191,90,242,.25)';
+    }
+    return;
+  }
+
   if(!badge||!ctaWrap){if(typeof IK_DEBUG!=='undefined'&&IK_DEBUG){const ids=['sub-status-badge','sub-cta-wrap'];ids.forEach(id=>{if(!document.getElementById(id))console.warn('[IK] updateSubManagementCard: missing #'+id);});}return;}
 
   const CIRC=106.8;
@@ -2272,7 +2296,7 @@ async function startCheckout(plan){
             'Authorization':'Bearer '+accessToken,
             'apikey':SUPABASE_KEY
           },
-          body:JSON.stringify({price_tier:plan||'monthly'})
+          body:JSON.stringify({plan:plan||'monthly'})
         }
       );
       if(!res.ok){
@@ -2327,7 +2351,7 @@ async function openBillingPortal(){
     if(!token){showToast('Sessione scaduta, riaccedi');return;}
     const res=await fetch(SUPABASE_URL+'/functions/v1/create-portal-session',{
       method:'POST',
-      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json','apikey':SUPABASE_KEY},
     });
     const json=await res.json();
     if(json.url)window.location.href=json.url;
@@ -2479,7 +2503,7 @@ async function _resumePostOnboardingOrBoot(){
           if(data?.trend_active){
             trendAccess={access:true,mode:'paid'};
             updateTrendBadge();
-            updateSubManagementCard?.();
+            if(typeof updateSubManagementCard==='function')updateSubManagementCard();
             showToast('✅ Trend attivato! Benvenuto 🚀',4000);
             const pw=document.getElementById('paywall-overlay');if(pw)pw.style.display='none';
             document.body.style.overflow='';
@@ -4200,12 +4224,12 @@ function applyTranslations(deferOffscreen){
   if(_pid('pwa-sub'))_pid('pwa-sub').textContent=t('pwa.sub');
   if(_pid('pwa-skip-note'))_pid('pwa-skip-note').textContent=t('pwa.skip');
   if(_pid('pwa-btn'))_pid('pwa-btn').textContent=t('pwa.btn');
-  if(_pid('pwa-ios-1'))_pid('pwa-ios-1').innerHTML=sanitize(t('pwa.ios.step1'));
-  if(_pid('pwa-ios-2'))_pid('pwa-ios-2').innerHTML=sanitize(t('pwa.ios.step2'));
-  if(_pid('pwa-ios-3'))_pid('pwa-ios-3').innerHTML=sanitize(t('pwa.ios.step3'));
-  if(_pid('pwa-and-1'))_pid('pwa-and-1').innerHTML=sanitize(t('pwa.android.step1'));
-  if(_pid('pwa-and-2'))_pid('pwa-and-2').innerHTML=sanitize(t('pwa.android.step2'));
-  if(_pid('pwa-and-3'))_pid('pwa-and-3').innerHTML=sanitize(t('pwa.android.step3'));
+  if(_pid('pwa-ios-1'))_pid('pwa-ios-1').innerHTML=t('pwa.ios.step1');
+  if(_pid('pwa-ios-2'))_pid('pwa-ios-2').innerHTML=t('pwa.ios.step2');
+  if(_pid('pwa-ios-3'))_pid('pwa-ios-3').innerHTML=t('pwa.ios.step3');
+  if(_pid('pwa-and-1'))_pid('pwa-and-1').innerHTML=t('pwa.android.step1');
+  if(_pid('pwa-and-2'))_pid('pwa-and-2').innerHTML=t('pwa.android.step2');
+  if(_pid('pwa-and-3'))_pid('pwa-and-3').innerHTML=t('pwa.android.step3');
   /* confirm modal buttons */
   const _cfCancelBtn=document.getElementById('confirm-cancel-btn');
   if(_cfCancelBtn&&!_cfCancelBtn.dataset.custom)_cfCancelBtn.textContent=t('confirm.cancel');
