@@ -2296,6 +2296,7 @@ async function startCheckout(plan){
       if(typeof Stripe==='undefined'){showToast('Stripe non disponibile — riprova');return;}
       const priceMap={monthly:'price_1TJy0qJYTPcSrsvtmBIyqDmu',annual:'price_1TJy0qJYTPcSrsvtqITsBfl0',lifetime:'price_1TJy0rJYTPcSrsvttxySfxQk'};
       const priceId=priceMap[plan]||priceMap.monthly;
+      if(!priceId){showToast('Piano non valido');return;}
       const stripe=Stripe(STRIPE_PK);
       const{error}=await stripe.redirectToCheckout({
         lineItems:[{price:priceId,quantity:1}],
@@ -2480,7 +2481,7 @@ async function _resumePostOnboardingOrBoot(){
             document.body.style.overflow='';
             const blurOv=document.getElementById('scr-prog-blur-overlay');if(blurOv)blurOv.style.display='none';
             applyTrendBlurOverlay?.();
-            window._trendActivatedMsg=true;
+            if(document.getElementById('scr-set')?.style.display!=='none'){renderSettings();}
             return;
           }
         }catch{}
