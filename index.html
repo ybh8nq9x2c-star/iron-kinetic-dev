@@ -654,8 +654,8 @@ body.onboarding-active #onb-screen{
 #paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9999;align-items:flex-end;justify-content:center;}
 #paywall-sheet{background:#1c1b19;border-radius:20px 20px 0 0;padding:32px 24px 48px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
 #trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
-#scr-prog.locked-trend{display:flex!important;flex-direction:column;min-height:calc(100vh - 140px);}
-#scr-prog.locked-trend .pg{flex:1;display:flex;flex-direction:column;}
+#scr-prog.locked-trend{display:flex!important;flex-direction:column;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#scr-prog.locked-trend .pg{flex:1;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 #trend-lock-banner.locked-card{flex-direction:column;margin:auto 0;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px 16px;}
 [onclick*="startCheckout"]:disabled{cursor:not-allowed;pointer-events:none;}
 /* ── Post-onboarding auth gate ── */
@@ -1662,30 +1662,6 @@ body.onboarding-active #onb-screen{
       <!-- Accordion Menu -->
       <div style="background:var(--s1);border:1px solid var(--line);border-radius:var(--rbox);overflow:hidden;">
 
-        <!-- A: Fase Corrente -->
-        <div style="border-bottom:1px solid var(--line);">
-          <button onclick="toggleAccordion('fase')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
-            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">timeline</span>
-            <span class="sn" data-i18n="set.fase.title" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Fase Corrente</span>
-            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
-          </button>
-          <div id="acc-fase" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
-            <div style="padding:0 16px 16px;border-top:1px solid var(--line);">
-              <div id="set-phases" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;"></div>
-              <div id="set-refeed-card" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);">
-                <div class="rowb">
-                  <div>
-                    <span class="sec-label" style="display:block;margin-bottom:3px;">Refeed Day</span>
-                    <p class="sn" style="font-size:13px;font-weight:600;color:var(--on);margin:0;">+880 kcal · +220g carbs · proteine e grassi invariati</p>
-                    <p class="t-xxs muted sn" style="margin-top:2px;">Solo Fase 2</p>
-                  </div>
-                  <button id="set-refeed-btn" onclick="toggleRefeed()" class="btn btn-ghost btn-xs sn" style="padding:0 16px;">DISATTIVO</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- B: Modificatore AI -->
         <div style="border-bottom:1px solid var(--line);">
           <button onclick="toggleAccordion('mod')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
@@ -2149,8 +2125,12 @@ function updateSubManagementCard(){
     badge.style.cssText='font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:rgba(77,220,198,.12);color:var(--p);border:1px solid rgba(77,220,198,.25)';
     setRing(pct,col);
     ringNum.textContent=d;ringNum.style.color=col;ringUnit.textContent='gg';
-    if(subtitle)subtitle.textContent='Iron Kinetic Trend';
-    if(detail)detail.textContent=d<=0?'Prova scaduta':`${d} giorn${d===1?'o':'i'} rimast${d===1?'o':'i'} · poi solo piano base`;
+    if(subtitle)subtitle.textContent=d<=0
+      ?'Prova scaduta · nessun accesso attivo'
+      :`Prova gratuita · ${d} giorn${d===1?'o':'i'} rimast${d===1?'o':'i'}`;
+    if(detail)detail.textContent=d<=0
+      ?'Attiva Trend per continuare'
+      :'Poi solo piano base gratuito';
     if(progLbl)progLbl.textContent=`${TRIAL_DAYS-d} giorni usati`;
     if(progRgt)progRgt.textContent=`${d} rimasti`;
     if(progBar){progBar.style.width=`${Math.round(pct*100)}%`;progBar.style.background=col;}
@@ -2171,8 +2151,12 @@ function updateSubManagementCard(){
     ringNum.style.color='var(--p)';
     ringNum.style.fontSize=plan==='lifetime'?'18px':'16px';
     ringUnit.textContent='';
-    if(subtitle)subtitle.textContent='Iron Kinetic Trend';
-    if(detail)detail.textContent=plan==='lifetime'?'Accesso completo permanente':'Abbonamento mensile · Rinnovo automatico';
+    if(subtitle)subtitle.textContent=plan==='lifetime'
+      ?'Lifetime · Accesso permanente ♾'
+      :'Mensile · Rinnovo automatico';
+    if(detail)detail.textContent=plan==='lifetime'
+      ?'Accesso completo senza scadenza'
+      :'Abbonamento Trend attivo';
     if(progLbl)progLbl.textContent='Stato abbonamento';
     if(progRgt)progRgt.textContent=plan==='lifetime'?'Per sempre ♾':'Auto-rinnovo attivo';
     if(progBar){progBar.style.width='100%';progBar.style.background='var(--p)';}
@@ -2188,8 +2172,8 @@ function updateSubManagementCard(){
     badge.style.cssText='font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:rgba(255,159,10,.12);color:var(--orange);border:1px solid rgba(255,159,10,.28)';
     setRing(h/48,'var(--orange)');
     ringNum.textContent=h;ringNum.style.color='var(--orange)';ringUnit.textContent='ore';
-    if(subtitle)subtitle.textContent='Iron Kinetic Trend';
-    if(detail)detail.textContent=`Accesso mantenuto per altre ${h}h · Aggiorna il pagamento`;
+    if(subtitle)subtitle.textContent=`Pagamento in sospeso · ${h}h rimaste`;
+    if(detail)detail.textContent='Aggiorna il metodo di pagamento per continuare';
     if(progLbl)progLbl.textContent='Grace period scade tra';
     if(progRgt)progRgt.textContent=`${h} ore`;
     if(progBar){progBar.style.width=`${Math.round((h/48)*100)}%`;progBar.style.background='var(--orange)';}
@@ -2204,8 +2188,8 @@ function updateSubManagementCard(){
     badge.style.cssText='font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:rgba(255,59,48,.10);color:var(--red);border:1px solid rgba(255,59,48,.22)';
     setRing(0,'var(--red)');
     ringNum.textContent='0';ringNum.style.color='var(--red)';ringUnit.textContent='gg';
-    if(subtitle)subtitle.textContent='Iron Kinetic Trend';
-    if(detail)detail.textContent='Riattiva per sbloccare analisi avanzata';
+    if(subtitle)subtitle.textContent='Prova terminata · Piano base attivo';
+    if(detail)detail.textContent='Riattiva Trend per sbloccare analisi avanzata';
     if(progLbl)progLbl.textContent='Prova terminata';
     if(progRgt)progRgt.textContent='—';
     if(progBar)progBar.style.width='0%';
