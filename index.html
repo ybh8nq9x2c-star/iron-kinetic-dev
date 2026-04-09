@@ -2020,7 +2020,8 @@ function _checkTrendLocal(){
   }
   const elapsed=(Date.now()-ts)/86400000;
   const left=Math.max(0,TRIAL_DAYS-elapsed);
-  return{access:left>0,mode:'trial',daysLeft:Math.ceil(left)};
+  if(left<=0)return{access:false,mode:'expired'};
+  return{access:true,mode:'trial',daysLeft:Math.ceil(left)};
 }
 
 async function getUser(){
@@ -2107,14 +2108,14 @@ function updateSubManagementCard(){
   const progRgt = document.getElementById('sub-prog-right');
   const progBar = document.getElementById('sub-prog-bar');
   const ctaWrap = document.getElementById('sub-cta-wrap');
-  if(!badge||!ctaWrap)return;
+  if(!badge||!ctaWrap){if(typeof IK_DEBUG!=='undefined'&&IK_DEBUG){const ids=['sub-status-badge','sub-cta-wrap'];ids.forEach(id=>{if(!document.getElementById(id))console.warn('[IK] updateSubManagementCard: missing #'+id);});}return;}
 
   const CIRC=106.8;
   const{mode,daysLeft,hoursLeft,plan}=trendAccess;
 
   const setRing=(pct,color)=>{
     const offset=CIRC*(1-Math.min(1,Math.max(0,pct)));
-    if(ring){ring.style.strokeDashoffset=offset;ring.style.stroke=color;}
+    if(ring){requestAnimationFrame(()=>{requestAnimationFrame(()=>{ring.style.strokeDashoffset=offset;ring.style.stroke=color;});});}
   };
 
   if(mode==='trial'){
@@ -6380,6 +6381,8 @@ function applyTrendBlurOverlay(){
 }
 
 function syncTrendLockCopy(){
+  try{
+  // Only run when Trend/Progress screen is actually active
   const scrProg=document.getElementById('scr-prog');
   if(!scrProg)return;
   /* Note: do NOT early-return on display:none — we must set state before tab becomes visible */
@@ -6419,6 +6422,7 @@ function syncTrendLockCopy(){
     lockBanner.style.display='flex';
   }
   updateTrendLockedLayout();
+  }catch(e){if(typeof IK_DEBUG!=='undefined'&&IK_DEBUG)console.warn('[IK] syncTrendLockCopy error:',e);}
 }
 
 function updateTrendLockedLayout(){
