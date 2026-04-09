@@ -2132,7 +2132,7 @@ function updateSubManagementCard(){
     return;
   }
 
-  if(!badge||!ctaWrap){if(typeof IK_DEBUG!=='undefined'&&IK_DEBUG){const ids=['sub-status-badge','sub-cta-wrap'];ids.forEach(id=>{if(!document.getElementById(id))console.warn('[IK] updateSubManagementCard: missing #'+id);});}return;}
+  if(!badge||!ctaWrap){console.warn('IK updateSubManagementCard: elementi non trovati',{badge:!!badge,ctaWrap:!!ctaWrap});return;}
 
   const CIRC=106.8;
   const{mode,daysLeft,hoursLeft,plan}=trendAccess;
@@ -7263,7 +7263,7 @@ function renderSettings(){
   const prof=getProfile();if(prof)_renderProfileCard(prof);
   _renderPrefsCard();
   if(document.getElementById('hdr-plan')){const _pn=normalizePlanLabel(m.name,m.goal);document.getElementById('hdr-plan').textContent=_pn;document.getElementById('hdr-plan').style.display=_pn?'block':'none';}
-  updateSubManagementCard();
+  trendInitPromise.then(()=>{try{updateSubManagementCard();}catch(e){}});
 }
 function _renderProfileCard(prof){
   /* Hero metrics */
@@ -8287,7 +8287,7 @@ function switchTab(name){
   if(progOverlay && name!=='prog') progOverlay.style.display='none';
   if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';applyTrendBlurOverlay();syncTrendLockCopy();}
   if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
-  if(name==='set'){renderSettings();updateSubManagementCard();renderKcalRing();_tabDirty.set=false;}
+  if(name==='set'){renderSettings();renderKcalRing();_tabDirty.set=false;trendInitPromise.then(()=>updateSubManagementCard());}
   if(name==='info'){updateConsentUI();}
   if(name==='oggi'){try{renderTodayAction();}catch(e){}try{renderPlanUpdateNote();}catch(e){}}
 }
@@ -8346,6 +8346,8 @@ function mountApp(){
     const progOverlay=document.getElementById('scr-prog-blur-overlay');
     if(progOverlay)progOverlay.style.display='none';
     if(window._trendActivatedMsg){window._trendActivatedMsg=false;toast(t('toast.trendActivated'));}
+    // Safety: ensure sub card is updated after full init
+    try{updateSubManagementCard();}catch(e){}
   });
 }
 
