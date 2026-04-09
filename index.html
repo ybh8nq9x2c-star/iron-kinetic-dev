@@ -2056,7 +2056,9 @@ async function checkTrendAccess(){
         localStorage.removeItem('ik_trend_active');
         return{access:false,mode:'expired',reason:'grace_expired'};
       }
-      return{access:true,mode:'paid',plan:data.plan||'monthly'};
+      const resolvedPlan=data.plan||'monthly';
+      if(!data.plan)console.warn('[IK] users.plan is null for paid user — defaulting to monthly');
+      return{access:true,mode:'paid',plan:resolvedPlan};
     }
     if(data?.trial_end&&new Date(data.trial_end)>new Date()){
       const left=Math.ceil((new Date(data.trial_end)-new Date())/86400000);
@@ -2106,6 +2108,7 @@ function updateSubManagementCard(){
   const ringNum  = document.getElementById('sub-ring-num');
   const ringUnit = document.getElementById('sub-ring-unit');
   const subtitle = document.getElementById('sub-plan-subtitle');
+  const detail   = document.getElementById('sub-plan-detail');
   const progLbl  = document.getElementById('sub-prog-label');
   const progRgt  = document.getElementById('sub-prog-right');
   const progBar  = document.getElementById('sub-prog-bar');
@@ -2157,6 +2160,7 @@ function updateSubManagementCard(){
     if(ringNum){ringNum.textContent=d;ringNum.style.color=col;}
     if(ringUnit)ringUnit.textContent=_lang==='en'?'d':'gg';
     if(subtitle)subtitle.textContent=d<=0?t('sub.trial.subtitle.zero'):t('sub.trial.subtitle',{d,s,r});
+    if(detail)detail.textContent=d<=0?t('sub.trial.detail.zero'):t('sub.trial.detail');
     if(progLbl)progLbl.textContent=t('sub.trial.prog.left',{d:TRIAL_DAYS-d});
     if(progRgt)progRgt.textContent=t('sub.trial.prog.right',{d});
     if(progBar){progBar.style.width=`${Math.round(pct*100)}%`;progBar.style.background=col;}
@@ -2205,6 +2209,7 @@ function updateSubManagementCard(){
     if(ringNum){ringNum.textContent=h;ringNum.style.color='var(--orange)';}
     if(ringUnit)ringUnit.textContent=_lang==='en'?'h':'ore';
     if(subtitle)subtitle.textContent=t('sub.grace.subtitle',{h,s,r});
+    if(detail)detail.textContent=t('sub.grace.detail');
     if(progLbl)progLbl.textContent=t('sub.grace.prog.left');
     if(progRgt)progRgt.textContent=t('sub.grace.prog.right',{h});
     if(progBar){progBar.style.width=`${Math.round((h/48)*100)}%`;progBar.style.background='var(--orange)';}
@@ -2222,6 +2227,7 @@ function updateSubManagementCard(){
     if(ringNum){ringNum.textContent='0';ringNum.style.color='var(--red)';}
     if(ringUnit)ringUnit.textContent=_lang==='en'?'d':'gg';
     if(subtitle)subtitle.textContent=t('sub.expired.subtitle');
+    if(detail)detail.textContent=t('sub.expired.detail');
     if(progLbl)progLbl.textContent=t('sub.expired.prog.left');
     if(progRgt)progRgt.textContent='';
     if(progBar)progBar.style.width='0%';
@@ -2292,11 +2298,25 @@ async function startCheckout(plan){
   const btns=document.querySelectorAll('[onclick*="startCheckout"]');
   btns.forEach(b=>{b.disabled=true;b.style.opacity='0.6';});
   try{
-    const user=await getUser();
-    const session=await sb?.auth.getSession();
-    const accessToken=session?.data?.session?.access_token;
-    if(accessToken&&user){
-      /* Server-side checkout for authenticated users */
+    /* Always refresh session first to get a fresh JWT */
+    let accessToken=null;
+    let userEmail=null;
+    if(sb){
+      try{
+        /* refreshSession ensures token is not expired */
+        const{data:refreshed}=await sb.auth.refreshSession();
+        accessToken=refreshed?.session?.access_token||null;
+        userEmail=refreshed?.session?.user?.email||null;
+      }catch{
+        /* refreshSession failed — try getSession as fallback */
+        const{data:sess}=await sb.auth.getSession().catch(()=>({data:{}}));
+        accessToken=sess?.session?.access_token||null;
+        userEmail=sess?.session?.user?.email||null;
+      }
+    }
+
+    if(accessToken){
+      /* Server-side checkout via Edge Function */
       const res=await fetch(
         SUPABASE_URL+'/functions/v1/create-checkout-session',
         {
@@ -2306,50 +2326,61 @@ async function startCheckout(plan){
             'Authorization':'Bearer '+accessToken,
             'apikey':SUPABASE_KEY
           },
-          body:JSON.stringify({plan:plan||'monthly'})
+          body:JSON.stringify({plan:plan||'monthly',price_tier:plan||'monthly'})
         }
       );
       if(!res.ok){
         const errBody=await res.json().catch(()=>({}));
         console.error('[IK] checkout edge function error',res.status,errBody);
-        if(res.status===404){throw new Error('Edge Function non deployata — contatta il supporto');}
-        if(res.status===401||res.status===403){throw new Error(t('toast.sessionExpired'));}
+        if(res.status===404){
+          /* Edge Function not deployed — fall through to client-side */
+          console.warn('[IK] Edge Function not found, falling back to client-side checkout');
+          await _clientSideCheckout(plan,userEmail);
+          return;
+        }
         throw new Error(errBody.error||'Checkout error '+res.status);
       }
       const data=await res.json();
       if(!data?.url)throw new Error('No checkout URL returned');
       window.location.href=data.url;
     }else{
-      /* Fallback: client-side Stripe checkout — load SDK lazily */
-      const loadStripe=()=>new Promise((resolve,reject)=>{
-        if(typeof Stripe!=='undefined'){resolve();return;}
-        const s=document.createElement('script');
-        s.src='https://js.stripe.com/v3/';
-        s.onload=resolve;
-        s.onerror=()=>reject(new Error('Impossibile caricare Stripe'));
-        document.head.appendChild(s);
-      });
-      await loadStripe();
-      if(typeof Stripe==='undefined'){showToast(t('toast.stripeUnavailable'));return;}
-      /* Stripe Price IDs — update when changing plans in Stripe Dashboard */
-      const priceMap={monthly:'price_1TJy0qJYTPcSrsvtmBIyqDmu',annual:'price_1TJy0qJYTPcSrsvtqITsBfl0',lifetime:'price_1TJy0rJYTPcSrsvttxySfxQk'};
-      const priceId=priceMap[plan]||priceMap.monthly;
-      if(!priceId){showToast('Piano non valido');return;}
-      const stripe=Stripe(STRIPE_PK);
-      const{error}=await stripe.redirectToCheckout({
-        lineItems:[{price:priceId,quantity:1}],
-        mode:plan==='lifetime'?'payment':'subscription',
-        successUrl:window.location.origin+window.location.pathname+'?trend=success',
-        cancelUrl:window.location.href,
-        customerEmail:user?.email||undefined,
-      });
-      if(error)throw new Error(error.message);
+      /* No session — use client-side Stripe checkout */
+      await _clientSideCheckout(plan,userEmail);
     }
   }catch(err){
     console.error('[IK] startCheckout failed:',err);
     showToast(err?.message||t('toast.checkoutError'));
     btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
   }
+}
+
+async function _clientSideCheckout(plan,email){
+  /* Load Stripe SDK lazily */
+  await new Promise((resolve,reject)=>{
+    if(typeof Stripe!=='undefined'){resolve();return;}
+    const s=document.createElement('script');
+    s.src='https://js.stripe.com/v3/';
+    s.onload=resolve;
+    s.onerror=()=>reject(new Error(t('toast.stripeUnavailable')));
+    document.head.appendChild(s);
+  });
+  if(typeof Stripe==='undefined'){showToast(t('toast.stripeUnavailable'));return;}
+  const priceMap={
+    monthly:'price_1TJy0qJYTPcSrsvtmBIyqDmu',
+    annual:'price_1TJy0qJYTPcSrsvtqITsBfl0',
+    lifetime:'price_1TJy0rJYTPcSrsvttxySfxQk'
+  };
+  const priceId=priceMap[plan]||priceMap.monthly;
+  const stripe=Stripe(STRIPE_PK);
+  /* Use newer stripe.checkout.sessions via Payment Links-style redirect */
+  const{error}=await stripe.redirectToCheckout({
+    lineItems:[{price:priceId,quantity:1}],
+    mode:plan==='lifetime'?'payment':'subscription',
+    successUrl:window.location.origin+window.location.pathname+'?trend=success',
+    cancelUrl:window.location.href,
+    ...(email?{customerEmail:email}:{})
+  });
+  if(error)throw new Error(error.message);
 }
 
 async function openBillingPortal(){
@@ -2363,10 +2394,20 @@ async function openBillingPortal(){
       method:'POST',
       headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json','apikey':SUPABASE_KEY},
     });
+    if(!res.ok){
+      const errBody=await res.json().catch(()=>({}));
+      console.error('[IK] portal error',res.status,errBody);
+      if(res.status===404)throw new Error('Portal non configurato — contatta il supporto');
+      if(res.status===401||res.status===403)throw new Error(t('toast.sessionExpired'));
+      throw new Error(errBody.error||t('toast.portalError'));
+    }
     const json=await res.json();
     if(json.url)window.location.href=json.url;
-    else showToast(json.error||t('toast.portalError'));
-  }catch(e){showToast('Errore: '+e.message);}
+    else throw new Error(t('toast.portalError'));
+  }catch(e){
+    console.error('[IK] openBillingPortal:',e);
+    showToast(e.message||t('toast.portalError'));
+  }
 }
 
 async function openAuthModal(){
@@ -2509,9 +2550,9 @@ async function _resumePostOnboardingOrBoot(){
       if(!user){window._trendActivatedMsg='Processing... refresh shortly';return;}
       for(let i=0;i<12;i++){ // 12 x 5s = 60s
         try{
-          const{data}=await sb.from('users').select('trend_active').eq('id',user.id).single();
+          const{data}=await sb.from('users').select('trend_active,plan').eq('id',user.id).single();
           if(data?.trend_active){
-            trendAccess={access:true,mode:'paid'};
+            trendAccess={access:true,mode:'paid',plan:data.plan||'monthly'};
             updateTrendBadge();
             if(typeof updateSubManagementCard==='function')updateSubManagementCard();
             showToast(t('toast.trendActivated'),4000);
@@ -3103,6 +3144,7 @@ it:{
   'sub.trial.subtitle': '{d} giorn{s} rimast{r} · poi solo piano base',
   'sub.trial.subtitle.zero': 'Prova scaduta — nessun accesso attivo',
   'sub.trial.detail': 'Poi solo piano base gratuito',
+  'sub.trial.detail.zero': 'Attiva Trend per continuare',
   'sub.trial.prog.left': '{d} giorni usati',
   'sub.trial.prog.right': '{d} rimasti',
   'sub.trial.cta.monthly': 'Attiva Trend — €9,99/mese',
@@ -3676,6 +3718,7 @@ en:{
   'sub.trial.subtitle': '{d} day{s} remaining · then free plan only',
   'sub.trial.subtitle.zero': 'Trial expired — no active access',
   'sub.trial.detail': 'Then free base plan only',
+  'sub.trial.detail.zero': 'Activate Trend to continue',
   'sub.trial.prog.left': '{d} days used',
   'sub.trial.prog.right': '{d} remaining',
   'sub.trial.cta.monthly': 'Activate Trend — €9.99/month',
