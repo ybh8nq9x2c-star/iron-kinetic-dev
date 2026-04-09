@@ -1993,6 +1993,9 @@ body.onboarding-active #onb-screen{
 
 <script>
 'use strict';
+const APP_VERSION='1.4.0';
+const IK_DEBUG=false;
+const ikLog=(...a)=>{if(IK_DEBUG)console.log('[IK]',...a);};
 
 /* ══════════════════════════════════════════════════════
    TREND FREEMIUM — Supabase + Stripe
@@ -2295,6 +2298,7 @@ async function startCheckout(plan){
       });
       await loadStripe();
       if(typeof Stripe==='undefined'){showToast('Stripe non disponibile — riprova');return;}
+      /* Stripe Price IDs — update when changing plans in Stripe Dashboard */
       const priceMap={monthly:'price_1TJy0qJYTPcSrsvtmBIyqDmu',annual:'price_1TJy0qJYTPcSrsvtqITsBfl0',lifetime:'price_1TJy0rJYTPcSrsvttxySfxQk'};
       const priceId=priceMap[plan]||priceMap.monthly;
       if(!priceId){showToast('Piano non valido');return;}
@@ -8172,7 +8176,9 @@ function updateAdherenceCalendar(){
    TABS
 ═══════════════════════════════════════ */
 const TABS=['oggi','prog','set','info'];
+let _tabInFlight=false;
 function switchTab(name){
+  if(_tabInFlight)return;_tabInFlight=true;setTimeout(()=>{_tabInFlight=false;},120);
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
   const progOverlay=document.getElementById('scr-prog-blur-overlay');
   if(progOverlay && name!=='prog') progOverlay.style.display='none';
