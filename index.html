@@ -1621,14 +1621,14 @@ body.onboarding-active #onb-screen{
                 style="transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)"/>
             </svg>
             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.1;pointer-events:none">
-              <div id="sub-ring-num" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--p)">—</div>
+              <div id="sub-ring-num" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--p)"></div>
               <div id="sub-ring-unit" style="font-size:8px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">gg</div>
             </div>
           </div>
 
           <!-- Subscription info only -->
           <div style="flex:1;min-width:0">
-            <p id="sub-plan-subtitle" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.01em;color:var(--p);margin:0 0 3px">Iron Kinetic Trend</p>
+            <p id="sub-plan-subtitle" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.01em;color:var(--p);margin:0 0 3px"></p>
             <p id="sub-plan-detail" class="sn" style="font-size:11px;color:var(--muted);line-height:1.45;margin:0"></p>
           </div>
         </div>
@@ -2022,7 +2022,7 @@ function _checkTrendLocal(){
   }
   const elapsed=(Date.now()-ts)/86400000;
   const left=Math.max(0,TRIAL_DAYS-elapsed);
-  return{access:left>0,mode:'trial',daysLeft:Math.max(1,Math.ceil(left))};
+  return{access:left>0,mode:'trial',daysLeft:Math.ceil(left)};
 }
 
 async function getUser(){
@@ -2088,6 +2088,7 @@ async function initTrend(){
     updateTrendBadge();
     const lb=document.getElementById('trend-lock-banner');
     if(lb)lb.style.display=trendAccess.access?'none':'block';
+    if(document.getElementById('scr-set')?.style.display!=='none'){updateSubManagementCard();}
   }
   applyTrendBlurOverlay();
   syncTrendLockCopy();
@@ -2398,6 +2399,7 @@ async function syncUserAfterLogin(user){
       trendAccess={access:true,mode:'trial',daysLeft:left};
     }
   }catch(e){console.warn('[IK] syncUserAfterLogin exception:',e);}
+  updateTrendBadge();
 }
 
 /* ── Auth state listener (set up once at boot) ── */
@@ -7148,6 +7150,7 @@ function renderSettings(){
   const prof=getProfile();if(prof)_renderProfileCard(prof);
   _renderPrefsCard();
   if(document.getElementById('hdr-plan')){const _pn=normalizePlanLabel(m.name,m.goal);document.getElementById('hdr-plan').textContent=_pn;document.getElementById('hdr-plan').style.display=_pn?'block':'none';}
+  updateSubManagementCard();
 }
 function _renderProfileCard(prof){
   /* Hero metrics */
