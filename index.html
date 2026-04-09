@@ -2006,8 +2006,8 @@ const STRIPE_PK='pk_live_51TJVZ2JYTPcSrsvtjpVbCEtvJFpC9pIj5n0PPOSPLtIGcQ12rc6YOH
 /* Supabase client — graceful no-op if CDN blocked */
 const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}catch{return null;}})();
 
-/* Global trend access state — optimistic default so first paint shows features */
-let trendAccess={access:true,mode:'trial',daysLeft:TRIAL_DAYS};
+/* Global trend access state — conservative default; initTrend() sets real value */
+let trendAccess={access:false,mode:'expired'};
 
 /* Sync check for anonymous users (no network needed) */
 function _checkTrendLocal(){
@@ -2070,6 +2070,7 @@ async function checkTrendAccess(){
   return{access:false,mode:'expired'};
 }
 
+let _trendInitResolve;const trendInitPromise=new Promise(r=>{_trendInitResolve=r;});
 async function initTrend(){
   /* Keep optimistic trial default until server responds — prevents flash of expired state */
   const user=await getUser();
@@ -2092,6 +2093,7 @@ async function initTrend(){
   syncTrendLockCopy();
   if(trendAccess.mode==='trial'&&trendAccess.daysLeft===1)
     setTimeout(()=>showTrialExpiringSoon(),3000);
+  _trendInitResolve();
 }
 
 function updateSubManagementCard(){
@@ -2218,7 +2220,8 @@ function updateTrendBadge(){
 }
 
 /* Gate wrapper — user-triggered actions open paywall; auto-renders just skip */
-function requireTrend(fn,featureName='',autoRender=false){
+async function requireTrend(fn,featureName='',autoRender=false){
+  await trendInitPromise;
   if(trendAccess.access){fn();return;}
   if(!autoRender)openPaywall(featureName);
 }
@@ -8166,9 +8169,11 @@ function updateAdherenceCalendar(){
 const TABS=['oggi','prog','set','info'];
 function switchTab(name){
   TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
+  const progOverlay=document.getElementById('scr-prog-blur-overlay');
+  if(progOverlay && name!=='prog') progOverlay.style.display='none';
   if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';applyTrendBlurOverlay();syncTrendLockCopy();}
   if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
-  if(name==='set'&&_tabDirty.set){renderSettings();renderKcalRing();_tabDirty.set=false;}
+  if(name==='set'){renderSettings();updateSubManagementCard();renderKcalRing();_tabDirty.set=false;}
   if(name==='info'){updateConsentUI();}
   if(name==='oggi'){try{renderTodayAction();}catch(e){}try{renderPlanUpdateNote();}catch(e){}}
 }
