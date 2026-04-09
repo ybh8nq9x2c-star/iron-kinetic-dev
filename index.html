@@ -655,8 +655,8 @@ body.onboarding-active #onb-screen{
 #paywall-sheet{background:#1c1b19;border-radius:20px 20px 0 0;padding:32px 24px 48px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
 #trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
 #scr-prog.locked-trend{display:flex!important;flex-direction:column;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-#scr-prog.locked-trend .pg{flex:1;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-#trend-lock-banner.locked-card{flex-direction:column;margin:auto 0;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px 16px;}
+#scr-prog.locked-trend .pg{flex:1;display:flex;flex-direction:column;overflow-y:auto!important;-webkit-overflow-scrolling:touch;pointer-events:auto!important;}
+#trend-lock-banner.locked-card{flex-direction:column;margin:auto 0;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px 16px;pointer-events:auto;cursor:auto;}
 [onclick*="startCheckout"]:disabled{cursor:not-allowed;pointer-events:none;}
 /* ── Post-onboarding auth gate ── */
 #post-onb-auth-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.90);backdrop-filter:blur(18px);z-index:10001;align-items:flex-end;justify-content:center;}
@@ -6339,24 +6339,36 @@ function activatePlanAndContinue(){
 
 function applyTrendBlurOverlay(){
   const overlay=document.getElementById('scr-prog-blur-overlay');
-  if(!overlay)return;
-  const titleEl=document.getElementById('trend-blur-title');
-  const daysEl=document.getElementById('trend-blur-days');
-  const ctaEl=document.getElementById('trend-blur-cta');
-  if(trendAccess.access){
-    /* paid OR trial-with-access → no blur, full access */
-    overlay.classList.remove('on');
-    overlay.style.pointerEvents='none';
+  const scrProg=document.getElementById('scr-prog');
+  const hasAccess=trendAccess.access;
+
+  if(hasAccess){
+    // UTENTE CON ACCESSO (trial o pagante): rimuovi tutto il lock
+    if(overlay){overlay.style.display='none';overlay.classList.remove('on');}
+    if(scrProg)scrProg.classList.remove('locked-trend');
+    // Riabilita tutti i card/pulsanti dentro scr-prog
+    if(scrProg){
+      scrProg.querySelectorAll('.locked-card,[disabled]').forEach(el=>{
+        el.classList.remove('locked-card');
+        el.removeAttribute('disabled');
+        el.style.pointerEvents='';
+        el.style.cursor='';
+      });
+    }
+    // Aggiorna testo blur se visibile per trial
+    const titleEl=document.getElementById('trend-blur-title');
+    const daysEl=document.getElementById('trend-blur-days');
     if(trendAccess.mode==='trial'){
-      /* subtle badge-only hint, no blocking overlay */
       if(titleEl)titleEl.textContent=t('trend.blur.trialActive');
       if(daysEl)daysEl.textContent=trendAccess.daysLeft===1?t('trend.blur.lastDay'):t('trend.blur.daysLeft').replace('{n}',trendAccess.daysLeft);
     }
   } else {
-    /* expired or grace_expired → block with blur */
-    overlay.classList.add('on');
-    overlay.style.pointerEvents='auto';
-    overlay.style.background='rgba(14,14,14,.80)';
+    // UTENTE SENZA ACCESSO (expired/freemium): applica lock
+    if(overlay){overlay.style.display='flex';overlay.classList.add('on');overlay.style.pointerEvents='auto';overlay.style.background='rgba(14,14,14,.80)';}
+    if(scrProg)scrProg.classList.add('locked-trend');
+    const titleEl=document.getElementById('trend-blur-title');
+    const daysEl=document.getElementById('trend-blur-days');
+    const ctaEl=document.getElementById('trend-blur-cta');
     if(titleEl)titleEl.textContent=t('trend.blur.expired');
     if(daysEl)daysEl.textContent=t('trend.blur.expiredSub');
     if(ctaEl)ctaEl.textContent=t('trend.blur.cta');
@@ -7141,8 +7153,23 @@ function _renderProfileCard(prof){
   /* Hero metrics */
   const heroTdee=document.getElementById('set-hero-tdee');
   const heroBmr=document.getElementById('set-hero-bmr');
-  if(heroTdee)heroTdee.textContent=prof.targetKcal?String(prof.targetKcal):'—';
-  if(heroBmr)heroBmr.innerHTML=prof.bmr?`${sanitize(prof.bmr)}<span style="font-size:14px;opacity:.5;margin-left:4px;font-weight:500;">kcal</span>`:'—';
+  // Fallback: ricalcola macros on-the-fly se targetKcal manca
+  let _targetKcal=prof.targetKcal;
+  let _bmr=prof.bmr;
+  if((!_targetKcal||!_bmr)&&typeof calculateUserMacros==='function'){
+    try{
+      const m=calculateUserMacros(prof);
+      if(!_targetKcal)_targetKcal=m.targetKcal;
+      if(!_bmr)_bmr=m.bmr||m.tdee;
+      prof.targetKcal=_targetKcal;
+      prof.bmr=_bmr;
+      try{lsS(SK.profile,prof);}catch(e){}
+    }catch(e){}
+  }
+  if(heroTdee)heroTdee.textContent=_targetKcal?String(Math.round(_targetKcal)):'—';
+  if(heroBmr)heroBmr.innerHTML=_bmr
+    ?`${sanitize(Math.round(_bmr))}<span style="font-size:14px;opacity:.5;margin-left:4px;font-weight:500;">kcal</span>`
+    :'—';
   const el=document.getElementById('set-profile-text');if(!el)return;
   const proRateDisplay=prof.proRate?`${prof.proRate}g/kg`:'2.0g/kg';
   const waterDisplay=prof.waterTarget?`${prof.waterTarget}L`:`${Math.round(parseFloat(prof.weight||70)*0.035*10)/10}L`;
