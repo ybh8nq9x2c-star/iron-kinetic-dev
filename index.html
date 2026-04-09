@@ -1709,7 +1709,7 @@ body.onboarding-active #onb-screen{
           </button>
           <div id="acc-danger" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
             <div style="padding:0 16px 16px;border-top:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.03);">
-              <p class="sn t-xxs muted" style="margin:14px 0 10px;line-height:1.5;">Queste azioni sono irreversibili senza un backup.</p>
+              <p class="sn t-xxs muted" data-i18n="set.danger.warn" style="margin:14px 0 10px;line-height:1.5;">Queste azioni sono irreversibili senza un backup.</p>
               <button id="btn-change-diet" onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
             </div>
           </div>
@@ -2100,23 +2100,25 @@ async function initTrend(){
 }
 
 function updateSubManagementCard(){
-  const badge   = document.getElementById('sub-status-badge');
-  const ring    = document.getElementById('sub-ring-fill');
-  const ringNum = document.getElementById('sub-ring-num');
-  const ringUnit= document.getElementById('sub-ring-unit');
-  const subtitle= document.getElementById('sub-plan-subtitle');
-  const detail  = document.getElementById('sub-plan-detail');
-  const progLbl = document.getElementById('sub-prog-label');
-  const progRgt = document.getElementById('sub-prog-right');
-  const progBar = document.getElementById('sub-prog-bar');
-  const ctaWrap = document.getElementById('sub-cta-wrap');
+  const badge    = document.getElementById('sub-status-badge');
+  const ring     = document.getElementById('sub-ring-fill');
+  const ringNum  = document.getElementById('sub-ring-num');
+  const ringUnit = document.getElementById('sub-ring-unit');
+  const subtitle = document.getElementById('sub-plan-subtitle');
+  const progLbl  = document.getElementById('sub-prog-label');
+  const progRgt  = document.getElementById('sub-prog-right');
+  const progBar  = document.getElementById('sub-prog-bar');
+  const ctaWrap  = document.getElementById('sub-cta-wrap');
 
-  // Mostra login prompt se utente non autenticato (PRIMA del guard DOM)
+  // Anon user — no Supabase (BEFORE DOM guard)
   if(!sb){
+    if(badge){badge.textContent=t('sub.badge.login');badge.style.cssText='font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:rgba(191,90,242,.12);color:var(--sec);border:1px solid rgba(191,90,242,.25)';}
+    if(subtitle)subtitle.textContent=t('sub.anon.prompt');
+    if(progLbl)progLbl.textContent='';
+    if(progRgt)progRgt.textContent='';
+    if(progBar)progBar.style.width='0%';
     if(ctaWrap)ctaWrap.innerHTML=`
-      <p style="font-size:11px;color:var(--muted);margin:0 0 8px;line-height:1.5">
-        Accedi con Google per gestire l'abbonamento e sincronizzare Trend su tutti i dispositivi.
-      </p>
+      <p style="font-size:11px;color:var(--muted);margin:0 0 8px;line-height:1.5">${t('sub.anon.prompt')}</p>
       <button onclick="signInWithGoogle()" class="btn btn-primary w100"
         style="font-size:12px;height:46px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
@@ -2125,12 +2127,8 @@ function updateSubManagementCard(){
           <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
           <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
         </svg>
-        Accedi con Google
+        ${t('sub.anon.cta')}
       </button>`;
-    if(badge){
-      badge.textContent='ACCEDI';
-      badge.style.cssText='font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:rgba(191,90,242,.12);color:var(--sec);border:1px solid rgba(191,90,242,.25)';
-    }
     return;
   }
 
@@ -2138,96 +2136,97 @@ function updateSubManagementCard(){
 
   const CIRC=106.8;
   const{mode,daysLeft,hoursLeft,plan}=trendAccess;
-
   const setRing=(pct,color)=>{
     const offset=CIRC*(1-Math.min(1,Math.max(0,pct)));
     if(ring){requestAnimationFrame(()=>{requestAnimationFrame(()=>{ring.style.strokeDashoffset=offset;ring.style.stroke=color;});});}
   };
+  const badgeStyle=(bg,color,border)=>
+    `font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:${bg};color:${color};border:1px solid ${border}`;
 
   if(mode==='trial'){
     const d=daysLeft||0;
     const pct=d/TRIAL_DAYS;
     const warn=d<=2;
     const col=warn?'var(--orange)':'var(--p)';
-    badge.textContent='PROVA GRATUITA';
-    badge.style.cssText='font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:rgba(77,220,198,.12);color:var(--p);border:1px solid rgba(77,220,198,.25)';
+    const s=_lang==='en'?(d===1?'':'s'):(d===1?'o':'i');
+    const r=_lang==='en'?'':(d===1?'o':'i');
+    badge.textContent=t('sub.badge.trial');
+    badge.style.cssText=badgeStyle('rgba(77,220,198,.12)','var(--p)','rgba(77,220,198,.25)');
     setRing(pct,col);
-    ringNum.textContent=d;ringNum.style.color=col;ringUnit.textContent='gg';
-    if(subtitle)subtitle.textContent=d<=0
-      ?'Prova scaduta · nessun accesso attivo'
-      :`Prova gratuita · ${d} giorn${d===1?'o':'i'} rimast${d===1?'o':'i'}`;
-    if(detail)detail.textContent=d<=0
-      ?'Attiva Trend per continuare'
-      :'Poi solo piano base gratuito';
-    if(progLbl)progLbl.textContent=`${TRIAL_DAYS-d} giorni usati`;
-    if(progRgt)progRgt.textContent=`${d} rimasti`;
+    if(ringNum){ringNum.textContent=d;ringNum.style.color=col;}
+    if(ringUnit)ringUnit.textContent=_lang==='en'?'d':'gg';
+    if(subtitle)subtitle.textContent=d<=0?t('sub.trial.subtitle.zero'):t('sub.trial.subtitle',{d,s,r});
+    if(progLbl)progLbl.textContent=t('sub.trial.prog.left',{d:TRIAL_DAYS-d});
+    if(progRgt)progRgt.textContent=t('sub.trial.prog.right',{d});
     if(progBar){progBar.style.width=`${Math.round(pct*100)}%`;progBar.style.background=col;}
     ctaWrap.innerHTML=`
-      <button onclick="startCheckout('monthly')" class="btn btn-primary w100" style="font-size:12px;height:46px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
+      <button onclick="startCheckout('monthly')" class="btn btn-primary w100"
+        style="font-size:12px;height:46px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">star</span>
-        Attiva Trend — €9,99/mese
+        ${t('sub.trial.cta.monthly')}
       </button>
-      <button onclick="startCheckout('lifetime')" class="btn btn-ghost w100" style="font-size:11px;height:36px;color:var(--muted)">
-        Oppure €99,99 una volta · Accesso vita
+      <button onclick="startCheckout('lifetime')" class="btn btn-ghost w100"
+        style="font-size:11px;height:36px;color:var(--muted)">
+        ${t('sub.trial.cta.lifetime')}
       </button>`;
 
   }else if(mode==='paid'){
-    badge.textContent='ATTIVO';
-    badge.style.cssText='font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:rgba(77,220,198,.12);color:var(--p);border:1px solid rgba(77,220,198,.25)';
+    const isLT=plan==='lifetime';
+    badge.textContent=t('sub.badge.paid');
+    badge.style.cssText=badgeStyle('rgba(77,220,198,.12)','var(--p)','rgba(77,220,198,.25)');
     setRing(1,'var(--p)');
-    ringNum.textContent=plan==='lifetime'?'∞':'✓';
-    ringNum.style.color='var(--p)';
-    ringNum.style.fontSize=plan==='lifetime'?'18px':'16px';
-    ringUnit.textContent='';
-    if(subtitle)subtitle.textContent=plan==='lifetime'
-      ?'Lifetime · Accesso permanente ♾'
-      :'Mensile · Rinnovo automatico';
-    if(detail)detail.textContent=plan==='lifetime'
-      ?'Accesso completo senza scadenza'
-      :'Abbonamento Trend attivo';
-    if(progLbl)progLbl.textContent='Stato abbonamento';
-    if(progRgt)progRgt.textContent=plan==='lifetime'?'Per sempre ♾':'Auto-rinnovo attivo';
+    if(ringNum){ringNum.textContent=isLT?'∞':'✓';ringNum.style.color='var(--p)';ringNum.style.fontSize=isLT?'18px':'16px';}
+    if(ringUnit)ringUnit.textContent='';
+    if(subtitle)subtitle.textContent=t(isLT?'sub.paid.subtitle.lifetime':'sub.paid.subtitle.monthly');
+    if(progLbl)progLbl.textContent=t('sub.paid.prog.left');
+    if(progRgt)progRgt.textContent=t(isLT?'sub.paid.prog.right.lifetime':'sub.paid.prog.right.monthly');
     if(progBar){progBar.style.width='100%';progBar.style.background='var(--p)';}
     ctaWrap.innerHTML=`
-      <button onclick="openBillingPortal()" class="btn btn-ghost w100" style="font-size:12px;height:46px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;border-color:var(--p);color:var(--p)">
+      <button onclick="openBillingPortal()" class="btn btn-ghost w100"
+        style="font-size:12px;height:46px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;border-color:var(--p);color:var(--p)">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">manage_accounts</span>
-        Gestisci abbonamento
+        ${t('sub.paid.cta.manage')}
       </button>`;
 
   }else if(mode==='grace'){
     const h=hoursLeft||0;
-    badge.textContent='PAGAMENTO IN RITARDO';
-    badge.style.cssText='font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:rgba(255,159,10,.12);color:var(--orange);border:1px solid rgba(255,159,10,.28)';
+    const s=_lang==='en'?(h===1?'':'s'):'';
+    const r=_lang==='en'?'':(h===1?'a':'e');
+    badge.textContent=t('sub.badge.grace');
+    badge.style.cssText=badgeStyle('rgba(255,159,10,.12)','var(--orange)','rgba(255,159,10,.28)');
     setRing(h/48,'var(--orange)');
-    ringNum.textContent=h;ringNum.style.color='var(--orange)';ringUnit.textContent='ore';
-    if(subtitle)subtitle.textContent=`Pagamento in sospeso · ${h}h rimaste`;
-    if(detail)detail.textContent='Aggiorna il metodo di pagamento per continuare';
-    if(progLbl)progLbl.textContent='Grace period scade tra';
-    if(progRgt)progRgt.textContent=`${h} ore`;
+    if(ringNum){ringNum.textContent=h;ringNum.style.color='var(--orange)';}
+    if(ringUnit)ringUnit.textContent=_lang==='en'?'h':'ore';
+    if(subtitle)subtitle.textContent=t('sub.grace.subtitle',{h,s,r});
+    if(progLbl)progLbl.textContent=t('sub.grace.prog.left');
+    if(progRgt)progRgt.textContent=t('sub.grace.prog.right',{h});
     if(progBar){progBar.style.width=`${Math.round((h/48)*100)}%`;progBar.style.background='var(--orange)';}
     ctaWrap.innerHTML=`
-      <button onclick="openBillingPortal()" class="btn w100" style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:12px;height:46px;font-weight:800;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:6px">
+      <button onclick="openBillingPortal()" class="btn w100"
+        style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:12px;height:46px;font-weight:800;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">warning</span>
-        Aggiorna metodo di pagamento
+        ${t('sub.grace.cta.update')}
       </button>`;
 
   }else{
-    badge.textContent='SCADUTO';
-    badge.style.cssText='font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:rgba(255,59,48,.10);color:var(--red);border:1px solid rgba(255,59,48,.22)';
+    badge.textContent=t('sub.badge.expired');
+    badge.style.cssText=badgeStyle('rgba(255,59,48,.10)','var(--red)','rgba(255,59,48,.22)');
     setRing(0,'var(--red)');
-    ringNum.textContent='0';ringNum.style.color='var(--red)';ringUnit.textContent='gg';
-    if(subtitle)subtitle.textContent='Prova terminata · Piano base attivo';
-    if(detail)detail.textContent='Riattiva Trend per sbloccare analisi avanzata';
-    if(progLbl)progLbl.textContent='Prova terminata';
-    if(progRgt)progRgt.textContent='—';
+    if(ringNum){ringNum.textContent='0';ringNum.style.color='var(--red)';}
+    if(ringUnit)ringUnit.textContent=_lang==='en'?'d':'gg';
+    if(subtitle)subtitle.textContent=t('sub.expired.subtitle');
+    if(progLbl)progLbl.textContent=t('sub.expired.prog.left');
+    if(progRgt)progRgt.textContent='';
     if(progBar)progBar.style.width='0%';
     ctaWrap.innerHTML=`
-      <button onclick="startCheckout('monthly')" class="btn btn-primary w100" style="font-size:12px;height:46px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
+      <button onclick="startCheckout('monthly')" class="btn btn-primary w100"
+        style="font-size:12px;height:46px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">star</span>
-        Riattiva Trend — €9,99/mese
+        ${t('sub.expired.cta.monthly')}
       </button>
-      <button onclick="startCheckout('lifetime')" class="btn btn-ghost w100" style="font-size:11px;height:36px;color:var(--muted)">
-        €99,99 una volta · Accesso vita
+      <button onclick="startCheckout('lifetime')" class="btn btn-ghost w100"
+        style="font-size:11px;height:36px;color:var(--muted)">
+        ${t('sub.expired.cta.lifetime')}
       </button>`;
   }
 }
@@ -2303,7 +2302,7 @@ async function startCheckout(plan){
         const errBody=await res.json().catch(()=>({}));
         console.error('[IK] checkout edge function error',res.status,errBody);
         if(res.status===404){throw new Error('Edge Function non deployata — contatta il supporto');}
-        if(res.status===401||res.status===403){throw new Error('Sessione scaduta — riaccedi e riprova');}
+        if(res.status===401||res.status===403){throw new Error(t('toast.sessionExpired'));}
         throw new Error(errBody.error||'Checkout error '+res.status);
       }
       const data=await res.json();
@@ -2320,7 +2319,7 @@ async function startCheckout(plan){
         document.head.appendChild(s);
       });
       await loadStripe();
-      if(typeof Stripe==='undefined'){showToast('Stripe non disponibile — riprova');return;}
+      if(typeof Stripe==='undefined'){showToast(t('toast.stripeUnavailable'));return;}
       /* Stripe Price IDs — update when changing plans in Stripe Dashboard */
       const priceMap={monthly:'price_1TJy0qJYTPcSrsvtmBIyqDmu',annual:'price_1TJy0qJYTPcSrsvtqITsBfl0',lifetime:'price_1TJy0rJYTPcSrsvttxySfxQk'};
       const priceId=priceMap[plan]||priceMap.monthly;
@@ -2337,25 +2336,25 @@ async function startCheckout(plan){
     }
   }catch(err){
     console.error('[IK] startCheckout failed:',err);
-    showToast(err?.message||'Errore checkout');
+    showToast(err?.message||t('toast.checkoutError'));
     btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
   }
 }
 
 async function openBillingPortal(){
   const user=await getUser();
-  if(!user||!sb){showToast('Accedi per gestire l\'abbonamento');return;}
+  if(!user||!sb){showToast(t('toast.loginRequired'));return;}
   try{
     const{data:{session}}=await sb.auth.getSession();
     const token=session?.access_token;
-    if(!token){showToast('Sessione scaduta, riaccedi');return;}
+    if(!token){showToast(t('toast.sessionExpired'));return;}
     const res=await fetch(SUPABASE_URL+'/functions/v1/create-portal-session',{
       method:'POST',
       headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json','apikey':SUPABASE_KEY},
     });
     const json=await res.json();
     if(json.url)window.location.href=json.url;
-    else showToast(json.error||'Errore portal');
+    else showToast(json.error||t('toast.portalError'));
   }catch(e){showToast('Errore: '+e.message);}
 }
 
@@ -2504,7 +2503,7 @@ async function _resumePostOnboardingOrBoot(){
             trendAccess={access:true,mode:'paid'};
             updateTrendBadge();
             if(typeof updateSubManagementCard==='function')updateSubManagementCard();
-            showToast('✅ Trend attivato! Benvenuto 🚀',4000);
+            showToast(t('toast.trendActivated'),4000);
             const pw=document.getElementById('paywall-overlay');if(pw)pw.style.display='none';
             document.body.style.overflow='';
             const blurOv=document.getElementById('scr-prog-blur-overlay');if(blurOv)blurOv.style.display='none';
@@ -3084,6 +3083,46 @@ it:{
   'toast.loginOk':'✓ Accesso effettuato',
   'set.sub.active':'Abbonamento Trend attivo',
   'set.sub.grace':'Pagamento in ritardo — accesso temporaneo',
+
+  'sub.badge.trial': 'PROVA GRATUITA',
+  'sub.badge.paid': 'ATTIVO',
+  'sub.badge.grace': 'PAGAMENTO IN RITARDO',
+  'sub.badge.expired': 'SCADUTO',
+  'sub.badge.login': 'ACCEDI',
+  'sub.trial.subtitle': '{d} giorn{s} rimast{r} · poi solo piano base',
+  'sub.trial.subtitle.zero': 'Prova scaduta — nessun accesso attivo',
+  'sub.trial.detail': 'Poi solo piano base gratuito',
+  'sub.trial.prog.left': '{d} giorni usati',
+  'sub.trial.prog.right': '{d} rimasti',
+  'sub.trial.cta.monthly': 'Attiva Trend — €4,99/mese',
+  'sub.trial.cta.lifetime': 'Oppure €9,99 una volta · Accesso vita',
+  'sub.paid.subtitle.monthly': 'Mensile · Rinnovo automatico',
+  'sub.paid.subtitle.lifetime': 'Lifetime · Accesso permanente',
+  'sub.paid.detail.monthly': 'Abbonamento Trend attivo',
+  'sub.paid.detail.lifetime': 'Accesso completo senza scadenza',
+  'sub.paid.prog.left': 'Stato abbonamento',
+  'sub.paid.prog.right.monthly': 'Auto-rinnovo attivo',
+  'sub.paid.prog.right.lifetime': 'Per sempre ♾',
+  'sub.paid.cta.manage': 'Gestisci abbonamento',
+  'sub.grace.subtitle': 'Pagamento in sospeso · {h} or{s} rimast{r}',
+  'sub.grace.detail': 'Aggiorna il metodo di pagamento per continuare',
+  'sub.grace.prog.left': 'Grace period scade tra',
+  'sub.grace.prog.right': '{h} ore',
+  'sub.grace.cta.update': 'Aggiorna metodo di pagamento',
+  'sub.expired.subtitle': 'Prova terminata · Piano base attivo',
+  'sub.expired.detail': 'Riattiva Trend per sbloccare analisi avanzata',
+  'sub.expired.prog.left': 'Prova terminata',
+  'sub.expired.cta.monthly': 'Riattiva Trend — €4,99/mese',
+  'sub.expired.cta.lifetime': 'Oppure €9,99 una volta · Accesso vita',
+  'sub.anon.prompt': "Accedi con Google per gestire l'abbonamento e sincronizzare Trend su tutti i dispositivi.",
+  'sub.anon.cta': 'Accedi con Google',
+  'toast.stripeUnavailable': 'Stripe non disponibile, riprova',
+  'toast.checkoutError': 'Errore checkout',
+  'toast.loginRequired': "Accedi per gestire l'abbonamento",
+  'toast.sessionExpired': 'Sessione scaduta, riaccedi',
+  'toast.portalError': 'Errore portale abbonamento',
+  'toast.trendActivated': 'Trend attivato! Benvenuto 🎉',
+  'coach.satiety.badge': 'Fame alta · aderenza bassa — considera +100 kcal',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -3612,6 +3651,46 @@ en:{
   'toast.loginOk':'✓ Signed in',
   'set.sub.active':'Trend subscription active',
   'set.sub.grace':'Payment overdue — temporary access',
+
+  'sub.badge.trial': 'FREE TRIAL',
+  'sub.badge.paid': 'ACTIVE',
+  'sub.badge.grace': 'PAYMENT OVERDUE',
+  'sub.badge.expired': 'EXPIRED',
+  'sub.badge.login': 'SIGN IN',
+  'sub.trial.subtitle': '{d} day{s} remaining · then free plan only',
+  'sub.trial.subtitle.zero': 'Trial expired — no active access',
+  'sub.trial.detail': 'Then free base plan only',
+  'sub.trial.prog.left': '{d} days used',
+  'sub.trial.prog.right': '{d} remaining',
+  'sub.trial.cta.monthly': 'Activate Trend — €4.99/month',
+  'sub.trial.cta.lifetime': 'Or €9.99 once · Lifetime access',
+  'sub.paid.subtitle.monthly': 'Monthly · Auto-renewing',
+  'sub.paid.subtitle.lifetime': 'Lifetime · Permanent access',
+  'sub.paid.detail.monthly': 'Trend subscription active',
+  'sub.paid.detail.lifetime': 'Full access, no expiry',
+  'sub.paid.prog.left': 'Subscription status',
+  'sub.paid.prog.right.monthly': 'Auto-renew active',
+  'sub.paid.prog.right.lifetime': 'Forever ♾',
+  'sub.paid.cta.manage': 'Manage subscription',
+  'sub.grace.subtitle': 'Payment pending · {h} hour{s} remaining',
+  'sub.grace.detail': 'Update your payment method to continue',
+  'sub.grace.prog.left': 'Grace period expires in',
+  'sub.grace.prog.right': '{h} hours',
+  'sub.grace.cta.update': 'Update payment method',
+  'sub.expired.subtitle': 'Trial ended · Free plan active',
+  'sub.expired.detail': 'Reactivate Trend to unlock advanced analytics',
+  'sub.expired.prog.left': 'Trial ended',
+  'sub.expired.cta.monthly': 'Reactivate Trend — €4.99/month',
+  'sub.expired.cta.lifetime': 'Or €9.99 once · Lifetime access',
+  'sub.anon.prompt': 'Sign in with Google to manage your subscription and sync Trend across all devices.',
+  'sub.anon.cta': 'Sign in with Google',
+  'toast.stripeUnavailable': 'Stripe unavailable, please retry',
+  'toast.checkoutError': 'Checkout error',
+  'toast.loginRequired': 'Sign in to manage your subscription',
+  'toast.sessionExpired': 'Session expired, please sign in again',
+  'toast.portalError': 'Subscription portal error',
+  'toast.trendActivated': 'Trend activated! Welcome 🎉',
+  'coach.satiety.badge': 'High hunger · low adherence — consider +100 kcal',
 }
 };
 let _lang='en';
@@ -3627,6 +3706,7 @@ function applyLang(){
   _trApplied=false;
   applyTranslations();
   scheduleRender(renderMacros,renderTrackers,renderMeals,renderKcalRing,renderCoach,renderSettings,renderCheckinAnalytics,renderFingerprint);
+  updateSubManagementCard?.();
 }
 function setLang(lang){
   _lang=(lang==='en')?'en':'it';
@@ -3711,7 +3791,7 @@ function applyTranslations(deferOffscreen){
   const _nTxt=document.getElementById('notif-status-txt');if(_nTxt)_nTxt.textContent=t('prog.notif.subtitle');
   const _nBtn=document.getElementById('notif-perm-btn');if(_nBtn&&!_nBtn.dataset.active)_nBtn.textContent=t('prog.notif.btn');
   const _wU=document.getElementById('btn-weight-upd');
-  if(_wU)_wU.textContent=_lang==='it'?'Aggiorna peso':'Update weight';
+  if(_wU)_wU.textContent=t('set.btn.aggiornaPeso');
   const _pT=document.getElementById('set-btn-privacy-txt');if(_pT)_pT.textContent=t('set.btn.privacy');
   const _aT=document.getElementById('set-btn-aiuto-txt');if(_aT)_aT.textContent=t('set.btn.aiuto');
   const _lL=document.getElementById('lang-label-txt');if(_lL)_lL.textContent=t('set.lang.label');
@@ -3725,7 +3805,7 @@ function applyTranslations(deferOffscreen){
   document.querySelectorAll('[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
   /* danger zone accordion warning text */
   document.querySelectorAll('#acc-danger .sn.t-xxs.muted').forEach(p=>{
-    if(p.textContent.includes('irreversibili')||p.textContent.includes('irreversible')||p.textContent.includes('backup'))
+    if(p.dataset.i18n==='set.danger.warn'||p.textContent.includes('irreversibili')||p.textContent.includes('irreversible')||p.textContent.includes('backup'))
       p.textContent=t('set.danger.warn');
   });
   document.querySelectorAll('#scr-info .rowb').forEach(row=>{
@@ -6641,7 +6721,7 @@ function renderCoach(){
     }else if(_showSatiety){
       _mrEl.style.background='rgba(255,159,10,.10)';_mrEl.style.border='1px solid rgba(255,159,10,.28)';
       _mrEl.style.color='var(--orange)';
-      _mrEl.textContent='⚠️ '+(_lang==='en'?'High hunger + low adherence: consider +100 kcal':'Fame alta + aderenza bassa: considera +100 kcal');
+      _mrEl.textContent='⚠️ '+t('coach.satiety.badge');
       _mrEl.style.display='block';
     }else{
       _mrEl.innerHTML='';_mrEl.style.display='none';
@@ -8265,7 +8345,7 @@ function mountApp(){
     // Hide prog overlay on boot since initial tab is not 'prog'
     const progOverlay=document.getElementById('scr-prog-blur-overlay');
     if(progOverlay)progOverlay.style.display='none';
-    if(window._trendActivatedMsg){window._trendActivatedMsg=false;toast('✨ Trend attivato! Benvenuto.');}
+    if(window._trendActivatedMsg){window._trendActivatedMsg=false;toast(t('toast.trendActivated'));}
   });
 }
 
