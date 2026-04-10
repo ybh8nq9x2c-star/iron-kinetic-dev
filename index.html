@@ -130,7 +130,7 @@ textarea.inp{height:auto;padding:12px 14px;resize:none;line-height:1.5;}
 .prog-stat-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -16px;padding:0 16px;}
 .prog-stat-scroll::-webkit-scrollbar{display:none;}
 .prog-stat-row{display:flex;gap:12px;padding-bottom:4px;}
-.prog-stat-chip{position:relative;min-width:138px;flex:0 0 138px;background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px 13px;overflow:hidden;}
+.prog-stat-chip{position:relative;min-width:138px;flex:0 0 138px;background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;overflow:hidden;}
 .prog-stat-chip::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0;background:linear-gradient(90deg,var(--p) 0%,transparent 100%);}
 .prog-stat-chip.sa::before{background:linear-gradient(90deg,var(--sec) 0%,transparent 100%);}
 /* ── Profilo: hero metrics ── */
@@ -227,12 +227,12 @@ body.onboarding-active #onb-screen{
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px;}
 .cal-header{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 0;}
 .cal-dot{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--on);margin:0 auto;background:var(--s2);border:1px solid var(--line);}
-.cal-dot.cal-green{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.32);color:#22c55e;}
-.cal-dot.cal-yellow{background:rgba(234,179,8,.18);border-color:rgba(234,179,8,.32);color:#eab308;}
-.cal-dot.cal-red{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.32);color:#ef4444;}
+.cal-dot.cal-green{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.32);color:var(--p);}
+.cal-dot.cal-yellow{background:rgba(234,179,8,.18);border-color:rgba(234,179,8,.32);color:var(--orange);}
+.cal-dot.cal-red{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.32);color:var(--red,#ff453a);}
 .cal-dot.cal-empty{background:var(--s3);border-color:var(--line);color:var(--dim);}
 /* Streak badge */
-.streak-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);padding:6px 10px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.06em;color:#f97316;margin-top:8px;}
+.streak-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);padding:6px 10px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--orange);margin-top:8px;}
 .streak-badge .fire{font-size:12px;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}.rfon{animation:none;}.bar-fill,.result-card{transition:none;}}
 /* ── Trend blur overlay ── */
@@ -454,7 +454,7 @@ body.onboarding-active #onb-screen{
   border-top:1px solid var(--glass-stroke);
   display:flex;flex-direction:column;
   overflow:hidden;
-  padding-bottom:var(--sab);
+  padding-bottom:max(var(--sab),16px);
   box-shadow:0 -8px 40px rgba(0,0,0,.4);
   transform:translateY(100%);
   transition:transform .3s cubic-bezier(.4,0,.2,1);
@@ -651,7 +651,7 @@ body.onboarding-active #onb-screen{
 .coach-ico-info{background:rgba(10,132,255,.12);color:var(--blue);}
 .pw-feat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;font-size:12px;color:#ccc;font-weight:500;}
 #paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9999;align-items:flex-end;justify-content:center;}
-#paywall-sheet{background:#1c1b19;border-radius:20px 20px 0 0;padding:32px 24px 48px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
+#paywall-sheet{background:var(--s1);border-radius:20px 20px 0 0;padding:28px 24px 32px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
 #trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
 #scr-prog.locked-trend{display:flex!important;flex-direction:column;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 #scr-prog.locked-trend .pg{flex:1;display:flex;flex-direction:column;overflow-y:auto!important;-webkit-overflow-scrolling:touch;pointer-events:auto!important;}
@@ -1226,7 +1226,7 @@ body.onboarding-active #onb-screen{
           <div>
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
               <span class="t-xxs muted sn" data-i18n="oggi.kcal.target">Target Giorno</span>
-              <span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:#FFB800;font-weight:700;">MOD</span>
+              <span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:var(--orange);font-weight:700;">MOD</span>
             </div>
             <p id="m-kcal" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;color:var(--p);line-height:1;margin:0 0 6px;">—</p>
             <span class="t-xxs muted sn" data-i18n="oggi.kcal.totali">Kcal totali</span>
@@ -1382,7 +1382,7 @@ body.onboarding-active #onb-screen{
 
       <!-- 7. Maintain Card (hidden, preserve) -->
       <div class="maintain-card" id="maintain-card">
-        <div class="rowb" style="margin-bottom:10px;"><span class="sec-label" style="margin-bottom:0;color:#0A84FF;">Mantenimento</span><span class="t-xxs" style="color:#8ec5ff;">LONG TERM</span></div>
+        <div class="rowb" style="margin-bottom:10px;"><span class="sec-label" style="margin-bottom:0;color:var(--blue,#0A84FF);">Mantenimento</span><span class="t-xxs" style="color:rgba(10,132,255,0.3);">LONG TERM</span></div>
         <p id="maintain-msg" class="sn" style="font-size:13px;line-height:1.6;font-weight:600;color:var(--on);">Sei in fase di mantenimento. Focus su routine sostenibile e stabilità del peso.</p>
       </div>
 
@@ -1402,7 +1402,7 @@ body.onboarding-active #onb-screen{
 
   <!-- Blur overlay (position:fixed) — shown only for expired/freemium -->
   <div id="scr-prog-blur-overlay">
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:40px 28px;text-align:center;pointer-events:auto;width:100%;">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px 20px;text-align:center;pointer-events:auto;width:100%;">
       <span class="material-symbols-outlined" style="font-size:52px;color:var(--p);font-variation-settings:'FILL' 1;filter:drop-shadow(0 0 16px rgba(77,220,198,.4));">lock</span>
       <div>
         <p id="trend-blur-title" style="font-size:17px;font-weight:700;color:var(--on);margin:0 0 6px;line-height:1.3;font-family:'Space Grotesk',sans-serif;"></p>
@@ -2124,7 +2124,7 @@ function updateSubManagementCard(){
     if(ctaWrap)ctaWrap.innerHTML=`
       <p style="font-size:11px;color:var(--muted);margin:0 0 8px;line-height:1.5">${t('sub.anon.prompt')}</p>
       <button onclick="signInWithGoogle()" class="btn btn-primary w100"
-        style="font-size:12px;height:46px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px">
+        style="font-size:12px;height:44px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -2166,7 +2166,7 @@ function updateSubManagementCard(){
     if(progBar){progBar.style.width=`${Math.round(pct*100)}%`;progBar.style.background=col;}
     ctaWrap.innerHTML=`
       <button onclick="startCheckout('monthly')" class="btn btn-primary w100"
-        style="font-size:12px;height:46px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
+        style="font-size:12px;height:44px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">star</span>
         ${t('sub.trial.cta.monthly')}
       </button>
@@ -2194,7 +2194,7 @@ function updateSubManagementCard(){
     if(progBar){progBar.style.width='100%';progBar.style.background='var(--p)';}
     ctaWrap.innerHTML=`
       <button onclick="openBillingPortal()" class="btn btn-ghost w100"
-        style="font-size:12px;height:46px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;border-color:var(--p);color:var(--p)">
+        style="font-size:12px;height:44px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;border-color:var(--p);color:var(--p)">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">manage_accounts</span>
         ${t('sub.paid.cta.manage')}
       </button>`;
@@ -2215,7 +2215,7 @@ function updateSubManagementCard(){
     if(progBar){progBar.style.width=`${Math.round((h/48)*100)}%`;progBar.style.background='var(--orange)';}
     ctaWrap.innerHTML=`
       <button onclick="openBillingPortal()" class="btn w100"
-        style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:12px;height:46px;font-weight:800;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:6px">
+        style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:12px;height:44px;font-weight:800;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">warning</span>
         ${t('sub.grace.cta.update')}
       </button>`;
@@ -2233,7 +2233,7 @@ function updateSubManagementCard(){
     if(progBar)progBar.style.width='0%';
     ctaWrap.innerHTML=`
       <button onclick="startCheckout('monthly')" class="btn btn-primary w100"
-        style="font-size:12px;height:46px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
+        style="font-size:12px;height:44px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">star</span>
         ${t('sub.expired.cta.monthly')}
       </button>
@@ -4937,7 +4937,7 @@ function renderRealTDEE(){
     rateEl.textContent=(data.weeklyRate>=0?'+':'')+data.weeklyRate+' kg/'+wkLabel;
     const prof=getProfile();const goal=prof?.goal||'maintain';
     const goalAligned=((goal==='cut'||goal==='cut_extreme'||goal==='recomp')&&data.weeklyRate<0)||((goal==='bulk')&&data.weeklyRate>0)||((goal==='maintain')&&Math.abs(data.weeklyRate)<0.2);
-    rateEl.style.color=goalAligned?'#22c55e':'var(--on)';
+    rateEl.style.color=goalAligned?'var(--p)':'var(--on)';
   }
   if(noteEl){
     let note=t('tdee.card.note',{n:data.dataPoints});
@@ -6902,8 +6902,8 @@ function renderMacros(){
   getEl('b-pro').style.width=Math.min(100,m.pro/bPro*100)+'%';
   getEl('b-carbs').style.width=Math.min(100,m.carbs/bCarbs*100)+'%';
   getEl('b-fat').style.width=Math.min(100,m.fat/bFat*100)+'%';
-  getEl('m-kcal').style.color=m.modified?'#FFB800':'var(--p)';
-  getEl('m-carbs').style.color=m.modified?'#FFB800':'var(--on)';
+  getEl('m-kcal').style.color=m.modified?'var(--orange)':'var(--p)';
+  getEl('m-carbs').style.color=m.modified?'var(--orange)':'var(--on)';
   const mb=getEl('m-mod-badge');if(mb)mb.style.display=m.modified?'block':'none';
   /* Feature A: daytype badge */
   let _dtb=getEl('m-daytype-badge');
@@ -7257,11 +7257,11 @@ function renderKcalRing(){
   const completedKcal=getCompletedMealKcal(selDay);
   const pct=targetKcal>0?Math.min(100,completedKcal/targetKcal*100):0;
   ring.style.strokeDashoffset=`${KCAL_CIRC*(1-pct/100)}`;
-  ring.style.stroke=pct>=99.5?'#22c55e':'var(--p)';
+  ring.style.stroke=pct>=99.5?'var(--p)':'var(--p)';
   ring.style.opacity=pct>0?'1':'0.35';
   const KCAL_CIRC2=106.8;
   const r2=getEl('kcal-ring-oggi');
-  if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct/100);r2.style.stroke=pct>=99.5?'#22c55e':'var(--p)';}
+  if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct/100);r2.style.stroke=pct>=99.5?'var(--p)':'var(--p)';}
   const pctEl=getEl('oggi-kcal-pct');
   if(pctEl)pctEl.textContent=t('oggi.kcal.pct',{pct:Math.round(pct)});
   const ringWrap=document.getElementById('kcal-ring-wrap');
