@@ -2297,96 +2297,205 @@ function closePaywall(){
 async function startCheckout(plan){
   const btns=document.querySelectorAll('[onclick*="startCheckout"]');
   btns.forEach(b=>{b.disabled=true;b.style.opacity='0.6';});
+  console.log('[IK][checkout] startCheckout called, plan=',plan,'sb=',!!sb);
+
   try{
-    /* Always refresh session first to get a fresh JWT */
+    /* ── STEP 1: get fresh session ── */
     let accessToken=null;
     let userEmail=null;
     if(sb){
       try{
-        /* refreshSession ensures token is not expired */
-        const{data:refreshed}=await sb.auth.refreshSession();
+        const{data:refreshed,error:refreshErr}=await sb.auth.refreshSession();
+        if(refreshErr)console.warn('[IK][checkout] refreshSession error:',refreshErr.message);
         accessToken=refreshed?.session?.access_token||null;
         userEmail=refreshed?.session?.user?.email||null;
-      }catch{
-        /* refreshSession failed — try getSession as fallback */
-        const{data:sess}=await sb.auth.getSession().catch(()=>({data:{}}));
+        console.log('[IK][checkout] refreshSession → token=',!!accessToken,'email=',userEmail||'(none)');
+      }catch(refreshEx){
+        console.warn('[IK][checkout] refreshSession threw:',refreshEx?.message||refreshEx);
+        const{data:sess,error:sessErr}=await sb.auth.getSession().catch(e=>({data:{},error:e}));
+        if(sessErr)console.warn('[IK][checkout] getSession error:',sessErr.message);
         accessToken=sess?.session?.access_token||null;
         userEmail=sess?.session?.user?.email||null;
+        console.log('[IK][checkout] getSession fallback → token=',!!accessToken);
       }
     }
 
-    if(accessToken){
-      /* Server-side checkout via Edge Function */
-      const res=await fetch(
-        SUPABASE_URL+'/functions/v1/create-checkout-session',
-        {
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'Authorization':'Bearer '+accessToken,
-            'apikey':SUPABASE_KEY
-          },
-          body:JSON.stringify({plan:plan||'monthly',price_tier:plan||'monthly'})
-        }
-      );
-      if(!res.ok){
-        const errBody=await res.json().catch(()=>({}));
-        console.error('[IK] checkout edge function error',res.status,errBody);
-        if(res.status===404){
-          /* Edge Function not deployed — fall through to client-side */
-          console.warn('[IK] Edge Function not found, falling back to client-side checkout');
-          await _clientSideCheckout(plan,userEmail);
-          return;
-        }
-        if(res.status===401||res.status===403){
-          showToast('Sessione scaduta — riaccedi e riprova',4000);
-          btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
-          if(typeof signInWithGoogle==='function')signInWithGoogle();
-          return;
-        }
-        throw new Error(errBody.error||'Checkout error '+res.status);
-      }
-      const data=await res.json();
-      if(!data?.url)throw new Error('No checkout URL returned');
-      window.location.href=data.url;
-    }else{
-      /* No session — use client-side Stripe checkout */
-      await _clientSideCheckout(plan,userEmail);
+    /* ── STEP 2: login required — no anonymous checkout ── */
+    if(!accessToken){
+      console.warn('[IK][checkout] No session — login required before checkout');
+      btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
+      /* Save plan so we can resume checkout automatically after login */
+      try{localStorage.setItem('ik_pending_checkout_plan',plan);}catch{}
+      /* Close paywall overlay if open, then show Google login gate */
+      const pw=document.getElementById('paywall-overlay');
+      if(pw)pw.style.display='none';
+      document.body.style.overflow='';
+      _showCheckoutLoginGate(plan);
+      return;
     }
+
+    /* ── STEP 3: server-side checkout via Edge Function ── */
+    console.log('[IK][checkout] path=Edge Function');
+    const edgeFnUrl=SUPABASE_URL+'/functions/v1/create-checkout-session';
+    const payload={plan:plan||'monthly',price_tier:plan||'monthly'};
+    console.log('[IK][checkout] POST',edgeFnUrl,'payload=',JSON.stringify(payload));
+
+    let res;
+    try{
+      res=await fetch(edgeFnUrl,{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer '+accessToken,
+          'apikey':SUPABASE_KEY
+        },
+        body:JSON.stringify(payload)
+      });
+    }catch(networkErr){
+      console.error('[IK][checkout] fetch network error:',networkErr?.message||networkErr);
+      throw new Error('Errore di rete — controlla la connessione e riprova');
+    }
+
+    console.log('[IK][checkout] Edge Function status=',res.status,'ok=',res.ok);
+
+    if(!res.ok){
+      let errBody={};
+      try{errBody=await res.json();}catch{try{const txt=await res.text();errBody={raw:txt};}catch{}}
+      console.error('[IK][checkout] Edge Function error — status=',res.status,'body=',JSON.stringify(errBody));
+      if(typeof Sentry!=='undefined'){
+        try{Sentry.captureMessage('[IK] checkout '+res.status+' '+JSON.stringify(errBody),{level:'error'});}catch{}
+      }
+      if(res.status===401||res.status===403){
+        console.warn('[IK][checkout] Token rifiutato ('+res.status+') — forcing re-login');
+        showToast('Sessione scaduta — riaccedi e riprova',4000);
+        btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
+        try{localStorage.setItem('ik_pending_checkout_plan',plan);}catch{}
+        _showCheckoutLoginGate(plan);
+        return;
+      }
+      if(res.status===400){
+        const detail=errBody.error||errBody.message||'Parametri non validi';
+        console.error('[IK][checkout] 400 Bad Request:',detail,'— verifica Price IDs e valore plan');
+        throw new Error('Configurazione non valida: '+detail);
+      }
+      if(res.status===404){
+        console.error('[IK][checkout] Edge Function 404 — non deployata su Supabase');
+        throw new Error('Servizio checkout non disponibile — contatta il supporto');
+      }
+      const detail=errBody.error||errBody.message||'Errore server '+res.status;
+      console.error('[IK][checkout] 5xx:',detail,'— controlla Supabase Edge Function logs');
+      throw new Error(detail);
+    }
+
+    let data={};
+    try{data=await res.json();}catch(parseErr){
+      console.error('[IK][checkout] JSON parse error:',parseErr?.message);
+      throw new Error('Risposta non valida dal server');
+    }
+    console.log('[IK][checkout] Edge Function response body=',JSON.stringify(data));
+
+    if(!data?.url){
+      console.error('[IK][checkout] Missing data.url — full response:',JSON.stringify(data));
+      throw new Error('URL checkout non ricevuto — controlla la Edge Function');
+    }
+
+    console.log('[IK][checkout] Redirecting to Stripe →',data.url);
+    window.location.href=data.url;
+
   }catch(err){
-    console.error('[IK] startCheckout failed:',err);
+    console.error('[IK][checkout] FAILED:',err?.message||err,err?.stack||'');
+    if(typeof Sentry!=='undefined'){
+      try{Sentry.captureException(err,{tags:{flow:'startCheckout',plan}});}catch{}
+    }
     showToast(err?.message||t('toast.checkoutError'));
     btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
   }
 }
 
+/* Show the Google login gate with checkout context */
+function _showCheckoutLoginGate(plan){
+  console.log('[IK][checkout] showing login gate for plan=',plan);
+  const ov=document.getElementById('post-onb-auth-overlay');
+  if(!ov){
+    /* Fallback: direct Google OAuth if overlay not available */
+    console.warn('[IK][checkout] post-onb-auth-overlay not found, direct OAuth');
+    if(typeof signInWithGoogle==='function')signInWithGoogle();
+    return;
+  }
+  /* Customize copy for checkout context */
+  const tit=document.getElementById('ponb-title');
+  const sub=document.getElementById('ponb-sub');
+  const badge=document.getElementById('ponb-badge');
+  const gcta=document.getElementById('ponb-gcta');
+  if(tit)tit.textContent='Accedi per continuare';
+  if(sub)sub.textContent='Accedi con Google per completare il pagamento e attivare Iron Kinetic Trend.';
+  if(badge)badge.textContent='Richiesto';
+  if(gcta){gcta.innerHTML='<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.14 15.89-5.81l-7.73-6C29.99 37.88 27.14 38.5 24 38.5c-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continua con Google';
+  }
+  try{localStorage.setItem('ik_auth_origin','checkout');}catch{}
+  ov.classList.add('on');
+  document.body.style.overflow='hidden';
+}
+
 async function _clientSideCheckout(plan,email){
+  console.log('[IK][checkout] _clientSideCheckout plan=',plan,'email=',email||'(none)');
+
+  /* ── CRITICAL FIX: stripe.redirectToCheckout() requires Stripe Connect
+     or a server-created Session ID. Without a server, we CANNOT use
+     redirectToCheckout with lineItems in live mode — Stripe blocks it.
+     The correct client-side path is to use pre-configured Payment Links.
+     If you don't have Payment Links, this path will always fail in live mode.
+     Solution: ensure Edge Function is deployed, or configure Payment Links below. ── */
+
   /* Load Stripe SDK lazily */
   await new Promise((resolve,reject)=>{
     if(typeof Stripe!=='undefined'){resolve();return;}
     const s=document.createElement('script');
     s.src='https://js.stripe.com/v3/';
-    s.onload=resolve;
+    s.onload=()=>{console.log('[IK][checkout] Stripe SDK loaded');resolve();};
     s.onerror=()=>reject(new Error(t('toast.stripeUnavailable')));
     document.head.appendChild(s);
   });
-  if(typeof Stripe==='undefined'){showToast(t('toast.stripeUnavailable'));return;}
+  if(typeof Stripe==='undefined'){
+    console.error('[IK][checkout] Stripe SDK unavailable after load attempt');
+    showToast(t('toast.stripeUnavailable'));
+    return;
+  }
+
   const priceMap={
     monthly:'price_1TJy0qJYTPcSrsvtmBIyqDmu',
     annual:'price_1TJy0qJYTPcSrsvtqITsBfl0',
     lifetime:'price_1TJy0rJYTPcSrsvttxySfxQk'
   };
   const priceId=priceMap[plan]||priceMap.monthly;
+  console.log('[IK][checkout] priceId=',priceId,'mode=',plan==='lifetime'?'payment':'subscription');
+
+  /* successUrl MUST be absolute — window.location.origin guarantees https://domain.com */
+  const successUrl=window.location.origin+window.location.pathname+'?trend=success';
+  /* cancelUrl must also be absolute */
+  const cancelUrl=window.location.origin+window.location.pathname;
+  console.log('[IK][checkout] successUrl=',successUrl,'cancelUrl=',cancelUrl);
+
   const stripe=Stripe(STRIPE_PK);
-  /* Use newer stripe.checkout.sessions via Payment Links-style redirect */
+
+  /* NOTE: redirectToCheckout with lineItems only works if your Stripe account
+     has "client-only integration" enabled. In live mode this is usually disabled.
+     If this throws "No such price" or "Integration error", the Edge Function
+     must be used instead. Check Stripe dashboard → Developers → Logs for details. */
   const{error}=await stripe.redirectToCheckout({
     lineItems:[{price:priceId,quantity:1}],
     mode:plan==='lifetime'?'payment':'subscription',
-    successUrl:window.location.origin+window.location.pathname+'?trend=success',
-    cancelUrl:window.location.href,
+    successUrl:successUrl,
+    cancelUrl:cancelUrl,
     ...(email?{customerEmail:email}:{})
   });
-  if(error)throw new Error(error.message);
+  if(error){
+    console.error('[IK][checkout] stripe.redirectToCheckout error:',error.message,'code=',error.code||'n/a','type=',error.type||'n/a');
+    if(typeof Sentry!=='undefined'){
+      try{Sentry.captureException(new Error('[IK] Stripe redirectToCheckout: '+error.message),{tags:{plan,priceId}});}catch{}
+    }
+    throw new Error(error.message);
+  }
 }
 
 async function openBillingPortal(){
@@ -2496,7 +2605,7 @@ function _initAuthListener(){
     if(event==='SIGNED_IN'&&session?.user){
       await syncUserAfterLogin(session.user);
       const origin=localStorage.getItem('ik_auth_origin');
-      if(origin==='post_onboarding'){
+      if(origin==='post_onboarding'||origin==='checkout'){
         try{localStorage.removeItem('ik_auth_origin');}catch{}
         closePostOnboardingAuthGate();
         _bootAfterGates();
@@ -2504,6 +2613,15 @@ function _initAuthListener(){
       }
       initTrend();
       updateServerDataLabel?.();
+
+      /* ── Resume pending checkout after login ── */
+      const pendingPlan=localStorage.getItem('ik_pending_checkout_plan');
+      if(pendingPlan){
+        try{localStorage.removeItem('ik_pending_checkout_plan');}catch{}
+        console.log('[IK][checkout] resuming pending checkout for plan=',pendingPlan);
+        /* Small delay so UI settles after login transition */
+        setTimeout(()=>startCheckout(pendingPlan),800);
+      }
     }
   });
 }
@@ -2511,14 +2629,23 @@ function _initAuthListener(){
 /* ── Handle OAuth redirect return ── */
 async function _resumePostOnboardingOrBoot(){
   const origin=localStorage.getItem('ik_auth_origin');
-  if(origin==='post_onboarding'&&sb){
+  if(origin==='post_onboarding'||origin==='checkout'){
     try{
       const{data:{session}}=await sb.auth.getSession();
       if(session?.user){
         await syncUserAfterLogin(session.user);
         try{localStorage.removeItem('ik_auth_origin');}catch{}
+        closePostOnboardingAuthGate();
         _bootAfterGates();
         setTimeout(()=>showToast(t('toast.loginOk')),400);
+
+        /* Resume checkout if the login was triggered by a checkout attempt */
+        const pendingPlan=localStorage.getItem('ik_pending_checkout_plan');
+        if(pendingPlan){
+          try{localStorage.removeItem('ik_pending_checkout_plan');}catch{}
+          console.log('[IK][checkout] resuming pending checkout (OAuth redirect) plan=',pendingPlan);
+          setTimeout(()=>startCheckout(pendingPlan),1000);
+        }
         return;
       }
     }catch{}
