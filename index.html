@@ -7611,20 +7611,22 @@ function showConfirm(msg,cb){
   const okBtn=getEl('confirm-ok-btn');if(okBtn&&!okBtn.dataset.custom)okBtn.textContent=t('confirm.ok');
   getEl('modal-confirm').style.display='flex';
 }
-function closeConfirm(){
+function closeConfirm(runCb){
   const modal=getEl('modal-confirm');if(!modal)return;
-  modal.style.display='none';_confirmCb=null;
+  modal.style.display='none';
+  const cb=_confirmCb;_confirmCb=null;
   /* Restore default two-button layout (cancel + ok) */
   const btnRow=modal.querySelector('div[style*="gap:8px"]');
   if(btnRow){
     btnRow.innerHTML=
-      `<button onclick="closeConfirm()" class="btn btn-ghost" style="flex:1">${t('confirm.cancel')}</button>`+
-      `<button id="confirm-ok-btn" class="btn btn-danger-o" style="flex:1" onclick="closeConfirm();_confirmCb&&_confirmCb();">${t('confirm.ok')}</button>`;
+      `<button onclick="closeConfirm(false)" class="btn btn-ghost" style="flex:1">${t('confirm.cancel')}</button>`+
+      `<button id="confirm-ok-btn" class="btn btn-danger-o" style="flex:1" onclick="closeConfirm(true)">${t('confirm.ok')}</button>`;
   }
+  if(runCb&&cb)cb();
 }
 document.addEventListener('DOMContentLoaded',()=>{
   const okBtn=getEl('confirm-ok-btn');
-  if(okBtn)okBtn.onclick=()=>{closeConfirm();_confirmCb&&_confirmCb();};
+  if(okBtn)okBtn.onclick=()=>closeConfirm(true);
   /* Populate confirm button text on first load */
   const cancelBtn=getEl('confirm-cancel-btn');
   if(cancelBtn)cancelBtn.textContent=t('confirm.cancel');
