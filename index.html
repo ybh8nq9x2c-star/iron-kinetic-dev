@@ -34,7 +34,7 @@
   --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
   --sal:env(safe-area-inset-left,0px); --sar:env(safe-area-inset-right,0px);
   --hdr:60px; --hdr-top:max(8px,var(--sat));
-  --nav-h:60px; --nav-bottom:0px;
+  --nav-h:60px; --nav-bottom:max(8px,env(safe-area-inset-bottom,0px));
   --page-top:calc(var(--hdr-top) + var(--hdr) + 2px);
   --page-bottom:calc(var(--nav-h) + max(8px,env(safe-area-inset-bottom,0px)) + 12px);
   --kb-offset:0px;
@@ -670,6 +670,162 @@ body.onboarding-active #onb-screen{
 .gauth-btn:active{opacity:.82;}
 .gauth-skip-btn{display:block;width:100%;background:none;border:1px solid var(--line);border-radius:14px;padding:14px 20px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Manrope',sans-serif;transition:color .15s;-webkit-tap-highlight-color:transparent;}
 .gauth-skip-btn:active{color:var(--on);}
+
+/* ═══════════════════════════════════════
+   UX PRODUCTION FIXES — audit pass
+═══════════════════════════════════════ */
+
+/* ── CSS variables: p-inverse for teal-bg buttons ── */
+:root{
+  --p-inverse:#003730;
+  --card-pad:16px;
+  --card-pad-sm:14px;
+}
+
+/* ── Tab transition: fade instead of hard display switch ── */
+.scr{
+  opacity:1;
+  transition:opacity .15s ease;
+}
+.scr.tab-exit{opacity:0;pointer-events:none;}
+.scr.tab-enter{animation:tabFadeIn .18s ease forwards;}
+@keyframes tabFadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── Skeleton loader ── */
+@keyframes shimmer{
+  0%{background-position:-200% 0;}
+  100%{background-position:200% 0;}
+}
+.skeleton{
+  border-radius:var(--r3);
+  background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s ease-in-out infinite;
+  min-height:14px;
+}
+
+/* ── Empty state utility ── */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;padding:32px 16px;text-align:center;
+}
+.empty-state-icon{font-size:32px;opacity:.4;}
+.empty-state-label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+
+/* ── Consistent card padding via CSS custom prop ── */
+.card-p{padding:var(--card-pad);}
+.card-p-sm{padding:var(--card-pad-sm);}
+
+/* ── btn-xs touch target fix: min 44px via padding compensation ── */
+.btn-xs{
+  height:34px;font-size:10px;border-radius:var(--r3);
+  /* Extend tap area without changing visual size */
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+}
+.btn-xs::before{
+  content:'';position:absolute;
+  top:-5px;bottom:-5px;left:-4px;right:-4px;
+}
+
+/* ── day-chip touch target: already 36px, add tap extension ── */
+.day-chip,.micro-chip,.food-tag{
+  position:relative;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ── mod-stepper-btn: ensure 44px tap ── */
+.mod-stepper-btn{width:44px;height:44px;}
+
+/* ── Accordion toggle buttons: active state ── */
+button[onclick*="toggleAccordion"]:active{opacity:.7;}
+button[onclick*="toggleFaq"]:active{opacity:.7;}
+.faq-question:active{opacity:.75;}
+
+/* ── Focus-visible: already good, add for accordion btns ── */
+button[onclick*="toggleAccordion"]:focus-visible,
+button[onclick*="toggleFaq"]:focus-visible{
+  outline:2px solid var(--p);outline-offset:2px;border-radius:var(--r3);
+}
+
+/* ── Kcal ring: ensure SVG is rotated -90deg ── */
+#kcal-ring-wrap svg,
+.prof-hero svg.ring-svg{
+  transform:rotate(-90deg);
+}
+
+/* ── Profile hero: better ring centering + font sizes ── */
+#kcal-ring-num{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:38px;font-weight:800;line-height:1;
+  color:var(--p);transition:color .3s;
+}
+
+/* ── Kcal ring center: add subtle text-shadow for legibility ── */
+#kcal-ring-num{text-shadow:0 0 20px rgba(77,220,198,.2);}
+
+/* ── Section labels: enforce 10px minimum ── */
+.t-xxs{font-size:10px;}
+.sec-label{font-size:10px;}
+
+/* ── Paywall: fix hardcoded #000 on teal btn ── */
+#paywall-sheet button[onclick*="startCheckout('monthly')"]{
+  color:var(--p-inverse)!important;
+}
+
+/* ── Hist-row: better touch feedback ── */
+.hist-row{transition:background .12s;}
+.hist-row:active{background:var(--s2);}
+
+/* ── scr-prog-blur-overlay: account for floating nav ── */
+#scr-prog-blur-overlay{
+  bottom:calc(var(--nav-bottom) + var(--nav-h) + 8px);
+}
+
+/* ── ring-track stroke-width consistency ── */
+.ring-track{stroke-width:4!important;}
+
+/* ── Meal row: slightly more prominent done state ── */
+.meal-row.done::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  border-radius:var(--r) 0 0 var(--r);
+  background:var(--p);
+}
+.meal-row{position:relative;overflow:hidden;}
+
+/* ── Number display: prevent NaN from showing, force — via CSS ── */
+.kcal-num:empty::after{content:'—';}
+
+/* ── Divider: already uses --line, ensure consistency ── */
+hr,.divider{background:var(--line);border:none;}
+hr{height:1px;}
+
+/* ── Sub-mgmt card ring-track consistent ── */
+#sub-ring-fill{stroke-width:3;}
+
+/* ── Toast: slightly larger text for readability ── */
+#toast{font-size:13px;}
+
+/* ── Loading state for async buttons ── */
+.btn.loading{opacity:.6;pointer-events:none;position:relative;}
+.btn.loading::after{
+  content:'';
+  position:absolute;right:16px;top:50%;
+  width:14px;height:14px;margin-top:-7px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.3);
+  border-top-color:currentColor;
+  animation:spin .6s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── Input: subtle validation states ── */
+.inp.valid{border-color:rgba(77,220,198,.38);}
+.inp.invalid{border-color:rgba(255,59,48,.38);}
+
+/* ── Gauth btn: use CSS var instead of hardcoded #fff/#1a1a1a ── */
+.gauth-btn{background:var(--on);color:var(--bg);}
 </style>
 <!-- Supabase: kept synchronous — inline boot depends on `supabase` global at parse time -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
@@ -1570,13 +1726,14 @@ body.onboarding-active #onb-screen{
           <p class="t-xxs muted sn" style="text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;">Target TDEE</p>
           <!-- Kcal progress ring: shows completed meal kcal vs daily target -->
           <div style="position:relative;width:190px;height:190px;margin:0 auto;">
-            <svg width="190" height="190" viewBox="0 0 200 200" class="ring-svg" aria-label="Progresso calorico giornaliero" role="img" style="position:absolute;top:0;left:0;">
+            <svg width="190" height="190" viewBox="0 0 200 200" class="ring-svg" aria-label="Progresso calorico giornaliero" role="img" style="position:absolute;top:0;left:0;transform:rotate(-90deg);">
               <circle cx="100" cy="100" r="88" class="ring-track" style="stroke:rgba(255,255,255,.15);stroke-width:6;"/>
               <circle cx="100" cy="100" r="88" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="6" stroke-dasharray="552.9" stroke-dashoffset="552.9" style="opacity:.35;filter:drop-shadow(0 0 8px rgba(77,220,198,.6));"/>
             </svg>
             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:140px;pointer-events:none;line-height:1.1;">
-              <div id="kcal-ring-num" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:800;line-height:1;color:var(--p);transition:color .3s;">—</div>
-              <div id="kcal-ring-label" class="sn" data-i18n="kcal.rimaste" style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">kcal rimaste</div>
+              <div id="kcal-ring-num" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:800;line-height:1;color:var(--p);transition:color .3s;">—</div>
+              <div id="kcal-ring-label" class="sn" data-i18n="kcal.rimaste" style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">kcal rimaste</div>
+              <div id="kcal-ring-target" class="sn" style="font-size:10px;font-weight:600;color:var(--dim);margin-top:6px;">— kcal</div>
               <div id="set-hero-tdee" style="display:none;">—</div>
             </div>
           </div>
@@ -2014,8 +2171,8 @@ const STRIPE_PK='pk_live_51TJVZ2JYTPcSrsvtjpVbCEtvJFpC9pIj5n0PPOSPLtIGcQ12rc6YOH
 /* Supabase client — graceful no-op if CDN blocked */
 const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}catch{return null;}})();
 
-/* Global trend access state — conservative default; initTrend() sets real value */
-let trendAccess={access:false,mode:'expired'};
+/* Global trend access state — optimistic default prevents flash of paywall on load */
+let trendAccess={access:true,mode:'trial',daysLeft:TRIAL_DAYS};
 
 /* Sync check for anonymous users (no network needed) */
 function _checkTrendLocal(){
@@ -5716,6 +5873,121 @@ const FOOD_DB={
   'semi lino':     {kcal:534,pro:18, carb:29,  fat:42,  fiber:27,  gi:1,  sat:3.7, omega3:23.0,ca:255, fe:5.7,na:30,   fodmap:false,label:'Semi di lino',             isFat:true,  maxPortionG:20},
   'semi zucca':    {kcal:559,pro:30, carb:10,  fat:49,  fiber:6,   gi:1,  sat:8.7, omega3:0.1, ca:46,  fe:8.8,na:7,    fodmap:false,label:'Semi di zucca',            isFat:true,  maxPortionG:25},
   olive:           {kcal:115,pro:0.8,carb:6,   fat:11,  fiber:3.2, gi:15, sat:1.4, omega3:0.1, ca:88,  fe:3.3,na:735,  fodmap:false,label:'Olive verdi/nere',         isFat:true,  maxPortionG:40},
+  /* ── CARNI AGGIUNTIVE ───────────────────────────────────────────────────── */
+  coniglio:        {kcal:136,pro:28, carb:0,   fat:2.5, fiber:0,   gi:0,  sat:0.7, omega3:0.2, ca:20,  fe:1.2,na:45,   fodmap:false,label:'Coniglio al forno',          isProtein:true, maxPortionG:250},
+  vitello:         {kcal:175,pro:25, carb:0,   fat:8,   fiber:0,   gi:0,  sat:3.2, omega3:0.1, ca:20,  fe:1.8,na:70,   fodmap:false,label:'Vitello al forno',            isProtein:true, maxPortionG:220},
+  agnello:         {kcal:206,pro:26, carb:0,   fat:11,  fiber:0,   gi:0,  sat:4.7, omega3:0.4, ca:18,  fe:2.1,na:75,   fodmap:false,label:'Agnello al forno',            isProtein:true, maxPortionG:200},
+  maiale:          {kcal:143,pro:27, carb:0,   fat:3.5, fiber:0,   gi:0,  sat:1.2, omega3:0.1, ca:18,  fe:1.0,na:62,   fodmap:false,label:'Lonza di maiale',             isProtein:true, maxPortionG:220},
+  prosciutto:      {kcal:145,pro:26, carb:0.5, fat:4,   fiber:0,   gi:0,  sat:1.4, omega3:0,   ca:12,  fe:1.2,na:1600, fodmap:false,label:'Prosciutto crudo magro',      isProtein:true, maxPortionG:80},
+  'prosciutto cotto':{kcal:110,pro:19,carb:0.8,fat:3.5, fiber:0,   gi:0,  sat:1.2, omega3:0,   ca:10,  fe:0.8,na:1050, fodmap:false,label:'Prosciutto cotto magro',      isProtein:true, maxPortionG:100},
+  'petto tacchino affumicato':{kcal:98,pro:20,carb:0.5,fat:1.5,fiber:0,   gi:0,  sat:0.4, omega3:0,   ca:8,   fe:0.6,na:900,  fodmap:false,label:'Tacchino affumicato',        isProtein:true, maxPortionG:100},
+  speck:           {kcal:174,pro:23, carb:0,   fat:9,   fiber:0,   gi:0,  sat:3.2, omega3:0.1, ca:10,  fe:1.4,na:1650, fodmap:false,label:'Speck',                       isProtein:true, maxPortionG:60},
+  'fesa tacchino': {kcal:107,pro:22, carb:0,   fat:1.8, fiber:0,   gi:0,  sat:0.5, omega3:0.1, ca:15,  fe:1.1,na:55,   fodmap:false,label:'Fesa di tacchino',            isProtein:true, maxPortionG:250},
+  cinghiale:       {kcal:122,pro:22, carb:0,   fat:3.3, fiber:0,   gi:0,  sat:1.0, omega3:0.1, ca:14,  fe:2.8,na:50,   fodmap:false,label:'Cinghiale al forno',          isProtein:true, maxPortionG:200},
+  /* ── PESCE AGGIUNTIVO ───────────────────────────────────────────────────── */
+  polpo:           {kcal:82, pro:15, carb:2.2, fat:1.0, fiber:0,   gi:0,  sat:0.2, omega3:0.3, ca:53,  fe:5.3,na:230,  fodmap:false,label:'Polpo al vapore',             isProtein:true, maxPortionG:250},
+  calamari:        {kcal:92, pro:16, carb:3.1, fat:1.4, fiber:0,   gi:0,  sat:0.3, omega3:0.4, ca:32,  fe:0.7,na:260,  fodmap:false,label:'Calamari alla griglia',       isProtein:true, maxPortionG:200},
+  cozze:           {kcal:86, pro:12, carb:3.7, fat:2.2, fiber:0,   gi:0,  sat:0.4, omega3:0.5, ca:28,  fe:3.9,na:290,  fodmap:false,label:'Cozze al vapore',             isProtein:true, maxPortionG:200},
+  vongole:         {kcal:74, pro:13, carb:2.6, fat:1.0, fiber:0,   gi:0,  sat:0.2, omega3:0.2, ca:46,  fe:13.9,na:290, fodmap:false,label:'Vongole al vapore',           isProtein:true, maxPortionG:200},
+  acciughe:        {kcal:131,pro:20, carb:0,   fat:5,   fiber:0,   gi:0,  sat:1.3, omega3:1.5, ca:147, fe:3.2,na:104,  fodmap:false,label:'Acciughe al naturale',        isProtein:true, maxPortionG:80},
+  'tonno sott olio':{kcal:198,pro:25,carb:0,   fat:11,  fiber:0,   gi:0,  sat:1.8, omega3:0.3, ca:10,  fe:1.0,na:400,  fodmap:false,label:'Tonno sott\'olio (sgocciolato)', isProtein:true, maxPortionG:130},
+  aringa:          {kcal:158,pro:18, carb:0,   fat:9,   fiber:0,   gi:0,  sat:2.0, omega3:1.7, ca:57,  fe:1.1,na:90,   fodmap:false,label:'Aringa affumicata',           isProtein:true, maxPortionG:150},
+  'salmone affumicato':{kcal:142,pro:20,carb:0,fat:6.5, fiber:0,   gi:0,  sat:1.4, omega3:1.8, ca:11,  fe:0.9,na:672,  fodmap:false,label:'Salmone affumicato',          isProtein:true, maxPortionG:100},
+  /* ── LEGUMI SPECIFICI ───────────────────────────────────────────────────── */
+  ceci:            {kcal:164,satiety:2.4,pro:9, carb:27,  fat:2.6, fiber:7.6, gi:28, sat:0.3, omega3:0,   ca:49,  fe:2.9,na:7,    fodmap:true, label:'Ceci lessati',              isProtein:true, isCarb:true, maxPortionG:250},
+  lenticchie:      {kcal:116,satiety:2.5,pro:9, carb:20,  fat:0.4, fiber:7.9, gi:32, sat:0.1, omega3:0.1, ca:19,  fe:3.3,na:2,    fodmap:false,label:'Lenticchie lessate',         isProtein:true, isCarb:true, maxPortionG:250},
+  fagioli:         {kcal:127,satiety:2.3,pro:8.7,carb:22, fat:0.5, fiber:6.4, gi:40, sat:0.1, omega3:0,   ca:50,  fe:2.2,na:2,    fodmap:true, label:'Fagioli borlotti lessati',  isProtein:true, isCarb:true, maxPortionG:250},
+  'fagioli neri':  {kcal:132,satiety:2.4,pro:8.9,carb:24, fat:0.5, fiber:8.7, gi:30, sat:0.1, omega3:0.1, ca:27,  fe:2.1,na:2,    fodmap:true, label:'Fagioli neri lessati',      isProtein:true, isCarb:true, maxPortionG:250},
+  edamame:         {kcal:122,pro:11, carb:10,  fat:5,   fiber:5,   gi:18, sat:0.5, omega3:0.3, ca:63,  fe:2.3,na:6,    fodmap:false,label:'Edamame',                     isProtein:true, maxPortionG:200},
+  /* ── VERDURE ────────────────────────────────────────────────────────────── */
+  spinaci:         {kcal:23,  pro:2.9,carb:3.6, fat:0.4, fiber:2.2, gi:15, sat:0.1, omega3:0.1, ca:99,  fe:2.7,na:79,   fodmap:false,label:'Spinaci freschi',             isVeg:true,  maxPortionG:300},
+  broccoli:        {kcal:34,  pro:2.8,carb:7,   fat:0.4, fiber:2.6, gi:15, sat:0.1, omega3:0.1, ca:47,  fe:0.7,na:33,   fodmap:false,label:'Broccoli al vapore',          isVeg:true,  maxPortionG:400},
+  zucchine:        {kcal:17,  pro:1.2,carb:3.1, fat:0.3, fiber:1,   gi:15, sat:0,   omega3:0,   ca:16,  fe:0.4,na:8,    fodmap:false,label:'Zucchine al vapore',          isVeg:true,  maxPortionG:400},
+  pomodori:        {kcal:18,  pro:0.9,carb:3.9, fat:0.2, fiber:1.2, gi:15, sat:0,   omega3:0,   ca:10,  fe:0.3,na:5,    fodmap:false,label:'Pomodori freschi',            isVeg:true,  maxPortionG:400},
+  cetrioli:        {kcal:15,  pro:0.7,carb:3.6, fat:0.1, fiber:0.5, gi:15, sat:0,   omega3:0,   ca:16,  fe:0.3,na:2,    fodmap:false,label:'Cetrioli',                   isVeg:true,  maxPortionG:400},
+  insalata:        {kcal:15,  pro:1.4,carb:2.9, fat:0.2, fiber:1.3, gi:15, sat:0,   omega3:0.1, ca:33,  fe:0.9,na:28,   fodmap:false,label:'Insalata mista',              isVeg:true,  maxPortionG:300},
+  peperoni:        {kcal:31,  pro:1,  carb:6,   fat:0.3, fiber:2.1, gi:15, sat:0,   omega3:0,   ca:10,  fe:0.4,na:4,    fodmap:false,label:'Peperoni crudi',              isVeg:true,  maxPortionG:300},
+  melanzane:       {kcal:25,  pro:1,  carb:6,   fat:0.2, fiber:3,   gi:15, sat:0,   omega3:0,   ca:9,   fe:0.2,na:2,    fodmap:false,label:'Melanzane grigliate',         isVeg:true,  maxPortionG:350},
+  carote:          {kcal:41,  pro:0.9,carb:10,  fat:0.2, fiber:2.8, gi:35, sat:0,   omega3:0,   ca:33,  fe:0.3,na:69,   fodmap:false,label:'Carote crude',                isVeg:true,  maxPortionG:300},
+  sedano:          {kcal:16,  pro:0.7,carb:3,   fat:0.2, fiber:1.6, gi:15, sat:0,   omega3:0.1, ca:40,  fe:0.2,na:80,   fodmap:false,label:'Sedano',                     isVeg:true,  maxPortionG:200},
+  finocchi:        {kcal:31,  pro:1.2,carb:7,   fat:0.2, fiber:3.1, gi:15, sat:0,   omega3:0,   ca:49,  fe:0.7,na:52,   fodmap:false,label:'Finocchi crudi',              isVeg:true,  maxPortionG:350},
+  asparagi:        {kcal:20,  pro:2.2,carb:3.9, fat:0.1, fiber:2.1, gi:15, sat:0,   omega3:0,   ca:24,  fe:2.1,na:2,    fodmap:false,label:'Asparagi al vapore',          isVeg:true,  maxPortionG:300},
+  cavolfiore:      {kcal:25,  pro:1.9,carb:5,   fat:0.3, fiber:2,   gi:15, sat:0,   omega3:0,   ca:22,  fe:0.4,na:30,   fodmap:false,label:'Cavolfiore al vapore',        isVeg:true,  maxPortionG:400},
+  cavolo:          {kcal:25,  pro:1.3,carb:6,   fat:0.1, fiber:2.5, gi:15, sat:0,   omega3:0,   ca:40,  fe:0.5,na:18,   fodmap:false,label:'Cavolo verza',                isVeg:true,  maxPortionG:350},
+  'cavolo riccio': {kcal:35,  pro:2.9,carb:4.4, fat:1.5, fiber:4.1, gi:15, sat:0.2, omega3:0.2, ca:135, fe:1.5,na:53,   fodmap:false,label:'Kale / Cavolo riccio',        isVeg:true,  maxPortionG:200},
+  funghi:          {kcal:22,  pro:3.1,carb:3.3, fat:0.3, fiber:1,   gi:15, sat:0,   omega3:0,   ca:3,   fe:0.5,na:5,    fodmap:false,label:'Funghi champignon',           isVeg:true,  maxPortionG:300},
+  'funghi porcini':{kcal:28,  pro:3.9,carb:4.3, fat:0.5, fiber:2.5, gi:15, sat:0,   omega3:0,   ca:3,   fe:0.5,na:2,    fodmap:false,label:'Funghi porcini',              isVeg:true,  maxPortionG:200},
+  cipolla:         {kcal:40,  pro:1.1,carb:9.3, fat:0.1, fiber:1.7, gi:10, sat:0,   omega3:0,   ca:23,  fe:0.2,na:4,    fodmap:true, label:'Cipolla cruda',              isVeg:true,  maxPortionG:100},
+  aglio:           {kcal:149, pro:6.4,carb:33,  fat:0.5, fiber:2.1, gi:10, sat:0.1, omega3:0,   ca:181, fe:1.7,na:17,   fodmap:true, label:'Aglio fresco',               isVeg:true,  maxPortionG:10},
+  radicchio:       {kcal:23,  pro:1.4,carb:4.5, fat:0.3, fiber:2,   gi:15, sat:0,   omega3:0,   ca:19,  fe:0.6,na:22,   fodmap:false,label:'Radicchio',                  isVeg:true,  maxPortionG:200},
+  rucola:          {kcal:25,  pro:2.6,carb:3.7, fat:0.7, fiber:1.6, gi:15, sat:0.1, omega3:0.2, ca:160, fe:1.5,na:27,   fodmap:false,label:'Rucola',                     isVeg:true,  maxPortionG:100},
+  barbabietola:    {kcal:43,  pro:1.6,carb:10,  fat:0.2, fiber:2.8, gi:64, sat:0,   omega3:0,   ca:16,  fe:0.8,na:78,   fodmap:false,label:'Barbabietola cotta',          isVeg:true,  maxPortionG:200},
+  'piselli freschi':{kcal:81, pro:5.4,carb:14,  fat:0.4, fiber:5.1, gi:51, sat:0.1, omega3:0.1, ca:25,  fe:1.5,na:5,    fodmap:true, label:'Piselli freschi',            isVeg:true,  isCarb:true, maxPortionG:200},
+  mais_verd:       {kcal:86,  pro:3.2,carb:19,  fat:1.2, fiber:2.7, gi:52, sat:0.2, omega3:0,   ca:2,   fe:0.5,na:15,   fodmap:false,label:'Mais in scatola (sgocciolato)',isVeg:true, isCarb:true, maxPortionG:150},
+  /* ── FRUTTA SPECIFICA ───────────────────────────────────────────────────── */
+  mela:            {kcal:52,  pro:0.3,carb:14,  fat:0.2, fiber:2.4, gi:36, sat:0,   omega3:0,   ca:6,   fe:0.1,na:1,    fodmap:false,label:'Mela',                       isCarb:true, unitG:180, maxPortionG:400},
+  banana:          {kcal:89,  pro:1.1,carb:23,  fat:0.3, fiber:2.6, gi:51, sat:0.1, omega3:0,   ca:5,   fe:0.3,na:1,    fodmap:false,label:'Banana',                     isCarb:true, unitG:120, maxPortionG:300},
+  arancia:         {kcal:47,  pro:0.9,carb:12,  fat:0.1, fiber:2.4, gi:40, sat:0,   omega3:0,   ca:40,  fe:0.1,na:0,    fodmap:false,label:'Arancia',                    isCarb:true, unitG:180, maxPortionG:400},
+  kiwi:            {kcal:61,  pro:1.1,carb:15,  fat:0.5, fiber:3,   gi:52, sat:0,   omega3:0,   ca:34,  fe:0.3,na:3,    fodmap:false,label:'Kiwi',                       isCarb:true, unitG:75,  maxPortionG:300},
+  fragole:         {kcal:32,  pro:0.7,carb:7.7, fat:0.3, fiber:2,   gi:40, sat:0,   omega3:0.1, ca:16,  fe:0.4,na:1,    fodmap:false,label:'Fragole',                    isCarb:true, maxPortionG:300},
+  mirtilli:        {kcal:57,  pro:0.7,carb:14,  fat:0.3, fiber:2.4, gi:53, sat:0,   omega3:0.1, ca:6,   fe:0.3,na:1,    fodmap:false,label:'Mirtilli',                   isCarb:true, maxPortionG:200},
+  pere:            {kcal:57,  pro:0.4,carb:15,  fat:0.1, fiber:3.1, gi:38, sat:0,   omega3:0,   ca:9,   fe:0.2,na:1,    fodmap:false,label:'Pera',                       isCarb:true, unitG:180, maxPortionG:400},
+  pesche:          {kcal:39,  pro:0.9,carb:10,  fat:0.3, fiber:1.5, gi:42, sat:0,   omega3:0,   ca:6,   fe:0.3,na:0,    fodmap:false,label:'Pesca',                      isCarb:true, unitG:150, maxPortionG:400},
+  uva:             {kcal:69,  pro:0.7,carb:18,  fat:0.2, fiber:0.9, gi:59, sat:0,   omega3:0,   ca:10,  fe:0.4,na:2,    fodmap:true, label:'Uva',                       isCarb:true, maxPortionG:150},
+  melone:          {kcal:34,  pro:0.8,carb:8.2, fat:0.2, fiber:0.9, gi:65, sat:0,   omega3:0,   ca:9,   fe:0.2,na:16,   fodmap:true, label:'Melone',                    isCarb:true, maxPortionG:300},
+  anguria:         {kcal:30,  pro:0.6,carb:7.6, fat:0.2, fiber:0.4, gi:72, sat:0,   omega3:0.1, ca:7,   fe:0.2,na:1,    fodmap:false,label:'Anguria',                    isCarb:true, maxPortionG:400},
+  lamponi:         {kcal:52,  pro:1.2,carb:12,  fat:0.7, fiber:6.5, gi:32, sat:0,   omega3:0.1, ca:25,  fe:0.7,na:1,    fodmap:false,label:'Lamponi',                    isCarb:true, maxPortionG:200},
+  ananas:          {kcal:50,  pro:0.5,carb:13,  fat:0.1, fiber:1.4, gi:59, sat:0,   omega3:0,   ca:13,  fe:0.3,na:1,    fodmap:false,label:'Ananas',                     isCarb:true, maxPortionG:250},
+  mandarini:       {kcal:53,  pro:0.8,carb:13,  fat:0.3, fiber:1.8, gi:47, sat:0,   omega3:0,   ca:37,  fe:0.2,na:2,    fodmap:false,label:'Mandarini',                  isCarb:true, unitG:75,  maxPortionG:300},
+  /* ── LATTICINI AGGIUNTIVI ───────────────────────────────────────────────── */
+  'latte parziale':{kcal:47,  pro:3.4,carb:4.8, fat:1.5, fiber:0,   gi:31, sat:1.0, omega3:0,   ca:120, fe:0.1,na:47,   fodmap:false,label:'Latte parzialmente scremato',isDairy:true, maxPortionG:300},
+  'latte intero':  {kcal:61,  pro:3.2,carb:4.8, fat:3.3, fiber:0,   gi:31, sat:2.1, omega3:0,   ca:113, fe:0,  na:43,   fodmap:false,label:'Latte intero',               isDairy:true, maxPortionG:300},
+  'latte vegetale':{kcal:40,  pro:1.4,carb:6.3, fat:1.0, fiber:0.5, gi:25, sat:0.1, omega3:0,   ca:120, fe:0.4,na:70,   fodmap:false,label:'Latte vegetale (avena/soia)', isDairy:true, maxPortionG:300},
+  mozzarella:      {kcal:253, pro:18, carb:2.2, fat:20,  fiber:0,   gi:0,  sat:12,  omega3:0.2, ca:505, fe:0.2,na:373,  fodmap:false,label:'Mozzarella',                 isFat:true,  isDairy:true, maxPortionG:125},
+  'yogurt bianco': {kcal:61,  pro:3.5,carb:4.7, fat:3.3, fiber:0,   gi:35, sat:2.1, omega3:0,   ca:121, fe:0.1,na:46,   fodmap:false,label:'Yogurt bianco intero',        isDairy:true, maxPortionG:250},
+  'yogurt magro':  {kcal:36,  pro:3.6,carb:5.1, fat:0.2, fiber:0,   gi:33, sat:0.1, omega3:0,   ca:122, fe:0.1,na:55,   fodmap:false,label:'Yogurt magro',               isDairy:true,isProtein:true, maxPortionG:300},
+  grana:           {kcal:384, pro:33, carb:0,   fat:27,  fiber:0,   gi:0,  sat:17,  omega3:0.1, ca:1145,fe:0.6,na:608,  fodmap:false,label:'Grana Padano grattugiato',   isFat:true,  isDairy:true, maxPortionG:25},
+  pecorino:        {kcal:387, pro:25, carb:0.5, fat:32,  fiber:0,   gi:0,  sat:20,  omega3:0.3, ca:760, fe:0.5,na:1862, fodmap:false,label:'Pecorino grattugiato',        isFat:true,  isDairy:true, maxPortionG:20},
+  feta:            {kcal:264, pro:14, carb:4,   fat:21,  fiber:0,   gi:0,  sat:15,  omega3:0.3, ca:493, fe:0.7,na:1116, fodmap:false,label:'Feta',                       isFat:true,  isDairy:true, maxPortionG:50},
+  'formaggio spalmabile':{kcal:142,pro:6,carb:3.9,fat:11, fiber:0,  gi:0,  sat:7,   omega3:0,   ca:98,  fe:0.2,na:350,  fodmap:false,label:'Formaggio spalmabile light',  isFat:true,  isDairy:true, maxPortionG:30},
+  /* ── CEREALI E PANE AGGIUNTIVI ──────────────────────────────────────────── */
+  'pane bianco':   {kcal:265, pro:9,  carb:50,  fat:3.2, fiber:2.7, gi:75, sat:0.6, omega3:0,   ca:77,  fe:2.7,na:520,  fodmap:true, label:'Pane bianco',                isCarb:true, maxPortionG:80},
+  'pane segale':   {kcal:259, pro:9,  carb:48,  fat:3.3, fiber:6,   gi:41, sat:0.4, omega3:0.3, ca:73,  fe:2.6,na:440,  fodmap:false,label:'Pane di segale',             isCarb:true, maxPortionG:80},
+  crackers:        {kcal:402, pro:8.5,carb:68,  fat:10,  fiber:3.5, gi:65, sat:1.5, omega3:0,   ca:35,  fe:2.5,na:540,  fodmap:false,label:'Crackers integrali',          isCarb:true, maxPortionG:40},
+  'pasta bianca':  {kcal:131, pro:5,  carb:27,  fat:1.1, fiber:1.8, gi:61, sat:0.2, omega3:0,   ca:7,   fe:1.0,na:1,    fodmap:true, label:'Pasta bianca cotta',          isCarb:true, rawFactor:0.40, maxPortionG:220},
+  'pasta grano duro':{kcal:124,pro:5, carb:26,  fat:0.9, fiber:1.5, gi:58, sat:0.2, omega3:0,   ca:7,   fe:0.9,na:1,    fodmap:true, label:'Pasta di grano duro cotta',   isCarb:true, rawFactor:0.40, maxPortionG:220},
+  'pane di mais':  {kcal:198, pro:4.2,carb:38,  fat:3.5, fiber:2.4, gi:60, sat:0.5, omega3:0,   ca:40,  fe:1.2,na:360,  fodmap:false,label:'Pane di mais',                isCarb:true, maxPortionG:80},
+  fette_biscottate:{kcal:353, pro:9.5,carb:72,  fat:3,   fiber:4,   gi:70, sat:0.5, omega3:0,   ca:50,  fe:2.3,na:420,  fodmap:true, label:'Fette biscottate integrali',  isCarb:true, maxPortionG:40},
+  gnocchi:         {kcal:120, pro:2.5,carb:24,  fat:1.5, fiber:1.5, gi:68, sat:0.3, omega3:0,   ca:15,  fe:0.5,na:100,  fodmap:true, label:'Gnocchi di patate',           isCarb:true, maxPortionG:250},
+  riso_venere:     {kcal:130, pro:2.9,carb:26,  fat:1.1, fiber:2,   gi:42, sat:0.2, omega3:0,   ca:10,  fe:0.9,na:1,    fodmap:false,label:'Riso venere cotto',           isCarb:true, rawFactor:0.33, maxPortionG:280},
+  miglio:          {kcal:119, pro:3.5,carb:23,  fat:1,   fiber:1.3, gi:71, sat:0.2, omega3:0,   ca:5,   fe:0.6,na:2,    fodmap:false,label:'Miglio cotto',                isCarb:true, rawFactor:0.33, maxPortionG:250},
+  amaranto:        {kcal:102, pro:3.8,carb:19,  fat:1.6, fiber:2.1, gi:35, sat:0.4, omega3:0,   ca:47,  fe:2.1,na:2,    fodmap:false,label:'Amaranto cotto',              isCarb:true, rawFactor:0.33, maxPortionG:250},
+  /* ── GRASSI E OLI AGGIUNTIVI ────────────────────────────────────────────── */
+  'burro chiarificato':{kcal:876,pro:0.3,carb:0,fat:99,  fiber:0,   gi:0,  sat:61,  omega3:0.3, ca:2,   fe:0,  na:5,    fodmap:false,label:'Burro chiarificato (ghee)',    isFat:true,  maxPortionG:10},
+  'olio cocco':    {kcal:862, pro:0,  carb:0,   fat:100, fiber:0,   gi:0,  sat:86,  omega3:0,   ca:0,   fe:0,  na:0,    fodmap:false,label:'Olio di cocco',              isFat:true,  maxPortionG:10},
+  'olio avocado':  {kcal:884, pro:0,  carb:0,   fat:100, fiber:0,   gi:0,  sat:12,  omega3:0.9, ca:0,   fe:0,  na:0,    fodmap:false,label:'Olio di avocado',            isFat:true,  maxPortionG:15},
+  'olio lino':     {kcal:884, pro:0,  carb:0,   fat:100, fiber:0,   gi:0,  sat:9,   omega3:53,  ca:0,   fe:0,  na:0,    fodmap:false,label:'Olio di lino',               isFat:true,  maxPortionG:10},
+  burro:           {kcal:717, pro:0.9,carb:0.1, fat:81,  fiber:0,   gi:0,  sat:51,  omega3:0.3, ca:24,  fe:0.1,na:643,  fodmap:false,label:'Burro',                      isFat:true,  maxPortionG:10},
+  anacardi:        {kcal:553, pro:18, carb:30,  fat:44,  fiber:3.3, gi:25, sat:7.8, omega3:0.2, ca:37,  fe:6.7,na:12,   fodmap:false,label:'Anacardi',                   isFat:true,  maxPortionG:30},
+  arachidi:        {kcal:567, pro:26, carb:16,  fat:49,  fiber:8.5, gi:14, sat:6.3, omega3:0,   ca:92,  fe:4.6,na:18,   fodmap:false,label:'Arachidi tostate',            isFat:true,  maxPortionG:30},
+  'semi girasole': {kcal:584, pro:21, carb:20,  fat:51,  fiber:8.6, gi:35, sat:5.4, omega3:0.1, ca:78,  fe:5.2,na:9,    fodmap:false,label:'Semi di girasole',           isFat:true,  maxPortionG:25},
+  'semi sesamo':   {kcal:573, pro:18, carb:23,  fat:50,  fiber:11,  gi:35, sat:7,   omega3:0.4, ca:975, fe:14.6,na:11,  fodmap:false,label:'Semi di sesamo',             isFat:true,  maxPortionG:15},
+  /* ── UOVA E DERIVATI ────────────────────────────────────────────────────── */
+  'uova sode':     {kcal:155, pro:13, carb:1.1, fat:11,  fiber:0,   gi:0,  sat:3.3, omega3:0.1, ca:50,  fe:1.8,na:124,  fodmap:false,label:'Uova sode',                  isProtein:true, unitG:60, maxPortionG:300},
+  'uova strapazzate':{kcal:148,pro:10,carb:1.6, fat:11,  fiber:0,   gi:0,  sat:3.1, omega3:0.1, ca:53,  fe:1.6,na:140,  fodmap:false,label:'Uova strapazzate',           isProtein:true, unitG:60, maxPortionG:300},
+  /* ── CIBI FUNZIONALI / SUPERFOOD ────────────────────────────────────────── */
+  'proteine siero': {kcal:120,pro:25, carb:3,   fat:1.5, fiber:0,   gi:25, sat:0.8, omega3:0,   ca:120, fe:0.5,na:80,   fodmap:false,label:'Proteine del siero (whey)',   isProtein:true, maxPortionG:35},
+  'proteine vegetali':{kcal:110,pro:22,carb:3,  fat:1.5, fiber:1,   gi:20, sat:0.3, omega3:0,   ca:50,  fe:2,  na:200,  fodmap:false,label:'Proteine vegetali (blend)',   isProtein:true, maxPortionG:35},
+  'fiocchi avena': {kcal:389, pro:17, carb:66,  fat:7,   fiber:11,  gi:55, sat:1.2, omega3:0.1, ca:54,  fe:4.7,na:6,    fodmap:false,label:'Fiocchi d\'avena crudi',      isCarb:true, maxPortionG:80},
+  'crusca avena':  {kcal:246, pro:17, carb:66,  fat:7,   fiber:15,  gi:55, sat:1.3, omega3:0.2, ca:58,  fe:5.4,na:4,    fodmap:false,label:'Crusca d\'avena',             isCarb:true, maxPortionG:40},
+  'polvere cacao': {kcal:228, pro:20, carb:58,  fat:14,  fiber:33,  gi:20, sat:8.1, omega3:0,   ca:128, fe:13.9,na:21,  fodmap:false,label:'Cacao in polvere (non zucch.)',isSweet:true, maxPortionG:15},
+  spirulina:       {kcal:290, pro:57, carb:24,  fat:8,   fiber:3.6, gi:15, sat:2.6, omega3:0.8, ca:120, fe:28, na:1048, fodmap:false,label:'Spirulina in polvere',        isProtein:true, maxPortionG:10},
+  'lievito nutritivo':{kcal:325,pro:50,carb:38, fat:5,   fiber:25,  gi:15, sat:0.7, omega3:0,   ca:22,  fe:3,  na:30,   fodmap:false,label:'Lievito nutrizionale',        isProtein:true, maxPortionG:15},
+  /* ── CONDIMENTI COMUNI ──────────────────────────────────────────────────── */
+  'salsa pomodoro':{kcal:29,  pro:1.5,carb:5.5, fat:0.4, fiber:1.5, gi:35, sat:0.1, omega3:0,   ca:16,  fe:0.8,na:200,  fodmap:false,label:'Salsa di pomodoro',           isVeg:true,  maxPortionG:150},
+  hummus:          {kcal:177, pro:7.9,carb:20,  fat:8.6, fiber:6,   gi:6,  sat:0.9, omega3:0.1, ca:49,  fe:2.4,na:300,  fodmap:true, label:'Hummus',                    isFat:true,  maxPortionG:80},
+  'aceto balsamico':{kcal:88, pro:0.5,carb:17,  fat:0,   fiber:0,   gi:25, sat:0,   omega3:0,   ca:27,  fe:0.7,na:23,   fodmap:false,label:'Aceto balsamico',            isVeg:true,  maxPortionG:15},
+  senape:          {kcal:66,  pro:4.4,carb:6.9, fat:3.3, fiber:3.2, gi:35, sat:0.2, omega3:0.2, ca:63,  fe:1.7,na:1115, fodmap:false,label:'Senape',                     isVeg:true,  maxPortionG:15},
 };
 
 /* ══════════════════════════════════════════════════════
@@ -5783,6 +6055,113 @@ const FOOD_ALIASES={
   'parmigiano':'parmigiano','parmigiano reggiano':'parmigiano','parmesan':'parmigiano','grana':'parmigiano',
   'skyr':'skyr',
   'cioccolato':'cioccolato fondente','dark chocolate':'cioccolato fondente','fondente':'cioccolato fondente',
+  /* carni aggiuntive */
+  'coniglio':'coniglio','rabbit':'coniglio',
+  'vitello':'vitello','veal':'vitello',
+  'agnello':'agnello','lamb':'agnello',
+  'maiale':'maiale','lonza':'maiale','pork':'maiale','lonza di maiale':'maiale',
+  'prosciutto':'prosciutto','crudo':'prosciutto','parma':'prosciutto','san daniele':'prosciutto',
+  'prosciutto cotto':'prosciutto cotto','cooked ham':'prosciutto cotto',
+  'speck':'speck',
+  'tacchino affumicato':'petto tacchino affumicato','turkey ham':'petto tacchino affumicato',
+  'fesa':'fesa tacchino','fesa di tacchino':'fesa tacchino',
+  'cinghiale':'cinghiale','wild boar':'cinghiale',
+  /* pesce aggiuntivo */
+  'polpo':'polpo','octopus':'polpo',
+  'calamaro':'calamari','squid':'calamari','calamaro':'calamari',
+  'cozza':'cozze','mussels':'cozze','mussel':'cozze',
+  'vongola':'vongole','clams':'vongole','clam':'vongole',
+  'acciuga':'acciughe','anchovy':'acciughe','alice':'acciughe',
+  'tonno olio':'tonno sott olio','tonno in olio':'tonno sott olio',
+  'aringa':'aringa','herring':'aringa',
+  'salmone affumicato':'salmone affumicato','smoked salmon':'salmone affumicato','lox':'salmone affumicato',
+  /* legumi specifici */
+  'ceci':'ceci','chickpeas':'ceci','chick peas':'ceci','garbanzo':'ceci',
+  'lenticchie':'lenticchie','lentils':'lenticchie','lentil':'lenticchie',
+  'fagioli':'fagioli','fagiolo':'fagioli','borlotti':'fagioli',
+  'fagioli neri':'fagioli neri','black beans':'fagioli neri',
+  'edamame':'edamame','soy beans':'edamame',
+  /* verdure */
+  'spinaci':'spinaci','spinach':'spinaci',
+  'broccoli':'broccoli','broccolo':'broccoli',
+  'zucchine':'zucchine','zucchina':'zucchine','courgette':'zucchine','zucchini':'zucchine',
+  'pomodori':'pomodori','pomodoro':'pomodori','tomato':'pomodori','tomatoes':'pomodori',
+  'cetriolo':'cetrioli','cucumber':'cetrioli',
+  'lattuga':'insalata','romain':'insalata','misticanza':'insalata','valeriana':'insalata',
+  'peperone':'peperoni','pepper':'peperoni','bell pepper':'peperoni',
+  'melanzana':'melanzane','eggplant':'melanzane','aubergine':'melanzane',
+  'carota':'carote','carrot':'carote',
+  'sedano':'sedano','celery':'sedano',
+  'finocchio':'finocchi','fennel':'finocchi',
+  'asparago':'asparagi','asparagus':'asparagi',
+  'cavolfiore':'cavolfiore','cauliflower':'cavolfiore',
+  'cavolo':'cavolo','cabbage':'cavolo',
+  'kale':'cavolo riccio','cavolo nero':'cavolo riccio',
+  'fungo':'funghi','champignon':'funghi','mushroom':'funghi','mushrooms':'funghi',
+  'porcini':'funghi porcini','porcino':'funghi porcini',
+  'cipolla':'cipolla','onion':'cipolla',
+  'radicchio':'radicchio',
+  'rucola':'rucola','rocket':'rucola','arugula':'rucola',
+  'barbabietola':'barbabietola','beet':'barbabietola','beetroot':'barbabietola',
+  'piselli':'piselli freschi','pea':'piselli freschi','peas':'piselli freschi',
+  /* frutta specifica */
+  'mela':'mela','apple':'mela',
+  'banana':'banana',
+  'arancia':'arancia','orange':'arancia',
+  'kiwi':'kiwi',
+  'fragola':'fragole','strawberry':'fragole','strawberries':'fragole',
+  'mirtillo':'mirtilli','blueberry':'mirtilli','blueberries':'mirtilli',
+  'pera':'pere','pear':'pere',
+  'pesca':'pesche','peach':'pesche',
+  'uva':'uva','grape':'uva','grapes':'uva',
+  'melone':'melone','melon':'melone','cantalupo':'melone',
+  'anguria':'anguria','watermelon':'anguria','cocomero':'anguria',
+  'lampone':'lamponi','raspberry':'lamponi','raspberries':'lamponi',
+  'ananas':'ananas','pineapple':'ananas',
+  'mandarino':'mandarini','mandarin':'mandarini','tangerine':'mandarini','clementine':'mandarini',
+  /* latticini */
+  'latte':'latte parziale','milk':'latte parziale',
+  'latte intero':'latte intero','whole milk':'latte intero',
+  'latte avena':'latte vegetale','latte soia':'latte vegetale','oat milk':'latte vegetale','soy milk':'latte vegetale',
+  'mozzarella':'mozzarella',
+  'yogurt':'yogurt bianco','yogurt naturale':'yogurt bianco',
+  'yogurt light':'yogurt magro','yogurt scremato':'yogurt magro',
+  'grana padano':'grana','grana':'grana',
+  'pecorino':'pecorino',
+  'feta':'feta',
+  'philadelphia':'formaggio spalmabile','cream cheese':'formaggio spalmabile','robiola':'formaggio spalmabile',
+  /* cereali/pane */
+  'pane bianco':'pane bianco','white bread':'pane bianco',
+  'pane di segale':'pane segale','rye bread':'pane segale','segale':'pane segale',
+  'cracker':'crackers','cracker integrale':'crackers',
+  'spaghetti bianchi':'pasta bianca','pasta normale':'pasta bianca',
+  'gnocchi':'gnocchi',
+  'riso venere':'riso_venere','black rice':'riso_venere',
+  'miglio':'miglio','millet':'miglio',
+  'amaranto':'amaranto','amaranth':'amaranto',
+  'fette biscottate':'fette_biscottate','toast':'fette_biscottate',
+  /* grassi/oli */
+  'ghee':'burro chiarificato','burro ghee':'burro chiarificato',
+  'olio di cocco':'olio cocco','coconut oil':'olio cocco',
+  'olio avocado':'olio avocado','avocado oil':'olio avocado',
+  'burro':'burro','butter':'burro',
+  'anacardi':'anacardi','cashew':'anacardi','cashews':'anacardi',
+  'arachidi':'arachidi','peanuts':'arachidi','peanut':'arachidi',
+  'semi di girasole':'semi girasole','sunflower seeds':'semi girasole',
+  'sesamo':'semi sesamo','sesame':'semi sesamo','semi di sesamo':'semi sesamo',
+  /* superfood/funzionali */
+  'whey':'proteine siero','whey protein':'proteine siero','proteine whey':'proteine siero',
+  'proteine vegane':'proteine vegetali','vegan protein':'proteine vegetali',
+  'fiocchi di avena':'fiocchi avena','rolled oats':'fiocchi avena',
+  'crusca':'crusca avena','oat bran':'crusca avena',
+  'cacao':'polvere cacao','cocoa':'polvere cacao','cacao amaro':'polvere cacao',
+  'spirulina':'spirulina',
+  'lievito':'lievito nutritivo','nutritional yeast':'lievito nutritivo',
+  /* condimenti */
+  'salsa pomodoro':'salsa pomodoro','tomato sauce':'salsa pomodoro','passata':'salsa pomodoro',
+  'hummus':'hummus',
+  'balsamico':'aceto balsamico','balsamic':'aceto balsamico',
+  'senape':'senape','mustard':'senape',
 };
 
 /* Resolve extra foods typed by user → valid FOOD_DB keys with category tags */
@@ -7413,8 +7792,8 @@ function renderKcalRing(){
   const ring=document.getElementById('kcal-ring');
   if(!ring||!dietData)return;
   const KCAL_CIRC=552.9;
-  const targetKcal=calcMacros().kcal;
-  const completedKcal=getCompletedMealKcal(selDay);
+  const targetKcal=calcMacros().kcal||0;
+  const completedKcal=getCompletedMealKcal(selDay)||0;
   const pct=targetKcal>0?Math.min(1,completedKcal/targetKcal):0;
   /* colore dinamico basato su kcal rimaste */
   const pctRimaste=targetKcal>0?Math.max(0,(targetKcal-completedKcal)/targetKcal):1;
@@ -7426,8 +7805,19 @@ function renderKcalRing(){
   const kcalRimaste=Math.max(0,Math.round(targetKcal-completedKcal));
   const numEl=document.getElementById('kcal-ring-num');
   const lblEl=document.getElementById('kcal-ring-label');
-  if(numEl){numEl.textContent=targetKcal>0?String(kcalRimaste):'—';numEl.style.color=ringColor;}
-  if(lblEl){lblEl.textContent=completedKcal>targetKcal?t('kcal.superate'):t('kcal.rimaste');lblEl.style.color=completedKcal>targetKcal?'var(--red)':'var(--muted)';}
+  const tgtEl=document.getElementById('kcal-ring-target');
+  if(numEl){
+    numEl.textContent=targetKcal>0?String(kcalRimaste):'—';
+    numEl.style.color=ringColor;
+  }
+  if(lblEl){
+    lblEl.textContent=completedKcal>targetKcal?t('kcal.superate'):t('kcal.rimaste');
+    lblEl.style.color=completedKcal>targetKcal?'var(--red)':'var(--muted)';
+  }
+  if(tgtEl&&targetKcal>0){
+    tgtEl.textContent=`su ${targetKcal} kcal`;
+    tgtEl.style.display='block';
+  } else if(tgtEl){tgtEl.style.display='none';}
   /* mini ring oggi */
   const KCAL_CIRC2=106.8;
   const r2=getEl('kcal-ring-oggi');
@@ -8524,8 +8914,21 @@ function updateAdherenceCalendar(){
 const TABS=['oggi','prog','set','info'];
 let _tabInFlight=false;
 function switchTab(name){
-  if(_tabInFlight)return;_tabInFlight=true;setTimeout(()=>{_tabInFlight=false;},120);
-  TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t===name?'block':'none';const nb=document.getElementById(`nav-${t}`);if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}});
+  if(_tabInFlight)return;_tabInFlight=true;setTimeout(()=>{_tabInFlight=false;},200);
+  TABS.forEach(t=>{
+    const scr=document.getElementById(`scr-${t}`);
+    const nb=document.getElementById(`nav-${t}`);
+    if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}
+    if(!scr)return;
+    if(t===name){
+      scr.style.display='block';
+      requestAnimationFrame(()=>scr.classList.add('tab-enter'));
+      setTimeout(()=>scr.classList.remove('tab-enter'),200);
+    } else {
+      scr.classList.remove('tab-enter');
+      scr.style.display='none';
+    }
+  });
   const progOverlay=document.getElementById('scr-prog-blur-overlay');
   if(progOverlay && name!=='prog') progOverlay.style.display='none';
   if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';applyTrendBlurOverlay();syncTrendLockCopy();}
@@ -9459,7 +9862,7 @@ function _bootAfterLangGate(){
       <div class="pw-feat">🛒 Shopping List</div>
     </div>
     <div style="display:flex;gap:10px;margin-bottom:10px;">
-      <button onclick="startCheckout('monthly')" style="flex:1;background:#4ddcc6;color:#000;border:none;border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">€9,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.7;">Cancella quando vuoi</span></button>
+      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">€9,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.7;">Cancella quando vuoi</span></button>
       <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:#4ddcc6;border:1px solid rgba(77,220,198,.35);border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">€39,99/anno<br><span style="font-weight:400;font-size:11px;opacity:.7;">💰 Risparmia 33%</span></button>
     </div>
     <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:#4ddcc6;border:1px solid rgba(77,220,198,.2);border-radius:12px;padding:12px;font-weight:800;font-size:12px;cursor:pointer;margin-bottom:16px;">€99,99 una volta · 🔥 Accesso vita permanente</button>
