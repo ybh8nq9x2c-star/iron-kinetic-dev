@@ -2324,15 +2324,30 @@ async function startCheckout(plan){
     if(!accessToken){
       console.warn('[IK][checkout] No session — login required before checkout');
       btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
-      /* Save plan so we can resume checkout automatically after login */
-      try{localStorage.setItem('ik_pending_checkout_plan',plan);}catch{}
-      /* Close paywall overlay if open, then show Google login gate */
+      /* Guard against infinite loop: only allow one auto-resume attempt */
+      const alreadyRetrying=localStorage.getItem('ik_checkout_retry')==='1';
+      if(alreadyRetrying){
+        console.error('[IK][checkout] Still no token after login — aborting to prevent loop');
+        try{
+          localStorage.removeItem('ik_pending_checkout_plan');
+          localStorage.removeItem('ik_checkout_retry');
+          localStorage.removeItem('ik_auth_origin');
+        }catch{}
+        showToast('Impossibile completare il checkout — riprova manualmente',4000);
+        return;
+      }
+      try{
+        localStorage.setItem('ik_pending_checkout_plan',plan);
+        localStorage.setItem('ik_checkout_retry','1');
+      }catch{}
       const pw=document.getElementById('paywall-overlay');
       if(pw)pw.style.display='none';
       document.body.style.overflow='';
       _showCheckoutLoginGate(plan);
       return;
     }
+    /* Token present — clear retry guard */
+    try{localStorage.removeItem('ik_checkout_retry');}catch{}
 
     /* ── STEP 3: server-side checkout via Edge Function ── */
     console.log('[IK][checkout] path=Edge Function');
@@ -2366,11 +2381,16 @@ async function startCheckout(plan){
         try{Sentry.captureMessage('[IK] checkout '+res.status+' '+JSON.stringify(errBody),{level:'error'});}catch{}
       }
       if(res.status===401||res.status===403){
-        console.warn('[IK][checkout] Token rifiutato ('+res.status+') — forcing re-login');
-        showToast('Sessione scaduta — riaccedi e riprova',4000);
+        /* Token rifiutato dalla Edge Function — NON riaprire il login automaticamente:
+           l'utente E' gia' loggato ma il token e' comunque rifiutato (es. SUPABASE_KEY
+           sbagliata, JWT malformato). Mostrare il login in loop non risolverebbe nulla. */
+        console.error('[IK][checkout] Token rifiutato dalla Edge Function ('+res.status+') — probabile SUPABASE_KEY errata o JWT issue');
+        try{
+          localStorage.removeItem('ik_pending_checkout_plan');
+          localStorage.removeItem('ik_checkout_retry');
+        }catch{}
+        showToast('Errore di autenticazione checkout — riprova o contatta il supporto',4000);
         btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
-        try{localStorage.setItem('ik_pending_checkout_plan',plan);}catch{}
-        _showCheckoutLoginGate(plan);
         return;
       }
       if(res.status===400){
@@ -2617,7 +2637,10 @@ function _initAuthListener(){
       /* ── Resume pending checkout after login ── */
       const pendingPlan=localStorage.getItem('ik_pending_checkout_plan');
       if(pendingPlan){
-        try{localStorage.removeItem('ik_pending_checkout_plan');}catch{}
+        try{
+          localStorage.removeItem('ik_pending_checkout_plan');
+          localStorage.removeItem('ik_checkout_retry'); /* clear guard so resume can proceed */
+        }catch{}
         console.log('[IK][checkout] resuming pending checkout for plan=',pendingPlan);
         /* Small delay so UI settles after login transition */
         setTimeout(()=>startCheckout(pendingPlan),800);
@@ -2642,7 +2665,10 @@ async function _resumePostOnboardingOrBoot(){
         /* Resume checkout if the login was triggered by a checkout attempt */
         const pendingPlan=localStorage.getItem('ik_pending_checkout_plan');
         if(pendingPlan){
-          try{localStorage.removeItem('ik_pending_checkout_plan');}catch{}
+          try{
+            localStorage.removeItem('ik_pending_checkout_plan');
+            localStorage.removeItem('ik_checkout_retry'); /* clear guard so resume can proceed */
+          }catch{}
           console.log('[IK][checkout] resuming pending checkout (OAuth redirect) plan=',pendingPlan);
           setTimeout(()=>startCheckout(pendingPlan),1000);
         }
