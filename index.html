@@ -9130,6 +9130,24 @@ function _bootAfterLangGate(){
             <td>Esecuzione contratto<br>Art.6(1)(b)</td>
             <td>Secondo policy Stripe</td>
           </tr>
+          <tr>
+            <td><strong>Dati abbonamento e trial</strong><br>(trend_active, plan, trial_end, grace_period_until, stripe_customer_id)</td>
+            <td>Gestione abbonamento Trend (freemium/premium)</td>
+            <td>Esecuzione contratto<br>Art.6(1)(b)</td>
+            <td>Fino a cancellazione account</td>
+          </tr>
+          <tr>
+            <td><strong>Dati di utilizzo e crash</strong><br>(Sentry)</td>
+            <td>Monitoraggio errori e stabilità app</td>
+            <td>Interesse legittimo<br>Art.6(1)(f)</td>
+            <td>90 giorni (policy Sentry)</td>
+          </tr>
+          <tr>
+            <td><strong>Stato sincronizzazione</strong><br>(last_sync, preferenze lingua)</td>
+            <td>Cross-device sync per utenti autenticati</td>
+            <td>Esecuzione contratto<br>Art.6(1)(b)</td>
+            <td>Fino a cancellazione</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -9140,7 +9158,7 @@ function _bootAfterLangGate(){
       <div class="prv-highlight" style="border-color:rgba(255,159,10,.3);background:rgba(255,159,10,.06);">
         <p class="prv-p" style="color:var(--on);" id="prv-s3-p1">Peso corporeo, percentuale di grasso corporeo e misure corporee (girovita) costituiscono <strong>dati relativi alla salute</strong> ai sensi dell'art. 9 GDPR.</p>
       </div>
-      <p class="prv-p" id="prv-s3-p2">Base giuridica: <strong>consenso esplicito</strong> (art. 9 par. 2 lett. a GDPR), prestato al primo avvio e sempre revocabile da <em>Profilo → Privacy</em>. Questi dati sono elaborati esclusivamente nel localStorage o, per utenti registrati, su Supabase con crittografia in transito (TLS). Non sono mai condivisi con Stripe, Google Analytics o altri terzi.</p>
+      <p class="prv-p" id="prv-s3-p2">Base giuridica: <strong>consenso esplicito</strong> (art. 9 par. 2 lett. a GDPR), prestato al primo avvio e sempre revocabile da <em>Profilo → Privacy</em>. Questi dati sono elaborati esclusivamente nel localStorage o, per utenti registrati, su Supabase con crittografia in transito (TLS). Non sono mai condivisi con Stripe, Google Analytics o altri terzi. Per gli utenti con abbonamento Trend attivo, i dati sanitari sono inoltre utilizzati per generare analisi predittive (trend del peso, grafici di progresso) elaborati localmente nel browser.</p>
     </div>
 
     <!-- Section 4 — Sub-processor -->
@@ -9171,19 +9189,31 @@ function _bootAfterLangGate(){
           <div class="prv-proc-note">Server statico, nessuna elaborazione server-side</div>
           <a href="https://railway.com/legal/privacy" class="prv-proc-link" target="_blank" rel="noopener">railway.com/legal/privacy</a>
         </div>
+        <div class="prv-proc-item">
+          <div class="prv-proc-name">Sentry (Functional Software Inc. — USA)</div>
+          <div class="prv-proc-role">Monitoraggio errori e crash reporting. Riceve stacktrace anonimi, tipo browser e URL. Nessun dato sanitario o personale identificativo.</div>
+          <div class="prv-proc-note">Regione EU (de.sentry.io) · DPA conforme GDPR · Dati retention 90gg</div>
+          <a href="https://sentry.io/privacy" class="prv-proc-link" target="_blank" rel="noopener">sentry.io/privacy</a>
+        </div>
       </div>
     </div>
 
     <!-- Section 5 — Utenti anonimi -->
     <div class="prv-section">
       <p class="prv-h2" id="prv-s5-h">5. Utenti anonimi (senza account)</p>
-      <p class="prv-p" id="prv-s5-p">Se non crei un account Google, <strong>nessun dato lascia il tuo dispositivo</strong>. Piano, peso, check-in e preferenze restano nel localStorage. Vengono cancellati svuotando i dati del sito o tramite <em>Profilo → Ricomincia da capo</em>.</p>
+      <p class="prv-p" id="prv-s5-p">Se non crei un account Google, <strong>i tuoi dati sanitari e il tuo piano restano nel localStorage del tuo dispositivo</strong> e non vengono trasferiti a Supabase. Piano, peso, check-in e preferenze vengono cancellati svuotando i dati del sito o tramite <em>Profilo → Ricomincia da capo</em>. Nota: i dati tecnici di crash ed errori (stacktrace anonimi, tipo browser) possono essere inviati a Sentry per il monitoraggio della stabilità dell'app, ma non contengono dati personali né sanitari.</p>
+    </div>
+
+    <!-- Section 5b — Freemium vs Subscription -->
+    <div class="prv-section">
+      <p class="prv-h2" id="prv-s5b-h">5b. Dati e abbonamento (freemium / premium)</p>
+      <p class="prv-p" id="prv-s5b-p">Iron Kinetic offre un periodo di prova gratuito di 7 giorni per le funzionalità Trend. Al termine della prova, l'accesso Trend richiede un abbonamento mensile o un pagamento una tantum lifetime. I dati sanitari (peso, misure, piano alimentare) sono accessibili indipendentemente dallo stato dell'abbonamento. Lo stato dell'abbonamento (piano, data scadenza trial, ID cliente Stripe) è conservato su Supabase per gli utenti autenticati e in localStorage per gli utenti anonimi. La disdetta dell'abbonamento non comporta la cancellazione dei dati sanitari.</p>
     </div>
 
     <!-- Section 6 — Cookie -->
     <div class="prv-section">
       <p class="prv-h2" id="prv-s6-h">6. Cookie e tracciamento</p>
-      <p class="prv-p" id="prv-s6-p"><strong>Zero cookie di profilazione.</strong> Zero analytics. Zero advertising. Zero pixel di tracciamento. Il solo storage utilizzato è il localStorage del browser (Web Storage API). Gli utenti autenticati ricevono un cookie di sessione tecnico da Supabase, necessario per mantenere il login.</p>
+      <p class="prv-p" id="prv-s6-p"><strong>Zero cookie di profilazione.</strong> Zero analytics. Zero advertising. Zero pixel di tracciamento. Il storage principale è il localStorage del browser (Web Storage API). Il SDK Sentry utilizza localStorage per il monitoraggio degli errori e può impostare cookie tecnici necessari al tracciamento delle sessioni di crash. Gli utenti autenticati ricevono un cookie di sessione tecnico da Supabase, necessario per mantenere il login.</p>
     </div>
 
     <!-- Section 7 — Diritti -->
