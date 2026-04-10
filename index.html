@@ -83,7 +83,7 @@ button:focus-visible{outline:2px solid var(--p);outline-offset:2px;}
 .btn{display:flex;align-items:center;justify-content:center;height:50px;border-radius:var(--r);font-family:'Manrope',sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;transition:transform .1s cubic-bezier(.34,1.56,.64,1),opacity .1s;user-select:none;}
 .btn:active{transform:scale(.96) translateZ(0);opacity:.88;}
 .btn-primary{background:var(--p);color:#003730;box-shadow:0 6px 20px rgba(77,220,198,.22);font-weight:800;}
-.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--glass-stroke);color:var(--on-v);}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--glass-stroke);color:var(--on-v);transition:background .15s,border-color .15s,opacity .15s;}
 .btn-ghost:active{background:var(--s3);}
 .btn-neon-o{background:rgba(77,220,198,.12);border:1px solid rgba(77,220,198,.22);color:var(--p);}
 .btn-danger-o{background:rgba(255,59,48,.08);border:1px solid rgba(255,59,48,.20);color:var(--red);}
@@ -117,10 +117,14 @@ textarea.inp{height:auto;padding:12px 14px;resize:none;line-height:1.5;}
 .meal-row:focus-visible{outline:2px solid var(--p);outline-offset:2px;}
 .meal-name{font-size:13px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.01em;color:var(--on);}
 .meal-desc{font-size:11px;color:var(--muted);margin-top:2px;font-weight:500;line-height:1.4;}
-.day-chip{height:28px;padding:0 10px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--s2);border:1px solid var(--line);color:var(--muted);touch-action:manipulation;transition:all .12s;user-select:none;}
+.day-chip{height:36px;padding:0 12px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--s2);border:1px solid var(--line);color:var(--muted);touch-action:manipulation;transition:all .12s;user-select:none;}
 .day-chip.on{background:var(--p);color:#003730;border-color:var(--p);}
+.day-chip:focus-visible{outline:2px solid var(--p);outline-offset:2px;}
+.phase-chip:focus-visible{outline:2px solid var(--p);outline-offset:2px;}
+.seg-btn:focus-visible{outline:2px solid var(--p);outline-offset:2px;border-radius:var(--r3);}
+.micro-chip:focus-visible{outline:2px solid var(--p);outline-offset:2px;}
 .day-chip:active{opacity:.7;}
-.phase-chip{height:36px;padding:0 14px;border-radius:var(--r-pill);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--s2);border:1px solid var(--line);color:var(--muted);touch-action:manipulation;transition:all .12s;user-select:none;}
+.phase-chip{height:40px;padding:0 14px;border-radius:var(--r-pill);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--s2);border:1px solid var(--line);color:var(--muted);touch-action:manipulation;transition:all .12s;user-select:none;}
 .phase-chip.on{background:var(--p);color:#003730;border-color:var(--p);}
 .phase-chip:active{opacity:.75;}
 .mod-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:var(--r-pill);margin-left:6px;vertical-align:middle;background:var(--p);color:#003730;}
@@ -141,8 +145,8 @@ textarea.inp{height:auto;padding:12px 14px;resize:none;line-height:1.5;}
 .mod-stepper-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:none;border:none;touch-action:manipulation;font-size:22px;font-weight:400;color:var(--muted);cursor:pointer;}
 .mod-stepper-btn.pos{color:var(--p);}
 .install-banner{position:fixed;bottom:calc(var(--nav-bottom) + var(--nav-h) + 8px);left:12px;right:12px;background:var(--s1);border:1px solid rgba(77,220,198,.22);border-radius:var(--r2);padding:10px 12px;display:flex;align-items:center;gap:10px;z-index:490;box-shadow:var(--glass-shadow);}
-#toast{position:fixed;bottom:calc(var(--nav-bottom) + var(--nav-h) + 14px + var(--kb-offset));left:50%;transform:translateX(-50%) translateY(10px);background:rgba(20,20,20,.96);border:1px solid rgba(77,220,198,.22);color:var(--on);font-size:12px;font-weight:600;font-family:'Manrope',sans-serif;padding:9px 18px;border-radius:var(--r-pill);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap;z-index:500;max-width:calc(100vw - 40px);overflow:hidden;text-overflow:ellipsis;box-shadow:0 8px 32px rgba(0,0,0,.4);}
-#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast{position:fixed;bottom:calc(var(--nav-bottom) + var(--nav-h) + 14px + var(--kb-offset));left:50%;transform:translateX(-50%) translateY(16px) scale(.95);background:rgba(20,20,20,.96);border:1px solid rgba(77,220,198,.22);color:var(--on);font-size:12px;font-weight:600;font-family:'Manrope',sans-serif;padding:9px 18px;border-radius:var(--r-pill);opacity:0;transition:opacity .22s cubic-bezier(.4,0,.2,1),transform .22s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;z-index:500;max-width:calc(100vw - 40px);overflow:hidden;text-overflow:ellipsis;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0) scale(1);}
 #onb-screen{display:none;position:fixed;inset:0;padding-top:var(--sat);padding-bottom:calc(var(--nav-bottom) + var(--nav-h) + 16px + var(--kb-offset));z-index:100;background:var(--bg);flex-direction:column;overflow-y:scroll;-webkit-overflow-scrolling:touch;scroll-padding-bottom:calc(var(--nav-bottom) + var(--nav-h) + var(--kb-offset) + 16px);}
 #onb-screen.on{display:flex;}
 #app-shell{display:none;height:100%;height:100dvh;min-height:0;position:relative;overflow:hidden;}
@@ -166,10 +170,10 @@ body.onboarding-active #onb-screen{
 .result-macro-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;}
 .result-macro{background:var(--s2);border-radius:var(--r2);padding:10px;text-align:center;}
 .result-macro .rv{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.03em;}
-.result-macro .rl{font-size:8px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+.result-macro .rl{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
 .ring-svg{transform:rotate(-90deg);}
 .ring-track{fill:none;stroke:rgba(255,255,255,.06);stroke-width:4;}
-.ring-fill{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1);}
+.ring-fill{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1),stroke .3s ease;will-change:stroke-dashoffset;}
 #kcal-ring{transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1),stroke .3s,opacity .3s;}
 #wChart-wrap{position:relative;width:100%;height:165px;overflow:hidden;}
 #wChart{display:block;width:100%!important;height:165px!important;touch-action:pan-x;}
@@ -193,7 +197,7 @@ body.onboarding-active #onb-screen{
 .range-wrap input[type="range"]::-moz-range-track{height:6px;border-radius:999px;background:rgba(255,255,255,.08);}
 .range-wrap input[type="range"]::-moz-range-thumb{width:22px;height:22px;border:none;border-radius:50%;background:var(--p);box-shadow:0 0 0 4px rgba(77,220,198,.16);}
 .chip-row{display:flex;flex-wrap:wrap;gap:6px;}
-.micro-chip{height:32px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--s2);color:var(--on-v);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;touch-action:manipulation;}
+.micro-chip{height:36px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--s2);color:var(--on-v);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;touch-action:manipulation;}
 .active-chip{background:rgba(77,220,198,.12)!important;border-color:rgba(77,220,198,.28)!important;color:var(--p)!important;}
 /* Food tag chips for onboarding */
 .food-tag{height:36px;padding:0 14px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--s2);color:var(--on-v);font-size:11px;font-weight:600;touch-action:manipulation;transition:all .15s;cursor:pointer;}
@@ -1226,7 +1230,7 @@ body.onboarding-active #onb-screen{
           <div>
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
               <span class="t-xxs muted sn" data-i18n="oggi.kcal.target">Target Giorno</span>
-              <span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:8px;letter-spacing:.06em;color:var(--orange);font-weight:700;">MOD</span>
+              <span id="m-mod-badge" class="t-xxs sn" style="display:none;font-size:9px;letter-spacing:.06em;color:var(--orange);font-weight:700;">MOD</span>
             </div>
             <p id="m-kcal" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;color:var(--p);line-height:1;margin:0 0 6px;">—</p>
             <span class="t-xxs muted sn" data-i18n="oggi.kcal.totali">Kcal totali</span>
@@ -1566,13 +1570,14 @@ body.onboarding-active #onb-screen{
           <p class="t-xxs muted sn" style="text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;">Target TDEE</p>
           <!-- Kcal progress ring: shows completed meal kcal vs daily target -->
           <div style="position:relative;width:190px;height:190px;margin:0 auto;">
-            <svg width="190" height="190" viewBox="0 0 200 200" class="ring-svg" aria-hidden="true" style="position:absolute;top:0;left:0;">
+            <svg width="190" height="190" viewBox="0 0 200 200" class="ring-svg" aria-label="Progresso calorico giornaliero" role="img" style="position:absolute;top:0;left:0;">
               <circle cx="100" cy="100" r="88" class="ring-track" style="stroke:rgba(255,255,255,.15);stroke-width:6;"/>
               <circle cx="100" cy="100" r="88" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="6" stroke-dasharray="552.9" stroke-dashoffset="552.9" style="opacity:.35;filter:drop-shadow(0 0 8px rgba(77,220,198,.6));"/>
             </svg>
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:140px;">
-              <p id="set-hero-tdee" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:700;line-height:1;color:var(--p);margin:0;">—</p>
-              <p class="t-xxs muted sn" style="margin-top:6px;letter-spacing:.14em;">KCAL</p>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:140px;pointer-events:none;line-height:1.1;">
+              <div id="kcal-ring-num" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:800;line-height:1;color:var(--p);transition:color .3s;">—</div>
+              <div id="kcal-ring-label" class="sn" style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">kcal rimaste</div>
+              <div id="set-hero-tdee" style="display:none;">—</div>
             </div>
           </div>
         </div>
@@ -1620,7 +1625,7 @@ body.onboarding-active #onb-screen{
             </svg>
             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.1;pointer-events:none">
               <div id="sub-ring-num" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--p)"></div>
-              <div id="sub-ring-unit" style="font-size:8px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">gg</div>
+              <div id="sub-ring-unit" style="font-size:9px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">gg</div>
             </div>
           </div>
 
@@ -7405,20 +7410,30 @@ function getCompletedMealKcal(dayNum){
 function renderKcalRing(){
   const ring=document.getElementById('kcal-ring');
   if(!ring||!dietData)return;
-  const KCAL_CIRC=552.9; // 2π×88, profile ring r=88
+  const KCAL_CIRC=552.9;
   const targetKcal=calcMacros().kcal;
   const completedKcal=getCompletedMealKcal(selDay);
-  const pct=targetKcal>0?Math.min(100,completedKcal/targetKcal*100):0;
-  ring.style.strokeDashoffset=`${KCAL_CIRC*(1-pct/100)}`;
-  ring.style.stroke=pct>=99.5?'var(--p)':'var(--p)';
+  const pct=targetKcal>0?Math.min(1,completedKcal/targetKcal):0;
+  /* colore dinamico basato su kcal rimaste */
+  const pctRimaste=targetKcal>0?Math.max(0,(targetKcal-completedKcal)/targetKcal):1;
+  const ringColor=pctRimaste>0.5?'var(--p)':pctRimaste>0.2?'var(--orange)':'var(--red)';
+  ring.style.strokeDashoffset=`${KCAL_CIRC*(1-pct)}`;
+  ring.style.stroke=ringColor;
   ring.style.opacity=pct>0?'1':'0.35';
+  /* centro anello: kcal rimaste */
+  const kcalRimaste=Math.max(0,Math.round(targetKcal-completedKcal));
+  const numEl=document.getElementById('kcal-ring-num');
+  const lblEl=document.getElementById('kcal-ring-label');
+  if(numEl){numEl.textContent=targetKcal>0?String(kcalRimaste):'—';numEl.style.color=ringColor;}
+  if(lblEl){lblEl.textContent=completedKcal>targetKcal?'kcal superate':'kcal rimaste';lblEl.style.color=completedKcal>targetKcal?'var(--red)':'var(--muted)';}
+  /* mini ring oggi */
   const KCAL_CIRC2=106.8;
   const r2=getEl('kcal-ring-oggi');
-  if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct/100);r2.style.stroke=pct>=99.5?'var(--p)':'var(--p)';}
+  if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct);r2.style.stroke=ringColor;}
   const pctEl=getEl('oggi-kcal-pct');
-  if(pctEl)pctEl.textContent=t('oggi.kcal.pct',{pct:Math.round(pct)});
+  if(pctEl)pctEl.textContent=t('oggi.kcal.pct',{pct:Math.round(pct*100)});
   const ringWrap=document.getElementById('kcal-ring-wrap');
-  if(ringWrap)ringWrap.setAttribute('aria-label',`${completedKcal} / ${targetKcal} kcal`);
+  if(ringWrap)ringWrap.setAttribute('aria-label',`${completedKcal} / ${targetKcal} kcal — ${kcalRimaste} rimaste`);
 }
 
 /* ═══════════════════════════════════════
@@ -7489,7 +7504,8 @@ function renderSettings(){
   trendInitPromise.then(()=>{try{updateSubManagementCard();}catch(e){}});
 }
 function _renderProfileCard(prof){
-  /* Hero metrics */
+  /* Hero metrics — aggiorna anello kcal dinamico */
+  renderKcalRing();
   const heroTdee=document.getElementById('set-hero-tdee');
   const heroBmr=document.getElementById('set-hero-bmr');
   // Fallback: ricalcola macros on-the-fly se targetKcal manca
@@ -9393,13 +9409,13 @@ function _bootAfterLangGate(){
 <!-- ── PAYWALL OVERLAY ── -->
 <div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic Trend">
   <div id="paywall-sheet">
-    <button onclick="closePaywall()" aria-label="Chiudi" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;color:#aaa;cursor:pointer;font-size:18px;line-height:1;">×</button>
+    <button onclick="closePaywall()" aria-label="Chiudi" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;touch-action:manipulation;min-width:44px;min-height:44px;">×</button>
     <div id="pw-trial-badge" style="display:none;background:rgba(77,220,198,.12);color:#4ddcc6;font-size:11px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:999px;width:fit-content;margin:0 auto 16px;">⏱ <span id="pw-days-left"></span> GIORNI RIMASTI</div>
     <div style="width:56px;height:56px;background:rgba(77,220,198,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
       <span class="material-symbols-outlined" style="color:#4ddcc6;font-size:28px;">trending_up</span>
     </div>
-    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:#fff;margin:0 0 8px;">Iron Kinetic Trend</h2>
-    <p style="font-size:13px;color:#888;text-align:center;line-height:1.6;margin:0 0 24px;">Il tuo metabolismo ha dati reali. Sbloccali.</p>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 8px;">Iron Kinetic Trend</h2>
+    <p style="font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:0 0 24px;">Il tuo metabolismo ha dati reali. Sbloccali.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
       <div class="pw-feat">📈 Predictive Curve</div>
       <div class="pw-feat">🧬 Metabolic Fingerprint</div>
