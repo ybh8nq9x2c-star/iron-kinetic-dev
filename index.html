@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="Iron Kinetic™"/>
+<meta name="apple-mobile-web-app-title" content="Iron Kinetic"/>
 <meta name="theme-color" content="#0e0e0e"/>
 <meta name="format-detection" content="telephone=no,date=no,email=no,address=no"/>
-<title>Iron Kinetic™</title>
+<title>Iron Kinetic</title>
 <link rel="manifest" href="manifest.webmanifest"/>
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230e0e0e'/%3E%3Ctext x='90' y='128' text-anchor='middle' font-size='100' font-family='system-ui'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -898,7 +898,8 @@ hr{height:1px;}
   <div style="width:64px;height:64px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.28);border-radius:18px;display:flex;align-items:center;justify-content:center;">
     <span class="material-symbols-outlined" style="color:var(--p);font-size:32px;font-variation-settings:'FILL' 1;">translate</span>
   </div>
-  <h2 id="lang-gate-title" style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin:0;text-align:center;line-height:1.3;">Choose your language<br><span style="color:var(--muted);font-size:16px;font-weight:500;">Scegli la lingua</span></h2>
+  <h2 id="lang-gate-title" style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin:0 0 8px;text-align:center;line-height:1.3;">Il tuo piano nutrizionale<br>calcolato su di te.<br><span style="color:var(--muted);font-size:15px;font-weight:500;">Your nutrition plan, built around you.</span></h2>
+  <p id="lang-gate-subtext" style="font-size:12px;color:var(--p);font-weight:700;text-align:center;letter-spacing:.06em;margin:0 0 4px;">Gratis. 3 minuti. Personalizzato.<br><span style="color:var(--muted);font-weight:500;">Free. 3 minutes. Personalised.</span></p>
   <div style="display:flex;flex-direction:column;gap:12px;width:100%;">
     <button onclick="selectLang('it')" style="width:100%;height:56px;border-radius:var(--r-pill);background:var(--p);color:#003730;font-size:15px;font-weight:800;letter-spacing:.04em;border:none;cursor:pointer;touch-action:manipulation;display:flex;align-items:center;justify-content:center;gap:10px;">
       <span style="font-size:22px;">🇮🇹</span> Italiano
@@ -920,8 +921,8 @@ hr{height:1px;}
       <div style="width:72px;height:72px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.30);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
         <span class="material-symbols-outlined sn" style="color:var(--p);font-size:36px;font-variation-settings:'FILL' 1;">add_to_home_screen</span>
       </div>
-      <h2 id="pwa-title" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Add to Home Screen</h2>
-      <p id="pwa-sub" style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">For the best experience, install Iron Kinetic™ as an app on your device. Works offline, opens like a real app and takes no storage.</p>
+      <h2 id="pwa-title" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Sempre a portata di mano.</h2>
+      <p id="pwa-sub" style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">Installalo in 10 secondi. Il tuo piano sempre disponibile, anche senza connessione. Nessuno spazio occupato.</p>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:12px;">
@@ -959,11 +960,11 @@ hr{height:1px;}
       </div>
     </div>
 
-    <p id="pwa-skip-note" style="font-size:11px;color:var(--muted);text-align:center;line-height:1.55;" class="sn">You can continue without installing, but the experience is optimal only as an installed app.</p>
+    <p id="pwa-skip-note" style="font-size:11px;color:var(--muted);text-align:center;line-height:1.55;" class="sn">Oppure salta — puoi installarlo in seguito dal menu del browser.</p>
   </div>
 
   <div style="padding-top:16px;">
-    <button id="pwa-btn" onclick="acknowledgedPWA()" style="width:100%;height:52px;border-radius:var(--r-pill);background:var(--p);color:#003730;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:none;cursor:pointer;touch-action:manipulation;" class="sn">Got it, Continue →</button>
+    <button id="pwa-btn" onclick="acknowledgedPWA()" style="width:100%;height:52px;border-radius:var(--r-pill);background:var(--p);color:#003730;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:none;cursor:pointer;touch-action:manipulation;" class="sn">Installa e inizia →</button>
   </div>
 </div>
 </div>
@@ -978,19 +979,19 @@ hr{height:1px;}
       <div style="width:64px;height:64px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.28);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
         <span class="material-symbols-outlined sn" style="color:var(--p);font-size:32px;font-variation-settings:'FILL' 1;">shield</span>
       </div>
-      <h2 id="gdpr-gate-title" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">Privacy &amp; Consent</h2>
-      <p id="gdpr-gate-sub" style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">Before you start, here's how we handle your data.</p>
+      <h2 id="gdpr-gate-title" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);letter-spacing:-.02em;margin-bottom:8px;" class="sn">I tuoi dati restano tuoi.</h2>
+      <p id="gdpr-gate-sub" style="font-size:13px;color:var(--muted);line-height:1.6;font-weight:500;" class="sn">Nessuna pubblicità. Nessun tracking. Processiamo solo ciò che serve per il tuo piano.</p>
     </div>
 
     <!-- Highlights box -->
     <div style="background:rgba(77,220,198,.06);border:1px solid rgba(77,220,198,.16);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;">
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">smartphone</span>
-        <div><p id="gdpr-p1-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Dati sanitari — Art. 9 GDPR</p><p id="gdpr-p1-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Peso, misure e grasso corporeo sono dati relativi alla salute. Elaborati esclusivamente per il piano nutrizionale, con tuo esplicito consenso. Utenti anonimi: localStorage. Utenti con account: stato su Supabase (EU).</p></div>
+        <div><p id="gdpr-p1-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Dati sanitari — solo per il tuo piano</p><p id="gdpr-p1-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Peso, misure e grasso corporeo sono dati relativi alla salute. Elaborati esclusivamente per il piano nutrizionale, con tuo esplicito consenso. Utenti anonimi: localStorage. Utenti con account: stato su Supabase (EU).</p></div>
       </div>
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">account_circle</span>
-        <div><p id="gdpr-p2-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Login Google — dati raccolti</p><p id="gdpr-p2-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Il login tramite Google trasmette a Iron Kinetic™ nome, email e avatar. Nessun dato sanitario condiviso con Google.</p></div>
+        <div><p id="gdpr-p2-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Login Google — dati raccolti</p><p id="gdpr-p2-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Il login tramite Google trasmette a Iron Kinetic nome, email e avatar. Nessun dato sanitario condiviso con Google.</p></div>
       </div>
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">block</span>
@@ -1009,11 +1010,11 @@ hr{height:1px;}
       <input type="checkbox" id="gdpr-age-confirm" style="width:18px;height:18px;accent-color:var(--p)">
       <span data-i18n="gdpr.ageConfirm">Confermo di avere almeno 16 anni</span>
     </label>
-    <button id="gdpr-accept-btn" onclick="gdprAccept()" class="btn btn-primary w100 sn" style="height:52px;font-size:13px;">✓ Accept &amp; Continue</button>
+    <button id="gdpr-accept-btn" onclick="gdprAccept()" class="btn btn-primary w100 sn" style="height:52px;font-size:13px;">Accetto — Inizia il mio piano →</button>
     <button id="gdpr-read-btn" onclick="openModal('privacy')" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;">Read the full Privacy Policy</button>
     <p style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;" class="sn">
-      <span id="gdpr-gate-footer2">Without accepting, you won't be able to use the app, as data processing is necessary to deliver the service.</span><br>
-      Controller: Iron Kinetic™ · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
+      <span id="gdpr-gate-footer2">Richiesto dalla legge UE (GDPR). Puoi revocare il consenso in qualsiasi momento da Profilo → Privacy.</span><br>
+      Controller: Iron Kinetic · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
     </p>
   </div>
 </div>
@@ -1021,7 +1022,7 @@ hr{height:1px;}
 
 <!-- HEADER -->
 <header id="hdr">
-  <span class="hdr-logo">Iron Kinetic™</span>
+  <span class="hdr-logo">Iron Kinetic</span>
   <div class="hdr-right">
     <span id="hdr-plan" class="hdr-plan" style="display:none;"></span>
     <div class="hdr-av">
@@ -1055,7 +1056,7 @@ hr{height:1px;}
 
   <!-- STEP 0 — Corpo -->
   <div class="onb-step on" id="step-0" style="gap:14px;">
-    <p class="sec-label" style="margin-bottom:0;">Passo 1 — Corpo</p>
+    <p class="sec-label" style="margin-bottom:0;" id="onb-step0-lbl">Il tuo corpo</p>
     <div>
       <label class="field-label" for="sex-m">Sesso biologico</label>
       <div class="seg-wrap">
@@ -1080,7 +1081,7 @@ hr{height:1px;}
 
   <!-- STEP 1 — Attività -->
   <div class="onb-step" id="step-1" style="gap:14px;">
-    <p class="sec-label" style="margin-bottom:0;">Passo 2 — Attività</p>
+    <p class="sec-label" style="margin-bottom:0;" id="onb-step1-lbl">La tua attività</p>
     <div>
       <label class="field-label">Allenamenti / settimana</label>
       <div class="seg-wrap" id="wk-seg">
@@ -1128,14 +1129,14 @@ hr{height:1px;}
 
   <!-- STEP 2 — Obiettivo -->
   <div class="onb-step" id="step-2" style="gap:14px;">
-    <p class="sec-label" style="margin-bottom:0;">Passo 3 — Obiettivo</p>
+    <p class="sec-label" style="margin-bottom:0;" id="onb-step2-lbl">Cosa vuoi ottenere</p>
     <div>
       <label class="field-label">Obiettivo primario</label>
       <div style="display:flex;flex-direction:column;gap:8px;" id="goal-wrap">
-        <button class="seg-btn sn" data-goal="cut_extreme" data-mod="-500" style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">🔥 Definizione Estrema — −500 kcal</button>
-        <button class="seg-btn sn" data-goal="recomp"      data-mod="-200" style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">🔁 Ricomposizione — −200 kcal</button>
-        <button class="seg-btn sn" data-goal="maintain"    data-mod="0"    style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">⚖️ Mantenimento — 0 kcal</button>
-        <button class="seg-btn sn" data-goal="bulk"        data-mod="250"  style="height:50px;border-radius:var(--r);" onclick="setGoal(this)">💪 Bulk lean — +250 kcal</button>
+        <button class="seg-btn sn" data-goal="cut_extreme" data-mod="-500" style="height:auto;min-height:50px;border-radius:var(--r);padding:10px 14px;line-height:1.3;" onclick="setGoal(this)">🔥 <strong>Dimagrire veloce</strong><br><span style="font-size:10px;opacity:.7;font-weight:400;">Definizione intensiva · −500 kcal</span></button>
+        <button class="seg-btn sn" data-goal="recomp"      data-mod="-200" style="height:auto;min-height:50px;border-radius:var(--r);padding:10px 14px;line-height:1.3;" onclick="setGoal(this)">🔁 <strong>Dimagrire e tonificare</strong><br><span style="font-size:10px;opacity:.7;font-weight:400;">Ricomposizione · approccio bilanciato</span></button>
+        <button class="seg-btn sn" data-goal="maintain"    data-mod="0"    style="height:auto;min-height:50px;border-radius:var(--r);padding:10px 14px;line-height:1.3;" onclick="setGoal(this)">⚖️ <strong>Mantenere la forma</strong><br><span style="font-size:10px;opacity:.7;font-weight:400;">Nessuna variazione calorica</span></button>
+        <button class="seg-btn sn" data-goal="bulk"        data-mod="250"  style="height:auto;min-height:50px;border-radius:var(--r);padding:10px 14px;line-height:1.3;" onclick="setGoal(this)">💪 <strong>Aumentare la massa</strong><br><span style="font-size:10px;opacity:.7;font-weight:400;">Bulk lean · +250 kcal controllati</span></button>
       </div>
     </div>
     <div class="row g2" id="back-from-2">
@@ -1146,7 +1147,7 @@ hr{height:1px;}
 
   <!-- STEP 3 — Preferenze alimentari -->
   <div class="onb-step" id="step-3" style="gap:16px;">
-    <p class="sec-label" style="margin-bottom:0;">Passo 4 — Le Tue Preferenze</p>
+    <p class="sec-label" style="margin-bottom:0;" id="onb-step3-lbl">Il tuo stile alimentare</p>
 
     <!-- Numero pasti -->
     <div>
@@ -1209,7 +1210,7 @@ hr{height:1px;}
 
   <!-- STEP 4 — Cibi preferiti + genera piano -->
   <div class="onb-step" id="step-4" style="gap:16px;">
-    <p class="sec-label" style="margin-bottom:0;">Passo 5 — I Tuoi Cibi Preferiti</p>
+    <p class="sec-label" style="margin-bottom:0;" id="onb-step4-lbl">Costruiamo il tuo piano</p>
     <p style="font-size:12px;color:var(--muted);line-height:1.55;font-weight:500;" class="sn">Seleziona i cibi che ami o scrivili tu. L'app costruirà il piano perfetto per te.</p>
 
     <!-- Food quick-select chips by category -->
@@ -1284,13 +1285,13 @@ hr{height:1px;}
 
     <div class="row g2">
       <button class="btn btn-ghost sn" onclick="goStep(3)" style="flex:1;">← Indietro</button>
-      <button class="btn btn-primary sn" onclick="runCalcAndGenerate()" style="flex:2;">⚡ Genera il Mio Piano</button>
+      <button class="btn btn-primary sn" onclick="runCalcAndGenerate()" style="flex:2;">⚡ Calcola il mio piano personalizzato →</button>
     </div>
 
     <!-- Result reveal -->
     <div class="result-card" id="result-card">
       <div style="text-align:center;margin-bottom:14px;">
-        <p class="t-xxs muted sn" style="margin-bottom:5px;">IL TUO TDEE</p>
+        <p class="t-xxs muted sn" style="margin-bottom:5px;" id="r-tdee-lbl-top">IL TUO METABOLISMO REALE</p>
         <div class="result-big sn" id="r-tdee">—</div>
         <p class="t-xxs sn" style="color:var(--muted);margin-top:3px;" id="r-tdee-lbl">—</p>
       </div>
@@ -1331,8 +1332,8 @@ hr{height:1px;}
             <div style="width:36px;height:36px;background:rgba(77,220,198,.12);border:1px solid rgba(77,220,198,.28);border-radius:10px;display:flex;align-items:center;justify-content:center;">
               <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;font-variation-settings:'FILL' 1;">lock</span>
             </div>
-            <p id="onb-trend-lock-title" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--on);margin:0;text-align:center;">Trend — sblocca l'analisi avanzata</p>
-            <p id="onb-trend-lock-sub" style="font-size:11px;color:var(--muted);margin:0;text-align:center;line-height:1.5;max-width:240px;">Predictive Curve, Metabolic Fingerprint, Weekly Report e molto altro</p>
+            <p id="onb-trend-lock-title" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--on);margin:0;text-align:center;">I tuoi dati ci sono. Leggili adesso.</p>
+            <p id="onb-trend-lock-sub" style="font-size:11px;color:var(--muted);margin:0;text-align:center;line-height:1.5;max-width:240px;">Vedi dove sarà il tuo peso tra 12 settimane. Basato sui tuoi dati reali, non su medie generiche.</p>
           </div>
         </div>
         <!-- Feature pills -->
@@ -1345,15 +1346,15 @@ hr{height:1px;}
         <!-- Pricing CTAs -->
         <div style="display:flex;gap:8px;margin-bottom:8px;">
           <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€9,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;">Cancella quando vuoi</span></button>
-          <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:var(--p);border:1px solid rgba(77,220,198,.35);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€39,99/anno<br><span style="font-weight:400;font-size:10px;opacity:.7;">💰 Risparmia 33%</span></button>
+          <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:var(--p);border:1px solid rgba(77,220,198,.35);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€39,99/anno<br><span style="font-weight:400;font-size:10px;opacity:.7;">💰 Risparmia il 33%</span></button>
         </div>
         <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.2);border-radius:var(--r);padding:10px 8px;font-weight:800;font-size:11px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:8px;">€99,99 una volta · 🔥 Accesso vita</button>
         <!-- Trial CTA -->
         <button id="onb-activate-plan-btn" onclick="activatePlanAndContinue()" class="btn btn-ghost w100" style="height:44px;font-size:12px;color:var(--muted);margin-bottom:4px;">
-          <span id="onb-trial-btn-txt">Continua con prova gratuita 7 giorni</span>
+          <span id="onb-trial-btn-txt">Prova Trend gratis — 7 giorni →</span>
         </button>
         <p style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;margin:0;">
-          <span id="onb-trial-note">Trend attivo per 7 giorni, poi solo il piano base è gratuito</span>
+          <span id="onb-trial-note">7 giorni completi. Poi scegli tu: rimani free o attiva Trend. Nessun addebito automatico.</span>
         </p>
       </div>
     </div>
@@ -1377,8 +1378,8 @@ hr{height:1px;}
             <span class="material-symbols-outlined sn" id="coach-ico" style="font-size:20px;color:#003730;font-variation-settings:'FILL' 1;">bolt</span>
           </div>
           <div style="flex:1;min-width:0;">
-            <span class="sec-label sn" id="coach-lbl" style="margin-bottom:2px;">KINETIC INSIGHT</span>
-            <p class="sn" id="coach-msg" style="font-size:13px;font-weight:600;color:var(--on);line-height:1.4;">— Analisi in corso...</p>
+            <span class="sec-label sn" id="coach-lbl" style="margin-bottom:2px;">IL TUO COACH</span>
+            <p class="sn" id="coach-msg" style="font-size:13px;font-weight:600;color:var(--on);line-height:1.4;">— Sto analizzando il tuo piano di oggi...</p>
           </div>
         </div>
         <div id="coach-streak-badge" style="position:absolute;top:14px;right:14px;"></div>
@@ -1886,48 +1887,11 @@ hr{height:1px;}
       <!-- ── MENU PRINCIPALE (stile riferimento) ── -->
       <div class="prof-menu-list">
 
-        <!-- Il Tuo Profilo -->
-        <div class="prof-menu-row" onclick="toggleAccordion('profilo-inline')">
-          <div class="prof-menu-ico teal"><span class="material-symbols-outlined" style="color:var(--p);">person</span></div>
-          <span class="prof-menu-label sn" data-i18n="set.profilo.title">Il Tuo Profilo</span>
-          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-profilo-inline" style="transition:transform .2s;">chevron_right</span>
-        </div>
-        <div id="acc-profilo-inline" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .35s ease;">
-          <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
-            <p id="set-profile-text" class="sn" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;">—</p>
-            <div id="weight-update-row" style="display:flex;gap:8px;margin-top:10px;align-items:center">
-              <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="width:80px">
-              <button onclick="updateWeight();event.stopPropagation();" class="btn btn-neon-o btn-xs" style="flex:1" id="btn-weight-upd">Aggiorna peso</button>
-            </div>
-            <div id="set-prefs-text" style="margin-top:10px;display:none;">
-              <div class="divider" style="margin-bottom:10px;"></div>
-              <p id="set-prefs-content" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;"></p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Piano Attivo -->
-        <div class="prof-menu-row" onclick="toggleAccordion('piano-inline')">
-          <div class="prof-menu-ico teal"><span class="material-symbols-outlined" style="color:var(--p);">restaurant_menu</span></div>
-          <div style="flex:1;min-width:0;">
-            <span class="prof-menu-label sn" data-i18n="set.piano.title">Piano Attivo</span>
-            <p id="set-plan-name" class="sn" style="font-size:11px;color:var(--muted);margin:0;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</p>
-          </div>
-          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-piano-inline" style="transition:transform .2s;">chevron_right</span>
-        </div>
-        <div id="acc-piano-inline" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .35s ease;">
-          <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
-            <p id="set-plan-meta" class="t-xxs muted sn" style="margin:0 0 10px;display:block;">—</p>
-            <div id="set-phases" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-            <p id="phase-hint" class="sn" style="font-size:11px;color:var(--muted);line-height:1.55;margin-top:8px;"></p>
-          </div>
-        </div>
-
-        <!-- Abbonamento Trend -->
+        <!-- Abbonamento Trend — PRIMO POSTO -->
         <div class="prof-menu-row" onclick="toggleAccordion('sub-inline')">
           <div class="prof-menu-ico orange"><span class="material-symbols-outlined" style="color:var(--orange);">bolt</span></div>
           <div style="flex:1;min-width:0;">
-            <span class="prof-menu-label sn">Abbonamento Trend</span>
+            <span class="prof-menu-label sn" data-i18n="set.sub.label">Abbonamento Trend</span>
             <p id="prof-sub-preview" style="font-size:11px;color:var(--muted);margin:0;"></p>
           </div>
           <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-sub-inline" style="transition:transform .2s;">chevron_right</span>
@@ -1969,6 +1933,43 @@ hr{height:1px;}
           </div>
         </div>
 
+        <!-- Il Tuo Profilo -->
+        <div class="prof-menu-row" onclick="toggleAccordion('profilo-inline')">
+          <div class="prof-menu-ico teal"><span class="material-symbols-outlined" style="color:var(--p);">person</span></div>
+          <span class="prof-menu-label sn" data-i18n="set.profilo.title">Il Tuo Profilo</span>
+          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-profilo-inline" style="transition:transform .2s;">chevron_right</span>
+        </div>
+        <div id="acc-profilo-inline" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .35s ease;">
+          <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
+            <p id="set-profile-text" class="sn" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;">—</p>
+            <div id="weight-update-row" style="display:flex;gap:8px;margin-top:10px;align-items:center">
+              <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="width:80px">
+              <button onclick="updateWeight();event.stopPropagation();" class="btn btn-neon-o btn-xs" style="flex:1" id="btn-weight-upd" data-i18n="set.btn.updateWeight">Aggiorna peso</button>
+            </div>
+            <div id="set-prefs-text" style="margin-top:10px;display:none;">
+              <div class="divider" style="margin-bottom:10px;"></div>
+              <p id="set-prefs-content" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Piano Attivo -->
+        <div class="prof-menu-row" onclick="toggleAccordion('piano-inline')">
+          <div class="prof-menu-ico teal"><span class="material-symbols-outlined" style="color:var(--p);">restaurant_menu</span></div>
+          <div style="flex:1;min-width:0;">
+            <span class="prof-menu-label sn" data-i18n="set.piano.title">Piano Attivo</span>
+            <p id="set-plan-name" class="sn" style="font-size:11px;color:var(--muted);margin:0;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</p>
+          </div>
+          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-piano-inline" style="transition:transform .2s;">chevron_right</span>
+        </div>
+        <div id="acc-piano-inline" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .35s ease;">
+          <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
+            <p id="set-plan-meta" class="t-xxs muted sn" style="margin:0 0 10px;display:block;">—</p>
+            <div id="set-phases" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+            <p id="phase-hint" class="sn" style="font-size:11px;color:var(--muted);line-height:1.55;margin-top:8px;"></p>
+          </div>
+        </div>
+
         <!-- Modificatore AI -->
         <div class="prof-menu-row" onclick="toggleAccordion('mod')">
           <div class="prof-menu-ico teal"><span class="material-symbols-outlined" style="color:var(--p);">tune</span></div>
@@ -1993,7 +1994,7 @@ hr{height:1px;}
         <!-- Notifiche -->
         <div class="prof-menu-row" onclick="requestNotifPermission()">
           <div class="prof-menu-ico blue"><span class="material-symbols-outlined" style="color:var(--blue);">notifications</span></div>
-          <span class="prof-menu-label sn">Promemoria</span>
+          <span class="prof-menu-label sn" data-i18n="set.notif.label">Promemoria / Reminder</span>
           <span class="prof-menu-chevron material-symbols-outlined">chevron_right</span>
         </div>
 
@@ -2154,7 +2155,7 @@ hr{height:1px;}
       <!-- Disclaimer -->
       <div style="background:rgba(255,59,48,.05);border:1px solid rgba(255,59,48,.14);border-radius:var(--r);padding:14px;">
         <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 5px;" class="sn" id="info-disclaimer-title">⚕️ Avviso medico importante</p>
-        <p style="font-size:11px;color:var(--muted);margin:0;line-height:1.6;" class="sn" id="info-disclaimer-text">Iron Kinetic™ è uno strumento informativo di supporto e <strong style="color:var(--on);">non costituisce consiglio medico</strong>. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
+        <p style="font-size:11px;color:var(--muted);margin:0;line-height:1.6;" class="sn" id="info-disclaimer-text">Iron Kinetic è uno strumento informativo di supporto e <strong style="color:var(--on);">non costituisce consiglio medico</strong>. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
       </div>
 
       <div style="height:8px;"></div>
@@ -2309,7 +2310,7 @@ hr{height:1px;}
 
 <div id="install-banner" class="install-banner" style="display:none" role="banner" aria-live="polite">
   <span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">install_mobile</span>
-  <span class="sn" id="install-banner-lbl" style="flex:1;font-size:13px;font-weight:600;">Installa Iron Kinetic™</span>
+  <span class="sn" id="install-banner-lbl" style="flex:1;font-size:13px;font-weight:600;">Installa Iron Kinetic</span>
   <button class="btn btn-primary btn-sm sn" onclick="installPWA()" id="install-banner-btn">Installa</button>
   <button class="btn btn-ghost btn-sm sn" onclick="dismissInstallBanner()" aria-label="Chiudi" style="padding:0 8px;">✕</button>
 </div>
@@ -2671,34 +2672,34 @@ function _applyCheckoutPreviewLang(){
   const it=_lang!=='en';
   const s=(id,txt)=>{const e=document.getElementById(id);if(e)e.textContent=txt;};
   s('cpo-subtitle',it
-    ?'Sblocca il tuo metabolismo con dati reali, previsioni adattive e coaching avanzato.'
-    :'Unlock your metabolism with real data, adaptive predictions and advanced coaching.');
-  s('cpo-choose',it?'Scegli il piano':'Choose your plan');
+    ?'Smetti di indovinare. Inizia a prevedere. I tuoi dati reali trasformati in una roadmap delle prossime 12 settimane.'
+    :'Stop guessing. Start knowing. Your real data turned into a 12-week roadmap for your body.');
+  s('cpo-choose',it?'Scegli come iniziare':'Choose how to start');
   s('cpo-features-title',it?'Trend include:':'Trend includes:');
   s('cpo-m-label',it?'1 mese':'1 month');
   s('cpo-m-note',it?'Addebitato mensilmente':'Billed monthly');
   s('cpo-a-label',it?'12 mesi':'12 months');
   s('cpo-a-note',it?'Fatturato annualmente':'Billed annually');
-  s('cpo-best-badge','4,17 €/mese');
+  s('cpo-best-badge',it?'Solo €3,33/mese':'Just €3.33/mo');
   s('cpo-cancel',it?'Annulla':'Cancel');
   s('cpo-legal',it
-    ?'I piani si rinnovano automaticamente. Puoi annullarli in qualsiasi momento.'
-    :'Plans renew automatically. Cancel anytime.');
+    ?'Rinnovo automatico. Cancella quando vuoi dal tuo profilo — in 10 secondi.'
+    :'Auto-renews. Cancel anytime from your profile — takes 10 seconds.');
   // Features
   const feats=it?[
-    ['Predictive Curve','Proiezione peso 12 settimane con correzione metabolica'],
-    ['Metabolic Fingerprint','Profilo metabolico personalizzato dai tuoi dati reali'],
-    ['Weekly Report','Analisi settimanale di peso, aderenza e macronutrienti'],
-    ['Circadian Timing','Ottimizzazione dei pasti in base al ritmo circadiano'],
-    ['Adaptive Engine','Aggiustamenti automatici delle calorie basati sui progressi'],
-    ['Shopping List','Lista della spesa generata automaticamente dal tuo piano'],
+    ['Curva Predittiva','Vedi il tuo peso tra 12 settimane — con correzione metabolica automatica basata sui tuoi progressi reali'],
+    ['Impronta Metabolica','Il tuo profilo metabolico unico. Capisce perché il tuo corpo risponde diversamente dagli altri'],
+    ['Report Settimanale','Ogni lunedì: analisi di peso, aderenza e macronutrienti. Sai esattamente cosa ha funzionato e perché'],
+    ['Timing Circadiano','I tuoi pasti ottimizzati sull\'orario di allenamento e sul tuo ritmo biologico. Fino al 15% in più di efficienza metabolica'],
+    ['Motore Adattivo','Le calorie si aggiustano automaticamente in base ai tuoi progressi. Il piano evolve con te ogni settimana'],
+    ['Lista della Spesa','Generata automaticamente dal tuo piano attivo. Risparmia 20 minuti di pianificazione ogni settimana'],
   ]:[
-    ['Predictive Curve','12-week weight projection with metabolic correction'],
-    ['Metabolic Fingerprint','Personalised metabolic profile from your real data'],
-    ['Weekly Report','Weekly analysis of weight, adherence and macronutrients'],
-    ['Circadian Timing','Meal timing optimised around your circadian rhythm'],
-    ['Adaptive Engine','Automatic calorie adjustments based on your progress'],
-    ['Shopping List','Auto-generated shopping list from your active plan'],
+    ['Predictive Curve','See your weight in 12 weeks — with automatic metabolic correction based on your real progress'],
+    ['Metabolic Fingerprint','Your unique metabolic profile. Understands why your body responds differently from everyone else'],
+    ['Weekly Report','Every Monday: weight, adherence and macro analysis. Know exactly what worked and why'],
+    ['Circadian Timing','Your meals timed around your workouts and biological rhythm. Up to 15% more metabolic efficiency'],
+    ['Adaptive Engine','Calories auto-adjust based on your progress. Your plan evolves with you every single week'],
+    ['Shopping List','Auto-generated from your active plan. Save 20 minutes of meal planning every week'],
   ];
   feats.forEach(([title,sub],i)=>{
     s(`cpo-f${i+1}-t`,title);
@@ -2887,7 +2888,7 @@ function _showCheckoutLoginGate(plan){
   const badge=document.getElementById('ponb-badge');
   const gcta=document.getElementById('ponb-gcta');
   if(tit)tit.textContent='Accedi per continuare';
-  if(sub)sub.textContent='Accedi con Google per completare il pagamento e attivare Iron Kinetic™ Trend.';
+  if(sub)sub.textContent='Accedi con Google per completare il pagamento e attivare Iron Kinetic Trend.';
   if(badge)badge.textContent='Richiesto';
   if(gcta){gcta.innerHTML='<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.14 15.89-5.81l-7.73-6C29.99 37.88 27.14 38.5 24 38.5c-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continua con Google';
   }
@@ -3241,15 +3242,15 @@ it:{
   'onb.step4.title':'I Tuoi Cibi',
   'onb.cibi.proteine':'Proteine preferite','onb.cibi.carb':'Carboidrati preferiti','onb.cibi.grassi':'Grassi preferiti',
   'onb.cibi.extra':'Aggiungi altri cibi che ami','onb.cibi.extra.ph':'es. broccoli, zucchine, mele, skyr…',
-  'onb.btn.indietro':'← Indietro','onb.btn.genera':'⚡ Genera il Mio Piano',
-  'onb.result.tdee':'IL TUO TDEE','onb.result.target':'TARGET → {kcal} kcal/giorno',
+  'onb.btn.indietro':'← Indietro','onb.btn.genera':'⚡ Calcola il mio piano personalizzato →',
+  'onb.result.tdee':'IL TUO METABOLISMO REALE','onb.result.target':'TARGET → {kcal} kcal/giorno',
   'onb.result.proteine':'Proteine','onb.result.carbs':'Carbs','onb.result.grassi':'Grassi',
   'onb.result.detail':'Dettaglio calcolo','onb.result.preview':'Il Tuo Piano — Anteprima',
   'onb.btn.attiva':'✅ Attiva questo piano',
-  'onb.paywall.lockTitle':'Trend — sblocca l\'analisi avanzata',
-  'onb.paywall.lockSub':'Predictive Curve, Metabolic Fingerprint, Weekly Report e molto altro',
-  'onb.paywall.trial':'Continua con prova gratuita 7 giorni',
-  'onb.paywall.trialNote':'Trend attivo per 7 giorni, poi solo il piano base è gratuito',
+  'onb.paywall.lockTitle':'I tuoi dati ci sono. Leggili adesso.',
+  'onb.paywall.lockSub':'Vedi dove sarà il tuo peso tra 12 settimane. Basato sui tuoi dati reali, non su medie generiche.',
+  'onb.paywall.trial':'Prova Trend gratis — 7 giorni →',
+  'onb.paywall.trialNote':'7 giorni completi. Poi scegli tu: rimani free o attiva Trend. Nessun addebito automatico.',
   'trend.blur.trialActive':'Prova gratuita attiva',
   'trend.blur.lastDay':'Ultimo giorno di prova',
   'trend.blur.daysLeft':'{n} giorni rimasti',
@@ -3293,6 +3294,8 @@ it:{
   'prog.notif.schedule':'Check-in reminder alle {h}:00',
   'prog.notif.blocked':'Bloccate — abilita nelle impostazioni del browser',
   'prog.storico.title':'Storico','prog.storico.empty':'— Nessuna voce —',
+  'set.sub.label':'Abbonamento Trend','set.btn.updateWeight':'Aggiorna peso / Update weight',
+  'set.notif.label':'Promemoria / Reminder',
   'set.title':'Profilo','set.hero.tdee':'Target TDEE','set.hero.bmr':'Base BMR',
   'set.profilo.title':'Il Tuo Profilo','set.rigenera':'🔄 Rigenera profilo',
   'set.piano.title':'Piano Attivo','set.piano.meta':'{fasi} fasi · {giorni} giorni',
@@ -3318,24 +3321,24 @@ it:{
   'info.app.cookie':'Cookie','info.app.cookie.val':'Zero ✓',
   'info.app.tracking':'Tracking','info.app.tracking.val':'Nessuno ✓',
   'info.disclaimer.title':'⚕️ Avviso medico importante',
-  'info.disclaimer.text':'Iron Kinetic™ è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
-  'gdpr.title':'Privacy & Consenso','gdpr.sub':'Prima di iniziare, ti informiamo su come trattiamo i tuoi dati.',
-  'gdpr.p1.title':'Dati sanitari — Art. 9 GDPR',
-  'gdpr.p1.sub':'Peso, misure e grasso corporeo sono <em>dati relativi alla salute</em>. Elaborati <em>esclusivamente</em> per calcolare il tuo piano nutrizionale, con tuo esplicito consenso. Utenti anonimi: tutto in localStorage. Utenti con account: stato abbonamento su Supabase (EU).',
+  'info.disclaimer.text':'Iron Kinetic è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
+  'gdpr.title':'I tuoi dati restano tuoi.','gdpr.sub':'Nessuna pubblicità. Nessun tracking. Processiamo solo ciò che serve per il tuo piano.',
+  'gdpr.p1.title':'Dati sanitari — solo per il tuo piano',
+  'gdpr.p1.sub':'Peso, misure e grasso corporeo vengono usati solo per calcolare il tuo piano nutrizionale. Nulla viene condiviso con terzi.',
   'gdpr.p2.title':'Login Google — dati raccolti',
-  'gdpr.p2.sub':'Il login tramite Google trasmette a Iron Kinetic™ nome, email e avatar. Questi dati sono conservati su Supabase esclusivamente per gestire l\'account. Nessun dato sanitario viene condiviso con Google.',
+  'gdpr.p2.sub':'Il login tramite Google trasmette a Iron Kinetic nome, email e avatar. Questi dati sono conservati su Supabase esclusivamente per gestire l\'account. Nessun dato sanitario viene condiviso con Google.',
   'gdpr.p3.title':'Zero cookie di tracking · Stripe per pagamenti',
   'gdpr.p3.sub':'Nessun cookie di profilazione, analytics o advertising. I pagamenti Trend sono gestiti da Stripe — nessun dato sanitario viene condiviso con Stripe.',
-  'gdpr.btn.accetta':'✓ Accetta e Continua','gdpr.btn.leggi':'Leggi l\'Informativa Privacy completa',
+  'gdpr.btn.accetta':'Accetto — Inizia il mio piano →','gdpr.btn.leggi':'Leggi l\'Informativa Privacy completa',
   'gdpr.ageConfirm':'Confermo di avere almeno 16 anni','gdpr.ageConfirm.required':'Conferma di avere almeno 16 anni',
   'gdpr.footer':'Cliccando <strong style="color:var(--on)">Accetta e Continua</strong> acconsenti al trattamento dei dati come descritto nell\'<button onclick="openModal(\'privacy\')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:\'Manrope\',sans-serif;">Informativa Privacy</button>.<br>Puoi revocare il consenso in qualsiasi momento da <em>Profilo → Privacy</em>.',
-  'pwa.title':'Aggiungi alla Schermata Home',
-  'pwa.sub':'Per la migliore esperienza, installa Iron Kinetic™ come app sul tuo dispositivo. Funziona offline, si apre come una vera app e non occupa spazio.',
-  'pwa.skip':'Puoi continuare senza installare, ma l\'esperienza sarà ottimale solo come app installata.',
-  'pwa.btn':'Ho capito, Continua →',
+  'pwa.title':'Sempre a portata di mano.',
+  'pwa.sub':'Installalo in 10 secondi. Il tuo piano sempre disponibile, anche senza connessione. Nessuno spazio occupato.',
+  'pwa.skip':'Oppure salta — puoi installarlo in seguito dal menu del browser.',
+  'pwa.btn':'Installa e inizia →',
   'shopping.title':'🛒 Lista della Spesa','shopping.empty':'Nessun dato','shopping.noPlan':'Carica un piano per generare la lista',
   'help.title':'❓ Aiuto & FAQ',
-  'help.offline':'Iron Kinetic™ funziona completamente offline. Tutti i tuoi dati sono sul tuo dispositivo.',
+  'help.offline':'Iron Kinetic funziona completamente offline. Tutti i tuoi dati sono sul tuo dispositivo.',
   'help.contact.title':'Hai altre domande?','help.contact.sub':'Scrivici a support@ironkinetic.app',
   'privacy.title':'🛡 Privacy & GDPR',
   'privacy.consenso.title':'Gestione consenso',
@@ -3344,7 +3347,7 @@ it:{
   'privacy.status.none':'Nessun consenso registrato. L\'app richiede il consenso per funzionare.',
   'meal.swap.pro':'🔄 Pro','meal.swap.carb':'🔄 Carb','meal.swap.regen':'♻️ Rigen',
   'meal.completed':'(completato)','meal.comp.protein':'proteine','meal.comp.carb':'carboidrati','meal.comp.fat':'grassi',
-  'coach.lbl.default':'KINETIC INSIGHT',
+  'coach.lbl.default':'IL TUO COACH',
   'coach.lbl.ricomp_attiva':'RICOMPOSIZIONE ATTIVA','coach.lbl.ritenzione':'RITENZIONE SODICA',
   'coach.lbl.ricarica':'RICARICA LEPTINA','coach.lbl.adatt_met':'ADATTAMENTO METABOLICO',
   'coach.lbl.surplus_insuff':'SURPLUS INSUFFICIENTE','coach.lbl.deficit_ott':'DEFICIT OTTIMALE',
@@ -3481,52 +3484,52 @@ it:{
   'adaptive.rule.hungerAdher':'Fame alta + aderenza bassa: aggiungere +{delta} kcal ({kcal} → {newKcal} kcal) per sostenibilità.',
   'adaptive.toast.applied':'{delta} kcal applicati dal motore adattivo.',
   'onb.sub.hero':'Il tuo piano nutrizionale personalizzato.',
-  'onb.step0.passo':'Passo 1 — Corpo','onb.step1.passo':'Passo 2 — Attività',
-  'onb.step2.passo':'Passo 3 — Obiettivo','onb.step3.passo':'Passo 4 — Le Tue Preferenze',
-  'onb.step4.passo':'Passo 5 — I Tuoi Cibi Preferiti',
+  'onb.step0.passo':'Il tuo corpo','onb.step1.passo':'La tua attività',
+  'onb.step2.passo':'Cosa vuoi ottenere','onb.step3.passo':'Il tuo stile alimentare',
+  'onb.step4.passo':'Costruiamo il tuo piano',
   'onb.field.sesso':'Sesso biologico','onb.sex.m.label':'♂ Uomo','onb.sex.f.label':'♀ Donna',
   'onb.field.obiettivo':'Obiettivo primario','onb.sel.none':'Selezionato: —',
   'onb.clinical.sub':'Solo se hai una diagnosi medica specifica. Adatta proteine, sodio e selezione cibi.',
   'onb.cibi.sub':'Seleziona i cibi che ami o scrivili tu. L\'app costruirà il piano perfetto per te.',
   'adaptive.btn.apply':'Applica','adaptive.btn.dismiss':'Ignora',
-  'coach.msg.loading':'— Analisi in corso...',
+  'coach.msg.loading':'— Sto analizzando il tuo piano di oggi...',
   'coach.bodycomp.recomp':'Ricomposizione rilevata: peso stabile, girovita -2%. +150 kcal anti-RED-S. Non modificare il piano.',
   'coach.micro.b12med':'Vegano >21gg: integra B12 (2.4µg/die) e controlla ferro non-eme. Abbina vitamina C al pasto.',
   'coach.micro.b12high':'Vegano >60gg: verifica B12 sierica, ferritina e zinco. Deficit subclinici compromettono il recupero.',
   'onb2.skip':'Salta','onb2.next':'Avanti','onb2.prev':'← Indietro','onb2.start':'INIZIA ORA',
-  'onb2.slide1.badge':'🔬 Nutrizione di precisione',
+  'onb2.slide1.badge':'SCIENTIFICO',
   'onb2.slide1.emoji':'⚡',
-  'onb2.slide1.title':'Non un\'altra dieta.\nIl tuo piano.',
-  'onb2.slide1.body':'Costruito sui tuoi dati reali, non su medie generiche.',
+  'onb2.slide1.title':'Non è una dieta.\nÈ il tuo metabolismo.',
+  'onb2.slide1.body':'Iron Kinetic calcola il tuo TDEE reale usando 3 formule cliniche, il tuo sport e i tuoi passi. Non numeri generici: i tuoi numeri.',
   'onb2.slide1.bl0':'Piano calorico personalizzato sul tuo TDEE',
   'onb2.slide1.bl1':'Macros calcolati con formule EFSA e WHO',
   'onb2.slide1.bl2':'Nessun dato inviato a server. Solo sul tuo dispositivo.',
   'onb2.slide1.hint':'→ Setup in 3 minuti',
-  'onb2.slide2.badge':'📐 Formule validate',
+  'onb2.slide2.badge':'PRECISO',
   'onb2.slide2.emoji':'🧬',
-  'onb2.slide2.title':'Più preciso di\nqualsiasi calcolatore online.',
-  'onb2.slide2.body':'Combina 3 equazioni metaboliche e dati sport-specifici.',
+  'onb2.slide2.title':'Il piano costruito\nsu chi sei davvero.',
+  'onb2.slide2.body':'La tua età, il tuo peso, il tuo sport, i tuoi passi: ogni variabile conta. Più dati inserisci, più il piano è accurato.',
   'onb2.slide2.sv0':'7',
   'onb2.slide2.sl0':'Formule',
   'onb2.slide2.sv1':'±50',
   'onb2.slide2.sl1':'kcal precisione',
   'onb2.slide2.sv2':'100%',
   'onb2.slide2.sl2':'Offline',
-  'onb2.slide3.badge':'🤖 Piano adattivo',
+  'onb2.slide3.badge':'PREDITTIVO',
   'onb2.slide3.emoji':'📊',
-  'onb2.slide3.title':'Il piano si adatta\na come reagisce il tuo corpo.',
-  'onb2.slide3.body':'Non resti bloccato su numeri statici.',
+  'onb2.slide3.title':'Sai già dove sarai\ntra 12 settimane.',
+  'onb2.slide3.body':'Trend analizza i tuoi progressi reali e proietta il tuo peso futuro. Finisci di indovinare. Inizia a pianificare.',
   'onb2.slide3.bl0':'TDEE reale calcolato dal tuo storico peso',
   'onb2.slide3.bl1':'Suggerimenti auto se il progresso rallenta',
   'onb2.slide3.bl2':'Modificatore manuale per refeed e pause',
-  'onb2.slide4.badge':'⏱ Tracking minimale',
+  'onb2.slide4.badge':'RISULTATI REALI',
   'onb2.slide4.emoji':'✅',
-  'onb2.slide4.title':'Flessibile quanto\nla tua vita.',
-  'onb2.slide4.body':'Segna un pasto, pesa, fai check-in. Niente di più.',
+  'onb2.slide4.title':'Chi ha iniziato 3 mesi fa\nè già diverso.',
+  'onb2.slide4.body':'Non servono integratori, coach costosi o diete impossibili. Servono dati reali e un piano che si adatta a te ogni settimana.',
   'onb2.slide4.quote':'"Finalmente un\'app di nutrizione che non mi fa sentire in colpa se salto un pasto."',
   'onb2.slide4.author':'— Feedback beta tester',
-  'onb2.slide5.title':'Inizia adesso.\nIn 3 minuti hai il tuo piano.',
-  'onb2.slide5.body':'Inserisci età, peso e obiettivo. Il motore fa il resto.',
+  'onb2.slide5.title':'Costruiamo il tuo\npiano adesso.',
+  'onb2.slide5.body':'3 minuti. Alcune domande. Un piano nutrizionale scientifico costruito esattamente su di te. Gratis.',
   'onb2.slide5.hint':'100% privato · solo sul tuo dispositivo',
   'confirm.cancel':'Annulla','confirm.ok':'Conferma',
   'gdpr.confirm.title':'Revoca consenso',
@@ -3548,7 +3551,7 @@ it:{
   'aria.delete.entry':'Elimina',
   'aria.meal.toggle':'Segna pasto completato',
   'aria.chart.weight':'Grafico peso','aria.chart.waist':'Grafico girovita','modal.close.help':'Chiudi aiuto','modal.close.privacy':'Chiudi privacy',
-  'pwa.install.banner':'Installa Iron Kinetic™','pwa.install.btn':'Installa',
+  'pwa.install.banner':'Installa Iron Kinetic','pwa.install.btn':'Installa',
   'coach.foods.refeed':'riso, patate, avena',
   'coach.foods.digest':'riso bianco, pollo al vapore, zucchine',
   'coach.foods.veggies':'broccoli, cetrioli, spinaci',
@@ -3581,7 +3584,7 @@ it:{
   'set.danger.warn':'Queste azioni sono irreversibili senza un backup.',
   'help.contact.sub.email':'Scrivici a <strong style="color:var(--p);">support&#64;ironkinetic.app</strong>',
   'help.features.title':"Tutte le funzioni dell'app",
-  'help.features.sub':'Questa sezione spiega in modo semplice cosa fa ogni area di Iron Kinetic™ e come usarla al meglio.',
+  'help.features.sub':'Questa sezione spiega in modo semplice cosa fa ogni area di Iron Kinetic e come usarla al meglio.',
   'help.feature.onboarding.title':'Onboarding e profilo',
   'help.feature.onboarding.desc':'Alla prima apertura inserisci sesso biologico, età, altezza, peso, attività, obiettivo e preferenze alimentari. Questi dati servono per creare un piano nutrizionale personalizzato.',
   'help.feature.tdee.title':'Calcolo TDEE e macro',
@@ -3605,7 +3608,7 @@ it:{
   'help.feature.privacy.title':'Privacy e backup',
   'help.feature.privacy.desc':'I dati rimangono localmente sul tuo dispositivo. Puoi esportare un backup JSON e importarlo in seguito per ripristinare profilo, piano e storico.',
   'help.feature.offline.title':'Offline e PWA',
-  'help.feature.offline.desc':'Iron Kinetic™ funziona offline e può essere installata come app. Questo permette accesso rapido, esperienza full-screen e utilizzo anche senza connessione.',
+  'help.feature.offline.desc':'Iron Kinetic funziona offline e può essere installata come app. Questo permette accesso rapido, esperienza full-screen e utilizzo anche senza connessione.',
   'faq.q.0':'Come funziona il calcolo del TDEE?',
   'faq.a.0':'Se inserisci la percentuale di grasso corporeo, viene usata la formula <strong>Katch-McArdle</strong> basata sulla massa magra. Altrimenti viene usata la formula <strong>Mifflin-St Jeor</strong>. Il TDEE finale viene moltiplicato per un fattore di attività calcolato da allenamenti settimanali e passi giornalieri.',
   'faq.q.1':'Come viene generato il piano alimentare?',
@@ -3621,14 +3624,14 @@ it:{
   'faq.q.6':'Perché il peso varia molto giornalmente?',
   'faq.a.6':'Fluttuazioni di 1-2 kg al giorno sono normali e dipendono da: acqua corporea, glicogeno muscolare, contenuto intestinale, ciclo ormonale (donne). Il Coach riconosce la ritenzione idrica (sale alto + acqua bassa) e ti avvisa quando il peso è "falsato". Analizza sempre il trend su 7+ giorni, non il singolo pesata.',
   'faq.q.7':'L\'app è adatta a tutti?',
-  'faq.a.7':'Iron Kinetic™ è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.',
+  'faq.a.7':'Iron Kinetic è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.',
   'faq.q.8':'Posso installare l\'app sul telefono?',
-  'faq.a.8':'Sì. Iron Kinetic™ è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un\'app nativa, anche offline.',
+  'faq.a.8':'Sì. Iron Kinetic è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un\'app nativa, anche offline.',
   'faq.q.9':'I miei dati vengono inviati da qualche parte?',
   'faq.a.9':'No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server, account o sincronizzazione cloud. L\'unica eccezione sono le richieste di font e icone a Google (Google Fonts/Material Symbols) che non trasmettono i tuoi dati personali.',
   'prv.badge':'Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003',
   'prv.s0.h':'🛡 In sintesi',
-  'prv.s0.p':'Iron Kinetic™ raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.',
+  'prv.s0.p':'Iron Kinetic raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.',
   'prv.s1.h':'1. Titolare del trattamento',
   'prv.s1.name':'[iron kinetic tm]',
   'prv.s1.addr':'[strada di caprile 30]',
@@ -3643,7 +3646,7 @@ it:{
   'prv.s5.h':'5. Utenti anonimi (senza account)',
   'prv.s5.p':'Se non crei un account Google, nessun dato lascia il tuo dispositivo. Piano, peso, check-in e preferenze restano nel localStorage. Vengono cancellati svuotando i dati del sito o tramite Profilo → Ricomincia da capo.',
   'prv.s6.h':'6. Cookie e tracciamento',
-  'prv.s6.p':'Iron Kinetic™ non utilizza cookie di profilazione. Nessun analytics. Nessun advertising. Nessun pixel di tracciamento. Il solo storage utilizzato è il localStorage del browser (Web Storage API). Gli utenti autenticati ricevono un cookie di sessione tecnico da Supabase, necessario per mantenere il login.',
+  'prv.s6.p':'Iron Kinetic non utilizza cookie di profilazione. Nessun analytics. Nessun advertising. Nessun pixel di tracciamento. Il solo storage utilizzato è il localStorage del browser (Web Storage API). Gli utenti autenticati ricevono un cookie di sessione tecnico da Supabase, necessario per mantenere il login.',
   'prv.s7.h':'7. I tuoi diritti (artt. 15–22 GDPR)',
   'prv.s7.r0.ico':'👁','prv.s7.r0.lbl':'Accesso (Art.15)','prv.s7.r0.desc':'Richiedi copia dei dati che ti riguardano scrivendo all\'email del titolare.',
   'prv.s7.r1.ico':'✏️','prv.s7.r1.lbl':'Rettifica (Art.16)','prv.s7.r1.desc':'Correggi i tuoi dati in qualsiasi momento dall\'app.',
@@ -3664,7 +3667,7 @@ it:{
   'prv.contact.p2':'Autorità di controllo: Garante per la protezione dei dati personali — Piazza Venezia 11, 00187 Roma',
   'prv.th.data':'Dato','prv.th.purpose':'Finalità','prv.th.basis':'Base giuridica','prv.th.retention':'Conservazione',
   'help.disclaimer.title':'⚕️ Avviso medico importante',
-  'help.disclaimer.text':'Iron Kinetic™ è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
+  'help.disclaimer.text':'Iron Kinetic è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
   'weekly.report.title':'Report Settimanale',
   'weekly.report.share':'Condividi',
   'weekly.report.label.peso':'Peso',
@@ -3679,7 +3682,7 @@ it:{
   'weekly.insight.ciHigh':'{val}/7 check-in: consistenza di alto livello.',
   'weekly.insight.ciLow':'Solo {val}/7 check-in: registra ogni giorno per analisi più precise.',
   'weekly.insight.default':'Settimana regolare. Mantieni la costanza.',
-  'share.report.text':'📊 Iron Kinetic™ — Report Settimanale\n\nPeso: {wTxt}\nCheck-in: {ciDays}/7\nPasti: {pct}\nEnergia: {energy}/10\nAderenza: {adher}/10\n\n{insight}',
+  'share.report.text':'📊 Iron Kinetic — Report Settimanale\n\nPeso: {wTxt}\nCheck-in: {ciDays}/7\nPasti: {pct}\nEnergia: {energy}/10\nAderenza: {adher}/10\n\n{insight}',
   'toast.reportCopied':'📋 Report copiato!',
   'toast.shareUnsup':'⚠️ Condivisione non supportata',
   'import.errFormat':'Formato non valido',
@@ -3687,7 +3690,7 @@ it:{
   'notif.action.open':'Apri App',
   'toast.errore':'⚠️ Errore inatteso',
   'toast.valoreNonValido':'⚠️ Valore non valido',
-  'gdpr.footer2':'Non accettando non potrai utilizzare l\'app, in quanto il trattamento dei dati è necessario per erogare il servizio.',
+  'gdpr.footer2':'Richiesto dalla legge UE (GDPR). Puoi revocare il consenso in qualsiasi momento da Profilo → Privacy.',
   'autoadj.slow_loss.title':'Perdita più lenta del previsto',
   'autoadj.fast_loss.title':'Perdita più rapida del previsto',
   'autoadj.maintain_drift.title':'Peso in deriva sul mantenimento',
@@ -3729,8 +3732,8 @@ it:{
   'tdee.card.unit.kgw':'kg/settimana',
   'tdee.card.note':'Basato su {n} rilevazioni. TDEE stimato dal tuo metabolismo reale.',
   'tdee.card.note.low':' (min. 10 rilevazioni per alta affidabilità)',
-  'postAuth.title':'Salva il tuo percorso',
-  'postAuth.sub':'Accedi con Google per sincronizzare piano, prova gratuita e Trend su tutti i dispositivi.',
+  'postAuth.title':'Salva il tuo piano',
+  'postAuth.sub':'Hai appena costruito il tuo piano personalizzato. Accedi per salvarlo e accederci da qualsiasi device.',
   'postAuth.cta.google':'Continua con Google',
   'postAuth.note':'Account Google richiesto per accedere all\'app',
   'postAuth.badge':'Consigliato',
@@ -3738,7 +3741,7 @@ it:{
   'set.sub.active':'Abbonamento Trend attivo',
   'set.sub.grace':'Pagamento in ritardo — accesso temporaneo',
 
-  'sub.badge.trial': 'PROVA GRATUITA',
+  'sub.badge.trial': 'PROVA IN CORSO',
   'sub.badge.paid': 'ATTIVO',
   'sub.badge.grace': 'PAGAMENTO IN RITARDO',
   'sub.badge.expired': 'SCADUTO',
@@ -3749,12 +3752,12 @@ it:{
   'sub.trial.detail.zero': 'Attiva Trend per continuare',
   'sub.trial.prog.left': '{d} giorni usati',
   'sub.trial.prog.right': '{d} rimasti',
-  'sub.trial.cta.monthly': 'Attiva Trend — €9,99/mese',
-  'sub.trial.cta.annual': 'Oppure €39,99/anno · Risparmia 33%',
-  'sub.trial.cta.lifetime': 'O €99,99 una volta · Accesso vita',
-  'sub.paid.subtitle.monthly': 'Mensile · Rinnovo automatico',
-  'sub.paid.subtitle.annual': 'Annuale · Rinnovo automatico',
-  'sub.paid.subtitle.lifetime': 'Lifetime · Accesso permanente',
+  'sub.trial.cta.monthly': '⭐ Attiva Trend — €9,99/mese',
+  'sub.trial.cta.annual': 'Miglior valore — €39,99/anno (€3,33/mese)',
+  'sub.trial.cta.lifetime': 'Una volta per sempre — €99,99',
+  'sub.paid.subtitle.monthly': 'Trend attivo · Rinnovo mensile automatico',
+  'sub.paid.subtitle.annual': 'Trend attivo · Rinnovo annuale · Risparmio 33%',
+  'sub.paid.subtitle.lifetime': 'Accesso permanente — pagato una volta, per sempre ♾',
   'sub.paid.detail.monthly': 'Abbonamento Trend attivo',
   'sub.paid.detail.annual': 'Abbonamento Trend annuale attivo',
   'sub.paid.detail.lifetime': 'Accesso completo senza scadenza',
@@ -3762,17 +3765,17 @@ it:{
   'sub.paid.prog.right.monthly': 'Auto-rinnovo attivo',
   'sub.paid.prog.right.annual': 'Auto-rinnovo annuale',
   'sub.paid.prog.right.lifetime': 'Per sempre ♾',
-  'sub.paid.cta.manage': 'Gestisci abbonamento',
+  'sub.paid.cta.manage': 'Gestisci il tuo abbonamento',
   'sub.grace.subtitle': 'Pagamento in sospeso · {h} or{s} rimast{r}',
   'sub.grace.detail': 'Aggiorna il metodo di pagamento per continuare',
   'sub.grace.prog.left': 'Grace period scade tra',
   'sub.grace.prog.right': '{h} ore',
-  'sub.grace.cta.update': 'Aggiorna metodo di pagamento',
-  'sub.expired.subtitle': 'Prova terminata · Piano base attivo',
+  'sub.grace.cta.update': '⚠️ Aggiorna il pagamento ora',
+  'sub.expired.subtitle': 'La tua prova è finita — riattiva Trend e continua esattamente da dove ti eri fermato',
   'sub.expired.detail': 'Riattiva Trend per sbloccare analisi avanzata',
   'sub.expired.prog.left': 'Prova terminata',
-  'sub.expired.cta.monthly': 'Riattiva Trend — €9,99/mese',
-  'sub.expired.cta.annual': 'Oppure €39,99/anno · Risparmia 33%',
+  'sub.expired.cta.monthly': '⭐ Riattiva ora — €9,99/mese',
+  'sub.expired.cta.annual': 'Miglior valore — €39,99/anno',
   'sub.expired.cta.lifetime': 'O €99,99 una volta · Accesso vita',
   'sub.anon.prompt': "Accedi con Google per gestire l'abbonamento e sincronizzare Trend su tutti i dispositivi.",
   'sub.anon.cta': 'Accedi con Google',
@@ -3816,15 +3819,15 @@ en:{
   'onb.step4.title':'Your Foods',
   'onb.cibi.proteine':'Preferred proteins','onb.cibi.carb':'Preferred carbs','onb.cibi.grassi':'Preferred fats',
   'onb.cibi.extra':'Add other foods you love','onb.cibi.extra.ph':'e.g. broccoli, courgette, apples, skyr…',
-  'onb.btn.indietro':'← Back','onb.btn.genera':'⚡ Generate My Plan',
-  'onb.result.tdee':'YOUR TDEE','onb.result.target':'TARGET → {kcal} kcal/day',
+  'onb.btn.indietro':'← Back','onb.btn.genera':'⚡ Calculate my personalised plan →',
+  'onb.result.tdee':'YOUR REAL METABOLISM','onb.result.target':'TARGET → {kcal} kcal/day',
   'onb.result.proteine':'Protein','onb.result.carbs':'Carbs','onb.result.grassi':'Fat',
   'onb.result.detail':'Calculation detail','onb.result.preview':'Your Plan — Preview',
   'onb.btn.attiva':'✅ Activate this plan',
-  'onb.paywall.lockTitle':'Trend — unlock advanced analytics',
-  'onb.paywall.lockSub':'Predictive Curve, Metabolic Fingerprint, Weekly Report and more',
-  'onb.paywall.trial':'Continue with 7-day free trial',
-  'onb.paywall.trialNote':'Trend active for 7 days, then only the base plan is free',
+  'onb.paywall.lockTitle':'Your data is ready. Read it now.',
+  'onb.paywall.lockSub':'See where your weight will be in 12 weeks. Based on your real data, not generic averages.',
+  'onb.paywall.trial':'Try Trend free — 7 days →',
+  'onb.paywall.trialNote':'Full 7 days. Then it\'s your choice: stay free or activate Trend. No automatic charge.',
   'trend.blur.trialActive':'Free trial active',
   'trend.blur.lastDay':'Last day of trial',
   'trend.blur.daysLeft':'{n} days remaining',
@@ -3869,6 +3872,8 @@ en:{
   'prog.notif.schedule':'Check-in reminder at {h}:00',
   'prog.notif.blocked':'Blocked — enable in your browser settings',
   'prog.storico.title':'History','prog.storico.empty':'— No entries —',
+  'set.sub.label':'Trend Subscription','set.btn.updateWeight':'Update weight / Aggiorna peso',
+  'set.notif.label':'Reminder / Promemoria',
   'set.title':'Profile','set.hero.tdee':'Target TDEE','set.hero.bmr':'Base BMR',
   'set.profilo.title':'Your Profile','set.rigenera':'🔄 Regenerate profile',
   'set.piano.title':'Active Plan','set.piano.meta':'{fasi} phases · {giorni} days',
@@ -3894,24 +3899,24 @@ en:{
   'info.app.cookie':'Cookies','info.app.cookie.val':'Zero ✓',
   'info.app.tracking':'Tracking','info.app.tracking.val':'None ✓',
   'info.disclaimer.title':'⚕️ Medical disclaimer',
-  'info.disclaimer.text':'Iron Kinetic™ is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
-  'gdpr.title':'Privacy & Consent','gdpr.sub':'Before you start, here\'s how we handle your data.',
-  'gdpr.p1.title':'Health data — GDPR Art. 9',
-  'gdpr.p1.sub':'Weight, measurements and body fat are <em>health-related data</em>. Processed <em>exclusively</em> to calculate your nutrition plan, with your explicit consent. Anonymous users: everything in localStorage. Account users: subscription state on Supabase (EU).',
+  'info.disclaimer.text':'Iron Kinetic is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
+  'gdpr.title':'Your data stays yours.','gdpr.sub':'No ads. No tracking. No selling your data. We only process what\'s needed to build your plan.',
+  'gdpr.p1.title':'Health data — only for your plan',
+  'gdpr.p1.sub':'Your weight, measurements and body fat are used exclusively to calculate your nutrition plan. Nothing is shared with third parties.',
   'gdpr.p2.title':'Google login — data collected',
-  'gdpr.p2.sub':'Signing in with Google shares your name, email and avatar with Iron Kinetic™. Stored in Supabase solely for account management. No health data is shared with Google.',
+  'gdpr.p2.sub':'Signing in with Google shares your name, email and avatar with Iron Kinetic. Stored in Supabase solely for account management. No health data is shared with Google.',
   'gdpr.p3.title':'Zero tracking cookies · Stripe for payments',
   'gdpr.p3.sub':'No profiling, analytics or advertising cookies. Trend payments are handled by Stripe — no health data is shared with Stripe.',
-  'gdpr.btn.accetta':'✓ Accept & Continue','gdpr.btn.leggi':'Read the full Privacy Policy',
+  'gdpr.btn.accetta':'I agree — Start my plan →','gdpr.btn.leggi':'Read the full Privacy Policy',
   'gdpr.ageConfirm':'I confirm I am at least 16 years old','gdpr.ageConfirm.required':'Please confirm you are at least 16 years old',
   'gdpr.footer':'By clicking <strong style="color:var(--on)">Accept &amp; Continue</strong> you consent to data processing as described in the <button onclick="openModal(\'privacy\')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:\'Manrope\',sans-serif;">Privacy Policy</button>.<br>You can revoke consent at any time from <em>Profile → Privacy</em>.',
-  'pwa.title':'Add to Home Screen',
-  'pwa.sub':'For the best experience, install Iron Kinetic™ as an app on your device. Works offline, opens like a real app, and takes no storage.',
-  'pwa.skip':'You can continue without installing, but the experience is best as an installed app.',
-  'pwa.btn':'Got it, Continue →',
+  'pwa.title':'One tap. Always ready.',
+  'pwa.sub':'Install once. Your plan is always there — no loading, no browser, no excuses. It takes 10 seconds.',
+  'pwa.skip':'Or skip for now — you can install later from your browser menu.',
+  'pwa.btn':'Install & Start →',
   'shopping.title':'🛒 Shopping List','shopping.empty':'No data','shopping.noPlan':'Load a plan to generate the list',
   'help.title':'❓ Help & FAQ',
-  'help.offline':'Iron Kinetic™ works completely offline. All your data is on your device.',
+  'help.offline':'Iron Kinetic works completely offline. All your data is on your device.',
   'help.contact.title':'Any other questions?','help.contact.sub':'Reach us at support@ironkinetic.app',
   'privacy.title':'🛡 Privacy & GDPR',
   'privacy.consenso.title':'Consent management',
@@ -3920,7 +3925,7 @@ en:{
   'privacy.status.none':'No consent on record. The app requires consent to function.',
   'meal.swap.pro':'🔄 Prot','meal.swap.carb':'🔄 Carb','meal.swap.regen':'♻️ Regen',
   'meal.completed':'(done)','meal.comp.protein':'protein','meal.comp.carb':'carbs','meal.comp.fat':'fat',
-  'coach.lbl.default':'KINETIC INSIGHT',
+  'coach.lbl.default':'YOUR COACH',
   'coach.lbl.ricomp_attiva':'ACTIVE RECOMPOSITION','coach.lbl.ritenzione':'SODIUM RETENTION',
   'coach.lbl.ricarica':'LEPTIN RELOAD','coach.lbl.adatt_met':'METABOLIC ADAPTATION',
   'coach.lbl.surplus_insuff':'INSUFFICIENT SURPLUS','coach.lbl.deficit_ott':'OPTIMAL DEFICIT',
@@ -4057,52 +4062,52 @@ en:{
   'adaptive.rule.hungerAdher':'High hunger + low adherence: add +{delta} kcal ({kcal} → {newKcal} kcal) for sustainability.',
   'adaptive.toast.applied':'{delta} kcal applied by adaptive engine.',
   'onb.sub.hero':'Your personalised nutrition plan.',
-  'onb.step0.passo':'Step 1 — Body','onb.step1.passo':'Step 2 — Activity',
-  'onb.step2.passo':'Step 3 — Goal','onb.step3.passo':'Step 4 — Preferences',
-  'onb.step4.passo':'Step 5 — Your Favourite Foods',
+  'onb.step0.passo':'Your body','onb.step1.passo':'Your activity',
+  'onb.step2.passo':'What you want to achieve','onb.step3.passo':'Your food style',
+  'onb.step4.passo':'Let\'s build your plan',
   'onb.field.sesso':'Biological sex','onb.sex.m.label':'♂ Male','onb.sex.f.label':'♀ Female',
   'onb.field.obiettivo':'Primary goal','onb.sel.none':'Selected: —',
   'onb.clinical.sub':'Only select if you have a specific medical diagnosis. Adjusts protein, sodium and food choices.',
   'onb.cibi.sub':'Select the foods you enjoy or type your own. The app will build the perfect plan for you.',
   'adaptive.btn.apply':'Apply','adaptive.btn.dismiss':'Dismiss',
-  'coach.msg.loading':'— Analysing...',
+  'coach.msg.loading':'— Analysing your plan for today...',
   'coach.bodycomp.recomp':'Body recomposition detected: stable weight, waist -2%. +150 kcal anti-RED-S. Do not change the plan.',
   'coach.micro.b12med':'Vegan >21 days: supplement B12 (2.4µg/day) and monitor non-haem iron. Pair vitamin C with meals.',
   'coach.micro.b12high':'Vegan >60 days: check serum B12, ferritin and zinc. Subclinical deficits impair recovery.',
   'onb2.skip':'Skip','onb2.next':'Next','onb2.prev':'← Back','onb2.start':'START NOW',
-  'onb2.slide1.badge':'🔬 Precision nutrition',
+  'onb2.slide1.badge':'SCIENCE-BASED',
   'onb2.slide1.emoji':'⚡',
-  'onb2.slide1.title':'Not another diet app.\nYour actual plan.',
-  'onb2.slide1.body':'Built on your real data, not generic averages.',
+  'onb2.slide1.title':'Not a diet.\nYour metabolism.',
+  'onb2.slide1.body':'Iron Kinetic calculates your real TDEE using 3 clinical formulas, your sport and your steps. Not generic numbers — your numbers.',
   'onb2.slide1.bl0':'Calorie target personalised to your TDEE',
   'onb2.slide1.bl1':'Macros calculated with EFSA and WHO formulas',
   'onb2.slide1.bl2':'No data sent to servers. Stays on your device.',
   'onb2.slide1.hint':'→ Setup in 3 minutes',
-  'onb2.slide2.badge':'📐 Validated formulas',
+  'onb2.slide2.badge':'PRECISE',
   'onb2.slide2.emoji':'🧬',
-  'onb2.slide2.title':'More accurate than any\nonline calculator.',
-  'onb2.slide2.body':'Combines 3 metabolic equations and sport-specific data.',
+  'onb2.slide2.title':'A plan built on\nwho you really are.',
+  'onb2.slide2.body':'Your age, weight, sport, steps: every variable counts. The more data you give, the more accurate your plan.',
   'onb2.slide2.sv0':'7',
   'onb2.slide2.sl0':'Formulas',
   'onb2.slide2.sv1':'±50',
   'onb2.slide2.sl1':'kcal accuracy',
   'onb2.slide2.sv2':'100%',
   'onb2.slide2.sl2':'Offline',
-  'onb2.slide3.badge':'🤖 Adaptive plan',
+  'onb2.slide3.badge':'PREDICTIVE',
   'onb2.slide3.emoji':'📊',
-  'onb2.slide3.title':'The plan adapts\nto how your body responds.',
-  'onb2.slide3.body':'No more being stuck on static numbers.',
+  'onb2.slide3.title':'Know where you\'ll be\nin 12 weeks.',
+  'onb2.slide3.body':'Trend analyses your real progress and projects your future weight. Stop guessing. Start planning.',
   'onb2.slide3.bl0':'Real TDEE calculated from your weight history',
   'onb2.slide3.bl1':'Automatic suggestions when progress stalls',
   'onb2.slide3.bl2':'Manual modifier for refeed days and breaks',
-  'onb2.slide4.badge':'⏱ Minimal tracking',
+  'onb2.slide4.badge':'REAL RESULTS',
   'onb2.slide4.emoji':'✅',
-  'onb2.slide4.title':'As flexible as\nyour life.',
-  'onb2.slide4.body':'Log a meal, weigh in, check in. Nothing more.',
+  'onb2.slide4.title':'Those who started 3 months ago\nare already different.',
+  'onb2.slide4.body':'You don\'t need supplements, expensive coaches or impossible diets. You need real data and a plan that adapts to you every week.',
   'onb2.slide4.quote':'"Finally a nutrition app that doesn\'t make me feel guilty for skipping a meal."',
   'onb2.slide4.author':'— Beta tester feedback',
-  'onb2.slide5.title':'Start now.\nYour plan takes 3 minutes.',
-  'onb2.slide5.body':'Enter your age, weight and goal. The engine does the rest.',
+  'onb2.slide5.title':'Let\'s build your\nplan now.',
+  'onb2.slide5.body':'3 minutes. A few questions. A science-based nutrition plan built exactly for you. Free.',
   'onb2.slide5.hint':'100% private · stays on your device',
   'confirm.cancel':'Cancel','confirm.ok':'Confirm',
   'gdpr.confirm.title':'Revoke consent',
@@ -4121,7 +4126,7 @@ en:{
   'aria.delete.entry':'Delete',
   'aria.meal.toggle':'Mark meal completed',
   'aria.chart.weight':'Weight chart','aria.chart.waist':'Waist chart','modal.close.help':'Close help','modal.close.privacy':'Close privacy',
-  'pwa.install.banner':'Install Iron Kinetic™','pwa.install.btn':'Install',
+  'pwa.install.banner':'Install Iron Kinetic','pwa.install.btn':'Install',
   'coach.foods.refeed':'rice, potatoes, oats',
   'coach.foods.digest':'white rice, steamed chicken, zucchini',
   'coach.foods.veggies':'broccoli, cucumber, spinach',
@@ -4156,7 +4161,7 @@ en:{
   'set.danger.warn':'These actions are irreversible without a backup.',
   'help.contact.sub.email':'Reach us at <strong style="color:var(--p);">support&#64;ironkinetic.app</strong>',
   'help.features.title':'All app features',
-  'help.features.sub':'This section explains in simple terms what each area of Iron Kinetic™ does and how to use it effectively.',
+  'help.features.sub':'This section explains in simple terms what each area of Iron Kinetic does and how to use it effectively.',
   'help.feature.onboarding.title':'Onboarding and profile',
   'help.feature.onboarding.desc':'At first launch you enter biological sex, age, height, weight, activity, goal, and food preferences. These data are used to create your personalised nutrition plan.',
   'help.feature.tdee.title':'TDEE and macro calculation',
@@ -4180,7 +4185,7 @@ en:{
   'help.feature.privacy.title':'Privacy and backup',
   'help.feature.privacy.desc':'Your data stay locally on your device. You can export a JSON backup and import it later to restore profile, plan, and history.',
   'help.feature.offline.title':'Offline and PWA',
-  'help.feature.offline.desc':'Iron Kinetic™ works offline and can be installed as an app. This gives you quick access, a full-screen experience, and usability even without connection.',
+  'help.feature.offline.desc':'Iron Kinetic works offline and can be installed as an app. This gives you quick access, a full-screen experience, and usability even without connection.',
   'faq.q.0':'How is the TDEE calculated?',
   'faq.a.0':'If you enter your body fat percentage, the <strong>Katch-McArdle</strong> formula based on lean mass is used. Otherwise the <strong>Mifflin-St Jeor</strong> formula applies. The final TDEE is multiplied by an activity factor derived from weekly training sessions and daily step count.',
   'faq.q.1':'How is the meal plan generated?',
@@ -4196,14 +4201,14 @@ en:{
   'faq.q.6':'Why does my weight fluctuate so much day to day?',
   'faq.a.6':'Fluctuations of 1–2 kg per day are normal and depend on: body water, muscle glycogen, gut content, hormonal cycle (women). The Coach detects water retention (high salt + low water) and alerts you when the weight reading is "skewed". Always analyse the trend over 7+ days, not a single weigh-in.',
   'faq.q.7':'Is the app suitable for everyone?',
-  'faq.a.7':'Iron Kinetic™ is a nutritional coaching support tool for healthy adults (16+). It is not a medical device and does not replace advice from a doctor, nutritionist or dietitian. If you have medical conditions, eating disorders or specific health issues, always consult a qualified healthcare professional before following any nutritional plan.',
+  'faq.a.7':'Iron Kinetic is a nutritional coaching support tool for healthy adults (16+). It is not a medical device and does not replace advice from a doctor, nutritionist or dietitian. If you have medical conditions, eating disorders or specific health issues, always consult a qualified healthcare professional before following any nutritional plan.',
   'faq.q.8':'Can I install the app on my phone?',
-  'faq.a.8':'Yes. Iron Kinetic™ is a Progressive Web App (PWA). On iPhone/iPad: open in Safari → Share → "Add to Home Screen". On Android: open in Chrome → "⋮" menu → "Add to Home Screen". It will work like a native app, even offline.',
+  'faq.a.8':'Yes. Iron Kinetic is a Progressive Web App (PWA). On iPhone/iPad: open in Safari → Share → "Add to Home Screen". On Android: open in Chrome → "⋮" menu → "Add to Home Screen". It will work like a native app, even offline.',
   'faq.q.9':'Is my data sent anywhere?',
   'faq.a.9':'No. All data (weight, plan, check-ins, preferences) stays in your device\'s localStorage. There are no servers, accounts or cloud sync. The only exception are font and icon requests to Google (Google Fonts/Material Symbols), which do not transmit your personal data.',
   'prv.badge':'Updated: April 2026 · GDPR (EU Reg. 2016/679) · D.Lgs. 196/2003',
   'prv.s0.h':'🛡 In short',
-  'prv.s0.p':'Iron Kinetic™ collects only the data strictly necessary to provide the service. Anonymous users keep all data in the browser localStorage. Google-account users sync account state and subscription via Supabase (EU). No health data is ever shared with third parties. Zero tracking cookies.',
+  'prv.s0.p':'Iron Kinetic collects only the data strictly necessary to provide the service. Anonymous users keep all data in the browser localStorage. Google-account users sync account state and subscription via Supabase (EU). No health data is ever shared with third parties. Zero tracking cookies.',
   'prv.s1.h':'1. Data controller',
   'prv.s1.name':'[iron kinetic tm]',
   'prv.s1.addr':'[strada di caprile 30]',
@@ -4218,7 +4223,7 @@ en:{
   'prv.s5.h':'5. Anonymous users (no account)',
   'prv.s5.p':'If you do not create a Google account, no data leaves your device. Plan, weight, check-ins and preferences stay in localStorage. They are deleted by clearing site data or via Profile → Start over.',
   'prv.s6.h':'6. Cookies and tracking',
-  'prv.s6.p':'Iron Kinetic™ does not use profiling cookies. No analytics. No advertising. No tracking pixels. The only storage used is the browser localStorage (Web Storage API). Authenticated users receive a technical session cookie from Supabase, required to maintain the login.',
+  'prv.s6.p':'Iron Kinetic does not use profiling cookies. No analytics. No advertising. No tracking pixels. The only storage used is the browser localStorage (Web Storage API). Authenticated users receive a technical session cookie from Supabase, required to maintain the login.',
   'prv.s7.h':'7. Your rights (GDPR Arts. 15–22)',
   'prv.s7.r0.ico':'👁','prv.s7.r0.lbl':'Access (Art.15)','prv.s7.r0.desc':'Request a copy of your data by emailing the controller.',
   'prv.s7.r1.ico':'✏️','prv.s7.r1.lbl':'Rectification (Art.16)','prv.s7.r1.desc':'Correct your data at any time from within the app.',
@@ -4239,7 +4244,7 @@ en:{
   'prv.contact.p2':'Supervisory authority: Garante per la protezione dei dati personali — Piazza Venezia 11, 00187 Rome, Italy',
   'prv.th.data':'Data','prv.th.purpose':'Purpose','prv.th.basis':'Legal basis','prv.th.retention':'Retention',
   'help.disclaimer.title':'⚕️ Medical disclaimer',
-  'help.disclaimer.text':'Iron Kinetic™ is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
+  'help.disclaimer.text':'Iron Kinetic is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
   'weekly.report.title':'Weekly Report',
   'weekly.report.share':'Share',
   'weekly.report.label.peso':'Weight',
@@ -4254,7 +4259,7 @@ en:{
   'weekly.insight.ciHigh':'{val} check-ins logged this week ✅',
   'weekly.insight.ciLow':'Only {val} check-ins this week.',
   'weekly.insight.default':'Keep it up!',
-  'share.report.text':'📊 Iron Kinetic™ — Weekly Report\n\nWeight: {wTxt}\nCheck-ins: {ciDays}/7\nMeals: {pct}\nEnergy: {energy}/10\nAdherence: {adher}/10\n\n{insight}',
+  'share.report.text':'📊 Iron Kinetic — Weekly Report\n\nWeight: {wTxt}\nCheck-ins: {ciDays}/7\nMeals: {pct}\nEnergy: {energy}/10\nAdherence: {adher}/10\n\n{insight}',
   'toast.reportCopied':'📋 Report copied!',
   'toast.shareUnsup':'⚠️ Sharing not supported',
   'import.errFormat':'Invalid format',
@@ -4262,7 +4267,7 @@ en:{
   'notif.action.open':'Open App',
   'toast.errore':'⚠️ Unexpected error',
   'toast.valoreNonValido':'⚠️ Invalid value',
-  'gdpr.footer2':'Without accepting, you won\'t be able to use the app, as data processing is necessary to deliver the service.',
+  'gdpr.footer2':'Required by EU law (GDPR). You can revoke consent anytime from Profile → Privacy.',
   'autoadj.slow_loss.title':'Loss slower than expected',
   'autoadj.fast_loss.title':'Loss faster than expected',
   'autoadj.maintain_drift.title':'Weight drifting on maintenance',
@@ -4304,8 +4309,8 @@ en:{
   'tdee.card.unit.kgw':'kg/week',
   'tdee.card.note':'Based on {n} readings. TDEE estimated from your real metabolism.',
   'tdee.card.note.low':' (min. 10 readings for high reliability)',
-  'postAuth.title':'Save your journey',
-  'postAuth.sub':'Sign in with Google to sync your plan, free trial, and Trend across all devices.',
+  'postAuth.title':'Save your plan',
+  'postAuth.sub':'You just built your personalised plan. Sign in to save it and access it from any device.',
   'postAuth.cta.google':'Continue with Google',
   'postAuth.note':'Google account required to access the app',
   'postAuth.badge':'Recommended',
@@ -4313,7 +4318,7 @@ en:{
   'set.sub.active':'Trend subscription active',
   'set.sub.grace':'Payment overdue — temporary access',
 
-  'sub.badge.trial': 'FREE TRIAL',
+  'sub.badge.trial': 'TRIAL ACTIVE',
   'sub.badge.paid': 'ACTIVE',
   'sub.badge.grace': 'PAYMENT OVERDUE',
   'sub.badge.expired': 'EXPIRED',
@@ -4324,11 +4329,11 @@ en:{
   'sub.trial.detail.zero': 'Activate Trend to continue',
   'sub.trial.prog.left': '{d} days used',
   'sub.trial.prog.right': '{d} remaining',
-  'sub.trial.cta.monthly': 'Activate Trend — €9.99/month',
-  'sub.trial.cta.annual': 'Or €39.99/year · Save 33%',
-  'sub.trial.cta.lifetime': 'Or €99.99 once · Lifetime access',
-  'sub.paid.subtitle.monthly': 'Monthly · Auto-renewing',
-  'sub.paid.subtitle.annual': 'Annual · Auto-renewing',
+  'sub.trial.cta.monthly': '⭐ Activate Trend — €9.99/mo',
+  'sub.trial.cta.annual': 'Best value — €39.99/yr (€3.33/mo)',
+  'sub.trial.cta.lifetime': 'Once and done — €99.99',
+  'sub.paid.subtitle.monthly': 'Trend active · Monthly auto-renewal',
+  'sub.paid.subtitle.annual': 'Trend active · Annual renewal · 33% saved',
   'sub.paid.subtitle.lifetime': 'Lifetime · Permanent access',
   'sub.paid.detail.monthly': 'Trend subscription active',
   'sub.paid.detail.annual': 'Annual Trend subscription active',
@@ -4337,16 +4342,16 @@ en:{
   'sub.paid.prog.right.monthly': 'Auto-renew active',
   'sub.paid.prog.right.annual': 'Annual auto-renew',
   'sub.paid.prog.right.lifetime': 'Forever ♾',
-  'sub.paid.cta.manage': 'Manage subscription',
+  'sub.paid.cta.manage': 'Manage your subscription',
   'sub.grace.subtitle': 'Payment pending · {h} hour{s} remaining',
   'sub.grace.detail': 'Update your payment method to continue',
   'sub.grace.prog.left': 'Grace period expires in',
   'sub.grace.prog.right': '{h} hours',
   'sub.grace.cta.update': 'Update payment method',
-  'sub.expired.subtitle': 'Trial ended · Free plan active',
+  'sub.expired.subtitle': 'Your trial ended — reactivate Trend and pick up exactly where you left off',
   'sub.expired.detail': 'Reactivate Trend to unlock advanced analytics',
   'sub.expired.prog.left': 'Trial ended',
-  'sub.expired.cta.monthly': 'Reactivate Trend — €9.99/month',
+  'sub.expired.cta.monthly': '⭐ Reactivate now — €9.99/mo',
   'sub.expired.cta.annual': 'Or €39.99/year · Save 33%',
   'sub.expired.cta.lifetime': 'Or €99.99 once · Lifetime access',
   'sub.anon.prompt': 'Sign in with Google to manage your subscription and sync Trend across all devices.',
@@ -5549,11 +5554,11 @@ function shareProgress(){
   const weeks=Math.round(log.length/7);
   const lang=lsR(SK.lang)==='en'?'en':'it';
   const text=lang==='en'
-    ?`💪 ${weeks} weeks on Iron Kinetic™${lost?` · ${lost>0?lost+'kg lost':Math.abs(lost)+'kg gained'}`:''}
-Tracking nutrition daily with Iron Kinetic™ PWA`
-    :`💪 ${weeks} settimane su Iron Kinetic™${lost?` · ${lost>0?lost+'kg persi':Math.abs(lost)+'kg guadagnati'}`:''}
-Nutrizione quotidiana con Iron Kinetic™ PWA`;
-  if(navigator.share){navigator.share({title:'Iron Kinetic™',text}).catch(()=>{});}
+    ?`💪 ${weeks} weeks on Iron Kinetic${lost?` · ${lost>0?lost+'kg lost':Math.abs(lost)+'kg gained'}`:''}
+Tracking nutrition daily with Iron Kinetic PWA`
+    :`💪 ${weeks} settimane su Iron Kinetic${lost?` · ${lost>0?lost+'kg persi':Math.abs(lost)+'kg guadagnati'}`:''}
+Nutrizione quotidiana con Iron Kinetic PWA`;
+  if(navigator.share){navigator.share({title:'Iron Kinetic',text}).catch(()=>{});}
   else{navigator.clipboard?.writeText(text);showToast(lang==='en'?'Copied to clipboard':'Copiato negli appunti');}
 }
 
@@ -5670,7 +5675,7 @@ function shareWeeklyReport(){
   const wTxt=rep.weightChange!==null?`${rep.weightChange>=0?'+':''}${rep.weightChange} kg`:'—';
   const pct=rep.mealsTotal>0?Math.round(rep.mealsDone/rep.mealsTotal*100)+'%':'—';
   const text=t('share.report.text',{wTxt,ciDays:rep.ciDays,pct,energy:rep.avgEnergy||'—',adher:rep.avgAdher||'—',insight});
-  if(navigator.share){navigator.share({title:'Iron Kinetic™ Report',text}).catch(()=>{});}
+  if(navigator.share){navigator.share({title:'Iron Kinetic Report',text}).catch(()=>{});}
   else{try{navigator.clipboard.writeText(text);toast(t('toast.reportCopied'));}catch{toast(t('toast.shareUnsup'));}}
 }/* ═══════════════════════════════════════
    visualViewport keyboard handler
@@ -8138,10 +8143,7 @@ function renderKcalRing(){
     lblEl.textContent=completedKcal>targetKcal?t('kcal.superate'):t('kcal.rimaste');
     lblEl.style.color=completedKcal>targetKcal?'var(--red)':'var(--muted)';
   }
-  if(tgtEl&&targetKcal>0){
-    tgtEl.textContent=`su ${targetKcal} kcal`;
-    tgtEl.style.display='block';
-  } else if(tgtEl){tgtEl.style.display='none';}
+  if(tgtEl){tgtEl.style.display='none';}
   /* mini ring oggi */
   const KCAL_CIRC2=106.8;
   const r2=getEl('kcal-ring-oggi');
@@ -8209,7 +8211,7 @@ function renderProfileHeader(){
   const subEl=document.getElementById('prof-user-sub');
   if(nameEl){
     const n=prof?.name||lsR('ik_user_name')||null;
-    nameEl.textContent=n||'Iron Kinetic™';
+    nameEl.textContent=n||'Iron Kinetic';
   }
   if(subEl){
     const plan=trendAccess?.mode==='paid'?'Trend '+String(trendAccess.plan||''):trendAccess?.mode==='trial'?`Trial — ${trendAccess.daysLeft||7} giorni`:'Piano Base';
@@ -9153,8 +9155,8 @@ function scheduleLocalReminder(type,hour){
   if(next<=now) next.setDate(next.getDate()+1);
   const delay=next.getTime()-now.getTime();
   const labels={
-    checkin:{title:'Iron Kinetic™ ⚡',body:t('notif.checkin.body')},
-    logging:{title:'Iron Kinetic™ 📊',body:t('notif.logging.body')},
+    checkin:{title:'Iron Kinetic ⚡',body:t('notif.checkin.body')},
+    logging:{title:'Iron Kinetic 📊',body:t('notif.logging.body')},
   };
   const lbl=labels[type]||labels.checkin;
   setTimeout(()=>{
@@ -9629,7 +9631,7 @@ window.addEventListener('beforeinstallprompt',e=>{
   const lbl=document.getElementById('install-banner-lbl');
   const btn=document.getElementById('install-banner-btn');
   if(b){
-    if(lbl)lbl.textContent=t('pwa.install.banner')||'Installa Iron Kinetic™';
+    if(lbl)lbl.textContent=t('pwa.install.banner')||'Installa Iron Kinetic';
     if(btn)btn.textContent=t('pwa.install.btn')||'Installa';
     b.style.display='flex';
   }
@@ -9891,7 +9893,7 @@ function _bootAfterLangGate(){
     <div class="prv-section">
       <div class="prv-highlight">
         <p class="prv-h2" id="prv-s0-h" style="margin-bottom:6px;">🛡 In sintesi</p>
-        <p class="prv-p" id="prv-s0-p">Iron Kinetic™ raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.</p>
+        <p class="prv-p" id="prv-s0-p">Iron Kinetic raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.</p>
       </div>
     </div>
 
@@ -9990,7 +9992,7 @@ function _bootAfterLangGate(){
         </div>
         <div class="prv-proc-item">
           <div class="prv-proc-name">Google LLC (USA)</div>
-          <div class="prv-proc-role">OAuth 2.0 login — condivide con Iron Kinetic™ nome, email e avatar. Non riceve dati sanitari.</div>
+          <div class="prv-proc-role">OAuth 2.0 login — condivide con Iron Kinetic nome, email e avatar. Non riceve dati sanitari.</div>
           <div class="prv-proc-note">Soggetto a Google Privacy Policy</div>
           <a href="https://policies.google.com/privacy" class="prv-proc-link" target="_blank" rel="noopener">policies.google.com/privacy</a>
         </div>
@@ -10018,7 +10020,7 @@ function _bootAfterLangGate(){
     <!-- Section 5b — Freemium vs Subscription -->
     <div class="prv-section">
       <p class="prv-h2" id="prv-s5b-h">5b. Dati e abbonamento (freemium / premium)</p>
-      <p class="prv-p" id="prv-s5b-p">Iron Kinetic™ offre un periodo di prova gratuito di 7 giorni per le funzionalità Trend. Al termine della prova, l'accesso Trend richiede un abbonamento mensile o un pagamento una tantum lifetime. I dati sanitari (peso, misure, piano alimentare) sono accessibili indipendentemente dallo stato dell'abbonamento. Lo stato dell'abbonamento (piano, data scadenza trial, ID cliente Stripe) è conservato su Supabase per gli utenti autenticati e in localStorage per gli utenti anonimi. La disdetta dell'abbonamento non comporta la cancellazione dei dati sanitari.</p>
+      <p class="prv-p" id="prv-s5b-p">Iron Kinetic offre un periodo di prova gratuito di 7 giorni per le funzionalità Trend. Al termine della prova, l'accesso Trend richiede un abbonamento mensile o un pagamento una tantum lifetime. I dati sanitari (peso, misure, piano alimentare) sono accessibili indipendentemente dallo stato dell'abbonamento. Lo stato dell'abbonamento (piano, data scadenza trial, ID cliente Stripe) è conservato su Supabase per gli utenti autenticati e in localStorage per gli utenti anonimi. La disdetta dell'abbonamento non comporta la cancellazione dei dati sanitari.</p>
     </div>
 
     <!-- Section 6 — Cookie -->
@@ -10112,7 +10114,7 @@ function _bootAfterLangGate(){
 
     <div style="background:rgba(77,220,198,.06);border:1px solid rgba(77,220,198,.16);border-radius:var(--r2);padding:12px 14px;margin-bottom:16px;" class="row g3">
       <span class="material-symbols-outlined" style="color:var(--p);font-size:22px;flex-shrink:0;font-variation-settings:'FILL' 1;">offline_bolt</span>
-      <p style="font-size:12px;color:var(--on);font-weight:600;line-height:1.5;margin:0;" class="sn">Iron Kinetic™ funziona completamente offline. Tutti i tuoi dati sono sul tuo dispositivo.</p>
+      <p style="font-size:12px;color:var(--on);font-weight:600;line-height:1.5;margin:0;" class="sn">Iron Kinetic funziona completamente offline. Tutti i tuoi dati sono sul tuo dispositivo.</p>
     </div>
 
     <!-- Feature Guide -->
@@ -10186,7 +10188,7 @@ function _bootAfterLangGate(){
           <span class="faq-q-text">L'app è adatta a tutti?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Iron Kinetic™ è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.</div>
+        <div class="faq-answer">Iron Kinetic è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
@@ -10194,7 +10196,7 @@ function _bootAfterLangGate(){
           <span class="faq-q-text">Posso installare l'app sul telefono?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Sì. Iron Kinetic™ è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un'app nativa, anche offline.</div>
+        <div class="faq-answer">Sì. Iron Kinetic è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un'app nativa, anche offline.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
@@ -10219,10 +10221,10 @@ function _bootAfterLangGate(){
     <!-- Disclaimer medico -->
     <div style="background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.18);border-radius:var(--r);padding:14px 16px;margin-top:4px;">
       <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 6px;" class="sn" id="help-disclaimer-title">⚕️ Avviso medico importante</p>
-      <p style="font-size:11px;color:var(--muted);line-height:1.6;font-weight:500;margin:0;" class="sn" id="help-disclaimer-text">Iron Kinetic™ è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
+      <p style="font-size:11px;color:var(--muted);line-height:1.6;font-weight:500;margin:0;" class="sn" id="help-disclaimer-text">Iron Kinetic è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
     </div>
 
-    <div class="help-version" id="help-version-txt">Iron Kinetic™ · v2.0.0 · PWA</div>
+    <div class="help-version" id="help-version-txt">Iron Kinetic · v2.0.0 · PWA</div>
 
   </div>
 </div>
@@ -10266,12 +10268,12 @@ function _bootAfterLangGate(){
           <span class="material-symbols-outlined" style="color:var(--p);font-size:22px;font-variation-settings:'FILL' 1;">bolt</span>
           <span id="cpo-badge" style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:rgba(77,220,198,.2);color:var(--p);padding:3px 10px;border-radius:999px;">TREND</span>
         </div>
-        <h2 id="cpo-title" style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:var(--on);margin:0 0 6px;letter-spacing:-.02em;">Iron Kinetic™ Trend</h2>
-        <p id="cpo-subtitle" style="font-size:13px;color:var(--on-v);line-height:1.5;margin:0;">Sblocca il tuo metabolismo con dati reali, previsioni adattive e coaching avanzato.</p>
+        <h2 id="cpo-title" style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:var(--on);margin:0 0 6px;letter-spacing:-.02em;">Iron Kinetic Trend</h2>
+        <p id="cpo-subtitle" style="font-size:13px;color:var(--on-v);line-height:1.5;margin:0;">Smetti di indovinare. Inizia a prevedere. I tuoi dati reali trasformati in una roadmap delle prossime 12 settimane.</p>
       </div>
 
       <!-- Plan selector -->
-      <p id="cpo-choose" style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;">Scegli il piano</p>
+      <p id="cpo-choose" style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;">Scegli come iniziare</p>
       <div style="display:flex;gap:10px;margin-bottom:20px;" id="cpo-plans">
         <!-- monthly -->
         <div id="cpo-monthly" onclick="selectCheckoutPlan('monthly')" style="flex:1;background:var(--s2);border:1px solid var(--line);border-radius:var(--r);padding:14px;cursor:pointer;transition:border-color .15s,background .15s;text-align:center;">
@@ -10281,7 +10283,7 @@ function _bootAfterLangGate(){
         </div>
         <!-- annual - highlighted -->
         <div id="cpo-annual" onclick="selectCheckoutPlan('annual')" style="flex:1;background:rgba(77,220,198,.06);border:2px solid var(--p);border-radius:var(--r);padding:14px;cursor:pointer;transition:border-color .15s;text-align:center;position:relative;">
-          <div id="cpo-best-badge" style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--p);color:var(--p-inverse);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 10px;border-radius:999px;white-space:nowrap;">4,17 €/mese</div>
+          <div id="cpo-best-badge" style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--p);color:var(--p-inverse);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 10px;border-radius:999px;white-space:nowrap;">Solo €3,33/mese</div>
           <p id="cpo-a-label" style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--p);margin:0 0 4px;">12 mesi</p>
           <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:var(--on);margin:0 0 2px;letter-spacing:-.02em;">€39,99</p>
           <p id="cpo-a-note" style="font-size:10px;color:var(--muted);margin:0;">Annuale</p>
@@ -10300,22 +10302,22 @@ function _bootAfterLangGate(){
       </div>
 
       <!-- CTA -->
-      <button id="cpo-cta" onclick="confirmCheckoutPreview()" style="width:100%;height:54px;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);font-family:'Manrope',sans-serif;font-size:15px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:10px;touch-action:manipulation;transition:opacity .15s;box-shadow:0 8px 24px rgba(77,220,198,.32);">Continua →</button>
+      <button id="cpo-cta" onclick="confirmCheckoutPreview()" style="width:100%;height:54px;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);font-family:'Manrope',sans-serif;font-size:15px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:10px;touch-action:manipulation;transition:opacity .15s;box-shadow:0 8px 24px rgba(77,220,198,.32);">Attiva Trend →</button>
       <button onclick="closeCheckoutPreview()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-family:'Manrope',sans-serif;cursor:pointer;padding:8px;touch-action:manipulation;" id="cpo-cancel">Annulla</button>
-      <p id="cpo-legal" style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;margin:8px 0 16px;">I piani si rinnovano automaticamente. Puoi annullarli in qualsiasi momento.</p>
+      <p id="cpo-legal" style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;margin:8px 0 16px;">Rinnovo automatico. Cancella quando vuoi dal tuo profilo — in 10 secondi.</p>
     </div>
   </div>
 </div>
 
-<div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic™ Trend">
+<div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic Trend">
   <div id="paywall-sheet">
     <button onclick="closePaywall()" aria-label="Chiudi" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;touch-action:manipulation;min-width:44px;min-height:44px;">×</button>
     <div id="pw-trial-badge" style="display:none;background:rgba(77,220,198,.12);color:#4ddcc6;font-size:11px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:999px;width:fit-content;margin:0 auto 16px;">⏱ <span id="pw-days-left"></span> GIORNI RIMASTI</div>
     <div style="width:56px;height:56px;background:rgba(77,220,198,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
       <span class="material-symbols-outlined" style="color:#4ddcc6;font-size:28px;">trending_up</span>
     </div>
-    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 8px;">Iron Kinetic™ Trend</h2>
-    <p style="font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:0 0 24px;">Il tuo metabolismo ha dati reali. Sbloccali.</p>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 8px;" id="pw-main-title">Sblocca l'analisi che lavora per te</h2>
+    <p style="font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:0 0 24px;" id="pw-main-sub">Smetti di indovinare i tuoi progressi. Trend trasforma i tuoi dati in previsioni concrete sulle prossime 12 settimane.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
       <div class="pw-feat">📈 Predictive Curve</div>
       <div class="pw-feat">🧬 Metabolic Fingerprint</div>
@@ -10325,10 +10327,10 @@ function _bootAfterLangGate(){
       <div class="pw-feat">🛒 Shopping List</div>
     </div>
     <div style="display:flex;gap:10px;margin-bottom:10px;">
-      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">€9,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.7;">Cancella quando vuoi</span></button>
-      <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:#4ddcc6;border:1px solid rgba(77,220,198,.35);border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">€39,99/anno<br><span style="font-weight:400;font-size:11px;opacity:.7;">💰 Risparmia 33%</span></button>
+      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">Attiva Trend<br><span style="font-weight:400;font-size:11px;opacity:.7;">€9,99/mese · Cancella quando vuoi</span></button>
+      <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:#4ddcc6;border:1px solid rgba(77,220,198,.35);border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">⭐ MIGLIOR VALORE<br><span style="font-weight:600;font-size:11px;">€39,99/anno · Solo €3,33/mese</span><br><span style="font-weight:400;font-size:10px;opacity:.7;">Risparmia il 33%</span></button>
     </div>
-    <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:#4ddcc6;border:1px solid rgba(77,220,198,.2);border-radius:12px;padding:12px;font-weight:800;font-size:12px;cursor:pointer;margin-bottom:16px;">€99,99 una volta · 🔥 Accesso vita permanente</button>
+    <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:#4ddcc6;border:1px solid rgba(77,220,198,.2);border-radius:12px;padding:12px;font-weight:800;font-size:12px;cursor:pointer;margin-bottom:16px;">€99,99 una volta sola<br><span style="font-weight:400;font-size:11px;opacity:.8;">Accesso permanente — paghi una volta, per sempre</span></button>
     <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:#888;font-size:12px;cursor:pointer;padding:8px;">Hai già un account? <span style="color:#4ddcc6;">Accedi</span></button>
   </div>
 </div>
