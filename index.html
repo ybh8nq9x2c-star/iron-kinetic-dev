@@ -1701,7 +1701,7 @@ hr{height:1px;}
       <!-- Metabolic Fingerprint -->
       <div class="card" id="fingerprint-card" style="padding:14px;display:none;">
         <div class="rowb" style="margin-bottom:12px;">
-          <span class="sec-label" style="margin-bottom:0;">Impronta Metabolica</span>
+          <span class="sec-label" style="margin-bottom:0;" data-i18n="prog.fp.title">Impronta Metabolica</span>
           <span id="fp-badge-lbl" class="t-xxs muted">PROFILO UNICO</span>
         </div>
         <div id="fingerprint-content"></div>
@@ -1736,7 +1736,7 @@ hr{height:1px;}
         </div>
         <!-- Bar chart: aderenza giornaliera -->
         <div style="padding:14px 16px 0;">
-          <p style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;" id="wr-chart-lbl">Aderenza settimanale</p>
+          <p style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;" id="wr-chart-lbl" data-i18n="weekly.report.chart.lbl">Aderenza settimanale</p>
           <div class="wr-bar-chart" id="wr-bar-chart" aria-hidden="true"></div>
         </div>
         <!-- Insight box -->
@@ -1749,14 +1749,14 @@ hr{height:1px;}
         <div style="padding:0 16px 14px;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
             <div style="background:var(--s2);border-radius:var(--r3);padding:10px 12px;">
-              <p class="t-xxs muted sn" style="margin-bottom:3px;">Energia media</p>
+              <p class="t-xxs muted sn" style="margin-bottom:3px;" data-i18n="weekly.report.label.energia">Energia media</p>
               <div style="display:flex;align-items:baseline;gap:4px;">
                 <span id="wr-energy-val" style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:var(--on);">—</span>
                 <span style="font-size:10px;color:var(--muted);">/10</span>
               </div>
             </div>
             <div style="background:var(--s2);border-radius:var(--r3);padding:10px 12px;">
-              <p class="t-xxs muted sn" style="margin-bottom:3px;">Fame media</p>
+              <p class="t-xxs muted sn" style="margin-bottom:3px;" data-i18n="weekly.report.label.fame">Fame media</p>
               <div style="display:flex;align-items:baseline;gap:4px;">
                 <span id="wr-hunger-val" style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:var(--on);">—</span>
                 <span style="font-size:10px;color:var(--muted);">/10</span>
@@ -2596,6 +2596,8 @@ async function requireTrend(fn,featureName='',autoRender=false){
 }
 
 function openPaywall(featureName=''){
+  /* Pre-warm session cache as soon as user opens paywall — gives ~30s headstart */
+  _prefetchSession();
   const overlay=document.getElementById('paywall-overlay');
   const sheet=document.getElementById('paywall-sheet');
   const badge=document.getElementById('pw-trial-badge');
@@ -2663,8 +2665,11 @@ function selectCheckoutPlan(plan){
 }
 
 function confirmCheckoutPreview(){
+  /* Show loading state on CTA immediately */
+  const ctaBtn=document.getElementById('cpo-cta');
+  if(ctaBtn){ctaBtn.textContent=_lang==='en'?'Processing…':'Elaborazione…';ctaBtn.disabled=true;ctaBtn.style.opacity='0.7';}
   closeCheckoutPreview();
-  // Minimal delay — just enough for the sheet to begin sliding down
+  /* Small delay — just enough for the sheet to begin sliding down */
   setTimeout(()=>_doStartCheckout(_cpoPlan),100);
 }
 
@@ -2738,9 +2743,17 @@ async function startCheckout(plan){
 }
 
 async function _doStartCheckout(plan){
+  /* ── Loading state on all checkout buttons + CTA ── */
   const btns=document.querySelectorAll('[onclick*="startCheckout"]');
   btns.forEach(b=>{b.disabled=true;b.style.opacity='0.6';});
-  console.log('[IK][checkout] startCheckout called, plan=',plan,'sb=',!!sb);
+  const ctaBtn=document.getElementById('cpo-cta');
+  const ctaOrigText=ctaBtn?.textContent||'';
+  if(ctaBtn){ctaBtn.disabled=true;ctaBtn.textContent=_lang==='en'?'Processing…':'Elaborazione…';ctaBtn.style.opacity='0.7';}
+  const _resetUI=()=>{
+    btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
+    if(ctaBtn){ctaBtn.disabled=false;ctaBtn.textContent=ctaOrigText;ctaBtn.style.opacity='1';}
+  };
+  console.log('[IK][checkout] _doStartCheckout plan=',plan,'sb=',!!sb);
 
   /* ── Always clear retry guard on a fresh attempt (user clicked again) ── */
   try{localStorage.removeItem('ik_checkout_retry');}catch{}
@@ -2775,10 +2788,8 @@ async function _doStartCheckout(plan){
     /* ── STEP 2: login required — no anonymous checkout ── */
     if(!accessToken){
       console.warn('[IK][checkout] No session — login required before checkout');
-      btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
-      /* Store pending plan — resume after login. Never block re-attempts. */
+      _resetUI();
       try{localStorage.setItem('ik_pending_checkout_plan',plan);}catch{}
-      /* Always clear retry guard so the user can always try again */
       try{localStorage.removeItem('ik_checkout_retry');}catch{}
       const pw=document.getElementById('paywall-overlay');
       if(pw)pw.style.display='none';
@@ -2830,7 +2841,7 @@ async function _doStartCheckout(plan){
           localStorage.removeItem('ik_checkout_retry');
         }catch{}
         showToast('Errore di autenticazione checkout — riprova o contatta il supporto',4000);
-        btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
+        _resetUI();
         return;
       }
       if(res.status===400){
@@ -2868,7 +2879,7 @@ async function _doStartCheckout(plan){
       try{Sentry.captureException(err,{tags:{flow:'startCheckout',plan}});}catch{}
     }
     showToast(err?.message||t('toast.checkoutError'));
-    btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
+    _resetUI();
   }
 }
 
@@ -2887,10 +2898,10 @@ function _showCheckoutLoginGate(plan){
   const sub=document.getElementById('ponb-sub');
   const badge=document.getElementById('ponb-badge');
   const gcta=document.getElementById('ponb-gcta');
-  if(tit)tit.textContent='Accedi per continuare';
-  if(sub)sub.textContent='Accedi con Google per completare il pagamento e attivare Iron Kinetic Trend.';
-  if(badge)badge.textContent='Richiesto';
-  if(gcta){gcta.innerHTML='<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.14 15.89-5.81l-7.73-6C29.99 37.88 27.14 38.5 24 38.5c-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continua con Google';
+  if(tit)tit.textContent=t('checkout.login.title');
+  if(sub)sub.textContent=t('checkout.login.sub');
+  if(badge)badge.textContent=t('checkout.login.badge');
+  if(gcta){gcta.innerHTML='<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.14 15.89-5.81l-7.73-6C29.99 37.88 27.14 38.5 24 38.5c-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> '+t('checkout.login.cta');
   }
   try{localStorage.setItem('ik_auth_origin','checkout');}catch{}
   ov.classList.add('on');
@@ -3672,6 +3683,12 @@ it:{
   'weekly.report.share':'Condividi',
   'weekly.report.label.peso':'Peso',
   'weekly.report.label.pasti':'Pasti',
+  'checkout.login.title':'Accedi per continuare',
+  'checkout.login.sub':'Accedi con Google per completare il pagamento e attivare Iron Kinetic Trend.',
+  'checkout.login.badge':'Richiesto',
+  'checkout.login.cta':'Continua con Google',
+  'weekly.report.label.fame':'Fame media',
+  'weekly.report.chart.lbl':'Aderenza settimanale',
   'weekly.insight.noData':'Registra pesate e check-in per ricevere analisi personalizzata.',
   'weekly.insight.weightDown':'Ottimo: −{val} kg questa settimana.',
   'weekly.insight.weightUp':'Peso in risalita di +{val} kg: controlla ritenzione e aderenza.',
@@ -4249,6 +4266,12 @@ en:{
   'weekly.report.share':'Share',
   'weekly.report.label.peso':'Weight',
   'weekly.report.label.pasti':'Meals done',
+  'checkout.login.title':'Sign in to continue',
+  'checkout.login.sub':'Sign in with Google to complete your payment and activate Iron Kinetic Trend.',
+  'checkout.login.badge':'Required',
+  'checkout.login.cta':'Continue with Google',
+  'weekly.report.label.fame':'Avg hunger',
+  'weekly.report.chart.lbl':'Weekly adherence',
   'weekly.insight.noData':'Not enough data this week.',
   'weekly.insight.weightDown':'Lost {val} kg this week 💪',
   'weekly.insight.weightUp':'Gained {val} kg this week.',
@@ -5665,7 +5688,7 @@ function renderWeeklyReport(){
   }
   /* Chart label i18n */
   const lbl=document.getElementById('wr-chart-lbl');
-  if(lbl)lbl.textContent=_lang==='en'?'Weekly adherence':'Aderenza settimanale';
+  if(lbl)lbl.textContent=t('weekly.report.chart.lbl');
   },'Weekly Report',true);
 }
 function shareWeeklyReport(){
