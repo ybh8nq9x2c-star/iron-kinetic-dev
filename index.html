@@ -178,6 +178,11 @@ body.onboarding-active #onb-screen{
 #wChart-wrap{position:relative;width:100%;height:165px;overflow:hidden;}
 #wChart{display:block;width:100%!important;height:165px!important;touch-action:pan-x;}
 @keyframes teal-pulse{0%,100%{box-shadow:0 0 8px rgba(77,220,198,.18);}50%{box-shadow:0 0 28px rgba(77,220,198,.5);}}
+@keyframes bolt-pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.18);opacity:.85;}}
+@keyframes coach-wrap-pulse{0%,100%{box-shadow:0 4px 16px rgba(77,220,198,.28);}50%{box-shadow:0 4px 28px rgba(77,220,198,.6),0 0 0 4px rgba(77,220,198,.12);}}
+.coach-ico-primary{background:var(--p);color:var(--p-inverse);animation:coach-wrap-pulse 2.4s ease-in-out infinite;}
+.coach-ico-primary .material-symbols-outlined,.coach-ico-primary-ico{animation:bolt-pulse 2.4s ease-in-out infinite;}
+@media(prefers-reduced-motion:reduce){.coach-ico-primary,.coach-ico-primary .material-symbols-outlined{animation:none;}}
 .rfon{animation:teal-pulse 2s ease-in-out infinite;}
 .row{display:flex;align-items:center;}.rowb{display:flex;align-items:center;justify-content:space-between;}
 .g2{gap:8px;}.g3{gap:10px;}
@@ -670,6 +675,16 @@ body.onboarding-active #onb-screen{
 .gauth-btn:active{opacity:.82;}
 .gauth-skip-btn{display:block;width:100%;background:none;border:1px solid var(--line);border-radius:14px;padding:14px 20px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Manrope',sans-serif;transition:color .15s;-webkit-tap-highlight-color:transparent;}
 .gauth-skip-btn:active{color:var(--on);}
+
+/* ── Checkout Preview ── */
+.cpo-feat-row{display:flex;align-items:flex-start;gap:12px;padding:0;}
+.cpo-feat-ico{font-size:18px;color:var(--p);flex-shrink:0;margin-top:1px;font-variation-settings:'FILL' 1;}
+.cpo-feat-title{font-size:13px;font-weight:700;color:var(--on);margin:0 0 1px;}
+.cpo-feat-sub{font-size:11px;color:var(--muted);margin:0;line-height:1.4;}
+#cpo-monthly.cpo-selected,#cpo-annual.cpo-selected{border-color:var(--p)!important;background:rgba(77,220,198,.08)!important;}
+#cpo-monthly:active,#cpo-annual:active{opacity:.8;}
+#cpo-cta:active{opacity:.85;transform:scale(.98);}
+#checkout-preview-sheet{position:relative;}
 
 /* ═══════════════════════════════════════
    UX PRODUCTION FIXES — audit pass
@@ -1817,7 +1832,7 @@ hr{height:1px;}
       <div class="card" style="padding:16px">
         <span class="sec-label" data-i18n="set.piano.title">Piano Attivo</span>
         <p id="set-plan-name" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);margin:0 0 4px">—</p>
-        <p id="set-plan-meta" class="t-xxs muted sn" style="margin:0">— fasi · — giorni</p>
+        <p id="set-plan-meta" class="t-xxs muted sn" style="margin:0;display:none">— fasi · — giorni</p>
       </div>
       <!-- Accordion Menu -->
       <div style="background:var(--s1);border:1px solid var(--line);border-radius:var(--rbox);overflow:hidden;">
@@ -2456,7 +2471,100 @@ function closePaywall(){
   },350);
 }
 
+/* ══════════════════════════════════════
+   CHECKOUT PREVIEW
+══════════════════════════════════════ */
+let _cpoPlan='annual'; // default selected plan
+
+function openCheckoutPreview(plan){
+  plan=plan||'annual';
+  _cpoPlan=plan;
+  const ov=document.getElementById('checkout-preview-overlay');
+  const sh=document.getElementById('checkout-preview-sheet');
+  if(!ov)return;
+  _applyCheckoutPreviewLang();
+  selectCheckoutPlan(_cpoPlan);
+  ov.style.display='flex';
+  requestAnimationFrame(()=>{sh.style.transform='translateY(0)';});
+  document.body.style.overflow='hidden';
+}
+
+function closeCheckoutPreview(){
+  const sh=document.getElementById('checkout-preview-sheet');
+  if(sh)sh.style.transform='translateY(100%)';
+  setTimeout(()=>{
+    const ov=document.getElementById('checkout-preview-overlay');
+    if(ov)ov.style.display='none';
+    document.body.style.overflow='';
+  },380);
+}
+
+function selectCheckoutPlan(plan){
+  _cpoPlan=plan;
+  const mEl=document.getElementById('cpo-monthly');
+  const aEl=document.getElementById('cpo-annual');
+  if(mEl)mEl.classList.toggle('cpo-selected',plan==='monthly');
+  if(aEl)aEl.classList.toggle('cpo-selected',plan==='annual');
+  const cta=document.getElementById('cpo-cta');
+  if(cta){
+    const price=plan==='annual'?'€39,99':plan==='monthly'?'€9,99':'€99,99';
+    const label=_lang==='en'?`Continue — ${price}`:`Continua — ${price}`;
+    cta.textContent=label+' →';
+  }
+}
+
+function confirmCheckoutPreview(){
+  closeCheckoutPreview();
+  // Small delay so the sheet animates out before Stripe opens
+  setTimeout(()=>_doStartCheckout(_cpoPlan),400);
+}
+
+function _applyCheckoutPreviewLang(){
+  const it=_lang!=='en';
+  const s=(id,txt)=>{const e=document.getElementById(id);if(e)e.textContent=txt;};
+  s('cpo-subtitle',it
+    ?'Sblocca il tuo metabolismo con dati reali, previsioni adattive e coaching avanzato.'
+    :'Unlock your metabolism with real data, adaptive predictions and advanced coaching.');
+  s('cpo-choose',it?'Scegli il piano':'Choose your plan');
+  s('cpo-features-title',it?'Trend include:':'Trend includes:');
+  s('cpo-m-label',it?'1 mese':'1 month');
+  s('cpo-m-note',it?'Addebitato mensilmente':'Billed monthly');
+  s('cpo-a-label',it?'12 mesi':'12 months');
+  s('cpo-a-note',it?'Fatturato annualmente':'Billed annually');
+  s('cpo-best-badge','4,17 €/mese');
+  s('cpo-cancel',it?'Annulla':'Cancel');
+  s('cpo-legal',it
+    ?'I piani si rinnovano automaticamente. Puoi annullarli in qualsiasi momento.'
+    :'Plans renew automatically. Cancel anytime.');
+  // Features
+  const feats=it?[
+    ['Predictive Curve','Proiezione peso 12 settimane con correzione metabolica'],
+    ['Metabolic Fingerprint','Profilo metabolico personalizzato dai tuoi dati reali'],
+    ['Weekly Report','Analisi settimanale di peso, aderenza e macronutrienti'],
+    ['Circadian Timing','Ottimizzazione dei pasti in base al ritmo circadiano'],
+    ['Adaptive Engine','Aggiustamenti automatici delle calorie basati sui progressi'],
+    ['Shopping List','Lista della spesa generata automaticamente dal tuo piano'],
+  ]:[
+    ['Predictive Curve','12-week weight projection with metabolic correction'],
+    ['Metabolic Fingerprint','Personalised metabolic profile from your real data'],
+    ['Weekly Report','Weekly analysis of weight, adherence and macronutrients'],
+    ['Circadian Timing','Meal timing optimised around your circadian rhythm'],
+    ['Adaptive Engine','Automatic calorie adjustments based on your progress'],
+    ['Shopping List','Auto-generated shopping list from your active plan'],
+  ];
+  feats.forEach(([title,sub],i)=>{
+    s(`cpo-f${i+1}-t`,title);
+    s(`cpo-f${i+1}-s`,sub);
+  });
+}
+
+/* ── Real startCheckout (renamed to _doStartCheckout) ── */
 async function startCheckout(plan){
+  /* Show preview before going to Stripe, unless already confirmed */
+  openCheckoutPreview(plan);
+}
+
+async function _doStartCheckout(plan){
   const btns=document.querySelectorAll('[onclick*="startCheckout"]');
   btns.forEach(b=>{b.disabled=true;b.style.opacity='0.6';});
   console.log('[IK][checkout] startCheckout called, plan=',plan,'sb=',!!sb);
@@ -2805,7 +2913,7 @@ function _initAuthListener(){
         }catch{}
         console.log('[IK][checkout] resuming pending checkout for plan=',pendingPlan);
         /* Small delay so UI settles after login transition */
-        setTimeout(()=>startCheckout(pendingPlan),800);
+        setTimeout(()=>_doStartCheckout(pendingPlan),800);
       }
     }
   });
@@ -2832,7 +2940,7 @@ async function _resumePostOnboardingOrBoot(){
             localStorage.removeItem('ik_checkout_retry'); /* clear guard so resume can proceed */
           }catch{}
           console.log('[IK][checkout] resuming pending checkout (OAuth redirect) plan=',pendingPlan);
-          setTimeout(()=>startCheckout(pendingPlan),1000);
+          setTimeout(()=>_doStartCheckout(pendingPlan),1000);
         }
         return;
       }
@@ -7297,6 +7405,9 @@ function renderCoach(){
   iw.className=`coach-ico-${_ck}`;
   iw.style.cssText='width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
   ic.style.color='';ic.textContent=d.ico;
+  /* Pulse the bolt icon when state is primary (optimal) */
+  if(_ck==='primary'){ic.style.animation='bolt-pulse 2.4s ease-in-out infinite';}
+  else{ic.style.animation='none';}
   lb.style.color='';lb.textContent=d.lbl;
   ms.style.color='var(--on)';ms.textContent=d.msg;
   /* Add streak badge if applicable — B2: show for streak>=1, pulse for >=7, hide for 0 */
@@ -7900,21 +8011,22 @@ function _renderProfileCard(prof){
   renderKcalRing();
   const heroTdee=document.getElementById('set-hero-tdee');
   const heroBmr=document.getElementById('set-hero-bmr');
-  // Fallback: ricalcola macros on-the-fly se targetKcal manca
+  // Always recalculate if bmr is missing/zero
   let _targetKcal=prof.targetKcal;
   let _bmr=prof.bmr;
-  if((!_targetKcal||!_bmr)&&typeof calculateUserMacros==='function'){
+  if(typeof calculateUserMacros==='function'&&(!_bmr||_bmr<500)){
     try{
       const m=calculateUserMacros(prof);
-      if(!_targetKcal)_targetKcal=m.targetKcal;
-      if(!_bmr)_bmr=m.bmr||m.tdee;
-      prof.targetKcal=_targetKcal;
-      prof.bmr=_bmr;
+      if(!_targetKcal&&m.targetKcal)_targetKcal=m.targetKcal;
+      if(m.bmr&&m.bmr>500)_bmr=m.bmr;
+      else if(m.tdee&&m.tdee>500)_bmr=Math.round(m.tdee/1.375);
+      if(_targetKcal)prof.targetKcal=_targetKcal;
+      if(_bmr)prof.bmr=_bmr;
       try{lsS(SK.profile,prof);}catch(e){}
-    }catch(e){}
+    }catch(e){console.warn('[IK] BMR recalc failed',e);}
   }
   if(heroTdee)heroTdee.textContent=_targetKcal?String(Math.round(_targetKcal)):'—';
-  if(heroBmr)heroBmr.innerHTML=_bmr
+  if(heroBmr)heroBmr.innerHTML=(_bmr&&_bmr>0)
     ?`${sanitize(Math.round(_bmr))}<span style="font-size:14px;opacity:.5;margin-left:4px;font-weight:500;">kcal</span>`
     :'—';
   const el=document.getElementById('set-profile-text');if(!el)return;
@@ -8546,7 +8658,17 @@ function openShoppingList(){
     if(categories[cat].length>0){
       html+=`<div class="shop-cat">${t('shop.cat.'+cat)}</div>`;
       categories[cat].forEach(item=>{
-        html+=`<div class="shop-item"><span>${localizeFoodLabel(item.name)||item.name}</span><span class="shop-item-qty">${item.qty.toFixed(0)}g</span></div>`;
+        /* Capitalize first letter, localize label if EN */
+        const rawName=item.name||'';
+        /* Try to find in FOOD_DB by label match for localization */
+        let displayName=rawName;
+        if(_lang==='en'){
+          const dbKey=Object.keys(FOOD_DB).find(k=>(FOOD_DB[k].label||'').toLowerCase()===rawName.toLowerCase());
+          if(dbKey&&FOOD_DB[dbKey].label)displayName=localizeFoodLabel(FOOD_DB[dbKey].label);
+          else displayName=localizeFoodLabel(rawName.charAt(0).toUpperCase()+rawName.slice(1))||rawName;
+        }
+        displayName=displayName.charAt(0).toUpperCase()+displayName.slice(1);
+        html+=`<div class="shop-item"><span>${sanitize(displayName)}</span><span class="shop-item-qty">${item.qty.toFixed(0)}g</span></div>`;
       });
     }
   });
@@ -9844,6 +9966,63 @@ function _bootAfterLangGate(){
 </div>
 
 <!-- ── PAYWALL OVERLAY ── -->
+<!-- ── CHECKOUT PREVIEW OVERLAY ── -->
+<div id="checkout-preview-overlay" aria-modal="true" role="dialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);z-index:10002;align-items:flex-end;justify-content:center;">
+  <div id="checkout-preview-sheet" style="background:var(--s1);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform .38s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;max-height:92dvh;padding-bottom:env(safe-area-inset-bottom,16px);">
+    <!-- drag handle -->
+    <div style="width:36px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;margin:12px auto 0;"></div>
+    <!-- close -->
+    <button onclick="closeCheckoutPreview()" aria-label="Chiudi" style="position:absolute;top:20px;right:16px;background:rgba(255,255,255,.08);border:1px solid var(--glass-stroke);border-radius:50%;width:32px;height:32px;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;touch-action:manipulation;min-width:44px;min-height:44px;">×</button>
+
+    <div style="padding:20px 20px 0;">
+      <!-- Header: teal gradient card like reference -->
+      <div style="background:linear-gradient(135deg,rgba(77,220,198,.22) 0%,rgba(77,220,198,.06) 100%);border:1px solid rgba(77,220,198,.3);border-radius:var(--r);padding:20px;margin-bottom:20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(77,220,198,.15);border-radius:50%;filter:blur(30px);pointer-events:none;"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="material-symbols-outlined" style="color:var(--p);font-size:22px;font-variation-settings:'FILL' 1;">bolt</span>
+          <span id="cpo-badge" style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:rgba(77,220,198,.2);color:var(--p);padding:3px 10px;border-radius:999px;">TREND</span>
+        </div>
+        <h2 id="cpo-title" style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:var(--on);margin:0 0 6px;letter-spacing:-.02em;">Iron Kinetic Trend</h2>
+        <p id="cpo-subtitle" style="font-size:13px;color:var(--on-v);line-height:1.5;margin:0;">Sblocca il tuo metabolismo con dati reali, previsioni adattive e coaching avanzato.</p>
+      </div>
+
+      <!-- Plan selector -->
+      <p id="cpo-choose" style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;">Scegli il piano</p>
+      <div style="display:flex;gap:10px;margin-bottom:20px;" id="cpo-plans">
+        <!-- monthly -->
+        <div id="cpo-monthly" onclick="selectCheckoutPlan('monthly')" style="flex:1;background:var(--s2);border:1px solid var(--line);border-radius:var(--r);padding:14px;cursor:pointer;transition:border-color .15s,background .15s;text-align:center;">
+          <p id="cpo-m-label" style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;">1 mese</p>
+          <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:var(--on);margin:0 0 2px;letter-spacing:-.02em;">€9,99</p>
+          <p id="cpo-m-note" style="font-size:10px;color:var(--muted);margin:0;">Mensile</p>
+        </div>
+        <!-- annual - highlighted -->
+        <div id="cpo-annual" onclick="selectCheckoutPlan('annual')" style="flex:1;background:rgba(77,220,198,.06);border:2px solid var(--p);border-radius:var(--r);padding:14px;cursor:pointer;transition:border-color .15s;text-align:center;position:relative;">
+          <div id="cpo-best-badge" style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--p);color:var(--p-inverse);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 10px;border-radius:999px;white-space:nowrap;">4,17 €/mese</div>
+          <p id="cpo-a-label" style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--p);margin:0 0 4px;">12 mesi</p>
+          <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:var(--on);margin:0 0 2px;letter-spacing:-.02em;">€39,99</p>
+          <p id="cpo-a-note" style="font-size:10px;color:var(--muted);margin:0;">Annuale</p>
+        </div>
+      </div>
+
+      <!-- Features: cosa include Trend -->
+      <p id="cpo-features-title" style="font-size:13px;font-weight:700;color:var(--on);margin:0 0 12px;">Trend include:</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;" id="cpo-features">
+        <div class="cpo-feat-row"><span class="material-symbols-outlined cpo-feat-ico">trending_up</span><div><p class="cpo-feat-title" id="cpo-f1-t">Predictive Curve</p><p class="cpo-feat-sub" id="cpo-f1-s">Proiezione peso 12 settimane con correzione metabolica</p></div></div>
+        <div class="cpo-feat-row"><span class="material-symbols-outlined cpo-feat-ico">fingerprint</span><div><p class="cpo-feat-title" id="cpo-f2-t">Metabolic Fingerprint</p><p class="cpo-feat-sub" id="cpo-f2-s">Profilo metabolico personalizzato basato sui tuoi dati reali</p></div></div>
+        <div class="cpo-feat-row"><span class="material-symbols-outlined cpo-feat-ico">bar_chart</span><div><p class="cpo-feat-title" id="cpo-f3-t">Weekly Report</p><p class="cpo-feat-sub" id="cpo-f3-s">Analisi settimanale di peso, aderenza e macronutrienti</p></div></div>
+        <div class="cpo-feat-row"><span class="material-symbols-outlined cpo-feat-ico">schedule</span><div><p class="cpo-feat-title" id="cpo-f4-t">Circadian Timing</p><p class="cpo-feat-sub" id="cpo-f4-s">Ottimizzazione dei pasti in base al ritmo circadiano</p></div></div>
+        <div class="cpo-feat-row"><span class="material-symbols-outlined cpo-feat-ico">auto_fix_high</span><div><p class="cpo-feat-title" id="cpo-f5-t">Adaptive Engine</p><p class="cpo-feat-sub" id="cpo-f5-s">Aggiustamenti automatici delle calorie basati sui progressi</p></div></div>
+        <div class="cpo-feat-row"><span class="material-symbols-outlined cpo-feat-ico">shopping_cart</span><div><p class="cpo-feat-title" id="cpo-f6-t">Shopping List</p><p class="cpo-feat-sub" id="cpo-f6-s">Lista della spesa generata automaticamente dal tuo piano</p></div></div>
+      </div>
+
+      <!-- CTA -->
+      <button id="cpo-cta" onclick="confirmCheckoutPreview()" style="width:100%;height:54px;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);font-family:'Manrope',sans-serif;font-size:15px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:10px;touch-action:manipulation;transition:opacity .15s;box-shadow:0 8px 24px rgba(77,220,198,.32);">Continua →</button>
+      <button onclick="closeCheckoutPreview()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-family:'Manrope',sans-serif;cursor:pointer;padding:8px;touch-action:manipulation;" id="cpo-cancel">Annulla</button>
+      <p id="cpo-legal" style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;margin:8px 0 16px;">I piani si rinnovano automaticamente. Puoi annullarli in qualsiasi momento.</p>
+    </div>
+  </div>
+</div>
+
 <div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic Trend">
   <div id="paywall-sheet">
     <button onclick="closePaywall()" aria-label="Chiudi" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;touch-action:manipulation;min-width:44px;min-height:44px;">×</button>
