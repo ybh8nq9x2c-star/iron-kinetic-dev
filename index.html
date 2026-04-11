@@ -139,6 +139,43 @@ textarea.inp{height:auto;padding:12px 14px;resize:none;line-height:1.5;}
 .prog-stat-chip.sa::before{background:linear-gradient(90deg,var(--sec) 0%,transparent 100%);}
 /* ── Profilo: hero metrics ── */
 .prof-hero{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 0 0;text-align:center;}
+/* ── New Profile layout ── */
+.prof-user-header{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 16px 16px;background:linear-gradient(180deg,rgba(77,220,198,.06) 0%,transparent 100%);border:1px solid rgba(77,220,198,.12);border-radius:var(--r);margin-bottom:0;}
+.prof-avatar{width:72px;height:72px;border-radius:50%;border:2px solid rgba(77,220,198,.3);background:var(--s3);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 4px rgba(77,220,198,.08);}
+.prof-avatar img{width:100%;height:100%;object-fit:cover;}
+.prof-avatar-fallback{font-size:28px;color:var(--muted);}
+.prof-stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;width:100%;background:var(--s1);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
+.prof-stat-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 8px;gap:3px;}
+.prof-stat-cell:not(:last-child){border-right:1px solid var(--line);}
+.prof-stat-val{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:var(--on);line-height:1;letter-spacing:-.03em;}
+.prof-stat-val.teal{color:var(--p);}
+.prof-stat-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.prof-menu-list{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
+.prof-menu-row{display:flex;align-items:center;gap:12px;padding:15px 16px;border-bottom:1px solid var(--line);cursor:pointer;touch-action:manipulation;transition:background .12s;-webkit-tap-highlight-color:transparent;}
+.prof-menu-row:last-child{border-bottom:none;}
+.prof-menu-row:active{background:var(--s2);}
+.prof-menu-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
+.prof-menu-ico.teal{background:rgba(77,220,198,.12);}
+.prof-menu-ico.orange{background:rgba(255,159,10,.12);}
+.prof-menu-ico.red{background:rgba(255,59,48,.1);}
+.prof-menu-ico.blue{background:rgba(10,132,255,.1);}
+.prof-menu-ico.muted{background:rgba(199,196,216,.08);}
+.prof-menu-ico .material-symbols-outlined{font-size:18px;}
+.prof-menu-label{flex:1;font-size:14px;font-weight:600;color:var(--on);}
+.prof-menu-chevron{color:var(--dim);font-size:18px;}
+/* ── Weekly Report expanded ── */
+.wr-section{display:flex;flex-direction:column;gap:14px;}
+.wr-stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.wr-stat-box{background:var(--s2);border-radius:var(--r3);padding:12px;text-align:center;}
+.wr-stat-num{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;line-height:1;margin-bottom:4px;}
+.wr-stat-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.wr-bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;padding:0 4px;}
+.wr-bar-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+.wr-bar-track{flex:1;width:100%;display:flex;align-items:flex-end;min-height:0;}
+.wr-bar-fill{width:100%;border-radius:4px 4px 0 0;transition:height .5s cubic-bezier(.4,0,.2,1);}
+.wr-bar-lbl{font-size:8px;font-weight:700;color:var(--muted);letter-spacing:.04em;}
+.wr-insight-box{background:rgba(77,220,198,.04);border:1px solid rgba(77,220,198,.14);border-radius:var(--r2);padding:12px 14px;}
+.wr-insight-txt{font-size:12px;color:var(--on-v);line-height:1.6;font-weight:500;}
 .prof-hero-divider{height:1px;width:80px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);}
 /* ── Profilo: AI modifier stepper ── */
 .mod-stepper{display:flex;align-items:center;background:var(--s3);border:1px solid var(--line);border-radius:var(--r-pill);}
@@ -1669,13 +1706,63 @@ hr{height:1px;}
         <div id="fingerprint-content"></div>
       </div>
 
-      <!-- Weekly Metabolic Report -->
-      <div class="card" id="weekly-report-card" style="padding:14px;display:none;">
-        <div class="rowb" style="margin-bottom:10px;">
-          <span class="sec-label" style="margin-bottom:0;" data-i18n="weekly.report.title">Report Settimanale</span>
+      <!-- Il Tuo Report Settimanale — expanded -->
+      <div class="card" id="weekly-report-card" style="padding:0;display:none;overflow:hidden;">
+        <!-- Header -->
+        <div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <span class="sec-label" style="margin-bottom:0;" data-i18n="weekly.report.title">Report Settimanale</span>
+            <p id="wr-date-range" style="font-size:10px;color:var(--muted);margin:2px 0 0;font-weight:600;"></p>
+          </div>
           <button onclick="shareWeeklyReport()" class="btn btn-xs sn" style="background:rgba(77,220,198,.1);border:1px solid rgba(77,220,198,.2);color:var(--p);font-size:10px;font-weight:700;height:26px;border-radius:var(--r3);padding:0 10px;" data-i18n="weekly.report.share">Condividi</button>
         </div>
-        <div id="weekly-report-content"></div>
+        <!-- Stat grid -->
+        <div style="padding:14px 16px 0;">
+          <div class="wr-stat-grid" id="wr-stat-grid">
+            <div class="wr-stat-box">
+              <div class="wr-stat-num" id="wr-weight-val" style="color:var(--p);">—</div>
+              <div class="wr-stat-lbl" data-i18n="weekly.report.label.peso">Peso</div>
+            </div>
+            <div class="wr-stat-box">
+              <div class="wr-stat-num" id="wr-checkin-val" style="color:var(--on);">—</div>
+              <div class="wr-stat-lbl">Check-in</div>
+            </div>
+            <div class="wr-stat-box">
+              <div class="wr-stat-num" id="wr-adher-val" style="color:var(--p);">—</div>
+              <div class="wr-stat-lbl" data-i18n="weekly.report.label.pasti">Pasti</div>
+            </div>
+          </div>
+        </div>
+        <!-- Bar chart: aderenza giornaliera -->
+        <div style="padding:14px 16px 0;">
+          <p style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;" id="wr-chart-lbl">Aderenza settimanale</p>
+          <div class="wr-bar-chart" id="wr-bar-chart" aria-hidden="true"></div>
+        </div>
+        <!-- Insight box -->
+        <div style="padding:12px 16px 14px;">
+          <div class="wr-insight-box">
+            <p class="wr-insight-txt" id="wr-insight-txt">—</p>
+          </div>
+        </div>
+        <!-- Weekly check-in metrics -->
+        <div style="padding:0 16px 14px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="background:var(--s2);border-radius:var(--r3);padding:10px 12px;">
+              <p class="t-xxs muted sn" style="margin-bottom:3px;">Energia media</p>
+              <div style="display:flex;align-items:baseline;gap:4px;">
+                <span id="wr-energy-val" style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:var(--on);">—</span>
+                <span style="font-size:10px;color:var(--muted);">/10</span>
+              </div>
+            </div>
+            <div style="background:var(--s2);border-radius:var(--r3);padding:10px 12px;">
+              <p class="t-xxs muted sn" style="margin-bottom:3px;">Fame media</p>
+              <div style="display:flex;align-items:baseline;gap:4px;">
+                <span id="wr-hunger-val" style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:var(--on);">—</span>
+                <span style="font-size:10px;color:var(--muted);">/10</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Real TDEE Card -->
@@ -1735,186 +1822,247 @@ hr{height:1px;}
   <div id="scr-set" class="scr" style="display:none;">
     <div class="pg">
       <p class="sec-title" data-i18n="set.title">Profilo</p>
-      <!-- Hero Metrics: Target TDEE with kcal progress ring + Base BMR -->
-      <div class="prof-hero">
-        <div>
-          <p class="t-xxs muted sn" style="text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;">Target TDEE</p>
-          <!-- Kcal progress ring: shows completed meal kcal vs daily target -->
-          <div style="position:relative;width:190px;height:190px;margin:0 auto;">
-            <svg width="190" height="190" viewBox="0 0 200 200" class="ring-svg" aria-label="Progresso calorico giornaliero" role="img" style="position:absolute;top:0;left:0;transform:rotate(-90deg);">
-              <circle cx="100" cy="100" r="88" class="ring-track" style="stroke:rgba(255,255,255,.15);stroke-width:6;"/>
-              <circle cx="100" cy="100" r="88" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="6" stroke-dasharray="552.9" stroke-dashoffset="552.9" style="opacity:.35;filter:drop-shadow(0 0 8px rgba(77,220,198,.6));"/>
-            </svg>
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:140px;pointer-events:none;line-height:1.1;">
-              <div id="kcal-ring-num" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:800;line-height:1;color:var(--p);transition:color .3s;">—</div>
-              <div id="kcal-ring-label" class="sn" data-i18n="kcal.rimaste" style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">kcal rimaste</div>
-              <div id="kcal-ring-target" class="sn" style="font-size:10px;font-weight:600;color:var(--dim);margin-top:6px;">— kcal</div>
-              <div id="set-hero-tdee" style="display:none;">—</div>
-            </div>
-          </div>
+
+      <!-- ── USER HEADER: avatar + nome + stats ── -->
+      <div class="prof-user-header">
+        <div class="prof-avatar" id="prof-avatar-wrap">
+          <img id="prof-avatar-img" src="" alt="Avatar" draggable="false" style="display:none;" onerror="this.style.display='none';document.getElementById('prof-avatar-icon').style.display='flex';"/>
+          <span id="prof-avatar-icon" class="material-symbols-outlined prof-avatar-fallback" style="font-variation-settings:'FILL' 1;">account_circle</span>
         </div>
-        <div class="prof-hero-divider"></div>
-        <div>
-          <p class="t-xxs muted sn" style="text-transform:uppercase;letter-spacing:.14em;margin-bottom:2px;">Base BMR</p>
-          <p id="set-hero-bmr" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;line-height:1;color:var(--on);opacity:.7;">—</p>
+        <div style="text-align:center;">
+          <p id="prof-user-name" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--on);margin:0 0 2px;letter-spacing:-.01em;">—</p>
+          <p id="prof-user-sub" class="sn" style="font-size:11px;color:var(--muted);margin:0;"></p>
         </div>
       </div>
-      <!-- Il Tuo Profilo -->
+
+      <!-- ── STATS ROW: Periodo · Peso attuale · Variazione ── -->
+      <div class="prof-stats-row">
+        <div class="prof-stat-cell">
+          <span class="prof-stat-val" id="prof-stat-days">—</span>
+          <span class="prof-stat-lbl" id="prof-stat-days-lbl">giorni</span>
+        </div>
+        <div class="prof-stat-cell" style="border-left:1px solid var(--line);border-right:1px solid var(--line);">
+          <span class="prof-stat-val teal" id="prof-stat-weight">—</span>
+          <span class="prof-stat-lbl">kg</span>
+        </div>
+        <div class="prof-stat-cell">
+          <span class="prof-stat-val" id="prof-stat-delta">—</span>
+          <span class="prof-stat-lbl" id="prof-stat-delta-lbl">variazione</span>
+        </div>
+      </div>
+
+      <!-- ── KCAL RING + BMR row ── -->
       <div class="card" style="padding:16px;">
-        <span class="sec-label" data-i18n="set.profilo.title">Il Tuo Profilo</span>
-        <p id="set-profile-text" class="sn" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;">—</p>
-        <div id="weight-update-row" style="display:flex;gap:8px;margin-top:10px;align-items:center">
-          <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="width:80px">
-          <button onclick="updateWeight()" class="btn btn-neon-o btn-xs" style="flex:1" id="btn-weight-upd">Aggiorna peso</button>
-        </div>
-        <div id="set-prefs-text" style="margin-top:10px;display:none;">
-          <div class="divider" style="margin-bottom:10px;"></div>
-          <p id="set-prefs-content" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;"></p>
-        </div>
-        <button onclick="resetProfile()" class="btn btn-danger-o btn-xs sn" style="margin-top:10px;padding:0 14px;">🔄 Rigenera profilo</button>
-      </div>
-      <!-- SUBSCRIPTION MANAGEMENT CARD -->
-      <div class="card" id="sub-mgmt-card" style="padding:16px">
-
-        <!-- Row: Title + Badge -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <span class="sec-label" style="margin-bottom:0">Abbonamento Trend</span>
-          <span id="sub-status-badge" style="font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block"></span>
-        </div>
-
-        <!-- Row: Ring countdown + Subscription info -->
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
-
-          <!-- SVG Ring -->
-          <div style="position:relative;flex-shrink:0;width:72px;height:72px">
-            <svg width="72" height="72" viewBox="0 0 44 44" style="transform:rotate(-90deg)">
-              <circle cx="22" cy="22" r="17" class="ring-track" style="stroke-width:3"/>
-              <circle cx="22" cy="22" r="17" id="sub-ring-fill"
-                stroke="var(--p)" fill="none"
-                stroke-width="3" stroke-linecap="round"
-                stroke-dasharray="106.8" stroke-dashoffset="106.8"
-                style="transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)"/>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <!-- Kcal ring -->
+          <div style="position:relative;width:100px;height:100px;flex-shrink:0;">
+            <svg width="100" height="100" viewBox="0 0 200 200" class="ring-svg" aria-label="Progresso calorico" role="img" style="position:absolute;top:0;left:0;transform:rotate(-90deg);">
+              <circle cx="100" cy="100" r="88" class="ring-track" style="stroke:rgba(255,255,255,.15);stroke-width:10;"/>
+              <circle cx="100" cy="100" r="88" class="ring-fill" id="kcal-ring" stroke="var(--p)" stroke-width="10" stroke-dasharray="552.9" stroke-dashoffset="552.9" style="opacity:.35;filter:drop-shadow(0 0 6px rgba(77,220,198,.5));"/>
             </svg>
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.1;pointer-events:none">
-              <div id="sub-ring-num" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--p)"></div>
-              <div id="sub-ring-unit" style="font-size:9px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">gg</div>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;line-height:1.1;width:80px;">
+              <div id="kcal-ring-num" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;line-height:1;color:var(--p);transition:color .3s;">—</div>
+              <div id="kcal-ring-label" class="sn" style="font-size:8px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;">rimaste</div>
             </div>
           </div>
+          <!-- Stats right of ring -->
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;">
+            <div>
+              <p class="t-xxs muted sn" style="margin-bottom:2px;">Target giornaliero</p>
+              <div id="set-hero-tdee-display" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:var(--on);line-height:1;">— <span style="font-size:13px;opacity:.5;font-weight:500;">kcal</span></div>
+            </div>
+            <div class="divider"></div>
+            <div>
+              <p class="t-xxs muted sn" style="margin-bottom:2px;">Base BMR</p>
+              <p id="set-hero-bmr" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;line-height:1;color:var(--on);opacity:.7;">—</p>
+            </div>
+          </div>
+        </div>
+        <!-- hidden for compat -->
+        <div id="set-hero-tdee" style="display:none;">—</div>
+        <div id="kcal-ring-target" style="display:none;">—</div>
+      </div>
 
-          <!-- Subscription info only -->
-          <div style="flex:1;min-width:0">
-            <p id="sub-plan-subtitle" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.01em;color:var(--p);margin:0 0 3px"></p>
-            <p id="sub-plan-detail" class="sn" style="font-size:11px;color:var(--muted);line-height:1.45;margin:0"></p>
+      <!-- ── MENU PRINCIPALE (stile riferimento) ── -->
+      <div class="prof-menu-list">
+
+        <!-- Il Tuo Profilo -->
+        <div class="prof-menu-row" onclick="toggleAccordion('profilo-inline')">
+          <div class="prof-menu-ico teal"><span class="material-symbols-outlined" style="color:var(--p);">person</span></div>
+          <span class="prof-menu-label sn" data-i18n="set.profilo.title">Il Tuo Profilo</span>
+          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-profilo-inline" style="transition:transform .2s;">chevron_right</span>
+        </div>
+        <div id="acc-profilo-inline" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .35s ease;">
+          <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
+            <p id="set-profile-text" class="sn" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;">—</p>
+            <div id="weight-update-row" style="display:flex;gap:8px;margin-top:10px;align-items:center">
+              <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="width:80px">
+              <button onclick="updateWeight();event.stopPropagation();" class="btn btn-neon-o btn-xs" style="flex:1" id="btn-weight-upd">Aggiorna peso</button>
+            </div>
+            <div id="set-prefs-text" style="margin-top:10px;display:none;">
+              <div class="divider" style="margin-bottom:10px;"></div>
+              <p id="set-prefs-content" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;"></p>
+            </div>
           </div>
         </div>
 
-        <!-- Progress bar giorni rimasti -->
-        <div style="margin-bottom:14px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-            <span id="sub-prog-label" class="t-xxs muted sn" style="font-size:10px"></span>
-            <span id="sub-prog-right" class="t-xxs muted sn" style="font-size:10px"></span>
+        <!-- Piano Attivo -->
+        <div class="prof-menu-row" onclick="toggleAccordion('piano-inline')">
+          <div class="prof-menu-ico teal"><span class="material-symbols-outlined" style="color:var(--p);">restaurant_menu</span></div>
+          <div style="flex:1;min-width:0;">
+            <span class="prof-menu-label sn" data-i18n="set.piano.title">Piano Attivo</span>
+            <p id="set-plan-name" class="sn" style="font-size:11px;color:var(--muted);margin:0;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</p>
           </div>
-          <div class="bar-track" style="height:4px;border-radius:999px">
-            <div id="sub-prog-bar" style="height:4px;border-radius:999px;width:0;background:var(--p);transition:width .5s cubic-bezier(.4,0,.2,1)"></div>
+          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-piano-inline" style="transition:transform .2s;">chevron_right</span>
+        </div>
+        <div id="acc-piano-inline" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .35s ease;">
+          <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
+            <p id="set-plan-meta" class="t-xxs muted sn" style="margin:0 0 10px;display:block;">—</p>
+            <div id="set-phases" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+            <p id="phase-hint" class="sn" style="font-size:11px;color:var(--muted);line-height:1.55;margin-top:8px;"></p>
           </div>
         </div>
 
-        <!-- CTA dinamici per stato -->
-        <div id="sub-cta-wrap" style="display:flex;flex-direction:column;gap:8px"></div>
-
-        <!-- backward compat hidden -->
-        <div id="set-sub-manage" style="display:none"><p id="set-sub-status"></p></div>
-
-      </div>
-      <!-- END SUBSCRIPTION MANAGEMENT CARD -->
-
-      <!-- PIANO DIETA CARD (separata) -->
-      <div class="card" style="padding:16px">
-        <span class="sec-label" data-i18n="set.piano.title">Piano Attivo</span>
-        <p id="set-plan-name" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);margin:0 0 4px">—</p>
-        <p id="set-plan-meta" class="t-xxs muted sn" style="margin:0;display:none">— fasi · — giorni</p>
-      </div>
-      <!-- Accordion Menu -->
-      <div style="background:var(--s1);border:1px solid var(--line);border-radius:var(--rbox);overflow:hidden;">
-
-        <!-- B: Modificatore AI -->
-        <div style="border-bottom:1px solid var(--line);">
-          <button onclick="toggleAccordion('mod')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
-            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">tune</span>
-            <span class="sn" data-i18n="set.mod.title" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Modificatore AI</span>
-            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
-          </button>
-          <div id="acc-mod" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
-            <div style="padding:0 16px 16px;border-top:1px solid var(--line);">
-              <div class="rowb" style="margin-top:14px;">
-                <p id="mod-status" class="t-xxs muted sn">Base invariata</p>
-                <div id="mod-stepper" class="mod-stepper">
-                  <button onclick="applyMod(-1)" class="mod-stepper-btn sn" aria-label="−100 kcal">−</button>
-                  <span id="mod-display" class="mod-stepper-val sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;min-width:72px;text-align:center;">0 kcal</span>
-                  <button onclick="applyMod(1)" class="mod-stepper-btn pos sn" aria-label="+100 kcal">+</button>
+        <!-- Abbonamento Trend -->
+        <div class="prof-menu-row" onclick="toggleAccordion('sub-inline')">
+          <div class="prof-menu-ico orange"><span class="material-symbols-outlined" style="color:var(--orange);">bolt</span></div>
+          <div style="flex:1;min-width:0;">
+            <span class="prof-menu-label sn">Abbonamento Trend</span>
+            <p id="prof-sub-preview" style="font-size:11px;color:var(--muted);margin:0;"></p>
+          </div>
+          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-sub-inline" style="transition:transform .2s;">chevron_right</span>
+        </div>
+        <div id="acc-sub-inline" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .35s ease;">
+          <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
+            <!-- SUBSCRIPTION MANAGEMENT CARD content inline -->
+            <div id="sub-mgmt-card" style="padding:0">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <span class="sec-label" style="margin-bottom:0">Trend</span>
+                <span id="sub-status-badge" style="font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block"></span>
+              </div>
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+                <div style="position:relative;flex-shrink:0;width:56px;height:56px">
+                  <svg width="56" height="56" viewBox="0 0 44 44" style="transform:rotate(-90deg)">
+                    <circle cx="22" cy="22" r="17" class="ring-track" style="stroke-width:3"/>
+                    <circle cx="22" cy="22" r="17" id="sub-ring-fill" stroke="var(--p)" fill="none" stroke-width="3" stroke-linecap="round" stroke-dasharray="106.8" stroke-dashoffset="106.8" style="transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)"/>
+                  </svg>
+                  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.1;pointer-events:none">
+                    <div id="sub-ring-num" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:800;color:var(--p)"></div>
+                    <div id="sub-ring-unit" style="font-size:8px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">gg</div>
+                  </div>
+                </div>
+                <div style="flex:1;min-width:0">
+                  <p id="sub-plan-subtitle" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;font-style:italic;color:var(--p);margin:0 0 2px"></p>
+                  <p id="sub-plan-detail" class="sn" style="font-size:11px;color:var(--muted);line-height:1.4;margin:0"></p>
                 </div>
               </div>
-              <p id="mod-units-label" class="t-xxs muted sn" style="text-align:center;margin-top:4px;"></p>
-              <button onclick="applyMod(0)" class="btn btn-ghost btn-xs sn" style="margin-top:10px;width:100%;">Reset modificatore</button>
+              <div style="margin-bottom:12px">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                  <span id="sub-prog-label" class="t-xxs muted sn" style="font-size:10px"></span>
+                  <span id="sub-prog-right" class="t-xxs muted sn" style="font-size:10px"></span>
+                </div>
+                <div class="bar-track"><div id="sub-prog-bar" style="height:4px;border-radius:999px;width:0;background:var(--p);transition:width .5s cubic-bezier(.4,0,.2,1)"></div></div>
+              </div>
+              <div id="sub-cta-wrap" style="display:flex;flex-direction:column;gap:8px"></div>
+              <div id="set-sub-manage" style="display:none"><p id="set-sub-status"></p></div>
             </div>
           </div>
         </div>
 
-        <!-- C: Dati -->
-        <div style="border-bottom:1px solid var(--line);">
-          <button onclick="toggleAccordion('dati')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
-            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">database</span>
-            <span class="sn" data-i18n="set.dati.title" style="font-size:13px;font-weight:700;color:var(--on);flex:1;">Dati</span>
-            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
-          </button>
-          <div id="acc-dati" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
-            <div style="padding:0 16px 16px;border-top:1px solid var(--line);">
-              <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
-                <button id="btn-export-data" onclick="exportData()" class="btn btn-ghost w100 sn">📦 Esporta Backup</button>
-                <button id="btn-import-data" onclick="document.getElementById('imp-inp').click()" class="btn btn-ghost w100 sn">📥 Importa Backup</button>
-                <input type="file" id="imp-inp" accept=".json" style="display:none;" onchange="importBackup(event)"/>
+        <!-- Modificatore AI -->
+        <div class="prof-menu-row" onclick="toggleAccordion('mod')">
+          <div class="prof-menu-ico teal"><span class="material-symbols-outlined" style="color:var(--p);">tune</span></div>
+          <span class="prof-menu-label sn" data-i18n="set.mod.title">Modificatore AI</span>
+          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-mod" style="transition:transform .2s;">chevron_right</span>
+        </div>
+        <div id="acc-mod" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
+          <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
+            <div class="rowb">
+              <p id="mod-status" class="t-xxs muted sn">Base invariata</p>
+              <div id="mod-stepper" class="mod-stepper">
+                <button onclick="applyMod(-1);event.stopPropagation();" class="mod-stepper-btn sn" aria-label="−100 kcal">−</button>
+                <span id="mod-display" class="mod-stepper-val sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;min-width:72px;text-align:center;">0 kcal</span>
+                <button onclick="applyMod(1);event.stopPropagation();" class="mod-stepper-btn pos sn" aria-label="+100 kcal">+</button>
               </div>
             </div>
+            <p id="mod-units-label" class="t-xxs muted sn" style="text-align:center;margin-top:4px;"></p>
+            <button onclick="applyMod(0);event.stopPropagation();" class="btn btn-ghost btn-xs sn" style="margin-top:10px;width:100%;">Reset modificatore</button>
           </div>
         </div>
 
-        <!-- D: Zona Pericolosa -->
-        <div style="border-bottom:1px solid var(--line);">
-          <button onclick="toggleAccordion('danger')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
-            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--red);">warning</span>
-            <span class="sn" data-i18n="set.danger.title" style="font-size:13px;font-weight:700;color:var(--red);flex:1;">Zona Pericolosa</span>
-            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--red);transition:transform .2s;">chevron_right</span>
-          </button>
-          <div id="acc-danger" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
-            <div style="padding:0 16px 16px;border-top:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.03);">
-              <p class="sn t-xxs muted" data-i18n="set.danger.warn" style="margin:14px 0 10px;line-height:1.5;">Queste azioni sono irreversibili senza un backup.</p>
-              <button id="btn-change-diet" onclick="changeDiet()" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
+        <!-- Notifiche -->
+        <div class="prof-menu-row" onclick="requestNotifPermission()">
+          <div class="prof-menu-ico blue"><span class="material-symbols-outlined" style="color:var(--blue);">notifications</span></div>
+          <span class="prof-menu-label sn">Promemoria</span>
+          <span class="prof-menu-chevron material-symbols-outlined">chevron_right</span>
+        </div>
+
+        <!-- Dati -->
+        <div class="prof-menu-row" onclick="toggleAccordion('dati')">
+          <div class="prof-menu-ico muted"><span class="material-symbols-outlined" style="color:var(--muted);">database</span></div>
+          <span class="prof-menu-label sn" data-i18n="set.dati.title">Dati</span>
+          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-dati" style="transition:transform .2s;">chevron_right</span>
+        </div>
+        <div id="acc-dati" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
+          <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button id="btn-export-data" onclick="exportData();event.stopPropagation();" class="btn btn-ghost w100 sn">📦 Esporta Backup</button>
+              <button id="btn-import-data" onclick="document.getElementById('imp-inp').click();event.stopPropagation();" class="btn btn-ghost w100 sn">📥 Importa Backup</button>
+              <input type="file" id="imp-inp" accept=".json" style="display:none;" onchange="importBackup(event)"/>
             </div>
           </div>
         </div>
 
-        <!-- E: Lingua -->
-        <div>
-          <button onclick="toggleAccordion('lingua')" style="display:flex;align-items:center;gap:12px;padding:16px;background:none;border:none;width:100%;cursor:pointer;text-align:left;touch-action:manipulation;">
-            <span class="material-symbols-outlined sn" style="font-size:20px;color:var(--p);">language</span>
-            <span class="sn" style="font-size:13px;font-weight:700;color:var(--on);flex:1;" id="lang-label-txt">Lingua / Language</span>
-            <span class="acc-chevron material-symbols-outlined sn" style="font-size:18px;color:var(--muted);transition:transform .2s;">chevron_right</span>
-          </button>
-          <div id="acc-lingua" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
-            <div style="padding:0 16px 16px;border-top:1px solid var(--line);">
-              <div class="seg-wrap" style="margin-top:14px;display:flex;gap:6px;">
-                <button id="lang-btn-en" class="seg-btn sn seg-on" onclick="setLang('en')" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇬🇧 English</button>
-                <button id="lang-btn-it" class="seg-btn sn" onclick="setLang('it')" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇮🇹 Italiano</button>
-              </div>
+        <!-- Lingua -->
+        <div class="prof-menu-row" onclick="toggleAccordion('lingua')">
+          <div class="prof-menu-ico muted"><span class="material-symbols-outlined" style="color:var(--muted);">language</span></div>
+          <span class="prof-menu-label sn" id="lang-label-txt">Lingua / Language</span>
+          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-lingua" style="transition:transform .2s;">chevron_right</span>
+        </div>
+        <div id="acc-lingua" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
+          <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
+            <div class="seg-wrap" style="margin-top:0;display:flex;gap:6px;">
+              <button id="lang-btn-en" class="seg-btn sn seg-on" onclick="setLang('en');event.stopPropagation();" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇬🇧 English</button>
+              <button id="lang-btn-it" class="seg-btn sn" onclick="setLang('it');event.stopPropagation();" style="flex:1;height:36px;font-size:12px;font-weight:700;letter-spacing:.06em;">🇮🇹 Italiano</button>
             </div>
           </div>
         </div>
 
-      </div>
-      <!-- Quick links to info tab -->
-      <div style="display:flex;gap:8px;">
-        <button onclick="switchTab('info')" class="btn btn-ghost sn" style="flex:1;height:40px;font-size:11px;gap:6px;"><span class="material-symbols-outlined" style="font-size:15px;font-variation-settings:'FILL' 1;">shield</span><span id="set-btn-privacy-txt">Privacy</span></button>
-        <button onclick="openModal('help')" class="btn btn-ghost sn" style="flex:1;height:40px;font-size:11px;gap:6px;"><span class="material-symbols-outlined" style="font-size:15px;font-variation-settings:'FILL' 1;">help</span><span id="set-btn-aiuto-txt">Aiuto</span></button>
+        <!-- Privacy -->
+        <div class="prof-menu-row" onclick="switchTab('info')">
+          <div class="prof-menu-ico muted"><span class="material-symbols-outlined" style="color:var(--muted);">shield</span></div>
+          <span class="prof-menu-label sn" id="set-btn-privacy-txt">Privacy</span>
+          <span class="prof-menu-chevron material-symbols-outlined">chevron_right</span>
+        </div>
+
+        <!-- Aiuto -->
+        <div class="prof-menu-row" onclick="openModal('help')">
+          <div class="prof-menu-ico muted"><span class="material-symbols-outlined" style="color:var(--muted);">help</span></div>
+          <span class="prof-menu-label sn" id="set-btn-aiuto-txt">Aiuto</span>
+          <span class="prof-menu-chevron material-symbols-outlined">chevron_right</span>
+        </div>
+
+        <!-- Zona Pericolosa -->
+        <div class="prof-menu-row" onclick="toggleAccordion('danger')">
+          <div class="prof-menu-ico red"><span class="material-symbols-outlined" style="color:var(--red);">warning</span></div>
+          <span class="prof-menu-label sn" data-i18n="set.danger.title" style="color:var(--red);">Zona Pericolosa</span>
+          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-danger" style="color:var(--red);transition:transform .2s;">chevron_right</span>
+        </div>
+        <div id="acc-danger" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
+          <div style="padding:14px 16px;border-top:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.03);">
+            <p class="sn t-xxs muted" data-i18n="set.danger.warn" style="margin:0 0 10px;line-height:1.5;">Queste azioni sono irreversibili senza un backup.</p>
+            <button id="btn-change-diet" onclick="changeDiet();event.stopPropagation();" class="btn btn-danger-o w100 sn">Ricomincia da capo</button>
+          </div>
+        </div>
+
+      </div><!-- /prof-menu-list -->
+
+      <!-- Rigenera profilo -->
+      <button onclick="resetProfile()" class="btn btn-danger-o btn-xs sn" style="padding:0 14px;">🔄 Rigenera profilo</button>
+
+      <!-- Notif button (compat) -->
+      <div style="display:none;">
+        <button id="notif-perm-btn" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
       </div>
       <div style="height:8px;"></div>
     </div>
@@ -2515,8 +2663,8 @@ function selectCheckoutPlan(plan){
 
 function confirmCheckoutPreview(){
   closeCheckoutPreview();
-  // Small delay so the sheet animates out before Stripe opens
-  setTimeout(()=>_doStartCheckout(_cpoPlan),400);
+  // Minimal delay — just enough for the sheet to begin sliding down
+  setTimeout(()=>_doStartCheckout(_cpoPlan),100);
 }
 
 function _applyCheckoutPreviewLang(){
@@ -2558,9 +2706,33 @@ function _applyCheckoutPreviewLang(){
   });
 }
 
+/* ── Session pre-cache: refreshed in background so checkout is instant ── */
+let _cachedSession=null;
+let _sessionPrefetchPromise=null;
+
+function _prefetchSession(){
+  if(!sb)return;
+  if(_sessionPrefetchPromise)return;
+  _sessionPrefetchPromise=sb.auth.getSession()
+    .then(({data})=>{
+      _cachedSession=data?.session||null;
+      /* If token expires soon (<5 min), silently refresh in background */
+      if(_cachedSession){
+        const exp=_cachedSession.expires_at||0;
+        if(exp-Date.now()/1000<300){
+          sb.auth.refreshSession().then(({data:r})=>{
+            if(r?.session)_cachedSession=r.session;
+          }).catch(()=>{});
+        }
+      }
+    })
+    .catch(()=>{_cachedSession=null;});
+}
+
 /* ── Real startCheckout (renamed to _doStartCheckout) ── */
 async function startCheckout(plan){
-  /* Show preview before going to Stripe, unless already confirmed */
+  /* Kick off session prefetch immediately on click, then show preview */
+  _prefetchSession();
   openCheckoutPreview(plan);
 }
 
@@ -2569,24 +2741,33 @@ async function _doStartCheckout(plan){
   btns.forEach(b=>{b.disabled=true;b.style.opacity='0.6';});
   console.log('[IK][checkout] startCheckout called, plan=',plan,'sb=',!!sb);
 
+  /* ── Always clear retry guard on a fresh attempt (user clicked again) ── */
+  try{localStorage.removeItem('ik_checkout_retry');}catch{}
+
   try{
-    /* ── STEP 1: get fresh session ── */
+    /* ── STEP 1: get session from cache, fallback to network ── */
     let accessToken=null;
     let userEmail=null;
     if(sb){
-      try{
-        const{data:refreshed,error:refreshErr}=await sb.auth.refreshSession();
-        if(refreshErr)console.warn('[IK][checkout] refreshSession error:',refreshErr.message);
-        accessToken=refreshed?.session?.access_token||null;
-        userEmail=refreshed?.session?.user?.email||null;
-        console.log('[IK][checkout] refreshSession → token=',!!accessToken,'email=',userEmail||'(none)');
-      }catch(refreshEx){
-        console.warn('[IK][checkout] refreshSession threw:',refreshEx?.message||refreshEx);
-        const{data:sess,error:sessErr}=await sb.auth.getSession().catch(e=>({data:{},error:e}));
-        if(sessErr)console.warn('[IK][checkout] getSession error:',sessErr.message);
-        accessToken=sess?.session?.access_token||null;
-        userEmail=sess?.session?.user?.email||null;
-        console.log('[IK][checkout] getSession fallback → token=',!!accessToken);
+      /* Wait for prefetch if it's still in flight (usually already done) */
+      if(_sessionPrefetchPromise) await _sessionPrefetchPromise.catch(()=>{});
+
+      if(_cachedSession?.access_token){
+        accessToken=_cachedSession.access_token;
+        userEmail=_cachedSession.user?.email||null;
+        console.log('[IK][checkout] session from cache → token=',!!accessToken,'email=',userEmail||'(none)');
+      }else{
+        /* Cache miss — fast getSession (no round-trip refresh) */
+        try{
+          const{data:sess,error:sessErr}=await sb.auth.getSession();
+          if(sessErr)console.warn('[IK][checkout] getSession error:',sessErr.message);
+          accessToken=sess?.session?.access_token||null;
+          userEmail=sess?.session?.user?.email||null;
+          _cachedSession=sess?.session||null;
+          console.log('[IK][checkout] getSession → token=',!!accessToken);
+        }catch(ex){
+          console.warn('[IK][checkout] getSession threw:',ex?.message||ex);
+        }
       }
     }
 
@@ -2594,30 +2775,18 @@ async function _doStartCheckout(plan){
     if(!accessToken){
       console.warn('[IK][checkout] No session — login required before checkout');
       btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
-      /* Guard against infinite loop: only allow one auto-resume attempt */
-      const alreadyRetrying=localStorage.getItem('ik_checkout_retry')==='1';
-      if(alreadyRetrying){
-        console.error('[IK][checkout] Still no token after login — aborting to prevent loop');
-        try{
-          localStorage.removeItem('ik_pending_checkout_plan');
-          localStorage.removeItem('ik_checkout_retry');
-          localStorage.removeItem('ik_auth_origin');
-        }catch{}
-        showToast('Impossibile completare il checkout — riprova manualmente',4000);
-        return;
-      }
-      try{
-        localStorage.setItem('ik_pending_checkout_plan',plan);
-        localStorage.setItem('ik_checkout_retry','1');
-      }catch{}
+      /* Store pending plan — resume after login. Never block re-attempts. */
+      try{localStorage.setItem('ik_pending_checkout_plan',plan);}catch{}
+      /* Always clear retry guard so the user can always try again */
+      try{localStorage.removeItem('ik_checkout_retry');}catch{}
       const pw=document.getElementById('paywall-overlay');
       if(pw)pw.style.display='none';
       document.body.style.overflow='';
       _showCheckoutLoginGate(plan);
       return;
     }
-    /* Token present — clear retry guard */
-    try{localStorage.removeItem('ik_checkout_retry');}catch{}
+    /* Token present — invalidate cache (will be re-fetched next time) */
+    _sessionPrefetchPromise=null;
 
     /* ── STEP 3: server-side checkout via Edge Function ── */
     console.log('[IK][checkout] path=Edge Function');
@@ -2892,6 +3061,9 @@ async function syncUserAfterLogin(user){
 function _initAuthListener(){
   if(!sb)return;
   sb.auth.onAuthStateChange(async(event,session)=>{
+    /* Always update the session cache */
+    _cachedSession=session||null;
+    _sessionPrefetchPromise=null;
     if(event==='SIGNED_IN'&&session?.user){
       await syncUserAfterLogin(session.user);
       const origin=localStorage.getItem('ik_auth_origin');
@@ -2909,11 +3081,11 @@ function _initAuthListener(){
       if(pendingPlan){
         try{
           localStorage.removeItem('ik_pending_checkout_plan');
-          localStorage.removeItem('ik_checkout_retry'); /* clear guard so resume can proceed */
+          localStorage.removeItem('ik_checkout_retry');
         }catch{}
         console.log('[IK][checkout] resuming pending checkout for plan=',pendingPlan);
-        /* Small delay so UI settles after login transition */
-        setTimeout(()=>_doStartCheckout(pendingPlan),800);
+        /* Short delay so UI settles after login transition */
+        setTimeout(()=>_doStartCheckout(pendingPlan),200);
       }
     }
   });
@@ -2940,7 +3112,7 @@ async function _resumePostOnboardingOrBoot(){
             localStorage.removeItem('ik_checkout_retry'); /* clear guard so resume can proceed */
           }catch{}
           console.log('[IK][checkout] resuming pending checkout (OAuth redirect) plan=',pendingPlan);
-          setTimeout(()=>_doStartCheckout(pendingPlan),1000);
+          setTimeout(()=>_doStartCheckout(pendingPlan),300);
         }
         return;
       }
@@ -5426,28 +5598,69 @@ function generateReportInsight(rep){
 function renderWeeklyReport(){
   requireTrend(()=>{
   const card=document.getElementById('weekly-report-card');
-  const cont=document.getElementById('weekly-report-content');
-  if(!card||!cont)return;
+  if(!card)return;
   const log=getLog();
   if(!dietData&&!log.length){card.style.display='none';return;}
   card.style.display='block';
   const rep=generateWeeklyReport();
   const insight=generateReportInsight(rep);
   const pct=rep.mealsTotal>0?Math.round(rep.mealsDone/rep.mealsTotal*100):0;
-  const wTxt=rep.weightChange!==null?`${rep.weightChange>=0?'+':''}${rep.weightChange} kg`:'—';
-  const wColor=rep.weightChange!=null&&rep.weightChange<0?'var(--p)':'var(--on)';
-  cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
-    <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
-      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${wColor};margin:0 0 2px;">${wTxt}</p>
-      <span class="t-xxs muted sn">${t('weekly.report.label.peso')}</span></div>
-    <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
-      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--on);margin:0 0 2px;">${rep.ciDays}/7</p>
-      <span class="t-xxs muted sn">Check-in</span></div>
-    <div style="background:var(--s2);border-radius:var(--r3);padding:10px;text-align:center;">
-      <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${pct>=80?'var(--p)':pct>=50?'var(--orange)':'var(--red)'};margin:0 0 2px;">${pct}%</p>
-      <span class="t-xxs muted sn">${t('weekly.report.label.pasti')}</span></div>
-  </div>
-  <p class="sn" style="font-size:12px;color:var(--muted);line-height:1.55;">${sanitize(insight)}</p>`;
+  const wTxt=rep.weightChange!==null?(rep.weightChange>=0?'+':'')+rep.weightChange+' kg':'—';
+  const wColor=rep.weightChange!=null&&rep.weightChange<0?'var(--p)':rep.weightChange!=null&&rep.weightChange>0?'var(--red)':'var(--on)';
+  /* Date range label */
+  const now=new Date();
+  const weekAgo=new Date(now-7*24*3600*1000);
+  const fmt=(d)=>d.toLocaleDateString(_lang==='en'?'en-GB':'it-IT',{day:'numeric',month:'short'});
+  const drEl=document.getElementById('wr-date-range');
+  if(drEl)drEl.textContent=`${fmt(weekAgo)} – ${fmt(now)}`;
+  /* Stats */
+  const wEl=document.getElementById('wr-weight-val');
+  const cEl=document.getElementById('wr-checkin-val');
+  const aEl=document.getElementById('wr-adher-val');
+  if(wEl){wEl.textContent=wTxt;wEl.style.color=wColor;}
+  if(cEl){cEl.textContent=`${rep.ciDays}/7`;cEl.style.color=rep.ciDays>=5?'var(--p)':rep.ciDays>=3?'var(--orange)':'var(--on)';}
+  if(aEl){aEl.textContent=`${pct}%`;aEl.style.color=pct>=80?'var(--p)':pct>=50?'var(--orange)':'var(--red)';}
+  /* Energy / hunger */
+  const enEl=document.getElementById('wr-energy-val');
+  const huEl=document.getElementById('wr-hunger-val');
+  if(enEl)enEl.textContent=rep.avgEnergy!==null?String(rep.avgEnergy):'—';
+  if(huEl)huEl.textContent=rep.avgHunger!==null?String(rep.avgHunger):'—';
+  /* Insight */
+  const iEl=document.getElementById('wr-insight-txt');
+  if(iEl)iEl.textContent=insight||'—';
+  /* Bar chart: aderenza giornaliera (last 7 days) */
+  const barEl=document.getElementById('wr-bar-chart');
+  if(barEl&&dietData){
+    const days7=[];
+    for(let i=6;i>=0;i--){
+      const d=new Date(now.getTime()-i*24*3600*1000);
+      const dow=d.getDay()===0?7:d.getDay();
+      const names=getMealNames();
+      const dayData=(dietData.days||[]).find(x=>x.d===dow);
+      let done=0,tot=0;
+      if(dayData){names.forEach(n=>{tot++;if(lsR(mk(dow,n))==='1')done++;});}
+      const p=tot>0?Math.round(done/tot*100):0;
+      days7.push({p,d});
+    }
+    const dayLabels=_lang==='en'
+      ?['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+      :['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
+    const now_dow=new Date().getDay();// 0=sun
+    // Map: i=0 is 6 days ago
+    barEl.innerHTML=days7.map((item,i)=>{
+      const realDow=((now_dow-6+i)+7)%7;// 0-indexed sun=0
+      const lblIdx=(realDow+6)%7;// convert to mon=0
+      const color=item.p>=80?'var(--p)':item.p>=50?'var(--orange)':'rgba(199,196,216,.2)';
+      const h=Math.max(4,Math.round(item.p*0.7));
+      return `<div class="wr-bar-col">
+        <div class="wr-bar-track"><div class="wr-bar-fill" style="height:${h}px;background:${color};min-height:4px;"></div></div>
+        <span class="wr-bar-lbl">${dayLabels[lblIdx]}</span>
+      </div>`;
+    }).join('');
+  }
+  /* Chart label i18n */
+  const lbl=document.getElementById('wr-chart-lbl');
+  if(lbl)lbl.textContent=_lang==='en'?'Weekly adherence':'Aderenza settimanale';
   },'Weekly Report',true);
 }
 function shareWeeklyReport(){
@@ -7979,30 +8192,86 @@ function getPhaseLiveDesc(phaseIndex){
   const key=descKeys[Math.min(phaseIndex,descKeys.length-1)];
   return t(key,{goal:goalLabel});
 }
+/* ── renderProfileHeader: popola avatar, nome, stats periodo ── */
+function renderProfileHeader(){
+  const prof=getProfile();
+  /* Avatar da Google se loggato */
+  const hdrImg=document.querySelector('#hdr-av img');
+  const pImg=document.getElementById('prof-avatar-img');
+  const pIco=document.getElementById('prof-avatar-icon');
+  if(pImg&&hdrImg?.src&&!hdrImg.src.startsWith('data:')){
+    pImg.src=hdrImg.src;
+    pImg.style.display='block';
+    if(pIco)pIco.style.display='none';
+  }
+  /* Nome utente */
+  const nameEl=document.getElementById('prof-user-name');
+  const subEl=document.getElementById('prof-user-sub');
+  if(nameEl){
+    const n=prof?.name||lsR('ik_user_name')||null;
+    nameEl.textContent=n||'Iron Kinetic';
+  }
+  if(subEl){
+    const plan=trendAccess?.mode==='paid'?'Trend '+String(trendAccess.plan||''):trendAccess?.mode==='trial'?`Trial — ${trendAccess.daysLeft||7} giorni`:'Piano Base';
+    subEl.textContent=plan;
+  }
+  /* Stat: giorni piano, peso attuale, variazione */
+  const log=getLog();
+  const daysEl=document.getElementById('prof-stat-days');
+  const wEl=document.getElementById('prof-stat-weight');
+  const dEl=document.getElementById('prof-stat-delta');
+  const dLbl=document.getElementById('prof-stat-days-lbl');
+  const dDelta=document.getElementById('prof-stat-delta-lbl');
+  /* Giorni piano attivo */
+  const sk=lsR('ik_prog_start')||lsR(SK.progStart);
+  const daysActive=sk?Math.max(1,Math.round((Date.now()-new Date(sk).getTime())/86400000)):0;
+  if(daysEl)daysEl.textContent=daysActive>0?String(daysActive):'—';
+  if(dLbl)dLbl.textContent=_lang==='en'?'days':'giorni';
+  /* Peso attuale */
+  const sorted=log.filter(e=>e.weight>0).sort((a,b)=>a.isoDate>b.isoDate?-1:1);
+  const lastW=sorted[0]?.weight;
+  if(wEl)wEl.textContent=lastW?String(lastW):'—';
+  /* Variazione rispetto al peso inizio piano */
+  const firstW=prof?.weight;
+  if(dEl&&lastW&&firstW){
+    const delta=Math.round((Number(lastW)-Number(firstW))*10)/10;
+    dEl.textContent=(delta>0?'+':'')+delta;
+    dEl.style.color=delta<0?'var(--p)':delta>0?'var(--red)':'var(--on)';
+  }else if(dEl){dEl.textContent='—';}
+  if(dDelta)dDelta.textContent=_lang==='en'?'change':'variaz.';
+  /* Sub preview under abbonamento menu item */
+  const spEl=document.getElementById('prof-sub-preview');
+  if(spEl){
+    const badge=document.getElementById('sub-status-badge');
+    spEl.textContent=badge?.textContent||'';
+  }
+  /* Target TDEE inline display */
+  const tdeeDisp=document.getElementById('set-hero-tdee-display');
+  if(tdeeDisp&&prof){
+    let _tkc=prof.targetKcal;
+    if(!_tkc&&typeof calculateUserMacros==='function'){try{_tkc=calculateUserMacros(prof).targetKcal;}catch{}}
+    if(_tkc)tdeeDisp.innerHTML=`${Math.round(_tkc)} <span style="font-size:13px;opacity:.5;font-weight:500;">kcal</span>`;
+  }
+}
+
 function renderSettings(){
-  if(!dietData){const prof=getProfile();if(prof)_renderProfileCard(prof);return;}
+  if(!dietData){const prof=getProfile();if(prof)_renderProfileCard(prof);renderProfileHeader();return;}
   const m=dietData.metadata||{};
-  document.getElementById('set-plan-name').textContent=normalizePlanLabel(m.name,m.goal)||'—';
-  document.getElementById('set-plan-meta').textContent=t('set.piano.meta',{fasi:(dietData.phases||[]).length,giorni:(dietData.days||[]).length});
-  const el=document.getElementById('set-phases');el.innerHTML='';
+  const planNameEl=document.getElementById('set-plan-name');
+  if(planNameEl)planNameEl.textContent=normalizePlanLabel(m.name,m.goal)||'—';
+  const planMetaEl=document.getElementById('set-plan-meta');
+  if(planMetaEl){planMetaEl.textContent=t('set.piano.meta',{fasi:(dietData.phases||[]).length,giorni:(dietData.days||[]).length});planMetaEl.style.display='block';}
+  const el=document.getElementById('set-phases');if(el){el.innerHTML='';
   (dietData.phases||[]).forEach((_,i)=>{
     const p=i+1,b=document.createElement('button');b.textContent=t('misc.fase')+' '+p;b.className='phase-chip sn';
-    if(getPhase()===p)b.classList.add('on');b.onclick=()=>{hap();setPhase(p);};el.appendChild(b);
-  });
-  {
-    const PHASE_HINTS={
-      it:{1:'Fase 1: adattamento (sett. 1-4). Avanza quando il peso cala con costanza.',2:'Fase 2: ottimizzazione (sett. 5-8). Avanza se l\'energia è stabile.',3:'Fase 3: consolidamento (sett. 9-15). Avanza quando il peso si è stabilizzato.',4:'Fase 4: reverse diet. Aumenta le kcal di +100/sett. fino al TDEE.'},
-      en:{1:'Phase 1: adaptation (wk 1-4). Advance when weight drops consistently.',2:'Phase 2: optimisation (wk 5-8). Advance when energy is stable.',3:'Phase 3: consolidation (wk 9-15). Advance when weight has stabilised.',4:'Phase 4: reverse diet. Increase kcal +100/wk until TDEE is reached.'}
-    };
-    const _phLang=lsR(SK.lang)==='en'?'en':'it';
-    let phHint=document.getElementById('phase-hint');
-    if(!phHint){phHint=document.createElement('p');phHint.id='phase-hint';phHint.className='sn';phHint.style.cssText='font-size:11px;color:var(--muted);line-height:1.55;margin-top:8px;padding:0 2px';el.parentNode.appendChild(phHint);}
-    phHint.textContent=PHASE_HINTS[_phLang][getPhase()]||'';
-  }
+    if(getPhase()===p)b.classList.add('on');b.onclick=(e)=>{e.stopPropagation();hap();setPhase(p);};el.appendChild(b);
+  });}
+  {const PHASE_HINTS={it:{1:'Fase 1: adattamento (sett. 1-4). Avanza quando il peso cala con costanza.',2:'Fase 2: ottimizzazione (sett. 5-8). Avanza se l\'energia è stabile.',3:'Fase 3: consolidamento (sett. 9-15). Avanza quando il peso si è stabilizzato.',4:'Fase 4: reverse diet. Aumenta le kcal di +100/sett. fino al TDEE.'},en:{1:'Phase 1: adaptation (wk 1-4). Advance when weight drops consistently.',2:'Phase 2: optimisation (wk 5-8). Advance when energy is stable.',3:'Phase 3: consolidation (wk 9-15). Advance when weight has stabilised.',4:'Phase 4: reverse diet. Increase kcal +100/wk until TDEE is reached.'}};const _phLang=lsR(SK.lang)==='en'?'en':'it';let phHint=document.getElementById('phase-hint');if(phHint)phHint.textContent=PHASE_HINTS[_phLang][getPhase()]||'';}
   renderRefeed();renderModDisplay();
   {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_U;const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}
   const prof=getProfile();if(prof)_renderProfileCard(prof);
   _renderPrefsCard();
+  renderProfileHeader();
   if(document.getElementById('hdr-plan')){const _pn=normalizePlanLabel(m.name,m.goal);document.getElementById('hdr-plan').textContent=_pn;document.getElementById('hdr-plan').style.display=_pn?'block':'none';}
   trendInitPromise.then(()=>{try{updateSubManagementCard();}catch(e){}});
 }
@@ -9557,6 +9826,19 @@ function _bootAfterLangGate(){
 
 /* ENTRY POINT */
 (()=>{
+  /* ── Clean up any stale checkout flags from a previous abandoned session ──
+     If the user got to Stripe and came back (or closed the tab), we must
+     never block them from trying again. Flags are cleared here unconditionally
+     unless we're in the middle of a live OAuth redirect (ik_auth_origin set). */
+  try{
+    const origin=localStorage.getItem('ik_auth_origin');
+    if(origin!=='checkout'&&origin!=='post_onboarding'){
+      localStorage.removeItem('ik_checkout_retry');
+      /* Keep ik_pending_checkout_plan only if we're mid-OAuth; otherwise clear */
+      localStorage.removeItem('ik_pending_checkout_plan');
+    }
+  }catch{}
+
   /* Lang gate: absolute first priority — before everything else */
   if(!lsR(SK.lang)){
     document.getElementById('lang-gate').classList.add('on');
@@ -9569,6 +9851,8 @@ function _bootAfterLangGate(){
   const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);
   /* Auth listener must be active before any gate so OAuth redirect is caught */
   _initAuthListener();
+  /* Pre-warm session cache so the first checkout click is instant */
+  _prefetchSession();
   _bootAfterLangGate();
 })();
 </script>
