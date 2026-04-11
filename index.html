@@ -991,7 +991,7 @@ hr{height:1px;}
       </div>
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">account_circle</span>
-        <div><p id="gdpr-p2-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Login Google — dati raccolti</p><p id="gdpr-p2-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Il login tramite Google trasmette a Iron Kinetic nome, email e avatar. Nessun dato sanitario condiviso con Google.</p></div>
+        <div><p id="gdpr-p2-title" style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Login Google — dati raccolti</p><p id="gdpr-p2-sub" style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;" class="sn">Il login tramite Google trasmette a Iron Kinetic™ nome, email e avatar. Nessun dato sanitario condiviso con Google.</p></div>
       </div>
       <div class="row g3">
         <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;flex-shrink:0;font-variation-settings:'FILL' 1;">block</span>
@@ -1014,7 +1014,7 @@ hr{height:1px;}
     <button id="gdpr-read-btn" onclick="openModal('privacy')" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;">Read the full Privacy Policy</button>
     <p style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;" class="sn">
       <span id="gdpr-gate-footer2">Richiesto dalla legge UE (GDPR). Puoi revocare il consenso in qualsiasi momento da Profilo → Privacy.</span><br>
-      Controller: Iron Kinetic · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
+      Controller: Iron Kinetic™ · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
     </p>
   </div>
 </div>
@@ -1022,11 +1022,11 @@ hr{height:1px;}
 
 <!-- HEADER -->
 <header id="hdr">
-  <span class="hdr-logo">Iron Kinetic</span>
+  <span class="hdr-logo">Iron Kinetic™</span>
   <div class="hdr-right">
     <span id="hdr-plan" class="hdr-plan" style="display:none;"></span>
     <div class="hdr-av">
-      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI9tFxKQXHDXw9TJcDT5p9psNzQvOPjdswHPKGSaFNqiIzce8Jg40724NBhFD3hqtWPNa_2lVNi77E0lbgVVlcUBKaqeT2Yxdck0ln77TIcCeKIb2E7VbPOxIBRuHcLgaAJxef7h7QymB2ZqQ9svYJryzKQJYrRC0ldKxYwnJ5b4oEysD2BCsf28wncFbTYlTNLs1EylLdS2CVX1e-37MMDY2_yBYohVB-5nzQCQsDE8aGU59vcI9owqxBRu4nv0UgtcRBo6ct0Q7T" alt="Profile avatar" draggable="false" onerror="this.style.display='none'"/>
+      <img id="hdr-av-img" src="" alt="Profile avatar" draggable="false" style="display:none;" onerror="this.style.display='none'"/>
     </div>
   </div>
 </header>
@@ -2155,7 +2155,7 @@ hr{height:1px;}
       <!-- Disclaimer -->
       <div style="background:rgba(255,59,48,.05);border:1px solid rgba(255,59,48,.14);border-radius:var(--r);padding:14px;">
         <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 5px;" class="sn" id="info-disclaimer-title">⚕️ Avviso medico importante</p>
-        <p style="font-size:11px;color:var(--muted);margin:0;line-height:1.6;" class="sn" id="info-disclaimer-text">Iron Kinetic è uno strumento informativo di supporto e <strong style="color:var(--on);">non costituisce consiglio medico</strong>. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
+        <p style="font-size:11px;color:var(--muted);margin:0;line-height:1.6;" class="sn" id="info-disclaimer-text">Iron Kinetic™ è uno strumento informativo di supporto e <strong style="color:var(--on);">non costituisce consiglio medico</strong>. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
       </div>
 
       <div style="height:8px;"></div>
@@ -2310,7 +2310,7 @@ hr{height:1px;}
 
 <div id="install-banner" class="install-banner" style="display:none" role="banner" aria-live="polite">
   <span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">install_mobile</span>
-  <span class="sn" id="install-banner-lbl" style="flex:1;font-size:13px;font-weight:600;">Installa Iron Kinetic</span>
+  <span class="sn" id="install-banner-lbl" style="flex:1;font-size:13px;font-weight:600;">Installa Iron Kinetic™</span>
   <button class="btn btn-primary btn-sm sn" onclick="installPWA()" id="install-banner-btn">Installa</button>
   <button class="btn btn-ghost btn-sm sn" onclick="dismissInstallBanner()" aria-label="Chiudi" style="padding:0 8px;">✕</button>
 </div>
@@ -2665,12 +2665,13 @@ function selectCheckoutPlan(plan){
 }
 
 function confirmCheckoutPreview(){
-  /* Show loading state on CTA immediately */
+  /* Tieni la preview aperta con stato loading — NON chiuderla prima del redirect Stripe.
+     La sheet rimane visibile fino al window.location.href= (che sostituisce la pagina).
+     Viene chiusa solo se _doStartCheckout fallisce (errore o login gate). */
   const ctaBtn=document.getElementById('cpo-cta');
-  if(ctaBtn){ctaBtn.textContent=_lang==='en'?'Processing…':'Elaborazione…';ctaBtn.disabled=true;ctaBtn.style.opacity='0.7';}
-  closeCheckoutPreview();
-  /* Small delay — just enough for the sheet to begin sliding down */
-  setTimeout(()=>_doStartCheckout(_cpoPlan),100);
+  if(ctaBtn){ctaBtn.textContent=_lang==='en'?'Redirecting…':'Reindirizzamento…';ctaBtn.disabled=true;ctaBtn.style.opacity='0.7';}
+  /* Lancia checkout direttamente senza timeout e senza chiudere l'overlay */
+  _doStartCheckout(_cpoPlan);
 }
 
 function _applyCheckoutPreviewLang(){
@@ -2789,6 +2790,8 @@ async function _doStartCheckout(plan){
     if(!accessToken){
       console.warn('[IK][checkout] No session — login required before checkout');
       _resetUI();
+      /* Chiudi preview e paywall perché mostriamo il login gate */
+      closeCheckoutPreview();
       try{localStorage.setItem('ik_pending_checkout_plan',plan);}catch{}
       try{localStorage.removeItem('ik_checkout_retry');}catch{}
       const pw=document.getElementById('paywall-overlay');
@@ -2878,6 +2881,8 @@ async function _doStartCheckout(plan){
     if(typeof Sentry!=='undefined'){
       try{Sentry.captureException(err,{tags:{flow:'startCheckout',plan}});}catch{}
     }
+    /* Chiudi la preview solo in caso di errore, mai prima del redirect */
+    closeCheckoutPreview();
     showToast(err?.message||t('toast.checkoutError'));
     _resetUI();
   }
@@ -3047,6 +3052,12 @@ function closePostOnboardingAuthGate(){
 /* ── Sync Supabase user row on login ── */
 async function syncUserAfterLogin(user){
   if(!sb||!user)return;
+  /* ── Salva nome Google e avatar da user_metadata (Supabase OAuth) ── */
+  const googleName=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||null;
+  const googleAvatar=user.user_metadata?.avatar_url||user.user_metadata?.picture||null;
+  if(googleName)try{localStorage.setItem('ik_user_name',googleName);}catch{}
+  if(googleAvatar)try{localStorage.setItem('ik_user_avatar',googleAvatar);}catch{}
+  _applyUserAvatar();
   try{
     /* Check if row already exists to avoid overwriting trial_end on returning users */
     const{data:existing}=await sb.from('users').select('id,trend_active,trial_end').eq('id',user.id).single().catch(()=>({data:null}));
@@ -3332,12 +3343,12 @@ it:{
   'info.app.cookie':'Cookie','info.app.cookie.val':'Zero ✓',
   'info.app.tracking':'Tracking','info.app.tracking.val':'Nessuno ✓',
   'info.disclaimer.title':'⚕️ Avviso medico importante',
-  'info.disclaimer.text':'Iron Kinetic è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
+  'info.disclaimer.text':'Iron Kinetic™ è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
   'gdpr.title':'I tuoi dati restano tuoi.','gdpr.sub':'Nessuna pubblicità. Nessun tracking. Processiamo solo ciò che serve per il tuo piano.',
   'gdpr.p1.title':'Dati sanitari — solo per il tuo piano',
   'gdpr.p1.sub':'Peso, misure e grasso corporeo vengono usati solo per calcolare il tuo piano nutrizionale. Nulla viene condiviso con terzi.',
   'gdpr.p2.title':'Login Google — dati raccolti',
-  'gdpr.p2.sub':'Il login tramite Google trasmette a Iron Kinetic nome, email e avatar. Questi dati sono conservati su Supabase esclusivamente per gestire l\'account. Nessun dato sanitario viene condiviso con Google.',
+  'gdpr.p2.sub':'Il login tramite Google trasmette a Iron Kinetic™ nome, email e avatar. Questi dati sono conservati su Supabase esclusivamente per gestire l\'account. Nessun dato sanitario viene condiviso con Google.',
   'gdpr.p3.title':'Zero cookie di tracking · Stripe per pagamenti',
   'gdpr.p3.sub':'Nessun cookie di profilazione, analytics o advertising. I pagamenti Trend sono gestiti da Stripe — nessun dato sanitario viene condiviso con Stripe.',
   'gdpr.btn.accetta':'Accetto — Inizia il mio piano →','gdpr.btn.leggi':'Leggi l\'Informativa Privacy completa',
@@ -3349,7 +3360,7 @@ it:{
   'pwa.btn':'Installa e inizia →',
   'shopping.title':'🛒 Lista della Spesa','shopping.empty':'Nessun dato','shopping.noPlan':'Carica un piano per generare la lista',
   'help.title':'❓ Aiuto & FAQ',
-  'help.offline':'Iron Kinetic funziona completamente offline. Tutti i tuoi dati sono sul tuo dispositivo.',
+  'help.offline':'Iron Kinetic™ funziona completamente offline. Tutti i tuoi dati sono sul tuo dispositivo.',
   'help.contact.title':'Hai altre domande?','help.contact.sub':'Scrivici a support@ironkinetic.app',
   'privacy.title':'🛡 Privacy & GDPR',
   'privacy.consenso.title':'Gestione consenso',
@@ -3562,7 +3573,7 @@ it:{
   'aria.delete.entry':'Elimina',
   'aria.meal.toggle':'Segna pasto completato',
   'aria.chart.weight':'Grafico peso','aria.chart.waist':'Grafico girovita','modal.close.help':'Chiudi aiuto','modal.close.privacy':'Chiudi privacy',
-  'pwa.install.banner':'Installa Iron Kinetic come app','pwa.install.btn':'Installa',
+  'pwa.install.banner':'Installa Iron Kinetic™ come app','pwa.install.btn':'Installa',
   'coach.foods.refeed':'riso, patate, avena',
   'coach.foods.digest':'riso bianco, pollo al vapore, zucchine',
   'coach.foods.veggies':'broccoli, cetrioli, spinaci',
@@ -3594,7 +3605,7 @@ it:{
   'set.danger.title':'Zona Pericolosa',
   'set.danger.warn':'Queste azioni sono irreversibili senza un backup.',
   'help.contact.sub.email':'Scrivici a <strong style="color:var(--p);">support&#64;ironkinetic.app</strong>',
-  'help.features.title':"Tutte le funzioni di Iron Kinetic",
+  'help.features.title':"Tutte le funzioni di Iron Kinetic™",
   'help.features.sub':'Ogni funzione è progettata per avvicinarti al tuo obiettivo — non per distrarti con dati inutili.',
   'help.feature.onboarding.title':'Onboarding e profilo',
   'help.feature.onboarding.desc':'In 5 passaggi l\'app impara chi sei: sesso, età, altezza, peso, attività, obiettivo e preferenze alimentari. Bastano 3 minuti per avere un piano nutrizionale costruito su di te — non su una media generica.',
@@ -3635,14 +3646,14 @@ it:{
   'faq.q.6':'Perché il peso varia molto giornalmente?',
   'faq.a.6':'Fluttuazioni di 1-2 kg al giorno sono normali e dipendono da: acqua corporea, glicogeno muscolare, contenuto intestinale, ciclo ormonale (donne). Il Coach riconosce la ritenzione idrica (sale alto + acqua bassa) e ti avvisa quando il peso è "falsato". Analizza sempre il trend su 7+ giorni, non il singolo pesata.',
   'faq.q.7':'L\'app è adatta a tutti?',
-  'faq.a.7':'Iron Kinetic è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.',
+  'faq.a.7':'Iron Kinetic™ è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.',
   'faq.q.8':'Posso installare l\'app sul telefono?',
-  'faq.a.8':'Sì. Iron Kinetic è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un\'app nativa, anche offline.',
+  'faq.a.8':'Sì. Iron Kinetic™ è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un\'app nativa, anche offline.',
   'faq.q.9':'I miei dati vengono condivisi o venduti?',
   'faq.a.9':'No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server che raccolgono i tuoi dati sanitari, nessun analytics, nessuna pubblicità basata su di essi. L\'unica eccezione tecnica sono le richieste di font a Google (Google Fonts/Material Symbols) che non trasmettono dati personali.',
   'prv.badge':'Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003',
   'prv.s0.h':'🛡 In sintesi',
-  'prv.s0.p':'Iron Kinetic raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.',
+  'prv.s0.p':'Iron Kinetic™ raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.',
   'prv.s1.h':'1. Titolare del trattamento',
   'prv.s1.name':'[iron kinetic tm]',
   'prv.s1.addr':'[strada di caprile 30]',
@@ -3657,7 +3668,7 @@ it:{
   'prv.s5.h':'5. Utenti anonimi (senza account)',
   'prv.s5.p':'Se non crei un account Google, nessun dato lascia il tuo dispositivo. Piano, peso, check-in e preferenze restano nel localStorage. Vengono cancellati svuotando i dati del sito o tramite Profilo → Ricomincia da capo.',
   'prv.s6.h':'6. Cookie e tracciamento',
-  'prv.s6.p':'Iron Kinetic non utilizza cookie di profilazione. Nessun analytics. Nessun advertising. Nessun pixel di tracciamento. Il solo storage utilizzato è il localStorage del browser (Web Storage API). Gli utenti autenticati ricevono un cookie di sessione tecnico da Supabase, necessario per mantenere il login.',
+  'prv.s6.p':'Iron Kinetic™ non utilizza cookie di profilazione. Nessun analytics. Nessun advertising. Nessun pixel di tracciamento. Il solo storage utilizzato è il localStorage del browser (Web Storage API). Gli utenti autenticati ricevono un cookie di sessione tecnico da Supabase, necessario per mantenere il login.',
   'prv.s7.h':'7. I tuoi diritti (artt. 15–22 GDPR)',
   'prv.s7.r0.ico':'👁','prv.s7.r0.lbl':'Accesso (Art.15)','prv.s7.r0.desc':'Richiedi copia dei dati che ti riguardano scrivendo all\'email del titolare.',
   'prv.s7.r1.ico':'✏️','prv.s7.r1.lbl':'Rettifica (Art.16)','prv.s7.r1.desc':'Correggi i tuoi dati in qualsiasi momento dall\'app.',
@@ -3678,13 +3689,13 @@ it:{
   'prv.contact.p2':'Autorità di controllo: Garante per la protezione dei dati personali — Piazza Venezia 11, 00187 Roma',
   'prv.th.data':'Dato','prv.th.purpose':'Finalità','prv.th.basis':'Base giuridica','prv.th.retention':'Conservazione',
   'help.disclaimer.title':'⚕️ Avviso medico importante',
-  'help.disclaimer.text':'Iron Kinetic è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
+  'help.disclaimer.text':'Iron Kinetic™ è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.',
   'weekly.report.title':'Report Settimanale',
   'weekly.report.share':'Condividi',
   'weekly.report.label.peso':'Peso',
   'weekly.report.label.pasti':'Pasti',
   'checkout.login.title':'Accedi per continuare',
-  'checkout.login.sub':'Accedi con Google per completare il pagamento e attivare Iron Kinetic Trend.',
+  'checkout.login.sub':'Accedi con Google per completare il pagamento e attivare Iron Kinetic™ Trend.',
   'checkout.login.badge':'Richiesto',
   'checkout.login.cta':'Continua con Google',
   'weekly.report.label.fame':'Fame media',
@@ -3699,12 +3710,12 @@ it:{
   'weekly.insight.ciHigh':'{val}/7 check-in questa settimana · Consistenza di alto livello.',
   'weekly.insight.ciLow':'Solo {val}/7 check-in · Registra ogni giorno per analisi più precise.',
   'weekly.insight.default':'Settimana regolare. Mantieni la costanza — i risultati si costruiscono nel tempo.',
-  'share.report.text':'📊 Iron Kinetic — Report Settimanale\n{wTxt} · {ciDays}/7 check-in\nEnergia: {energy}/10 · Aderenza: {adher}/10 · Pasti: {pct}%\n{insight}\n\niron-kinetic.app',
+  'share.report.text':'📊 Iron Kinetic™ — Report Settimanale\n{wTxt} · {ciDays}/7 check-in\nEnergia: {energy}/10 · Aderenza: {adher}/10 · Pasti: {pct}%\n{insight}\n\niron-kinetic.app',
   'toast.reportCopied':'📋 Report copiato!',
   'toast.shareUnsup':'⚠️ Condivisione non supportata',
   'import.errFormat':'Formato non valido',
   'import.errPlan':'Piano non valido nel backup: {msg}',
-  'notif.action.open':'Apri Iron Kinetic',
+  'notif.action.open':'Apri Iron Kinetic™',
   'toast.errore':'⚠️ Errore inatteso',
   'toast.valoreNonValido':'⚠️ Valore non valido',
   'gdpr.footer2':'Richiesto dalla legge UE (GDPR). Puoi revocare il consenso in qualsiasi momento da Profilo → Privacy.',
@@ -3916,12 +3927,12 @@ en:{
   'info.app.cookie':'Cookies','info.app.cookie.val':'Zero ✓',
   'info.app.tracking':'Tracking','info.app.tracking.val':'None ✓',
   'info.disclaimer.title':'⚕️ Medical disclaimer',
-  'info.disclaimer.text':'Iron Kinetic is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
+  'info.disclaimer.text':'Iron Kinetic™ is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
   'gdpr.title':'Your data stays yours.','gdpr.sub':'No ads. No tracking. No selling your data. We only process what\'s needed to build your plan.',
   'gdpr.p1.title':'Health data — only for your plan',
   'gdpr.p1.sub':'Your weight, measurements and body fat are used exclusively to calculate your nutrition plan. Nothing is shared with third parties.',
   'gdpr.p2.title':'Google login — data collected',
-  'gdpr.p2.sub':'Signing in with Google shares your name, email and avatar with Iron Kinetic. Stored in Supabase solely for account management. No health data is shared with Google.',
+  'gdpr.p2.sub':'Signing in with Google shares your name, email and avatar with Iron Kinetic™. Stored in Supabase solely for account management. No health data is shared with Google.',
   'gdpr.p3.title':'Zero tracking cookies · Stripe for payments',
   'gdpr.p3.sub':'No profiling, analytics or advertising cookies. Trend payments are handled by Stripe — no health data is shared with Stripe.',
   'gdpr.btn.accetta':'I agree — Start my plan →','gdpr.btn.leggi':'Read the full Privacy Policy',
@@ -3933,7 +3944,7 @@ en:{
   'pwa.btn':'Install & Start →',
   'shopping.title':'🛒 Shopping List','shopping.empty':'No data','shopping.noPlan':'Load a plan to generate the list',
   'help.title':'❓ Help & FAQ',
-  'help.offline':'Iron Kinetic works completely offline. All your data is on your device.',
+  'help.offline':'Iron Kinetic™ works completely offline. All your data is on your device.',
   'help.contact.title':'Any other questions?','help.contact.sub':'Reach us at support@ironkinetic.app',
   'privacy.title':'🛡 Privacy & GDPR',
   'privacy.consenso.title':'Consent management',
@@ -4143,7 +4154,7 @@ en:{
   'aria.delete.entry':'Delete',
   'aria.meal.toggle':'Mark meal completed',
   'aria.chart.weight':'Weight chart','aria.chart.waist':'Waist chart','modal.close.help':'Close help','modal.close.privacy':'Close privacy',
-  'pwa.install.banner':'Install Iron Kinetic as an app','pwa.install.btn':'Install',
+  'pwa.install.banner':'Install Iron Kinetic™ as an app','pwa.install.btn':'Install',
   'coach.foods.refeed':'rice, potatoes, oats',
   'coach.foods.digest':'white rice, steamed chicken, zucchini',
   'coach.foods.veggies':'broccoli, cucumber, spinach',
@@ -4177,7 +4188,7 @@ en:{
   'set.danger.title':'Danger Zone',
   'set.danger.warn':'These actions are irreversible without a backup.',
   'help.contact.sub.email':'Reach us at <strong style="color:var(--p);">support&#64;ironkinetic.app</strong>',
-  'help.features.title':'All Iron Kinetic features',
+  'help.features.title':'All Iron Kinetic™ features',
   'help.features.sub':'Every feature is designed to bring you closer to your goal — not distract you with useless data.',
   'help.feature.onboarding.title':'Onboarding and profile',
   'help.feature.onboarding.desc':'In 5 steps the app learns who you are: sex, age, height, weight, activity, goal, and food preferences. Three minutes to a nutrition plan built around you — not around a generic average.',
@@ -4218,14 +4229,14 @@ en:{
   'faq.q.6':'Why does my weight fluctuate so much day to day?',
   'faq.a.6':'Fluctuations of 1–2 kg per day are normal and depend on: body water, muscle glycogen, gut content, hormonal cycle (women). The Coach detects water retention (high salt + low water) and alerts you when the weight reading is "skewed". Always analyse the trend over 7+ days, not a single weigh-in.',
   'faq.q.7':'Is the app suitable for everyone?',
-  'faq.a.7':'Iron Kinetic is a nutritional coaching support tool for healthy adults (16+). It is not a medical device and does not replace advice from a doctor, nutritionist or dietitian. If you have medical conditions, eating disorders or specific health issues, always consult a qualified healthcare professional before following any nutritional plan.',
+  'faq.a.7':'Iron Kinetic™ is a nutritional coaching support tool for healthy adults (16+). It is not a medical device and does not replace advice from a doctor, nutritionist or dietitian. If you have medical conditions, eating disorders or specific health issues, always consult a qualified healthcare professional before following any nutritional plan.',
   'faq.q.8':'Can I install the app on my phone?',
-  'faq.a.8':'Yes. Iron Kinetic is a Progressive Web App (PWA). On iPhone/iPad: open in Safari → Share → "Add to Home Screen". On Android: open in Chrome → "⋮" menu → "Add to Home Screen". It will work like a native app, even offline.',
+  'faq.a.8':'Yes. Iron Kinetic™ is a Progressive Web App (PWA). On iPhone/iPad: open in Safari → Share → "Add to Home Screen". On Android: open in Chrome → "⋮" menu → "Add to Home Screen". It will work like a native app, even offline.',
   'faq.q.9':'Is my data shared or sold?',
   'faq.a.9':'No. All data (weight, plan, check-ins, preferences) stays in your device\'s localStorage. No servers collect your health data, no analytics, no ads based on it. The only technical exception is font requests to Google (Google Fonts/Material Symbols), which do not transmit personal data.',
   'prv.badge':'Updated: April 2026 · GDPR (EU Reg. 2016/679) · D.Lgs. 196/2003',
   'prv.s0.h':'🛡 In short',
-  'prv.s0.p':'Iron Kinetic collects only the data strictly necessary to provide the service. Anonymous users keep all data in the browser localStorage. Google-account users sync account state and subscription via Supabase (EU). No health data is ever shared with third parties. Zero tracking cookies.',
+  'prv.s0.p':'Iron Kinetic™ collects only the data strictly necessary to provide the service. Anonymous users keep all data in the browser localStorage. Google-account users sync account state and subscription via Supabase (EU). No health data is ever shared with third parties. Zero tracking cookies.',
   'prv.s1.h':'1. Data controller',
   'prv.s1.name':'[iron kinetic tm]',
   'prv.s1.addr':'[strada di caprile 30]',
@@ -4240,7 +4251,7 @@ en:{
   'prv.s5.h':'5. Anonymous users (no account)',
   'prv.s5.p':'If you do not create a Google account, no data leaves your device. Plan, weight, check-ins and preferences stay in localStorage. They are deleted by clearing site data or via Profile → Start over.',
   'prv.s6.h':'6. Cookies and tracking',
-  'prv.s6.p':'Iron Kinetic does not use profiling cookies. No analytics. No advertising. No tracking pixels. The only storage used is the browser localStorage (Web Storage API). Authenticated users receive a technical session cookie from Supabase, required to maintain the login.',
+  'prv.s6.p':'Iron Kinetic™ does not use profiling cookies. No analytics. No advertising. No tracking pixels. The only storage used is the browser localStorage (Web Storage API). Authenticated users receive a technical session cookie from Supabase, required to maintain the login.',
   'prv.s7.h':'7. Your rights (GDPR Arts. 15–22)',
   'prv.s7.r0.ico':'👁','prv.s7.r0.lbl':'Access (Art.15)','prv.s7.r0.desc':'Request a copy of your data by emailing the controller.',
   'prv.s7.r1.ico':'✏️','prv.s7.r1.lbl':'Rectification (Art.16)','prv.s7.r1.desc':'Correct your data at any time from within the app.',
@@ -4261,13 +4272,13 @@ en:{
   'prv.contact.p2':'Supervisory authority: Garante per la protezione dei dati personali — Piazza Venezia 11, 00187 Rome, Italy',
   'prv.th.data':'Data','prv.th.purpose':'Purpose','prv.th.basis':'Legal basis','prv.th.retention':'Retention',
   'help.disclaimer.title':'⚕️ Medical disclaimer',
-  'help.disclaimer.text':'Iron Kinetic is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
+  'help.disclaimer.text':'Iron Kinetic™ is an informational support tool and does not constitute medical advice. It does not replace the opinion of a doctor, nutritionist or dietitian. Always consult a qualified healthcare professional before starting any nutritional programme.',
   'weekly.report.title':'Weekly Report',
   'weekly.report.share':'Share',
   'weekly.report.label.peso':'Weight',
   'weekly.report.label.pasti':'Meals done',
   'checkout.login.title':'Sign in to continue',
-  'checkout.login.sub':'Sign in with Google to complete your payment and activate Iron Kinetic Trend.',
+  'checkout.login.sub':'Sign in with Google to complete your payment and activate Iron Kinetic™ Trend.',
   'checkout.login.badge':'Required',
   'checkout.login.cta':'Continue with Google',
   'weekly.report.label.fame':'Avg hunger',
@@ -4282,12 +4293,12 @@ en:{
   'weekly.insight.ciHigh':'{val}/7 check-ins this week · Elite-level consistency.',
   'weekly.insight.ciLow':'Only {val}/7 check-ins this week · Log daily for more precise analysis.',
   'weekly.insight.default':'Regular week. Stay consistent — results are built over time.',
-  'share.report.text':'📊 Iron Kinetic — Weekly Report\n{wTxt} · {ciDays}/7 check-ins\nEnergy: {energy}/10 · Adherence: {adher}/10 · Meals: {pct}%\n{insight}\n\niron-kinetic.app',
+  'share.report.text':'📊 Iron Kinetic™ — Weekly Report\n{wTxt} · {ciDays}/7 check-ins\nEnergy: {energy}/10 · Adherence: {adher}/10 · Meals: {pct}%\n{insight}\n\niron-kinetic.app',
   'toast.reportCopied':'📋 Report copied!',
   'toast.shareUnsup':'⚠️ Sharing not supported',
   'import.errFormat':'Invalid format',
   'import.errPlan':'Invalid plan in backup: {msg}',
-  'notif.action.open':'Open Iron Kinetic',
+  'notif.action.open':'Open Iron Kinetic™',
   'toast.errore':'⚠️ Unexpected error',
   'toast.valoreNonValido':'⚠️ Invalid value',
   'gdpr.footer2':'Required by EU law (GDPR). You can revoke consent anytime from Profile → Privacy.',
@@ -5577,10 +5588,10 @@ function shareProgress(){
   const weeks=Math.round(log.length/7);
   const lang=lsR(SK.lang)==='en'?'en':'it';
   const text=lang==='en'
-    ?`💪 ${weeks} weeks on Iron Kinetic${lost?` · ${lost>0?lost+'kg lost':Math.abs(lost)+'kg gained'}`:''}
-Tracking nutrition daily with Iron Kinetic PWA`
-    :`💪 ${weeks} settimane su Iron Kinetic${lost?` · ${lost>0?lost+'kg persi':Math.abs(lost)+'kg guadagnati'}`:''}
-Nutrizione quotidiana con Iron Kinetic PWA`;
+    ?`💪 ${weeks} weeks on Iron Kinetic™${lost?` · ${lost>0?lost+'kg lost':Math.abs(lost)+'kg gained'}`:''}
+Tracking nutrition daily with Iron Kinetic™ PWA`
+    :`💪 ${weeks} settimane su Iron Kinetic™${lost?` · ${lost>0?lost+'kg persi':Math.abs(lost)+'kg guadagnati'}`:''}
+Nutrizione quotidiana con Iron Kinetic™ PWA`;
   if(navigator.share){navigator.share({title:'Iron Kinetic',text}).catch(()=>{});}
   else{navigator.clipboard?.writeText(text);showToast(lang==='en'?'Copied to clipboard':'Copiato negli appunti');}
 }
@@ -8217,25 +8228,34 @@ function getPhaseLiveDesc(phaseIndex){
   const key=descKeys[Math.min(phaseIndex,descKeys.length-1)];
   return t(key,{goal:goalLabel});
 }
+/* ── _applyUserAvatar: applica avatar e nome Google all'header e al profilo ── */
+function _applyUserAvatar(){
+  const avatarUrl=localStorage.getItem('ik_user_avatar');
+  const displayName=localStorage.getItem('ik_user_name');
+  /* Header navbar */
+  const hdrImg=document.getElementById('hdr-av-img');
+  if(hdrImg){
+    if(avatarUrl){hdrImg.src=avatarUrl;hdrImg.style.display='block';}
+    else hdrImg.style.display='none';
+  }
+  /* Profilo avatar */
+  const pImg=document.getElementById('prof-avatar-img');
+  const pIco=document.getElementById('prof-avatar-icon');
+  if(pImg){
+    if(avatarUrl){pImg.src=avatarUrl;pImg.style.display='block';if(pIco)pIco.style.display='none';}
+    else{pImg.style.display='none';if(pIco)pIco.style.display='flex';}
+  }
+  /* Nome sotto avatar nel profilo */
+  const nameEl=document.getElementById('prof-user-name');
+  if(nameEl)nameEl.textContent=displayName||'—';
+}
+
 /* ── renderProfileHeader: popola avatar, nome, stats periodo ── */
 function renderProfileHeader(){
   const prof=getProfile();
-  /* Avatar da Google se loggato */
-  const hdrImg=document.querySelector('#hdr-av img');
-  const pImg=document.getElementById('prof-avatar-img');
-  const pIco=document.getElementById('prof-avatar-icon');
-  if(pImg&&hdrImg?.src&&!hdrImg.src.startsWith('data:')){
-    pImg.src=hdrImg.src;
-    pImg.style.display='block';
-    if(pIco)pIco.style.display='none';
-  }
-  /* Nome utente */
-  const nameEl=document.getElementById('prof-user-name');
+  /* Avatar e nome Google — usa helper centralizzato */
+  _applyUserAvatar();
   const subEl=document.getElementById('prof-user-sub');
-  if(nameEl){
-    const n=prof?.name||lsR('ik_user_name')||null;
-    nameEl.textContent=n||'Iron Kinetic';
-  }
   if(subEl){
     const plan=trendAccess?.mode==='paid'?'Trend '+String(trendAccess.plan||''):trendAccess?.mode==='trial'?`Trial — ${trendAccess.daysLeft||7} giorni`:'Piano Base';
     subEl.textContent=plan;
@@ -9178,8 +9198,8 @@ function scheduleLocalReminder(type,hour){
   if(next<=now) next.setDate(next.getDate()+1);
   const delay=next.getTime()-now.getTime();
   const labels={
-    checkin:{title:'Iron Kinetic ⚡',body:t('notif.checkin.body')},
-    logging:{title:'Iron Kinetic 📊',body:t('notif.logging.body')},
+    checkin:{title:'Iron Kinetic™ ⚡',body:t('notif.checkin.body')},
+    logging:{title:'Iron Kinetic™ 📊',body:t('notif.logging.body')},
   };
   const lbl=labels[type]||labels.checkin;
   setTimeout(()=>{
@@ -9654,7 +9674,7 @@ window.addEventListener('beforeinstallprompt',e=>{
   const lbl=document.getElementById('install-banner-lbl');
   const btn=document.getElementById('install-banner-btn');
   if(b){
-    if(lbl)lbl.textContent=t('pwa.install.banner')||'Installa Iron Kinetic';
+    if(lbl)lbl.textContent=t('pwa.install.banner')||'Installa Iron Kinetic™';
     if(btn)btn.textContent=t('pwa.install.btn')||'Installa';
     b.style.display='flex';
   }
@@ -9665,6 +9685,8 @@ function dismissInstallBanner(){const b=document.getElementById('install-banner'
 
 /* ── Shared boot sequence (after all gates are cleared) ── */
 function _bootAfterGates(){
+  /* Ripristina avatar e nome da localStorage al boot */
+  if(typeof _applyUserAvatar==='function')_applyUserAvatar();
   const consent=gdprStatus();
   if(!consent||!consent.accepted){
     document.getElementById('gdpr-gate').classList.add('on');
@@ -9916,7 +9938,7 @@ function _bootAfterLangGate(){
     <div class="prv-section">
       <div class="prv-highlight">
         <p class="prv-h2" id="prv-s0-h" style="margin-bottom:6px;">🛡 In sintesi</p>
-        <p class="prv-p" id="prv-s0-p">Iron Kinetic raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.</p>
+        <p class="prv-p" id="prv-s0-p">Iron Kinetic™ raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.</p>
       </div>
     </div>
 
@@ -10015,7 +10037,7 @@ function _bootAfterLangGate(){
         </div>
         <div class="prv-proc-item">
           <div class="prv-proc-name">Google LLC (USA)</div>
-          <div class="prv-proc-role">OAuth 2.0 login — condivide con Iron Kinetic nome, email e avatar. Non riceve dati sanitari.</div>
+          <div class="prv-proc-role">OAuth 2.0 login — condivide con Iron Kinetic™ nome, email e avatar. Non riceve dati sanitari.</div>
           <div class="prv-proc-note">Soggetto a Google Privacy Policy</div>
           <a href="https://policies.google.com/privacy" class="prv-proc-link" target="_blank" rel="noopener">policies.google.com/privacy</a>
         </div>
@@ -10043,7 +10065,7 @@ function _bootAfterLangGate(){
     <!-- Section 5b — Freemium vs Subscription -->
     <div class="prv-section">
       <p class="prv-h2" id="prv-s5b-h">5b. Dati e abbonamento (freemium / premium)</p>
-      <p class="prv-p" id="prv-s5b-p">Iron Kinetic offre un periodo di prova gratuito di 7 giorni per le funzionalità Trend. Al termine della prova, l'accesso Trend richiede un abbonamento mensile o un pagamento una tantum lifetime. I dati sanitari (peso, misure, piano alimentare) sono accessibili indipendentemente dallo stato dell'abbonamento. Lo stato dell'abbonamento (piano, data scadenza trial, ID cliente Stripe) è conservato su Supabase per gli utenti autenticati e in localStorage per gli utenti anonimi. La disdetta dell'abbonamento non comporta la cancellazione dei dati sanitari.</p>
+      <p class="prv-p" id="prv-s5b-p">Iron Kinetic™ offre un periodo di prova gratuito di 7 giorni per le funzionalità Trend. Al termine della prova, l'accesso Trend richiede un abbonamento mensile o un pagamento una tantum lifetime. I dati sanitari (peso, misure, piano alimentare) sono accessibili indipendentemente dallo stato dell'abbonamento. Lo stato dell'abbonamento (piano, data scadenza trial, ID cliente Stripe) è conservato su Supabase per gli utenti autenticati e in localStorage per gli utenti anonimi. La disdetta dell'abbonamento non comporta la cancellazione dei dati sanitari.</p>
     </div>
 
     <!-- Section 6 — Cookie -->
@@ -10137,7 +10159,7 @@ function _bootAfterLangGate(){
 
     <div style="background:rgba(77,220,198,.06);border:1px solid rgba(77,220,198,.16);border-radius:var(--r2);padding:12px 14px;margin-bottom:16px;" class="row g3">
       <span class="material-symbols-outlined" style="color:var(--p);font-size:22px;flex-shrink:0;font-variation-settings:'FILL' 1;">offline_bolt</span>
-      <p style="font-size:12px;color:var(--on);font-weight:600;line-height:1.5;margin:0;" class="sn">Iron Kinetic funziona completamente offline. Tutti i tuoi dati sono sul tuo dispositivo.</p>
+      <p style="font-size:12px;color:var(--on);font-weight:600;line-height:1.5;margin:0;" class="sn">Iron Kinetic™ funziona completamente offline. Tutti i tuoi dati sono sul tuo dispositivo.</p>
     </div>
 
     <!-- Feature Guide -->
@@ -10211,7 +10233,7 @@ function _bootAfterLangGate(){
           <span class="faq-q-text">L'app è adatta a tutti?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Iron Kinetic è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.</div>
+        <div class="faq-answer">Iron Kinetic™ è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
@@ -10219,7 +10241,7 @@ function _bootAfterLangGate(){
           <span class="faq-q-text">Posso installare l'app sul telefono?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Sì. Iron Kinetic è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un'app nativa, anche offline.</div>
+        <div class="faq-answer">Sì. Iron Kinetic™ è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un'app nativa, anche offline.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
@@ -10244,10 +10266,10 @@ function _bootAfterLangGate(){
     <!-- Disclaimer medico -->
     <div style="background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.18);border-radius:var(--r);padding:14px 16px;margin-top:4px;">
       <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 6px;" class="sn" id="help-disclaimer-title">⚕️ Avviso medico importante</p>
-      <p style="font-size:11px;color:var(--muted);line-height:1.6;font-weight:500;margin:0;" class="sn" id="help-disclaimer-text">Iron Kinetic è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
+      <p style="font-size:11px;color:var(--muted);line-height:1.6;font-weight:500;margin:0;" class="sn" id="help-disclaimer-text">Iron Kinetic™ è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
     </div>
 
-    <div class="help-version" id="help-version-txt">Iron Kinetic · v2.0.0 · PWA</div>
+    <div class="help-version" id="help-version-txt">Iron Kinetic™ · v2.0.0 · PWA</div>
 
   </div>
 </div>
@@ -10291,7 +10313,7 @@ function _bootAfterLangGate(){
           <span class="material-symbols-outlined" style="color:var(--p);font-size:22px;font-variation-settings:'FILL' 1;">bolt</span>
           <span id="cpo-badge" style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:rgba(77,220,198,.2);color:var(--p);padding:3px 10px;border-radius:999px;">TREND</span>
         </div>
-        <h2 id="cpo-title" style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:var(--on);margin:0 0 6px;letter-spacing:-.02em;">Iron Kinetic Trend</h2>
+        <h2 id="cpo-title" style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:var(--on);margin:0 0 6px;letter-spacing:-.02em;">Iron Kinetic™ Trend</h2>
         <p id="cpo-subtitle" style="font-size:13px;color:var(--on-v);line-height:1.5;margin:0;">Smetti di indovinare. Inizia a prevedere. I tuoi dati reali trasformati in una roadmap delle prossime 12 settimane.</p>
       </div>
 
