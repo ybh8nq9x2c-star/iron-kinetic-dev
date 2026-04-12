@@ -87,9 +87,9 @@ Deno.serve(async (req) => {
 
   /* ── 4. Risolvi Price ID ── */
   const priceMap: Record<string, string> = {
-    monthly:  Deno.env.get('STRIPE_PRICE_MONTHLY')  ?? 'price_1TJy0qJYTPcSrsvtmBIyqDmu',
-    annual:   Deno.env.get('STRIPE_PRICE_ANNUAL')   ?? 'price_1TJy0qJYTPcSrsvtqITsBfl0',
-    lifetime: Deno.env.get('STRIPE_PRICE_LIFETIME') ?? 'price_1TJy0rJYTPcSrsvttxySfxQk',
+    monthly:  Deno.env.get('STRIPE_PRICE_MONTHLY')  ?? 'price_1TLJO9JYTPcSrsvtFVhrRBAT',
+    annual:   Deno.env.get('STRIPE_PRICE_ANNUAL')   ?? 'price_1TLJO9JYTPcSrsvts1UjmFlr',
+    lifetime: Deno.env.get('STRIPE_PRICE_LIFETIME') ?? 'price_1TLJOAJYTPcSrsvtvdSkbwGr',
   }
   const priceId = priceMap[plan]
   console.log('[checkout] plan=', plan, 'priceId=', priceId)
