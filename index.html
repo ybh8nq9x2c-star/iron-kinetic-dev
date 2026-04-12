@@ -2768,23 +2768,17 @@ async function _doStartCheckout(plan){
     let accessToken=null;
     let userEmail=null;
     if(sb){
-      /* Wait for prefetch with 3s timeout to prevent hang */
-      if(_sessionPrefetchPromise){
-        try{await Promise.race([_sessionPrefetchPromise,new Promise(r=>setTimeout(r,3000))]);}catch{}
-      }
+      /* Wait for prefetch if it's still in flight (usually already done) */
+      if(_sessionPrefetchPromise) await _sessionPrefetchPromise.catch(()=>{});
 
       if(_cachedSession?.access_token){
         accessToken=_cachedSession.access_token;
         userEmail=_cachedSession.user?.email||null;
         console.log('[IK][checkout] session from cache → token=',!!accessToken,'email=',userEmail||'(none)');
       }else{
-        /* Cache miss — try getSession with 5s timeout */
+        /* Cache miss — fast getSession (no round-trip refresh) */
         try{
-          const sessResult=await Promise.race([
-            sb.auth.getSession(),
-            new Promise((_,rej)=>setTimeout(()=>rej(new Error('getSession timeout')),5000))
-          ]);
-          const{data:sess,error:sessErr}=sessResult||{};
+          const{data:sess,error:sessErr}=await sb.auth.getSession();
           if(sessErr)console.warn('[IK][checkout] getSession error:',sessErr.message);
           accessToken=sess?.session?.access_token||null;
           userEmail=sess?.session?.user?.email||null;
@@ -2815,15 +2809,15 @@ async function _doStartCheckout(plan){
 
     /* ── STEP 3: server-side checkout via Edge Function ── */
     console.log('[IK][checkout] path=Edge Function');
-    const edgeFnUrl=SUPABASE_URL+'/functions/v1/create-checkout-session';
+    /* Safari iOS (PWA/standalone) silently drops custom headers like 'apikey'.
+       Passing it also as a query param guarantees Supabase always receives it. */
+    const edgeFnUrl=SUPABASE_URL+'/functions/v1/create-checkout-session'
+                    +'?apikey='+encodeURIComponent(SUPABASE_KEY);
     const payload={plan:plan||'monthly',price_tier:plan||'monthly'};
     console.log('[IK][checkout] POST',edgeFnUrl,'payload=',JSON.stringify(payload));
 
     let res;
     try{
-      /* 10s timeout on EF call to prevent hang */
-      const _efController=new AbortController();
-      const _efTimeout=setTimeout(()=>_efController.abort(),10000);
       res=await fetch(edgeFnUrl,{
         method:'POST',
         headers:{
@@ -2831,10 +2825,8 @@ async function _doStartCheckout(plan){
           'Authorization':'Bearer '+accessToken,
           'apikey':SUPABASE_KEY
         },
-        body:JSON.stringify(payload),
-        signal:_efController.signal
+        body:JSON.stringify(payload)
       });
-      clearTimeout(_efTimeout);
     }catch(networkErr){
       console.error('[IK][checkout] fetch network error:',networkErr?.message||networkErr);
       throw new Error('Errore di rete — controlla la connessione e riprova');
@@ -2889,15 +2881,23 @@ async function _doStartCheckout(plan){
     }
 
     console.log('[IK][checkout] Redirecting to Stripe →',data.url);
+    /* Safari iOS PWA blocca window.location.href dentro Promise async.
+       Soluzione: prova href, se la pagina non cambia entro 600ms usa window.open. */
     window.location.href=data.url;
+    setTimeout(()=>{
+      try{
+        if(document.visibilityState!=='hidden'){
+          window.open(data.url,'_blank','noopener');
+        }
+      }catch{}
+    },600);
 
   }catch(err){
     console.error('[IK][checkout] FAILED:',err?.message||err,err?.stack||'');
     if(typeof Sentry!=='undefined'){
       try{Sentry.captureException(err,{tags:{flow:'startCheckout',plan}});}catch{}
     }
-    /* Always clean up checkout keys on failure to prevent redirect loops */
-    try{localStorage.removeItem('ik_pending_checkout_plan');localStorage.removeItem('ik_checkout_retry');localStorage.removeItem('ik_auth_origin');}catch{}
+    /* Chiudi la preview solo in caso di errore, mai prima del redirect */
     closeCheckoutPreview();
     showToast(err?.message||t('toast.checkoutError'));
     _resetUI();
@@ -9803,9 +9803,12 @@ function onbRender(idx){
     nextBtn.disabled=false;
     nextBtn.className=last?'btn btn-primary sn':'btn btn-neon-o sn';
     nextBtn.style.cssText=last
-      ?'height:50px;font-size:14px;padding:0 28px;border-radius:var(--r-pill);font-weight:800;'
-      :'height:44px;font-size:13px;padding:0 22px;border-radius:var(--r-pill);font-weight:700;';
+      ?'height:52px;font-size:15px;padding:0 28px;border-radius:var(--r-pill);font-weight:800;grid-column:1/-1;justify-self:stretch;width:100%;'
+      :'height:44px;font-size:13px;padding:0 22px;border-radius:var(--r-pill);font-weight:700;grid-column:auto;justify-self:end;width:auto;';
   }
+  /* On last slide: hide Skip+Back so START NOW gets the full row */
+  if(skipBtn){skipBtn.style.display=last?'none':'';}
+  if(prevBtn){prevBtn.style.display=last?'none':'';}
   /* Auto-progress: only slides 0-1, pause 3.8s — slide 2+ is manual */
   _onbAutoClear();
   if(idx<2){_onbAutoTimer=setTimeout(()=>onbNext(),3800);}
