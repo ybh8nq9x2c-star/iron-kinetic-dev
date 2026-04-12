@@ -3035,6 +3035,30 @@ function showTrialExpiringSoon(){
 }
 
 /* ── Google OAuth ── */
+async function signOut(){
+  if(!sb){showToast('Auth non configurata');return;}
+  const btn=document.getElementById('btn-logout');
+  const lbl=document.getElementById('btn-logout-label');
+  if(btn){btn.disabled=true;}
+  if(lbl){lbl.textContent=_lang==='en'?'Signing out…':'Uscita in corso…';}
+  try{
+    /* Clear all local state */
+    try{localStorage.removeItem('ik_pending_checkout_plan');}catch{}
+    try{localStorage.removeItem('ik_checkout_retry');}catch{}
+    try{localStorage.removeItem('ik_auth_origin');}catch{}
+    _cachedSession=null;
+    _sessionPrefetchPromise=null;
+    await sb.auth.signOut();
+    /* Reload the page — cleanest way to reset all state */
+    window.location.reload();
+  }catch(err){
+    console.error('[IK][signOut] error:',err?.message||err);
+    showToast(_lang==='en'?'Sign out failed — try again':'Errore logout — riprova');
+    if(btn){btn.disabled=false;}
+    if(lbl){lbl.textContent=_lang==='en'?'Sign out':'Esci dall\'account';}
+  }
+}
+
 async function signInWithGoogle(){
   if(!sb){showToast('Auth non configurata');return;}
   /* No explicit redirectTo — Supabase uses Site URL configured in dashboard */
@@ -3540,7 +3564,7 @@ it:{
   'coach.bodycomp.recomp':'Ricomposizione rilevata: peso stabile, girovita -2%. +150 kcal anti-RED-S. Non modificare il piano.',
   'coach.micro.b12med':'Vegano >21gg: integra B12 (2.4µg/die) e controlla ferro non-eme. Abbina vitamina C al pasto.',
   'coach.micro.b12high':'Vegano >60gg: verifica B12 sierica, ferritina e zinco. Deficit subclinici compromettono il recupero.',
-  'onb2.skip':'Salta','onb2.next':'Avanti','onb2.prev':'← Indietro','onb2.start':'INIZIA ORA — È GRATIS',
+  'logout':'Esci dall\'account','onb2.skip':'Salta','onb2.next':'Avanti','onb2.prev':'← Indietro','onb2.start':'INIZIA ORA — È GRATIS',
   'onb2.slide1.badge':'Il tuo nutrizionista tascabile',
   'onb2.slide1.emoji':'bolt',
   'onb2.slide1.title':'Non un\'altra app.\nIl tuo piano reale.',
@@ -4124,7 +4148,7 @@ en:{
   'coach.bodycomp.recomp':'Body recomposition detected: stable weight, waist -2%. +150 kcal anti-RED-S. Do not change the plan.',
   'coach.micro.b12med':'Vegan >21 days: supplement B12 (2.4µg/day) and monitor non-haem iron. Pair vitamin C with meals.',
   'coach.micro.b12high':'Vegan >60 days: check serum B12, ferritin and zinc. Subclinical deficits impair recovery.',
-  'onb2.skip':'Skip','onb2.next':'Next','onb2.prev':'← Back','onb2.start':'START NOW — IT\'S FREE',
+  'logout':'Sign out','onb2.skip':'Skip','onb2.next':'Next','onb2.prev':'← Back','onb2.start':'START NOW — IT\'S FREE',
   'onb2.slide1.badge':'Your pocket nutritionist',
   'onb2.slide1.emoji':'bolt',
   'onb2.slide1.title':'Not another app.\nYour actual plan.',
