@@ -2817,8 +2817,7 @@ async function _doStartCheckout(plan){
     console.log('[IK][checkout] path=Edge Function');
     /* Safari iOS (PWA/standalone) silently drops custom headers like 'apikey'.
        Passing it also as a query param guarantees Supabase always receives it. */
-    const edgeFnUrl=SUPABASE_URL+'/functions/v1/create-checkout-session'
-                    +'?apikey='+encodeURIComponent(SUPABASE_KEY);
+    const edgeFnUrl=SUPABASE_URL+'/functions/v1/create-checkout-session';
     const payload={plan:plan||'monthly',price_tier:plan||'monthly'};
     console.log('[IK][checkout] POST',edgeFnUrl,'payload=',JSON.stringify(payload));
 
@@ -2828,8 +2827,7 @@ async function _doStartCheckout(plan){
         method:'POST',
         headers:{
           'Content-Type':'application/json',
-          'Authorization':'Bearer '+accessToken,
-          'apikey':SUPABASE_KEY
+          'X-User-JWT':accessToken
         },
         body:JSON.stringify(payload)
       });
