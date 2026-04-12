@@ -2880,7 +2880,16 @@ async function _doStartCheckout(plan){
     }
 
     console.log('[IK][checkout] Redirecting to Stripe →',data.url);
+    /* Safari iOS PWA blocca window.location.href dentro Promise async.
+       Soluzione: prova href, se la pagina non cambia entro 600ms usa window.open. */
     window.location.href=data.url;
+    setTimeout(()=>{
+      try{
+        if(document.visibilityState!=='hidden'){
+          window.open(data.url,'_blank','noopener');
+        }
+      }catch{}
+    },600);
 
   }catch(err){
     console.error('[IK][checkout] FAILED:',err?.message||err,err?.stack||'');
@@ -5546,16 +5555,42 @@ function renderPredictionChart(){
         return;
       }
       if(bodyChart){try{bodyChart.destroy();}catch(e){}bodyChart=null;}
+      /* Formatter identico al weight chart */
+      const _fmtPred=v=>v!=null?(()=>{const n=Math.round(v*10)/10;return(n%1===0?String(Math.round(n)):n.toFixed(1))+' kg';})():'';
       bodyChart=new Chart(cv,{
         type:'line',
         data:{labels:allLabels,datasets:[
-          {label:t('chart.reale'),data:allReal,borderColor:'#4ddcc6',backgroundColor:'rgba(77,220,198,.10)',borderWidth:2.25,pointBackgroundColor:'#4ddcc6',pointBorderWidth:0,pointRadius:3,tension:.35,fill:true,spanGaps:false},
-          {label:t('chart.previsione'),data:allPred,borderColor:'rgba(77,220,198,.45)',backgroundColor:'transparent',borderWidth:2,borderDash:[5,4],pointRadius:2,pointBackgroundColor:'rgba(77,220,198,.45)',tension:.35,fill:false,spanGaps:false}
+          /* Dataset reale — identico al weight chart */
+          {label:t('chart.reale'),data:allReal,
+           borderColor:'var(--p)',backgroundColor:'rgba(77,220,198,.10)',
+           borderWidth:2.25,pointBackgroundColor:'var(--p)',pointBorderWidth:0,
+           pointRadius:3,pointHoverRadius:4,tension:.35,fill:true,spanGaps:false},
+          /* Dataset previsione — stessa palette, tratteggiato */
+          {label:t('chart.previsione'),data:allPred,
+           borderColor:'rgba(77,220,198,.5)',backgroundColor:'transparent',
+           borderWidth:2,borderDash:[5,4],
+           pointRadius:2,pointHoverRadius:3,pointBackgroundColor:'rgba(77,220,198,.5)',
+           tension:.35,fill:false,spanGaps:false}
         ]},
         options:{responsive:true,maintainAspectRatio:false,animation:false,
-          plugins:{legend:{display:false},tooltip:{displayColors:false,backgroundColor:'#151515',borderColor:'#4ddcc6',borderWidth:1,titleColor:'#8A8A8A',bodyColor:'#fff',callbacks:{label:ctx=>{const v=ctx.parsed.y;return v!=null?(Math.round(v*10)/10)+' kg':'';} }}},
-          scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#8A8A8A',maxRotation:0,autoSkip:true,maxTicksLimit:6,font:{family:'Manrope',size:10,weight:'600'}},border:{display:false}},
-                  y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#8A8A8A',font:{family:'Manrope',size:10,weight:'600'},callback:v=>v!=null?(Math.round(v*10)/10)+' kg':''},border:{display:false}}}}
+          plugins:{
+            legend:{display:false},
+            tooltip:{displayColors:false,backgroundColor:'#151515',
+              borderColor:'var(--p)',borderWidth:1,
+              titleColor:'#8A8A8A',bodyColor:'#fff',
+              callbacks:{label:ctx=>{const v=ctx.parsed.y;return v!=null?_fmtPred(v):'';}}
+            }
+          },
+          scales:{
+            x:{grid:{color:'rgba(255,255,255,.04)'},
+               ticks:{color:'#8A8A8A',maxRotation:0,autoSkip:true,maxTicksLimit:6,
+                      font:{family:'Manrope',size:10,weight:'600'}},
+               border:{display:false}},
+            y:{grid:{color:'rgba(255,255,255,.04)'},
+               ticks:{color:'#8A8A8A',font:{family:'Manrope',size:10,weight:'600'},
+                      callback:v=>_fmtPred(v)},
+               border:{display:false}}
+          }}
       });
       _chartType='prediction';
     }));
