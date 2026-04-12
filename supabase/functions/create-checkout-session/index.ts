@@ -21,7 +21,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': 'https://irokninetic-production.up.railway.app',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-user-jwt',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
@@ -37,27 +37,24 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
-  /* ── 1. Verifica Authorization header ── */
-  const authHeader = req.headers.get('Authorization') ?? ''
-  const accessToken = authHeader.replace(/^Bearer\s+/i, '').trim()
+  /* ── 1. Read user JWT from custom header ──
+     We use X-User-JWT instead of Authorization because the Supabase
+     gateway validates Authorization Bearer tokens and rejects them if
+     the JWT signing secret doesn't match (common after key rotation). */
+  const accessToken = req.headers.get('X-User-JWT') ?? ''
 
   if (!accessToken) {
-    console.error('[checkout] Missing Authorization header')
+    console.error('[checkout] Missing X-User-JWT header')
     return json({ error: 'Unauthorized — missing token' }, 401)
   }
 
-  /* ── 2. Verifica JWT utente ──────────────────────────────────
-     USA SUPABASE_SERVICE_ROLE_KEY (iniettata automaticamente da
-     Supabase) + passa il JWT utente via global header.
-     NON usare SUPABASE_ANON_KEY: non è una variabile built-in
-     nelle Edge Functions e causa getUser() silenziosamente nullo.
-  ─────────────────────────────────────────────────────────────── */
+  /* ── 2. Verify user JWT via service_role ── */
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     {
       auth: { persistSession: false },
-      global: { headers: { Authorization: authHeader } },
+      global: { headers: { Authorization: 'Bearer ' + accessToken } },
     }
   )
 

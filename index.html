@@ -2846,9 +2846,8 @@ async function _doStartCheckout(plan){
       const _efTimeout=setTimeout(()=>_efController.abort(),10000);
       res=await fetch(edgeFnUrl,{
         method:'POST',
-        headers:{
           'Content-Type':'application/json',
-          'Authorization':'Bearer '+accessToken,
+          'X-User-JWT':accessToken,
           'apikey':SUPABASE_KEY
         },
         body:JSON.stringify(payload),
