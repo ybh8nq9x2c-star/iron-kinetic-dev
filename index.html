@@ -2265,8 +2265,6 @@ hr{height:1px;}
         </div>
         <p class="onb-title" id="onb-t4"></p>
         <p class="onb-body" id="onb-b4"></p>
-        <button id="onb-start-btn" class="btn btn-primary" onclick="onbFinish()" aria-label="Start"
-          style="margin-top:28px;width:100%;max-width:300px;height:60px;font-size:16px;font-weight:800;letter-spacing:.08em;border-radius:var(--r-pill);box-shadow:0 8px 28px rgba(77,220,198,.35);"></button>
         <p class="onb-step-hint" id="onb-hint4" style="margin-top:14px"></p>
       </div>
 
@@ -9799,7 +9797,7 @@ function onbRender(idx){
   if(nextBtn){
     nextBtn.textContent=last?t('onb2.start'):t('onb2.next');
     nextBtn.onclick=last?onbFinish:onbNext;
-    nextBtn.disabled=last;
+    nextBtn.disabled=false;
     nextBtn.className=last?'btn btn-primary sn':'btn btn-neon-o sn';
     nextBtn.style.cssText=last
       ?'height:50px;font-size:14px;padding:0 28px;border-radius:var(--r-pill);font-weight:800;'
@@ -9865,8 +9863,7 @@ function showOnboarding(){
     if(el)el.innerHTML=el.textContent.replace(/\n/g,'<br>');
   });
   /* Buttons */
-  const startBtn=document.getElementById('onb-start-btn');
-  if(startBtn){startBtn.textContent=t('onb2.start');startBtn.setAttribute('aria-label',t('onb2.start'));}
+  /* onb-start-btn rimosso dalla slide — gestito dal nav button */
   const skipBtn=document.getElementById('onb-skip-btn');
   if(skipBtn) skipBtn.textContent=t('onb2.skip');
   const prevBtn=document.getElementById('onb-prev-btn');
