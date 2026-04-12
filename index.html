@@ -1351,8 +1351,8 @@ hr{height:1px;}
         </div>
         <!-- Pricing CTAs -->
         <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€9,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;">Cancella quando vuoi</span></button>
-          <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:var(--p);border:1px solid rgba(77,220,198,.35);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€39,99/anno<br><span style="font-weight:400;font-size:10px;opacity:.7;">💰 Risparmia il 33%</span></button>
+          <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€6,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;">Cancella quando vuoi</span></button>
+          <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:var(--p);border:1px solid rgba(77,220,198,.35);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€69,99/anno<br><span style="font-weight:400;font-size:10px;opacity:.7;">💰 Risparmia il 33%</span></button>
         </div>
         <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.2);border-radius:var(--r);padding:10px 8px;font-weight:800;font-size:11px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:8px;">€99,99 · Accesso permanente</button>
         <!-- Trial CTA -->
@@ -2664,7 +2664,7 @@ function selectCheckoutPlan(plan){
   if(aEl)aEl.classList.toggle('cpo-selected',plan==='annual');
   const cta=document.getElementById('cpo-cta');
   if(cta){
-    const price=plan==='annual'?'€39,99':plan==='monthly'?'€9,99':'€99,99';
+    const price=plan==='annual'?'€69,99':plan==='monthly'?'€6,99':'€179,99';
     const label=_lang==='en'?`Continue — ${price}`:`Continua — ${price}`;
     cta.textContent=label+' →';
   }
@@ -3786,9 +3786,9 @@ it:{
   'sub.trial.detail.zero': 'Attiva Trend per non perdere le analisi',
   'sub.trial.prog.left': '{d} giorni utilizzati',
   'sub.trial.prog.right': '{d} rimasti',
-  'sub.trial.cta.monthly': 'Attiva Trend — €9,99/mese',
-  'sub.trial.cta.annual': 'Oppure €39,99/anno · Risparmia il 33%',
-  'sub.trial.cta.lifetime': 'O €99,99 una volta · Accesso per sempre',
+  'sub.trial.cta.monthly': 'Attiva Trend — €6,99/mese',
+  'sub.trial.cta.annual': 'Oppure €69,99/anno · Risparmia il 17%',
+  'sub.trial.cta.lifetime': 'O €179,99 una volta · Accesso per sempre',
   'sub.paid.subtitle.monthly': 'Mensile · Rinnovo automatico',
   'sub.paid.subtitle.annual': 'Annuale · Rinnovo automatico',
   'sub.paid.subtitle.lifetime': 'Lifetime · Accesso permanente garantito',
@@ -3808,9 +3808,9 @@ it:{
   'sub.expired.subtitle': 'La tua prova è finita — riattiva Trend e continua esattamente da dove ti eri fermato',
   'sub.expired.detail': 'Riattiva Trend per riprendere l\'analisi',
   'sub.expired.prog.left': 'Prova terminata',
-  'sub.expired.cta.monthly': '⭐ Riattiva ora — €9,99/mese',
-  'sub.expired.cta.annual': 'Miglior valore — €39,99/anno',
-  'sub.expired.cta.lifetime': 'O €99,99 una volta · Accesso vita',
+  'sub.expired.cta.monthly': '⭐ Riattiva ora — €6,99/mese',
+  'sub.expired.cta.annual': 'Miglior valore — €69,99/anno',
+  'sub.expired.cta.lifetime': 'O €179,99 una volta · Accesso per sempre',
   'sub.anon.prompt': "Sign in with Google to activate your free 7-day trial and sync your plan across all devices.",
   'sub.anon.cta': 'Accedi con Google — È gratis',
   'toast.stripeUnavailable': 'Stripe non disponibile, riprova',
@@ -4369,9 +4369,9 @@ en:{
   'sub.trial.detail.zero': 'Activate Trend to keep your progress insights',
   'sub.trial.prog.left': '{d} days used',
   'sub.trial.prog.right': '{d} remaining',
-  'sub.trial.cta.monthly': 'Activate Trend — €9.99/month',
-  'sub.trial.cta.annual': 'Or €39.99/year · Save 33%',
-  'sub.trial.cta.lifetime': 'Or €99.99 once · Lifetime access',
+  'sub.trial.cta.monthly': 'Activate Trend — €6.99/month',
+  'sub.trial.cta.annual': 'Or €69.99/year · Save 17%',
+  'sub.trial.cta.lifetime': 'Or €179.99 once · Lifetime access',
   'sub.paid.subtitle.monthly': 'Monthly · Auto-renewing',
   'sub.paid.subtitle.annual': 'Annual · Auto-renewing',
   'sub.paid.subtitle.lifetime': 'Lifetime · Permanent access guaranteed',
@@ -4392,8 +4392,8 @@ en:{
   'sub.expired.detail': 'Reactivate Trend to unlock advanced analytics',
   'sub.expired.prog.left': 'Trial ended',
   'sub.expired.cta.monthly': '⭐ Reactivate now — €9.99/mo',
-  'sub.expired.cta.annual': 'Or €39.99/year · Save 33%',
-  'sub.expired.cta.lifetime': 'Or €99.99 once · Lifetime access',
+  'sub.expired.cta.annual': 'Or €69.99/year · Save 17%',
+  'sub.expired.cta.lifetime': 'Or €179.99 once · Lifetime access',
   'sub.anon.prompt': 'Accedi con Google per attivare la prova gratuita di 7 giorni e sincronizzare il tuo piano su tutti i dispositivi.',
   'sub.anon.cta': 'Sign in with Google — It\'s free',
   'toast.stripeUnavailable': 'Stripe unavailable, please retry',
@@ -10333,14 +10333,14 @@ function _bootAfterLangGate(){
         <!-- monthly -->
         <div id="cpo-monthly" onclick="selectCheckoutPlan('monthly')" style="flex:1;background:var(--s2);border:1px solid var(--line);border-radius:var(--r);padding:14px;cursor:pointer;transition:border-color .15s,background .15s;text-align:center;">
           <p id="cpo-m-label" style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;">1 mese</p>
-          <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:var(--on);margin:0 0 2px;letter-spacing:-.02em;">€9,99</p>
+          <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:var(--on);margin:0 0 2px;letter-spacing:-.02em;">€6,99</p>
           <p id="cpo-m-note" style="font-size:10px;color:var(--muted);margin:0;">Mensile</p>
         </div>
         <!-- annual - highlighted -->
         <div id="cpo-annual" onclick="selectCheckoutPlan('annual')" style="flex:1;background:rgba(77,220,198,.06);border:2px solid var(--p);border-radius:var(--r);padding:14px;cursor:pointer;transition:border-color .15s;text-align:center;position:relative;">
           <div id="cpo-best-badge" style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--p);color:var(--p-inverse);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 10px;border-radius:999px;white-space:nowrap;">Solo €3,33/mese</div>
           <p id="cpo-a-label" style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--p);margin:0 0 4px;">12 mesi</p>
-          <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:var(--on);margin:0 0 2px;letter-spacing:-.02em;">€39,99</p>
+          <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:var(--on);margin:0 0 2px;letter-spacing:-.02em;">€69,99</p>
           <p id="cpo-a-note" style="font-size:10px;color:var(--muted);margin:0;">Annuale</p>
         </div>
       </div>
@@ -10382,8 +10382,8 @@ function _bootAfterLangGate(){
       <div class="pw-feat">Lista della Spesa</div>
     </div>
     <div style="display:flex;gap:10px;margin-bottom:10px;">
-      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€9,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.75;">Cancella quando vuoi</span></button>
-      <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.12);color:var(--p);border:1px solid rgba(77,220,198,.3);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€39,99/anno<br><span style="font-weight:600;font-size:11px;">€3,33/mese · −33%</span></button>
+      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€6,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.75;">Cancella quando vuoi</span></button>
+      <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.12);color:var(--p);border:1px solid rgba(77,220,198,.3);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€69,99/anno<br><span style="font-weight:600;font-size:11px;">€3,33/mese · −33%</span></button>
     </div>
     <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);padding:12px;font-weight:700;font-size:12px;cursor:pointer;margin-bottom:16px;touch-action:manipulation;">€99,99 · Accesso permanente<br><span style="font-weight:400;font-size:11px;opacity:.7;">Pagamento unico</span></button>
     <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:8px;">Hai già un account? <span style="color:var(--p);">Accedi</span></button>
