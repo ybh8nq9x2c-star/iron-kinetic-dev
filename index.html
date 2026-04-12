@@ -43,23 +43,30 @@
   --glass-shadow:0 8px 32px rgba(0,0,0,.32),var(--glass-hi);
   --neon:var(--p); --neon-12:var(--p-dim); --neon-06:rgba(77,220,198,.06);
   --neon-glow:var(--p-glow); --neon-glow-s:var(--p-glow-s); --neon-20:rgba(77,220,198,.20);
+  /* ── Spacing scale (4px base) ── */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-8:32px;
+  /* ── Typography ── */
+  --font-label:700 10px/1 'Manrope',sans-serif;
+  /* ── Component tokens ── */
+  --p-inverse:#003730; --card-pad:16px; --card-pad-sm:14px;
+  --sheet-radius:20px; --modal-radius:20px;
 }
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;height:100%;height:100dvh;background:var(--bg);}
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
 input,textarea,select{-webkit-user-select:text;user-select:text;}
-body{margin:0;height:100%;height:100dvh;width:100%;overflow:hidden;overscroll-behavior:none;background:var(--bg);font-family:'Manrope',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;color:var(--on);padding-top:var(--sat);}
+body{margin:0;height:100%;height:100dvh;width:100%;overflow:hidden;overscroll-behavior:none;background:var(--bg);font-family:'Manrope',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:var(--on);padding-top:var(--sat);}
 .glow-a,.glow-b{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
-.glow-a{top:20%;right:-10%;width:50%;height:40%;background:rgba(77,220,198,.12);filter:blur(60px);}
-.glow-b{bottom:10%;left:-10%;width:50%;height:40%;background:rgba(49,49,192,.10);filter:blur(60px);}
+.glow-a{top:20%;right:-10%;width:50%;height:40%;background:rgba(77,220,198,.06);filter:blur(80px);}
+.glow-b{bottom:10%;left:-10%;width:50%;height:40%;background:rgba(49,49,192,.06);filter:blur(80px);}
 .scr{position:absolute;top:0;left:var(--sal);right:var(--sar);bottom:0;padding-top:var(--page-top);padding-bottom:calc(var(--page-bottom) + var(--kb-offset) + var(--sat));overflow-y:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;scroll-padding-bottom:calc(var(--page-bottom) + var(--sat) + 16px);z-index:1;}
 .scr::-webkit-scrollbar{display:none;}.scr{scrollbar-width:none;-ms-overflow-style:none;}
-#hdr{position:fixed;top:var(--hdr-top);left:max(12px,var(--sal));right:max(12px,var(--sar));height:var(--hdr);z-index:200;padding:0 16px;border-radius:22px;background:rgba(77,220,198,.04);border:1px solid rgba(77,220,198,.15);box-shadow:0 8px 32px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.08);-webkit-backdrop-filter:saturate(180%) blur(20px) brightness(1.5);backdrop-filter:saturate(180%) blur(20px) brightness(1.5);display:flex;align-items:center;justify-content:space-between;}
-.hdr-logo{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;letter-spacing:-.02em;color:var(--p);text-transform:uppercase;line-height:1;user-select:none;}
+#hdr{position:fixed;top:var(--hdr-top);left:max(12px,var(--sal));right:max(12px,var(--sar));height:var(--hdr);z-index:200;padding:0 16px;border-radius:16px;background:rgba(20,20,20,.92);border:1px solid var(--line-hi);box-shadow:0 4px 24px rgba(0,0,0,.32);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:space-between;}
+.hdr-logo{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;letter-spacing:.02em;color:var(--p);text-transform:uppercase;line-height:1;user-select:none;}
 .hdr-right{display:flex;align-items:center;gap:10px;}
 .hdr-plan{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:none;}
 .hdr-av{width:28px;height:28px;border-radius:50%;border:1px solid var(--glass-stroke);background:var(--s3);overflow:hidden;flex-shrink:0;}
 .hdr-av img{width:100%;height:100%;object-fit:cover;}
-#nav{position:fixed;left:max(12px,var(--sal));right:max(12px,var(--sar));bottom:max(8px,var(--sab));height:var(--nav-h);padding:6px 12px;z-index:200;border-radius:22px;background:rgba(77,220,198,.04);border:1px solid rgba(77,220,198,.15);box-shadow:0 8px 32px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.08);-webkit-backdrop-filter:saturate(180%) blur(20px) brightness(1.5);backdrop-filter:saturate(180%) blur(20px) brightness(1.5);display:flex;align-items:center;justify-content:space-around;transform:translateY(var(--kb-offset));transition:transform .22s ease;}
+#nav{position:fixed;left:max(12px,var(--sal));right:max(12px,var(--sar));bottom:max(8px,var(--sab));height:var(--nav-h);padding:6px 12px;z-index:200;border-radius:16px;background:rgba(20,20,20,.94);border:1px solid var(--line-hi);box-shadow:0 4px 24px rgba(0,0,0,.4);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:space-around;transform:translateY(var(--kb-offset));transition:transform .22s ease;}
 .nb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:1;min-width:0;height:56px;padding:0 6px;border-radius:18px;background:transparent;border:none;outline:none;cursor:pointer;touch-action:manipulation;transform:translateZ(0);will-change:transform;transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .15s;}
 .nb:active{transform:scale(.88) translateZ(0);}
 .nb.on{background:rgba(77,220,198,.18);}
@@ -71,9 +78,9 @@ body{margin:0;height:100%;height:100dvh;width:100%;overflow:hidden;overscroll-be
 .pg{padding:6px 16px 20px;max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
 .card{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);}
 .card-ghost{background:rgba(255,255,255,.04);border:1px solid var(--glass-stroke);border-radius:var(--r);}
-.card-neon{background:rgba(77,220,198,.04);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);box-shadow:inset 0 0 32px rgba(77,220,198,.04),var(--p-glow-s);}
+.card-neon{background:rgba(77,220,198,.04);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);}
 .sec-label{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--p);display:block;margin-bottom:10px;user-select:none;}
-.sec-title{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;letter-spacing:-.03em;text-transform:uppercase;font-style:italic;line-height:1;user-select:none;color:var(--on);margin:0 0 2px;}
+.sec-title{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.02em;line-height:1.1;user-select:none;color:var(--on);margin:0 0 2px;}
 .field-label{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;user-select:none;}
 .t-xxs{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;user-select:none;}
 .neon{color:var(--p);}.muted{color:var(--muted);}.dimmed{color:var(--dim);}
@@ -82,7 +89,7 @@ button:focus-visible{outline:2px solid var(--p);outline-offset:2px;}
 .nb{transform:translateZ(0);will-change:transform;}
 .btn{display:flex;align-items:center;justify-content:center;height:50px;border-radius:var(--r);font-family:'Manrope',sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;transition:transform .1s cubic-bezier(.34,1.56,.64,1),opacity .1s;user-select:none;}
 .btn:active{transform:scale(.96) translateZ(0);opacity:.88;}
-.btn-primary{background:var(--p);color:#003730;box-shadow:0 6px 20px rgba(77,220,198,.22);font-weight:800;}
+.btn-primary{background:var(--p);color:var(--p-inverse);box-shadow:0 2px 12px rgba(77,220,198,.15);font-weight:700;}
 .btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--glass-stroke);color:var(--on-v);transition:background .15s,border-color .15s,opacity .15s;}
 .btn-ghost:active{background:var(--s3);}
 .btn-neon-o{background:rgba(77,220,198,.12);border:1px solid rgba(77,220,198,.22);color:var(--p);}
@@ -100,7 +107,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
 textarea.inp{height:auto;padding:12px 14px;resize:none;line-height:1.5;}
 .seg-wrap{display:flex;background:rgba(255,255,255,.04);border-radius:var(--r2);padding:3px;gap:3px;}
 .seg-btn{flex:1;height:44px;border-radius:var(--r3);font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:transparent;border:none;outline:none;transition:all .18s;user-select:none;touch-action:manipulation;}
-.seg-btn.seg-on{background:var(--p);color:#003730;box-shadow:var(--p-glow-s);}
+.seg-btn.seg-on{background:var(--p);color:var(--p-inverse);}
 .seg-btn:active{opacity:.75;}
 .bar-track{height:4px;border-radius:100px;background:rgba(255,255,255,.06);overflow:hidden;}
 .bar-track.md{height:5px;}.bar-track.lg{height:6px;}
@@ -115,7 +122,7 @@ textarea.inp{height:auto;padding:12px 14px;resize:none;line-height:1.5;}
 .meal-row.done{border-color:rgba(77,220,198,.24);background:rgba(77,220,198,.03);}
 .meal-row:active{opacity:.75;}
 .meal-row:focus-visible{outline:2px solid var(--p);outline-offset:2px;}
-.meal-name{font-size:13px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.01em;color:var(--on);}
+.meal-name{font-size:13px;font-weight:600;letter-spacing:0;color:var(--on);}
 .meal-desc{font-size:11px;color:var(--muted);margin-top:2px;font-weight:500;line-height:1.4;}
 .day-chip{height:36px;padding:0 12px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--s2);border:1px solid var(--line);color:var(--muted);touch-action:manipulation;transition:all .12s;user-select:none;}
 .day-chip.on{background:var(--p);color:#003730;border-color:var(--p);}
@@ -214,13 +221,8 @@ body.onboarding-active #onb-screen{
 #kcal-ring{transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1),stroke .3s,opacity .3s;}
 #wChart-wrap{position:relative;width:100%;height:165px;overflow:hidden;}
 #wChart{display:block;width:100%!important;height:165px!important;touch-action:pan-x;}
-@keyframes teal-pulse{0%,100%{box-shadow:0 0 8px rgba(77,220,198,.18);}50%{box-shadow:0 0 28px rgba(77,220,198,.5);}}
-@keyframes bolt-pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.18);opacity:.85;}}
-@keyframes coach-wrap-pulse{0%,100%{box-shadow:0 4px 16px rgba(77,220,198,.28);}50%{box-shadow:0 4px 28px rgba(77,220,198,.6),0 0 0 4px rgba(77,220,198,.12);}}
-.coach-ico-primary{background:var(--p);color:var(--p-inverse);animation:coach-wrap-pulse 2.4s ease-in-out infinite;}
-.coach-ico-primary .material-symbols-outlined,.coach-ico-primary-ico{animation:bolt-pulse 2.4s ease-in-out infinite;}
-@media(prefers-reduced-motion:reduce){.coach-ico-primary,.coach-ico-primary .material-symbols-outlined{animation:none;}}
-.rfon{animation:teal-pulse 2s ease-in-out infinite;}
+/* Pulse animations removed — continuous animations signal vibe-coded, not professional */
+.coach-ico-primary{background:rgba(77,220,198,.12);color:var(--p);}
 .row{display:flex;align-items:center;}.rowb{display:flex;align-items:center;justify-content:space-between;}
 .g2{gap:8px;}.g3{gap:10px;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -278,9 +280,9 @@ body.onboarding-active #onb-screen{
 .cal-dot.cal-red{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.32);color:var(--red,#ff453a);}
 .cal-dot.cal-empty{background:var(--s3);border-color:var(--line);color:var(--dim);}
 /* Streak badge */
-.streak-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);padding:6px 10px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--orange);margin-top:8px;}
+.streak-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);padding:4px 10px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.04em;color:var(--orange);}
 .streak-badge .fire{font-size:12px;}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}.rfon{animation:none;}.bar-fill,.result-card{transition:none;}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}.bar-fill,.result-card{transition:none;}}
 /* ── Trend blur overlay ── */
 #scr-prog-blur-overlay{display:none;position:fixed;top:calc(var(--hdr-top) + var(--hdr) + 4px);left:0;right:0;bottom:calc(var(--nav-bottom) + var(--nav-h));z-index:50;background:transparent;pointer-events:none;}
 #scr-prog-blur-overlay.on{display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(8px) saturate(120%);-webkit-backdrop-filter:blur(8px) saturate(120%);background:rgba(14,14,14,.80);}
@@ -347,14 +349,29 @@ body.onboarding-active #onb-screen{
 }
 /* Emoji: block, centered, consistent spacing */
 .onb-emoji{
-  font-size:64px;
+  font-size:48px;
   line-height:1;
-  display:block;
-  text-align:center;
-  width:100%;
-  margin:0 0 24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:56px;height:56px;
+  margin:0 auto 24px;
+  background:rgba(77,220,198,.08);
+  border:1px solid rgba(77,220,198,.15);
+  border-radius:16px;
   user-select:none;
   -webkit-user-select:none;
+}
+.onb-emoji.material-symbols-outlined{
+  font-size:28px;
+  color:var(--p);
+  background:rgba(77,220,198,.08);
+  border:1px solid rgba(77,220,198,.15);
+  border-radius:var(--r2);
+  width:56px;height:56px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 24px;
+  font-variation-settings:'FILL' 1;
 }
 /* Title: centered, balanced wrapping */
 .onb-title{
@@ -368,6 +385,7 @@ body.onboarding-active #onb-screen{
   width:100%;
   max-width:320px;
   letter-spacing:-.02em;
+  line-height:1.2;
 }
 /* Body: centered, comfortable reading width */
 .onb-body{
@@ -396,7 +414,7 @@ body.onboarding-active #onb-screen{
   transition:background .25s,transform .25s,width .25s;
   display:block;flex-shrink:0;
 }
-.onb-dot.active{width:24px;border-radius:3px;background:var(--p);transform:none;box-shadow:0 0 8px rgba(77,220,198,.4);}
+.onb-dot.active{width:24px;border-radius:3px;background:var(--p);transform:none;}
 .onb-dot.completed{background:rgba(77,220,198,.3);}
 /* Badge pill above title */
 .onb-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:14px;border:1px solid;}
@@ -480,9 +498,7 @@ body.onboarding-active #onb-screen{
   .onb-nav{padding-left:16px;padding-right:16px;gap:6px;}
 }
 
-/* ═══════════════════════════════════════
-   MODALS — Privacy / Aiuto
-═══════════════════════════════════════ */
+/* MODALS — Privacy / Aiuto */
 .modal-overlay{
   position:fixed;inset:0;z-index:800;
   background:rgba(0,0,0,.72);
@@ -496,7 +512,7 @@ body.onboarding-active #onb-screen{
   width:100%;max-width:520px;
   max-height:88dvh;
   background:var(--s1);
-  border-radius:24px 24px 0 0;
+  border-radius:var(--modal-radius) var(--modal-radius) 0 0;
   border-top:1px solid var(--glass-stroke);
   display:flex;flex-direction:column;
   overflow:hidden;
@@ -691,13 +707,12 @@ body.onboarding-active #onb-screen{
 .coach-card-warning{background:rgba(255,159,10,.06);border:1px solid rgba(255,159,10,.28);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;}
 .coach-card-danger{background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.22);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;}
 .coach-card-info{background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.22);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;}
-.coach-ico-primary{background:rgba(77,220,198,.12);color:var(--p);}
 .coach-ico-warning{background:rgba(255,159,10,.12);color:var(--orange);}
 .coach-ico-danger{background:rgba(255,59,48,.12);color:var(--red);}
 .coach-ico-info{background:rgba(10,132,255,.12);color:var(--blue);}
-.pw-feat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;font-size:12px;color:#ccc;font-weight:500;}
+.pw-feat{background:rgba(255,255,255,.04);border:1px solid var(--glass-stroke);border-radius:var(--r3);padding:10px 12px;font-size:12px;color:var(--on-v);font-weight:500;}
 #paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9999;align-items:flex-end;justify-content:center;}
-#paywall-sheet{background:var(--s1);border-radius:20px 20px 0 0;padding:28px 24px 32px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
+#paywall-sheet{background:var(--s1);border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;padding:28px 24px 32px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
 #trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
 #scr-prog.locked-trend{display:flex!important;flex-direction:column;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 #scr-prog.locked-trend .pg{flex:1;display:flex;flex-direction:column;overflow-y:auto!important;-webkit-overflow-scrolling:touch;pointer-events:auto!important;}
@@ -705,7 +720,7 @@ body.onboarding-active #onb-screen{
 [onclick*="startCheckout"]:disabled{cursor:not-allowed;pointer-events:none;}
 /* ── Post-onboarding auth gate ── */
 #post-onb-auth-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.90);backdrop-filter:blur(18px);z-index:10001;align-items:flex-end;justify-content:center;}
-#post-onb-auth-sheet{background:var(--s1);border-radius:28px 28px 0 0;padding:36px 24px 52px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .42s cubic-bezier(0.16,1,0.3,1);}
+#post-onb-auth-sheet{background:var(--s1);border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;padding:28px 24px 40px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .42s cubic-bezier(0.16,1,0.3,1);}
 #post-onb-auth-overlay.on{display:flex;}
 #post-onb-auth-overlay.on #post-onb-auth-sheet{transform:translateY(0);}
 .gauth-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#fff;color:#1a1a1a;border:none;border-radius:14px;padding:15px 20px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;letter-spacing:-.01em;transition:opacity .15s;-webkit-tap-highlight-color:transparent;}
@@ -723,16 +738,8 @@ body.onboarding-active #onb-screen{
 #cpo-cta:active{opacity:.85;transform:scale(.98);}
 #checkout-preview-sheet{position:relative;}
 
-/* ═══════════════════════════════════════
-   UX PRODUCTION FIXES — audit pass
-═══════════════════════════════════════ */
-
-/* ── CSS variables: p-inverse for teal-bg buttons ── */
-:root{
-  --p-inverse:#003730;
-  --card-pad:16px;
-  --card-pad-sm:14px;
-}
+/* DESIGN SYSTEM — production tokens */
+/* Note: --p-inverse, --card-pad already defined here — removed duplicate :root */
 
 /* ── Tab transition: fade instead of hard display switch ── */
 .scr{
@@ -815,11 +822,18 @@ button[onclick*="toggleFaq"]:focus-visible{
 }
 
 /* ── Kcal ring center: add subtle text-shadow for legibility ── */
-#kcal-ring-num{text-shadow:0 0 20px rgba(77,220,198,.2);}
+/* #kcal-ring-num text-shadow removed */
 
 /* ── Section labels: enforce 10px minimum ── */
 .t-xxs{font-size:10px;}
 .sec-label{font-size:10px;}
+/* ── Typography system classes ── */
+.type-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.type-body-sm{font-size:12px;font-weight:500;color:var(--muted);line-height:1.55;}
+.type-body{font-size:13px;font-weight:500;color:var(--on-v);line-height:1.6;}
+.type-caption{font-size:11px;font-weight:500;color:var(--muted);line-height:1.45;}
+.type-data{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.04em;line-height:1;}
+.type-hero{font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:800;letter-spacing:-.05em;line-height:1;}
 
 /* ── Paywall: fix hardcoded #000 on teal btn ── */
 #paywall-sheet button[onclick*="startCheckout('monthly')"]{
@@ -890,9 +904,7 @@ hr{height:1px;}
 <div class="glow-b" aria-hidden="true"></div>
 
 
-<!-- ══════════════════════════════════════
-     LANGUAGE SELECTION GATE — primissimo avvio assoluto
-══════════════════════════════════════ -->
+<!-- LANGUAGE SELECTION GATE — primissimo avvio assoluto -->
 <div id="lang-gate">
 <div style="max-width:360px;width:100%;padding:0 28px;display:flex;flex-direction:column;align-items:center;gap:28px;">
   <div style="width:64px;height:64px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.28);border-radius:18px;display:flex;align-items:center;justify-content:center;">
@@ -911,9 +923,7 @@ hr{height:1px;}
 </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     PWA INSTALL GATE — primissimo avvio
-══════════════════════════════════════ -->
+<!-- PWA INSTALL GATE — primissimo avvio -->
 <div id="pwa-gate">
 <div style="max-width:420px;margin:0 auto;width:100%;padding:calc(max(8px,var(--sat)) + 20px) 24px 40px;display:flex;flex-direction:column;flex:1;">
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;">
@@ -928,7 +938,7 @@ hr{height:1px;}
     <div style="display:flex;flex-direction:column;gap:12px;">
       <!-- iPhone / Safari -->
       <div style="background:var(--s1);border:1px solid var(--glass-stroke);border-radius:var(--r2);padding:14px 16px;">
-        <div class="pwa-os-label">📱 iPhone / Safari</div>
+        <div class="pwa-os-label">iPhone / Safari</div>
         <div class="pwa-step">
           <div class="pwa-step-num">1</div>
           <div id="pwa-ios-1" style="font-size:12px;color:var(--on);line-height:1.55;">Tap the <strong style="color:var(--p);">Share</strong> button (rectangle with arrow pointing up) in the Safari bar</div>
@@ -944,7 +954,7 @@ hr{height:1px;}
       </div>
       <!-- Android / Chrome -->
       <div style="background:var(--s1);border:1px solid var(--glass-stroke);border-radius:var(--r2);padding:14px 16px;">
-        <div class="pwa-os-label">🤖 Android / Chrome</div>
+        <div class="pwa-os-label">Android / Chrome</div>
         <div class="pwa-step">
           <div class="pwa-step-num">1</div>
           <div id="pwa-and-1" style="font-size:12px;color:var(--on);line-height:1.55;">Tap the <strong style="color:var(--p);">⋮</strong> menu at the top right of your browser</div>
@@ -969,9 +979,7 @@ hr{height:1px;}
 </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     GDPR CONSENT GATE — first launch
-══════════════════════════════════════ -->
+<!-- GDPR CONSENT GATE — first launch -->
 <div id="gdpr-gate">
 <div style="max-width:420px;margin:0 auto;width:100%;padding:calc(max(8px,var(--sat)) + 20px) 24px 40px;display:flex;flex-direction:column;flex:1;">
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;">
@@ -1031,9 +1039,7 @@ hr{height:1px;}
   </div>
 </header>
 
-<!-- ══════════════════════════════════════
-     ONBOARDING — 5 STEPS
-══════════════════════════════════════ -->
+<!-- ONBOARDING — 5 STEPS -->
 <div id="onb-screen">
 <div style="max-width:420px;margin:0 auto;width:100%;padding:calc(var(--hdr-top) + var(--hdr) + 16px) 20px 48px;display:flex;flex-direction:column;gap:0;">
 
@@ -1041,7 +1047,7 @@ hr{height:1px;}
     <div style="width:56px;height:56px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.28);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
       <span class="material-symbols-outlined sn" style="color:var(--p);font-size:26px;font-variation-settings:'FILL' 1;">bolt</span>
     </div>
-    <h1 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;font-style:italic;text-transform:uppercase;letter-spacing:-.02em;color:var(--on);margin-bottom:4px;" class="sn">Kinetic Profiler</h1>
+    <h1 style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.02em;color:var(--on);margin-bottom:4px;" class="sn">Profilo metabolico</h1>
     <p style="font-size:12px;color:var(--muted);line-height:1.5;font-weight:500;" class="sn">Il tuo piano nutrizionale personalizzato.</p>
   </div>
 
@@ -1060,8 +1066,8 @@ hr{height:1px;}
     <div>
       <label class="field-label" for="sex-m">Sesso biologico</label>
       <div class="seg-wrap">
-        <button class="seg-btn seg-on sn" id="sex-m" onclick="setSex('M')">♂ Uomo</button>
-        <button class="seg-btn sn" id="sex-f" onclick="setSex('F')">♀ Donna</button>
+        <button class="seg-btn seg-on sn" id="sex-m" onclick="setSex('M')">Uomo</button>
+        <button class="seg-btn sn" id="sex-f" onclick="setSex('F')">Donna</button>
       </div>
     </div>
     <div class="grid2">
@@ -1108,12 +1114,12 @@ hr{height:1px;}
     <div>
       <label class="field-label" for="f-sport">Sport praticato</label>
       <select class="inp" id="f-sport" onchange="profState.sport=this.value;" style="font-size:15px!important;color:var(--on);background:var(--s1);">
-        <option value="strength">💪 Forza / Potenza (Pesistica, Sprint)</option>
-        <option value="endurance">🏃 Resistenza (Corsa, Ciclismo)</option>
-        <option value="team">⚽ Sport di Squadra / Ibrido (Calcio, Basket, Rugby)</option>
-        <option value="fitness">🏋️ Fitness Generale</option>
-        <option value="powerlifting">🏆 Powerlifting / Sollevamento Pesi</option>
-        <option value="combat">🥊 Sport da Combattimento (MMA, Boxe, Judo)</option>
+        <option value="strength">Forza / Potenza (Pesistica, Sprint)</option>
+        <option value="endurance">Resistenza (Corsa, Ciclismo)</option>
+        <option value="team">Sport di Squadra / Ibrido (Calcio, Basket, Rugby)</option>
+        <option value="fitness">Fitness Generale</option>
+        <option value="powerlifting">Powerlifting / Sollevamento Pesi</option>
+        <option value="combat">Sport da Combattimento (MMA, Boxe, Judo)</option>
       </select>
     </div>
     <div>
@@ -1164,9 +1170,9 @@ hr{height:1px;}
     <div>
       <label class="field-label">Gusto prevalente</label>
       <div class="seg-wrap" id="taste-seg">
-        <button class="seg-btn sn" onclick="setTaste('salato')" id="taste-salato">🧂 Salato</button>
-        <button class="seg-btn sn" onclick="setTaste('dolce')" id="taste-dolce">🍫 Dolce</button>
-        <button class="seg-btn sn" onclick="setTaste('misto')" id="taste-misto">⚖️ Misto</button>
+        <button class="seg-btn sn" onclick="setTaste('salato')" id="taste-salato">Salato</button>
+        <button class="seg-btn sn" onclick="setTaste('dolce')" id="taste-dolce">Dolce</button>
+        <button class="seg-btn sn" onclick="setTaste('misto')" id="taste-misto">Misto</button>
       </div>
     </div>
 
@@ -1174,9 +1180,9 @@ hr{height:1px;}
     <div>
       <label class="field-label">Stile alimentare</label>
       <div class="seg-wrap" id="diet-style-seg">
-        <button class="seg-btn sn" onclick="setDietStyle('onnivoro')" style="font-size:10px;">🥩 Onnivoro</button>
-        <button class="seg-btn sn" onclick="setDietStyle('vegetariano')" style="font-size:10px;">🥦 Vegetariano</button>
-        <button class="seg-btn sn" onclick="setDietStyle('vegano')" style="font-size:10px;">🌱 Vegano</button>
+        <button class="seg-btn sn" onclick="setDietStyle('onnivoro')" style="font-size:10px;">Onnivoro</button>
+        <button class="seg-btn sn" onclick="setDietStyle('vegetariano')" style="font-size:10px;">Vegetariano</button>
+        <button class="seg-btn sn" onclick="setDietStyle('vegano')" style="font-size:10px;">Vegano</button>
       </div>
     </div>
 
@@ -1194,10 +1200,10 @@ hr{height:1px;}
         <button class="food-tag" id="cp-none"    onclick="setClinical(null,this)"      style="background:rgba(77,220,198,.14);border-color:rgba(77,220,198,.32);color:var(--p);">✓ Nessuno</button>
         <button class="food-tag" id="cp-CKD"     onclick="setClinical('CKD',this)">🫁 CKD / Renale</button>
         <button class="food-tag" id="cp-DASH"    onclick="setClinical('DASH',this)">❤️ DASH / Pressione</button>
-        <button class="food-tag" id="cp-IBS"     onclick="setClinical('IBS',this)">🌿 IBS / Low-FODMAP</button>
-        <button class="food-tag" id="cp-T2D"     onclick="setClinical('T2D',this)">💉 Diabete T2D</button>
+        <button class="food-tag" id="cp-IBS"     onclick="setClinical('IBS',this)">IBS / Low-FODMAP</button>
+        <button class="food-tag" id="cp-T2D"     onclick="setClinical('T2D',this)">Diabete T2D</button>
         <button class="food-tag" id="cp-IBD_acute"  onclick="setClinical('IBD_acute',this)">🔥 IBD Attiva</button>
-        <button class="food-tag" id="cp-IBD_remiss" onclick="setClinical('IBD_remiss',this)">🟢 IBD Remissione</button>
+        <button class="food-tag" id="cp-IBD_remiss" onclick="setClinical('IBD_remiss',this)">IBD Remissione</button>
       </div>
       <p style="font-size:10px;color:var(--dim);margin-top:6px;line-height:1.5;" class="sn" id="clinical-hint"></p>
     </div>
@@ -1329,7 +1335,7 @@ hr{height:1px;}
             </div>
           </div>
           <div style="position:absolute;top:14px;left:14px;right:14px;bottom:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
-            <div style="width:36px;height:36px;background:rgba(77,220,198,.12);border:1px solid rgba(77,220,198,.28);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+            <div style="width:36px;height:36px;background:rgba(77,220,198,.12);border:1px solid rgba(77,220,198,.2);border-radius:var(--r2);display:flex;align-items:center;justify-content:center;">
               <span class="material-symbols-outlined" style="color:var(--p);font-size:20px;font-variation-settings:'FILL' 1;">lock</span>
             </div>
             <p id="onb-trend-lock-title" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--on);margin:0;text-align:center;">I tuoi dati ci sono. Leggili adesso.</p>
@@ -1348,7 +1354,7 @@ hr{height:1px;}
           <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€9,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;">Cancella quando vuoi</span></button>
           <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:var(--p);border:1px solid rgba(77,220,198,.35);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€39,99/anno<br><span style="font-weight:400;font-size:10px;opacity:.7;">💰 Risparmia il 33%</span></button>
         </div>
-        <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.2);border-radius:var(--r);padding:10px 8px;font-weight:800;font-size:11px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:8px;">€99,99 una volta · 🔥 Accesso vita</button>
+        <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.2);border-radius:var(--r);padding:10px 8px;font-weight:800;font-size:11px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:8px;">€99,99 · Accesso permanente</button>
         <!-- Trial CTA -->
         <button id="onb-activate-plan-btn" onclick="activatePlanAndContinue()" class="btn btn-ghost w100" style="height:44px;font-size:12px;color:var(--muted);margin-bottom:4px;">
           <span id="onb-trial-btn-txt">Prova Trend gratis — 7 giorni →</span>
@@ -1374,7 +1380,7 @@ hr{height:1px;}
       <div id="coach-card" class="card-neon" aria-live="polite" style="padding:16px;position:relative;overflow:hidden;">
         <div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:200px;height:80px;background:rgba(77,220,198,.08);filter:blur(40px);pointer-events:none;border-radius:50%;"></div>
         <div class="row g3" style="position:relative;padding-right:56px;">
-          <div id="coach-ico-wrap" style="width:40px;height:40px;border-radius:12px;background:var(--p);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 16px rgba(77,220,198,.28);">
+          <div id="coach-ico-wrap" style="width:40px;height:40px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <span class="material-symbols-outlined sn" id="coach-ico" style="font-size:20px;color:#003730;font-variation-settings:'FILL' 1;">bolt</span>
           </div>
           <div style="flex:1;min-width:0;">
@@ -1407,7 +1413,7 @@ hr{height:1px;}
       <!-- Auto-Adjust Feedback Banner -->
       <div id="autoadj-banner" class="card-neon" role="alert" aria-live="assertive" style="display:none;padding:14px;">
         <div style="display:flex;align-items:flex-start;gap:10px;">
-          <span id="autoadj-icon" style="font-size:22px;flex-shrink:0;margin-top:1px;">🐢</span>
+          <span id="autoadj-icon" class="material-symbols-outlined" style="font-size:22px;flex-shrink:0;color:var(--p);font-variation-settings:'FILL' 1;">tune</span>
           <div style="flex:1;min-width:0;">
             <p id="autoadj-title" class="sn" style="font-size:13px;font-weight:700;color:var(--on);margin:0 0 4px;"></p>
             <p id="autoadj-body" class="sn" style="font-size:11px;color:var(--muted);line-height:1.5;margin:0 0 10px;"></p>
@@ -1421,7 +1427,7 @@ hr{height:1px;}
 
       <!-- Today Action Card -->
       <div id="today-action-card" class="card-neon" style="padding:14px 16px;display:none;align-items:center;gap:12px;">
-        <span id="today-action-icon" style="font-size:24px;flex-shrink:0;">🍽️</span>
+        <span id="today-action-icon" class="material-symbols-outlined" style="font-size:24px;flex-shrink:0;color:var(--p);font-variation-settings:'FILL' 1;">restaurant</span>
         <div style="flex:1;min-width:0;">
           <p id="today-action-title" class="sn" style="font-size:13px;font-weight:700;color:var(--on);margin:0 0 3px;"></p>
           <p id="today-action-body" class="sn" style="font-size:11px;color:var(--muted);margin:0;line-height:1.4;"></p>
@@ -1484,7 +1490,7 @@ hr{height:1px;}
         <!-- Header -->
         <div class="pasti-header">
           <div style="display:flex;align-items:center;gap:10px;">
-            <p class="sn" data-i18n="oggi.pasti" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;font-style:italic;letter-spacing:-.02em;color:var(--on);margin:0;">Pasti</p>
+            <p class="sn" data-i18n="oggi.pasti" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;letter-spacing:-.01em;color:var(--on);margin:0;">Pasti</p>
             <div class="bar-track" style="width:44px;flex-shrink:0;"><div id="oggi-pasti-bar" class="bar-fill bfn" style="width:0%;transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
             <span style="color:var(--p);font-size:11px;font-weight:700;" class="sn" id="meals-done">0</span><span class="muted sn" style="font-size:11px;font-weight:600;" id="meals-total">/3</span>
           </div>
@@ -1916,7 +1922,7 @@ hr{height:1px;}
                   </div>
                 </div>
                 <div style="flex:1;min-width:0">
-                  <p id="sub-plan-subtitle" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;font-style:italic;color:var(--p);margin:0 0 2px"></p>
+                  <p id="sub-plan-subtitle" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--p);margin:0 0 2px"></p>
                   <p id="sub-plan-detail" class="sn" style="font-size:11px;color:var(--muted);line-height:1.4;margin:0"></p>
                 </div>
               </div>
@@ -1958,7 +1964,7 @@ hr{height:1px;}
           <div class="prof-menu-ico teal"><span class="material-symbols-outlined" style="color:var(--p);">restaurant_menu</span></div>
           <div style="flex:1;min-width:0;">
             <span class="prof-menu-label sn" data-i18n="set.piano.title">Piano Attivo</span>
-            <p id="set-plan-name" class="sn" style="font-size:11px;color:var(--muted);margin:0;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</p>
+            <p id="set-plan-name" class="sn" style="font-size:11px;color:var(--muted);margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</p>
           </div>
           <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-piano-inline" style="transition:transform .2s;">chevron_right</span>
         </div>
@@ -1973,7 +1979,7 @@ hr{height:1px;}
         <!-- Modificatore AI -->
         <div class="prof-menu-row" onclick="toggleAccordion('mod')">
           <div class="prof-menu-ico teal"><span class="material-symbols-outlined" style="color:var(--p);">tune</span></div>
-          <span class="prof-menu-label sn" data-i18n="set.mod.title">Modificatore AI</span>
+          <span class="prof-menu-label sn" data-i18n="set.mod.title">Aggiustamento calorico</span>
           <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-mod" style="transition:transform .2s;">chevron_right</span>
         </div>
         <div id="acc-mod" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
@@ -2080,7 +2086,7 @@ hr{height:1px;}
         <div class="card" style="padding:16px;">
           <div class="rowb">
             <div class="row g3">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(77,220,198,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <div style="width:36px;height:36px;border-radius:var(--r2);background:rgba(77,220,198,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <span class="material-symbols-outlined" style="font-size:18px;color:var(--p);font-variation-settings:'FILL' 1;">shield</span>
               </div>
               <div>
@@ -2098,7 +2104,7 @@ hr{height:1px;}
         <div class="card" style="padding:16px;">
           <div class="rowb">
             <div class="row g3">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(192,193,255,.10);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <div style="width:36px;height:36px;border-radius:var(--r2);background:rgba(192,193,255,.10);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <span class="material-symbols-outlined" style="font-size:18px;color:var(--sec);font-variation-settings:'FILL' 1;">help</span>
               </div>
               <div>
@@ -2164,9 +2170,7 @@ hr{height:1px;}
 
 </div><!-- /#app-shell -->
 
-<!-- ══════════════════════════════════════
-     ONBOARDING SLIDESHOW — moved BEFORE main script so getElementById finds it at boot
-══════════════════════════════════════ -->
+<!-- ONBOARDING SLIDESHOW — moved BEFORE main script so getElementById finds it at boot -->
 <div id="onboarding-overlay" style="display:none;">
 
   <!-- Slides viewport -->
@@ -2255,7 +2259,9 @@ hr{height:1px;}
       <!-- Slide 4 — accent-teal — CTA finale -->
       <div class="onboarding-slide accent-teal">
         <div class="onb-emoji-row">
-          <span>🧬</span><span>🍽️</span><span>📈</span>
+          <span class="material-symbols-outlined" style="font-size:28px;color:var(--p);font-variation-settings:'FILL' 1;">biotech</span>
+          <span class="material-symbols-outlined" style="font-size:28px;color:var(--p);font-variation-settings:'FILL' 1;">restaurant</span>
+          <span class="material-symbols-outlined" style="font-size:28px;color:var(--p);font-variation-settings:'FILL' 1;">trending_up</span>
         </div>
         <p class="onb-title" id="onb-t4"></p>
         <p class="onb-body" id="onb-b4"></p>
@@ -2577,14 +2583,14 @@ function updateSubManagementCard(){
 function updateTrendBadge(){
   const badge=document.getElementById('trend-access-badge');
   if(!badge)return;
-  if(trendAccess.mode==='paid'){badge.textContent='✦ TREND';badge.style.color='#4ddcc6';}
+  if(trendAccess.mode==='paid'){badge.textContent='✦ TREND';badge.style.color='var(--p)';}
   else if(trendAccess.mode==='grace'){
     badge.textContent='⚠️ TREND';badge.style.color='#f5a623';
     const hours=trendAccess.hoursLeft||48;
     showToast('⚠️ Pagamento in ritardo — accesso attivo per altre '+hours+' ore',8000);
   }
   else if(trendAccess.mode==='trial'){badge.textContent='⏱ '+trendAccess.daysLeft+'gg';badge.style.color='#f5a623';}
-  else{badge.textContent='🔒 TREND';badge.style.color='#666';}
+  else{badge.textContent='TREND';badge.style.color='var(--muted)';}
   updateSubManagementCard();
 }
 
@@ -2678,8 +2684,8 @@ function _applyCheckoutPreviewLang(){
   const it=_lang!=='en';
   const s=(id,txt)=>{const e=document.getElementById(id);if(e)e.textContent=txt;};
   s('cpo-subtitle',it
-    ?'Smetti di indovinare. Inizia a prevedere. I tuoi dati reali trasformati in una roadmap delle prossime 12 settimane.'
-    :'Stop guessing. Start knowing. Your real data turned into a 12-week roadmap for your body.');
+    ?'Analisi predittiva basata sui tuoi dati reali. Proiezione a 12 settimane con correzione metabolica automatica.'
+    :'Predictive analysis based on your real data. 12-week projection with automatic metabolic correction.');
   s('cpo-choose',it?'Scegli come iniziare':'Choose how to start');
   s('cpo-features-title',it?'Trend include:':'Trend includes:');
   s('cpo-m-label',it?'1 mese':'1 month');
@@ -3264,12 +3270,12 @@ it:{
   'onb.step4.title':'I Tuoi Cibi',
   'onb.cibi.proteine':'Proteine preferite','onb.cibi.carb':'Carboidrati preferiti','onb.cibi.grassi':'Grassi preferiti',
   'onb.cibi.extra':'Aggiungi altri cibi che ami','onb.cibi.extra.ph':'es. broccoli, zucchine, mele, skyr…',
-  'onb.btn.indietro':'← Indietro','onb.btn.genera':'⚡ Calcola il mio piano personalizzato →',
+  'onb.btn.indietro':'← Indietro','onb.btn.genera':'Calcola il mio piano personalizzato →',
   'onb.result.tdee':'IL TUO METABOLISMO REALE','onb.result.target':'TARGET → {kcal} kcal/giorno',
   'onb.result.proteine':'Proteine','onb.result.carbs':'Carbs','onb.result.grassi':'Grassi',
   'onb.result.detail':'Dettaglio calcolo','onb.result.preview':'Il Tuo Piano — Anteprima',
   'onb.btn.attiva':'✅ Attiva questo piano',
-  'onb.paywall.lockTitle':'Sblocca l\'analisi avanzata con Trend',
+  'onb.paywall.lockTitle':'Attiva l\'analisi avanzata con Trend',
   'onb.paywall.lockSub':'Curva predittiva · Impronta Metabolica · Report Settimanale · Coach AI · e altro ancora',
   'onb.paywall.trial':'Attiva la prova gratuita di 7 giorni',
   'onb.paywall.trialNote':'Trend attivo per 7 giorni · Poi solo il piano base è gratuito · Nessun addebito automatico',
@@ -3278,7 +3284,7 @@ it:{
   'trend.blur.daysLeft':'{n} giorni rimasti',
   'trend.blur.expired':'Prova terminata',
   'trend.blur.expiredSub':'Attiva Trend per vedere la tua analisi completa',
-  'trend.blur.cta':'Sblocca Trend',
+  'trend.blur.cta':'Attiva Trend',
   'onb.field.sport':'Sport praticato',
   'onb.field.trainTime':'Orario di allenamento',
   'onb.field.trainTime.hint':'⏱ Cruciale per il nutrient timing: i pasti pre/post-workout verranno calibrati su questo orario.',
@@ -3324,8 +3330,8 @@ it:{
   'set.fase.title':'Fase Corrente',
   'set.refeed.title':'Refeed Day','set.refeed.sub':'+880 kcal · +220g carbs · proteine e grassi invariati','set.refeed.soloFase2':'Solo Fase 2',
   'set.refeed.off':'DISATTIVO','set.refeed.on':'ON 🔥',
-  'set.mod.title':'Modificatore AI','set.mod.base':'Base invariata',
-  'set.mod.taglio':'Taglio −{kcal} kcal','set.mod.boost':'Boost +{kcal} kcal','set.mod.reset':'Reset modificatore',
+  'set.mod.title':'Aggiustamento calorico','set.mod.base':'Base invariata',
+  'set.mod.taglio':'Taglio −{kcal} kcal','set.mod.boost':'Boost +{kcal} kcal','set.mod.reset':'Azzera aggiustamento',
   'set.dati.title':'Dati','set.dati.esporta':'📦 Esporta Backup',
   'set.dati.importa':'📥 Importa Backup','set.dati.ricomincia':'🗑 Ricomincia da capo',
   'set.btn.privacy':'Privacy','set.btn.aiuto':'Aiuto','set.lang.label':'Lingua / Language',
@@ -3372,14 +3378,14 @@ it:{
   'coach.lbl.default':'KINETIC INSIGHT',
   'coach.lbl.ricomp_attiva':'RICOMPOSIZIONE ATTIVA','coach.lbl.ritenzione':'RITENZIONE SODIO',
   'coach.lbl.ricarica':'RICARICA LEPTINA','coach.lbl.adatt_met':'ADATTAMENTO METABOLICO',
-  'coach.lbl.surplus_insuff':'SURPLUS INSUFFICIENTE','coach.lbl.deficit_ott':'DEFICIT OTTIMALE ✓',
-  'coach.lbl.deficit_alto':'DEFICIT ELEVATO ⚠','coach.lbl.prog_lento':'PROGRESSO LENTO',
-  'coach.lbl.bulk_ott':'BULK OTTIMALE ✓','coach.lbl.surplus_exc':'SURPLUS ECCESSIVO',
+  'coach.lbl.surplus_insuff':'SURPLUS INSUFFICIENTE','coach.lbl.deficit_ott':'DEFICIT OTTIMALE',
+  'coach.lbl.deficit_alto':'DEFICIT ELEVATO','coach.lbl.prog_lento':'PROGRESSO LENTO',
+  'coach.lbl.bulk_ott':'BULK OTTIMALE','coach.lbl.surplus_exc':'SURPLUS ECCESSIVO',
   'coach.lbl.peso_su':'PESO IN RISALITA','coach.lbl.fame_pegg':'FAME IN AUMENTO',
   'coach.lbl.fame_strutt':'FAME STRUTTURALE','coach.lbl.energia_calo':'ENERGIA IN CALO',
-  'coach.lbl.energia_bassa':'ENERGIA MOLTO BASSA ⚠','coach.lbl.dig_pegg':'DIGESTIONE IN PEGGIORAMENTO',
-  'coach.lbl.dig_comp':'DIGESTIONE COMPROMESSA ⚠','coach.lbl.ader_calo':'ADERENZA IN CALO',
-  'coach.lbl.segnali_ott':'SEGNALI OTTIMALI ✓',
+  'coach.lbl.energia_bassa':'ENERGIA MOLTO BASSA','coach.lbl.dig_pegg':'DIGESTIONE IN PEGGIORAMENTO',
+  'coach.lbl.dig_comp':'DIGESTIONE COMPROMESSA','coach.lbl.ader_calo':'ADERENZA IN CALO',
+  'coach.lbl.segnali_ott':'SEGNALI OTTIMALI',
   'coach.lbl.ckd':'PROTOCOLLO CKD','coach.lbl.dash':'PROTOCOLLO DASH','coach.lbl.ibs':'PROTOCOLLO LOW-FODMAP',
   'toast.compilaCorpo':'⚠️ Compila età, altezza e peso',
   'toast.selAllenamentiPassi':'⚠️ Seleziona allenamenti e passi',
@@ -3426,49 +3432,49 @@ it:{
   'prefs.cibiScelti':'Cibi scelti','prefs.extra':'Extra','prefs.esclusi':'Esclusi',
   'misc.fase':'Fase','misc.piano':'Piano','misc.locale':'(locale)','misc.noData':'N/D',
   'res.obiettivo':'Obiettivo','res.deficit':'deficit',
-  'coach.lbl.streak':'STREAK {n} GIORNI 🔥',
-  'coach.lbl.perdita_ecc':'PERDITA ECCESSIVA ⚠','coach.lbl.trend_iniz':'TREND IN COSTRUZIONE',
-  'coach.msg.streak':'🔥 {n} giorni consecutivi di check-in! La consistenza è il superpotere. Continua così — ogni giorno ti avvicina ai risultati.',
-  'coach.msg.perdita_ecc':'⚠️ −{rate} kg/sett supera il limite sicuro. A questo ritmo perdi massa magra. Velocità ottimale: {min}–{max} kg/sett. Aggiungi subito 100–150 kcal da carboidrati, soprattutto peri-workout.',
-  'coach.msg.trend_iniz':'📊 −{rate} kg/sett stimato su {days} giorni ({cnt} pesate). Span troppo breve per un\'analisi affidabile — continua a registrare il peso per 7+ giorni.',
-  'coach.msg.ricomp_attiva':'🔁 Peso stabile ±{rate} kg/sett, girovita −{waist} cm. Stai perdendo grasso e guadagnando massa simultaneamente. NON cambiare il piano.',
-  'coach.msg.ritenzione':'💧 Sale oggi: {salt}g (≈{saltmg}mg Na+) vs acqua {water}L. Il peso è falsato dalla ritenzione. Bevi 500ml nelle prossime 2h. Il sodio sierico si normalizza in 12-24h con corretta idratazione.',
-  'coach.msg.ricarica':'🔥 {days} giorni in deficit: leptina in calo, adattamento metabolico. Refeed {urgenza} entro 1-2 giorni. Target: +880 kcal SOLO da carboidrati (220g {refeedFoods}). Grassi e proteine invariati.',
-  'coach.msg.adatt_met':'⚡ Trend piatto ({cnt} rilevazioni). Il metabolismo si è adattato. Tre opzioni: (A) −100 kcal dai carboidrati serali, (B) +2.000 passi NEAT/die, (C) settimana refeed poi riprendi deficit.',
-  'coach.msg.surplus_insuff':'⚡ Peso fermo da {cnt} rilevazioni. In bulk lean target: +0.15-0.30 kg/sett. Aggiungi 150-200 kcal da carboidrati (riso, avena). Se girovita cresce >0.5cm/sett, torna al mantenimento 1 settimana.',
-  'coach.msg.deficit_ott':'🔥 −{rate} kg/sett: velocità ottimale ({min}–{max} kg/sett). Preservazione massa magra massimale. Piano perfettamente calibrato. Mantieni invariato.',
-  'coach.msg.deficit_alto':'⚠️ −{rate} kg/sett: sopra l\'ottimale. Considera +50 kcal da proteine magre o carbs peri-workout per limitare il catabolismo muscolare.',
-  'coach.msg.prog_lento':'⚡ −{rate} kg/sett: sotto il target ({min} kg/sett). Controlla aderenza. Se il piano è seguito, riduci 100 kcal dai carboidrati serali.',
-  'coach.msg.bulk_ott':'💪 +{rate} kg/sett: surplus lean perfetto (Barbalho 2020). Monitora girovita ogni settimana: se cresce >0.5cm/sett, riduci 100 kcal. Proteine invariate.',
-  'coach.msg.surplus_exc':'⚠️ +{rate} kg/sett: troppo veloce, rischio accumulo grasso. Riduci 200 kcal da carboidrati. Target: +0.15-0.25 kg/sett.',
-  'coach.msg.peso_su':'⚠️ +{rate} kg/sett in {goal_lbl}. Controlla: (1) aderenza pasti, (2) ritenzione idrica (pesata al mattino a stomaco vuoto), (3) sodio assunto. Se confermato dopo 5gg, riduci 100 kcal da carbs.',
-  'coach.msg.fame_pegg':'🍽 Fame {hunger}/10 e in aumento (trend +{trend}/die). Aderenza {adher}/10. Il deficit supera la tollerabilità individuale. {tip} Inizia ogni pasto con la proteina: satura prima i recettori della fame.',
-  'coach.msg.fame_strutt':'🍽 Fame {hunger}/10 + aderenza {adher}/10. Aggiungi 150–200g verdure fibrose ({veggies}) ai pasti principali: zero impatto calorico, sazietà volumetrica significativa. Proteine ad ogni pasto prima dei carbs.',
-  'coach.msg.energia_calo':'⚡ Energia {energy}/10 e in peggioramento (trend {trend}/die). Causa più probabile: carbs peri-workout insufficienti. Aggiungi 25–30g riso/avena 60min prima dell\'allenamento. Se persiste >5 giorni: verifica ferro, B12, vitamina D.',
-  'coach.msg.energia_bassa':'⚡ Energia {energy}/10. Azione immediata: (1) +20g carbs peri-workout, (2) 500ml acqua adesso, (3) sonno priorità assoluta. Se <7h/notte, l\'adattamento calorico è impossibile.',
-  'coach.msg.dig_pegg':'🫁 Digestione {dig}/10 (trend {trend}/die). Protocollo 48h: {digestFoods}. Elimina temporaneamente legumi, lattosio, farine integrali. Pasti più piccoli e frequenti riducono il carico digestivo.',
-  'coach.msg.dig_comp':'🫁 Digestione {dig}/10. Semplifica: {digestFoods}, elimina legumi e lattosio per 2 giorni. Riduci le porzioni del 20% e mastica lentamente.',
-  'coach.msg.ader_calo':'📉 Aderenza {adher}/10 e in calo ({trend}/die). Causa più comune: piano troppo rigido. Identifica i 2 pasti più difficili e semplificali: sostituisci con alternative rapide dallo stesso gruppo alimentare.{streakNote}',
-  'coach.msg.segnali_ott':'✅ Aderenza {adher}/10, energia {energy}/10 — entrambi stabili o in miglioramento.{streak} Il piano funziona. Mantieni la stessa routine: la consistenza produce risultati composti nel tempo.',
-  'coach.msg.ckd':'🫁 Piano calibrato per CKD (proteine ≤0.8g/kg). Monitora: edemi, pressione, potassio. Evita integratori proteici non prescritti. Aggiorna il medico ogni 3 mesi con creatinina ed eGFR.',
-  'coach.msg.dash':'❤️ Piano DASH attivo. Target: Na+ <{na}mg/die, K+ ≥4700mg/die, Ca++ ≥1250mg/die. Le 5 porzioni frutta-verdura abbassano la sistolica di 8-14 mmHg entro 2 settimane (NEJM 1997).',
-  'coach.msg.ibs':'🌿 Piano low-FODMAP attivo (Monash University). Evita: grano, cipolla, aglio, lenticchie, mele, pere. Preferisci: quinoa, riso, carote, zucchine, mirtilli. Fase eliminazione 6-8 settimane, poi reintroduzione graduale.',
+  'coach.lbl.streak':'STREAK {n} GIORNI',
+  'coach.lbl.perdita_ecc':'PERDITA ECCESSIVA','coach.lbl.trend_iniz':'TREND IN COSTRUZIONE',
+  'coach.msg.streak':'{n} giorni consecutivi di check-in! Continuità registrata. Il piano si sta adattando ai tuoi progressi.',
+  'coach.msg.perdita_ecc':'−{rate} kg/sett supera il limite sicuro. A questo ritmo perdi massa magra. Velocità ottimale: {min}–{max} kg/sett. Aggiungi subito 100–150 kcal da carboidrati, soprattutto peri-workout.',
+  'coach.msg.trend_iniz':'−{rate} kg/sett stimato su {days} giorni ({cnt} pesate). Span troppo breve per un\'analisi affidabile — continua a registrare il peso per 7+ giorni.',
+  'coach.msg.ricomp_attiva':'Peso stabile ±{rate} kg/sett, girovita −{waist} cm. Stai perdendo grasso e guadagnando massa simultaneamente. NON cambiare il piano.',
+  'coach.msg.ritenzione':'Sale oggi: {salt}g (≈{saltmg}mg Na+) vs acqua {water}L. Il peso è falsato dalla ritenzione. Bevi 500ml nelle prossime 2h. Il sodio sierico si normalizza in 12-24h con corretta idratazione.',
+  'coach.msg.ricarica':'{days} giorni in deficit: leptina in calo, adattamento metabolico. Refeed {urgenza} entro 1-2 giorni. Target: +880 kcal SOLO da carboidrati (220g {refeedFoods}). Grassi e proteine invariati.',
+  'coach.msg.adatt_met':'Trend piatto ({cnt} rilevazioni). Il metabolismo si è adattato. Tre opzioni: (A) −100 kcal dai carboidrati serali, (B) +2.000 passi NEAT/die, (C) settimana refeed poi riprendi deficit.',
+  'coach.msg.surplus_insuff':'Peso fermo da {cnt} rilevazioni. In bulk lean target: +0.15-0.30 kg/sett. Aggiungi 150-200 kcal da carboidrati (riso, avena). Se girovita cresce >0.5cm/sett, torna al mantenimento 1 settimana.',
+  'coach.msg.deficit_ott':'−{rate} kg/sett: velocità ottimale ({min}–{max} kg/sett). Preservazione massa magra massimale. Piano perfettamente calibrato. Mantieni invariato.',
+  'coach.msg.deficit_alto':'−{rate} kg/sett: sopra l\'ottimale. Considera +50 kcal da proteine magre o carbs peri-workout per limitare il catabolismo muscolare.',
+  'coach.msg.prog_lento':'−{rate} kg/sett: sotto il target ({min} kg/sett). Controlla aderenza. Se il piano è seguito, riduci 100 kcal dai carboidrati serali.',
+  'coach.msg.bulk_ott':'+{rate} kg/sett: surplus lean perfetto (Barbalho 2020). Monitora girovita ogni settimana: se cresce >0.5cm/sett, riduci 100 kcal. Proteine invariate.',
+  'coach.msg.surplus_exc':'+{rate} kg/sett: troppo veloce, rischio accumulo grasso. Riduci 200 kcal da carboidrati. Target: +0.15-0.25 kg/sett.',
+  'coach.msg.peso_su':'+{rate} kg/sett in {goal_lbl}. Controlla: (1) aderenza pasti, (2) ritenzione idrica (pesata al mattino a stomaco vuoto), (3) sodio assunto. Se confermato dopo 5gg, riduci 100 kcal da carbs.',
+  'coach.msg.fame_pegg':'Fame {hunger}/10 e in aumento (trend +{trend}/die). Aderenza {adher}/10. Il deficit supera la tollerabilità individuale. {tip} Inizia ogni pasto con la proteina: satura prima i recettori della fame.',
+  'coach.msg.fame_strutt':'Fame {hunger}/10 + aderenza {adher}/10. Aggiungi 150–200g verdure fibrose ({veggies}) ai pasti principali: zero impatto calorico, sazietà volumetrica significativa. Proteine ad ogni pasto prima dei carbs.',
+  'coach.msg.energia_calo':'Energia {energy}/10 e in peggioramento (trend {trend}/die). Causa più probabile: carbs peri-workout insufficienti. Aggiungi 25–30g riso/avena 60min prima dell\'allenamento. Se persiste >5 giorni: verifica ferro, B12, vitamina D.',
+  'coach.msg.energia_bassa':'Energia {energy}/10. Azione immediata: (1) +20g carbs peri-workout, (2) 500ml acqua adesso, (3) sonno priorità assoluta. Se <7h/notte, l\'adattamento calorico è impossibile.',
+  'coach.msg.dig_pegg':'Digestione {dig}/10 (trend {trend}/die). Protocollo 48h: {digestFoods}. Elimina temporaneamente legumi, lattosio, farine integrali. Pasti più piccoli e frequenti riducono il carico digestivo.',
+  'coach.msg.dig_comp':'Digestione {dig}/10. Semplifica: {digestFoods}, elimina legumi e lattosio per 2 giorni. Riduci le porzioni del 20% e mastica lentamente.',
+  'coach.msg.ader_calo':'Aderenza {adher}/10 e in calo ({trend}/die). Causa più comune: piano troppo rigido. Identifica i 2 pasti più difficili e semplificali: sostituisci con alternative rapide dallo stesso gruppo alimentare.{streakNote}',
+  'coach.msg.segnali_ott':'Aderenza {adher}/10, energia {energy}/10 — entrambi stabili o in miglioramento.{streak} Il piano funziona. Mantieni la stessa routine: la continuità produce adattamenti progressivi nel tempo.',
+  'coach.msg.ckd':'Piano calibrato per CKD (proteine ≤0.8g/kg). Monitora: edemi, pressione, potassio. Evita integratori proteici non prescritti. Aggiorna il medico ogni 3 mesi con creatinina ed eGFR.',
+  'coach.msg.dash':'Piano DASH attivo. Target: Na+ <{na}mg/die, K+ ≥4700mg/die, Ca++ ≥1250mg/die. Le 5 porzioni frutta-verdura abbassano la sistolica di 8-14 mmHg entro 2 settimane (NEJM 1997).',
+  'coach.msg.ibs':'Piano low-FODMAP attivo (Monash University). Evita: grano, cipolla, aglio, lenticchie, mele, pere. Preferisci: quinoa, riso, carote, zucchine, mirtilli. Fase eliminazione 6-8 settimane, poi reintroduzione graduale.',
   'coach.msg.tip_cut':'+100 kcal da proteine magre (50g albume o 100g yogurt greco) al pasto più carente.',
   'coach.msg.tip_other':'Una giornata a mantenimento ogni 10 giorni resetta la leptina e migliora l\'aderenza.',
-  'coach.msg.streak_long':' 🔥 {n} giorni di streak: stai costruendo un\'abitudine reale.',
-  'coach.msg.streak_med':' 🔥 {n} giorni consecutivi — continua così.',
-  'coach.msg.streak_short':' 🔥 {n} giorni di streak.',
+  'coach.msg.streak_long':' {n} giorni di streak: stai costruendo un\'abitudine reale.',
+  'coach.msg.streak_med':' {n} giorni consecutivi — continua così.',
+  'coach.msg.streak_short':' {n} giorni di streak.',
   'coach.msg.streak_note':' Hai {n} giorni consecutivi di check-in: non interrompere ora.',
   'coach.urgenza.urgente':'urgente','coach.urgenza.programmato':'programmato',
   'goal.label.recomp_ctx':'ricomposizione','goal.label.cut_ctx':'definizione',
   'coach.msg.no_log_note':' Aggiungi pesate mattutine (min. 4) per sbloccare l\'analisi del trend.',
   'coach.msg.no_ci_note':' Salva almeno 2 check-in per attivare i segnali nutrizionali.',
-  'coach.msg.ctx_cut_no_log':'⚡ Registra ≥4 pesate a digiuno per attivare il trend.{noCheckinNote}',
-  'coach.msg.ctx_cut':'✅ Deficit attivo. Peso ogni 2-3 giorni, girovita 1×/sett. Proteine alte ({pro}g/die) proteggono la massa magra.{streakNote}',
-  'coach.msg.ctx_recomp_no_log':'⚡ Ricomposizione richiede sia peso che girovita. Peso stabile + girovita in calo = ricomposizione in corso.{noCheckinNote}',
-  'coach.msg.ctx_recomp':'🔁 Target: −{min}–{max} kg/sett o girovita in calo. Con peso stabile, la composizione migliora ugualmente.{streakNote}',
-  'coach.msg.ctx_maintain':'⚖️ Mantenimento. ±1-2 kg/die sono fisiologici (glicogeno, acqua). Osserva 2-3 settimane. Fibra ≥25g/die e sodio <2g/die.{streakNote}',
-  'coach.msg.ctx_bulk':'💪 Bulk lean. Target: +{min}–{max} kg/die. Forza in palestra e volume muscolare sono gli indicatori primari.{noLogNote}{streakNote}',
+  'coach.msg.ctx_cut_no_log':'Registra ≥4 pesate a digiuno per attivare il trend.{noCheckinNote}',
+  'coach.msg.ctx_cut':'Deficit attivo. Peso ogni 2-3 giorni, girovita 1×/sett. Proteine alte ({pro}g/die) proteggono la massa magra.{streakNote}',
+  'coach.msg.ctx_recomp_no_log':'Ricomposizione richiede sia peso che girovita. Peso stabile + girovita in calo = ricomposizione in corso.{noCheckinNote}',
+  'coach.msg.ctx_recomp':'Target: −{min}–{max} kg/sett o girovita in calo. Con peso stabile, la composizione migliora ugualmente.{streakNote}',
+  'coach.msg.ctx_maintain':'Mantenimento. ±1-2 kg/die sono fisiologici (glicogeno, acqua). Osserva 2-3 settimane. Fibra ≥25g/die e sodio <2g/die.{streakNote}',
+  'coach.msg.ctx_bulk':'Bulk lean. Target: +{min}–{max} kg/die. Forza in palestra e volume muscolare sono gli indicatori primari.{noLogNote}{streakNote}',
   'ci.fb.default':'Aderenza solida. Mantieni il piano invariato: la consistenza è il 90% del risultato.',
   'ci.fb.hunger_energy':'Fame alta con buona energia: non è deficit ma volume insufficiente. Aggiungi 150–200g di verdure fibrose (zucchine, cetrioli, spinaci) ai pasti principali. Sazia senza calorie significative.',
   'ci.fb.tip_cut':'Considera di aggiungere 100 kcal da proteine magre (es. +50g albume) al pasto che ti lascia più affamato.',
@@ -3520,15 +3526,15 @@ it:{
   'coach.micro.b12high':'Vegano >60gg: verifica B12 sierica, ferritina e zinco. Deficit subclinici compromettono il recupero.',
   'onb2.skip':'Salta','onb2.next':'Avanti','onb2.prev':'← Indietro','onb2.start':'INIZIA ORA — È GRATIS',
   'onb2.slide1.badge':'Il tuo nutrizionista tascabile',
-  'onb2.slide1.emoji':'⚡',
+  'onb2.slide1.emoji':'bolt',
   'onb2.slide1.title':'Non un\'altra app.\nIl tuo piano reale.',
-  'onb2.slide1.body':'Costruito sui tuoi dati, non su medie generiche.\nCome avere un nutrizionista h24.',
+  'onb2.slide1.body':'Costruito sui tuoi dati, non su medie generiche.\nPiano che si aggiorna ogni settimana in base ai tuoi check-in.',
   'onb2.slide1.bl0':'Target calorico calcolato sul tuo TDEE reale',
   'onb2.slide1.bl1':'Macro con formule EFSA e WHO validate',
   'onb2.slide1.bl2':'Zero dati su server — tutto sul tuo dispositivo',
   'onb2.slide1.hint':'Setup in 3 minuti · Zero abbonamento obbligatorio',
   'onb2.slide2.badge':'Precisione metabolica',
-  'onb2.slide2.emoji':'🧬',
+  'onb2.slide2.emoji':'biotech',
   'onb2.slide2.title':'Più accurato di qualsiasi calcolatore online.',
   'onb2.slide2.body':'Tre equazioni metaboliche combinate con i tuoi dati sportivi reali.\nNessuna stima generica.',
   'onb2.slide2.sv0':'7',
@@ -3538,14 +3544,14 @@ it:{
   'onb2.slide2.sv2':'100%',
   'onb2.slide2.sl2':'offline, sempre',
   'onb2.slide3.badge':'Si adatta a te ogni giorno',
-  'onb2.slide3.emoji':'📊',
+  'onb2.slide3.emoji':'bar_chart',
   'onb2.slide3.title':'Il piano cambia\nquando il tuo corpo cambia.',
   'onb2.slide3.body':'Niente numeri fissi che si ignorano a vicenda.\nQuando il tuo metabolismo si adatta, il piano si adatta prima.',
   'onb2.slide3.bl0':'TDEE reale calcolato dalla tua curva di peso',
   'onb2.slide3.bl1':'Suggerimenti automatici quando il progresso si ferma',
   'onb2.slide3.bl2':'Refeed day e pause gestiti intelligentemente',
   'onb2.slide4.badge':'Senza ossessioni',
-  'onb2.slide4.emoji':'✅',
+  'onb2.slide4.emoji':'check_circle',
   'onb2.slide4.title':'Flessibile quanto\nla tua vita.',
   'onb2.slide4.body':'Check-in di 20 secondi ogni giorno. Niente barcode, niente pesatura ossessiva.\nSolo i segnali che contano davvero.',
   'onb2.slide4.quote':'Finalmente un\'app che non mi fa sentire in colpa se salto un allenamento. Si aggiusta da sola.',
@@ -3635,8 +3641,8 @@ it:{
   'faq.a.0':'Se inserisci la percentuale di grasso corporeo, viene usata la formula <strong>Katch-McArdle</strong> basata sulla massa magra. Altrimenti viene usata la formula <strong>Mifflin-St Jeor</strong>. Il TDEE finale viene moltiplicato per un fattore di attività calcolato da allenamenti settimanali e passi giornalieri.',
   'faq.q.1':'Come viene generato il piano alimentare?',
   'faq.a.1':'Il piano viene generato automaticamente in base ai tuoi cibi preferiti, al numero di pasti scelto, al gusto (dolce/salato/misto) e allo stile alimentare (onnivoro/vegetariano/vegano). Le porzioni sono calcolate per raggiungere il tuo target proteico e calorico personale. Nessun JSON esterno necessario.',
-  'faq.q.2':'Cosa fa il Modificatore AI?',
-  'faq.a.2':'Il modificatore aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall\'inizio.',
+  'faq.q.2':'Come funziona l\'aggiustamento calorico?',
+  'faq.a.2':'L\'aggiustamento aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall\'inizio.',
   'faq.q.3':'Cos\'è il Refeed Day?',
   'faq.a.3':'Un refeed è un giorno di aumento calorico controllato: +880 kcal, 220g carbs da {refeedFoods} per stimolare la leptina e prevenire l\'adattamento metabolico durante il taglio. Va pianificato ogni 7-10 giorni in Fase 2. Proteine e grassi invariati (Dirlewanger 2000).',
   'faq.q.4':'Come funziona davvero il Coach AI?',
@@ -3776,7 +3782,7 @@ it:{
   'sub.badge.login': 'ACCEDI',
   'sub.trial.subtitle': '{d} giorn{s} rimast{r} · poi solo il piano base',
   'sub.trial.subtitle.zero': 'Prova scaduta · Passa a Trend per continuare',
-  'sub.trial.detail': 'Stai usando il nutrizionista adattivo h24',
+  'sub.trial.detail': 'Stai usando il piano adattivo a aggiornamento settimanale',
   'sub.trial.detail.zero': 'Attiva Trend per non perdere le analisi',
   'sub.trial.prog.left': '{d} giorni utilizzati',
   'sub.trial.prog.right': '{d} rimasti',
@@ -3800,7 +3806,7 @@ it:{
   'sub.grace.prog.right': '{h} ore',
   'sub.grace.cta.update': 'Aggiorna metodo di pagamento',
   'sub.expired.subtitle': 'La tua prova è finita — riattiva Trend e continua esattamente da dove ti eri fermato',
-  'sub.expired.detail': 'Riattiva Trend per sbloccare analisi avanzata',
+  'sub.expired.detail': 'Riattiva Trend per riprendere l\'analisi',
   'sub.expired.prog.left': 'Prova terminata',
   'sub.expired.cta.monthly': '⭐ Riattiva ora — €9,99/mese',
   'sub.expired.cta.annual': 'Miglior valore — €39,99/anno',
@@ -3847,7 +3853,7 @@ en:{
   'onb.step4.title':'Your Foods',
   'onb.cibi.proteine':'Preferred proteins','onb.cibi.carb':'Preferred carbs','onb.cibi.grassi':'Preferred fats',
   'onb.cibi.extra':'Add other foods you love','onb.cibi.extra.ph':'e.g. broccoli, courgette, apples, skyr…',
-  'onb.btn.indietro':'← Back','onb.btn.genera':'⚡ Calculate my personalised plan →',
+  'onb.btn.indietro':'← Back','onb.btn.genera':'Calcola il mio piano personalizzato →',
   'onb.result.tdee':'YOUR REAL METABOLISM','onb.result.target':'TARGET → {kcal} kcal/day',
   'onb.result.proteine':'Protein','onb.result.carbs':'Carbs','onb.result.grassi':'Fat',
   'onb.result.detail':'Calculation detail','onb.result.preview':'Your Plan — Preview',
@@ -3908,7 +3914,7 @@ en:{
   'set.fase.title':'Current Phase',
   'set.refeed.title':'Refeed Day','set.refeed.sub':'+880 kcal · +220g carbs · protein and fats unchanged','set.refeed.soloFase2':'Phase 2 only',
   'set.refeed.off':'INACTIVE','set.refeed.on':'ON 🔥',
-  'set.mod.title':'AI Modifier','set.mod.base':'Unchanged',
+  'set.mod.title':'Calorie adjustment','set.mod.base':'Unchanged',
   'set.mod.taglio':'Cut −{kcal} kcal','set.mod.boost':'Boost +{kcal} kcal','set.mod.reset':'Reset modifier',
   'set.dati.title':'Data','set.dati.esporta':'📦 Export Backup',
   'set.dati.importa':'📥 Import Backup','set.dati.ricomincia':'🗑 Start over',
@@ -3956,14 +3962,14 @@ en:{
   'coach.lbl.default':'KINETIC INSIGHT',
   'coach.lbl.ricomp_attiva':'ACTIVE RECOMPOSITION','coach.lbl.ritenzione':'SODIUM RETENTION',
   'coach.lbl.ricarica':'LEPTIN RELOAD','coach.lbl.adatt_met':'METABOLIC ADAPTATION',
-  'coach.lbl.surplus_insuff':'INSUFFICIENT SURPLUS','coach.lbl.deficit_ott':'OPTIMAL DEFICIT ✓',
-  'coach.lbl.deficit_alto':'HIGH DEFICIT ⚠','coach.lbl.prog_lento':'SLOW PROGRESS',
-  'coach.lbl.bulk_ott':'OPTIMAL BULK ✓','coach.lbl.surplus_exc':'EXCESSIVE SURPLUS',
+  'coach.lbl.surplus_insuff':'INSUFFICIENT SURPLUS','coach.lbl.deficit_ott':'OPTIMAL DEFICIT',
+  'coach.lbl.deficit_alto':'HIGH DEFICIT','coach.lbl.prog_lento':'SLOW PROGRESS',
+  'coach.lbl.bulk_ott':'OPTIMAL BULK','coach.lbl.surplus_exc':'EXCESSIVE SURPLUS',
   'coach.lbl.peso_su':'WEIGHT RISING','coach.lbl.fame_pegg':'WORSENING HUNGER',
   'coach.lbl.fame_strutt':'STRUCTURAL HUNGER','coach.lbl.energia_calo':'ENERGY DROPPING',
-  'coach.lbl.energia_bassa':'VERY LOW ENERGY ⚠','coach.lbl.dig_pegg':'WORSENING DIGESTION',
-  'coach.lbl.dig_comp':'COMPROMISED DIGESTION ⚠','coach.lbl.ader_calo':'DECLINING ADHERENCE',
-  'coach.lbl.segnali_ott':'OPTIMAL SIGNALS ✓',
+  'coach.lbl.energia_bassa':'VERY LOW ENERGY','coach.lbl.dig_pegg':'WORSENING DIGESTION',
+  'coach.lbl.dig_comp':'COMPROMISED DIGESTION','coach.lbl.ader_calo':'DECLINING ADHERENCE',
+  'coach.lbl.segnali_ott':'OPTIMAL SIGNALS',
   'coach.lbl.ckd':'CKD PROTOCOL','coach.lbl.dash':'DASH PROTOCOL','coach.lbl.ibs':'LOW-FODMAP PROTOCOL',
   'toast.compilaCorpo':'⚠️ Fill in age, height and weight',
   'toast.selAllenamentiPassi':'⚠️ Select training frequency and steps',
@@ -4010,49 +4016,49 @@ en:{
   'prefs.cibiScelti':'Chosen foods','prefs.extra':'Extra','prefs.esclusi':'Excluded',
   'misc.fase':'Phase','misc.piano':'Plan','misc.locale':'(local)','misc.noData':'N/A',
   'res.obiettivo':'Goal','res.deficit':'deficit',
-  'coach.lbl.streak':'STREAK {n} DAYS 🔥',
-  'coach.lbl.perdita_ecc':'EXCESSIVE LOSS ⚠','coach.lbl.trend_iniz':'BUILDING TREND',
-  'coach.msg.streak':'🔥 {n} consecutive check-in days! Consistency is your superpower. Keep going — every day brings you closer to your results.',
-  'coach.msg.perdita_ecc':'⚠️ −{rate} kg/week exceeds the safe limit. At this pace you\'re losing lean mass. Optimal rate: {min}–{max} kg/week. Add 100–150 kcal from carbs now, especially peri-workout.',
-  'coach.msg.trend_iniz':'📊 −{rate} kg/week estimated over {days} days ({cnt} weigh-ins). Span too short for reliable analysis — keep logging weight for 7+ days.',
-  'coach.msg.ricomp_attiva':'🔁 Weight stable ±{rate} kg/week, waist −{waist} cm. You\'re losing fat and gaining muscle simultaneously. Do NOT change the plan.',
-  'coach.msg.ritenzione':'💧 Salt today: {salt}g (≈{saltmg}mg Na+) vs water {water}L. Weight is skewed by retention. Drink 500ml in the next 2h. Serum sodium normalises in 12-24h with proper hydration.',
-  'coach.msg.ricarica':'🔥 {days} days in deficit: leptin dropping, metabolic adaptation. {urgenza} refeed within 1-2 days. Target: +880 kcal from carbs ONLY (220g {refeedFoods}). Fats and protein unchanged.',
-  'coach.msg.adatt_met':'⚡ Flat trend ({cnt} readings). Your metabolism has adapted. Three options: (A) −100 kcal from evening carbs, (B) +2,000 NEAT steps/day, (C) refeed week then resume deficit.',
-  'coach.msg.surplus_insuff':'⚡ Weight stuck for {cnt} readings. Lean bulk target: +0.15-0.30 kg/week. Add 150-200 kcal from carbs (rice, oats). If waist grows >0.5cm/week, return to maintenance for 1 week.',
-  'coach.msg.deficit_ott':'🔥 −{rate} kg/week: optimal rate ({min}–{max} kg/week). Maximum lean mass preservation. Plan perfectly calibrated. Keep unchanged.',
-  'coach.msg.deficit_alto':'⚠️ −{rate} kg/week: above optimal. Consider +50 kcal from lean protein or peri-workout carbs to limit muscle catabolism.',
-  'coach.msg.prog_lento':'⚡ −{rate} kg/week: below target ({min} kg/week). Check adherence. If the plan is being followed, cut 100 kcal from evening carbs.',
-  'coach.msg.bulk_ott':'💪 +{rate} kg/week: perfect lean surplus (Barbalho 2020). Track waist weekly: if it grows >0.5cm/week, cut 100 kcal. Protein unchanged.',
-  'coach.msg.surplus_exc':'⚠️ +{rate} kg/week: too fast, fat gain risk. Cut 200 kcal from carbs. Target: +0.15-0.25 kg/week.',
-  'coach.msg.peso_su':'⚠️ +{rate} kg/week in {goal_lbl}. Check: (1) meal adherence, (2) water retention (weigh in the morning fasted), (3) sodium intake. If confirmed after 5 days, cut 100 kcal from carbs.',
-  'coach.msg.fame_pegg':'🍽 Hunger {hunger}/10 and rising (trend +{trend}/day). Adherence {adher}/10. The deficit exceeds individual tolerance. {tip} Start every meal with protein: saturates hunger receptors first.',
-  'coach.msg.fame_strutt':'🍽 Hunger {hunger}/10 + adherence {adher}/10. Add 150–200g fibrous vegetables ({veggies}) to main meals: zero caloric impact, significant volumetric satiety. Protein at every meal before carbs.',
-  'coach.msg.energia_calo':'⚡ Energy {energy}/10 and worsening (trend {trend}/day). Most likely cause: insufficient peri-workout carbs. Add 25–30g rice/oats 60min before training. If it persists >5 days: check iron, B12, vitamin D.',
-  'coach.msg.energia_bassa':'⚡ Energy {energy}/10. Immediate action: (1) +20g peri-workout carbs, (2) 500ml water now, (3) sleep absolute priority. If <7h/night, caloric adaptation is impossible.',
-  'coach.msg.dig_pegg':'🫁 Digestion {dig}/10 (trend {trend}/day). 48h protocol: {digestFoods}. Temporarily eliminate legumes, lactose, wholegrains. Smaller, more frequent meals reduce digestive load.',
-  'coach.msg.dig_comp':'🫁 Digestion {dig}/10. Simplify: {digestFoods}, eliminate legumes and lactose for 2 days. Reduce portions by 20% and chew slowly.',
-  'coach.msg.ader_calo':'📉 Adherence {adher}/10 and dropping ({trend}/day). Most common cause: plan too rigid. Identify the 2 hardest meals and simplify them: replace with quick alternatives from the same food group.{streakNote}',
-  'coach.msg.segnali_ott':'✅ Adherence {adher}/10, energy {energy}/10 — both stable or improving.{streak} The plan is working. Keep the same routine: consistency produces compound results over time.',
-  'coach.msg.ckd':'🫁 Plan calibrated for CKD (protein ≤0.8g/kg). Monitor: oedema, blood pressure, potassium. Avoid unprescribed protein supplements. Update your doctor every 3 months with creatinine and eGFR.',
-  'coach.msg.dash':'❤️ DASH plan active. Target: Na+ <{na}mg/day, K+ ≥4700mg/day, Ca++ ≥1250mg/day. 5 servings of fruit and veg lower systolic BP by 8-14 mmHg within 2 weeks (NEJM 1997).',
-  'coach.msg.ibs':'🌿 Low-FODMAP plan active (Monash University). Avoid: wheat, onion, garlic, lentils, apples, pears. Prefer: quinoa, rice, carrots, courgette, blueberries. Elimination phase 6-8 weeks, then gradual reintroduction.',
+  'coach.lbl.streak':'STREAK {n} DAYS',
+  'coach.lbl.perdita_ecc':'EXCESSIVE LOSS','coach.lbl.trend_iniz':'BUILDING TREND',
+  'coach.msg.streak':'{n} consecutive check-in days! Consistency recorded. The plan is adapting to your progress.',
+  'coach.msg.perdita_ecc':'−{rate} kg/week exceeds the safe limit. At this pace you\'re losing lean mass. Optimal rate: {min}–{max} kg/week. Add 100–150 kcal from carbs now, especially peri-workout.',
+  'coach.msg.trend_iniz':'−{rate} kg/week estimated over {days} days ({cnt} weigh-ins). Span too short for reliable analysis — keep logging weight for 7+ days.',
+  'coach.msg.ricomp_attiva':'Weight stable ±{rate} kg/week, waist −{waist} cm. You\'re losing fat and gaining muscle simultaneously. Do NOT change the plan.',
+  'coach.msg.ritenzione':'Salt today: {salt}g (≈{saltmg}mg Na+) vs water {water}L. Weight is skewed by retention. Drink 500ml in the next 2h. Serum sodium normalises in 12-24h with proper hydration.',
+  'coach.msg.ricarica':'{days} days in deficit: leptin dropping, metabolic adaptation. {urgenza} refeed within 1-2 days. Target: +880 kcal from carbs ONLY (220g {refeedFoods}). Fats and protein unchanged.',
+  'coach.msg.adatt_met':'Flat trend ({cnt} readings). Your metabolism has adapted. Three options: (A) −100 kcal from evening carbs, (B) +2,000 NEAT steps/day, (C) refeed week then resume deficit.',
+  'coach.msg.surplus_insuff':'Weight stuck for {cnt} readings. Lean bulk target: +0.15-0.30 kg/week. Add 150-200 kcal from carbs (rice, oats). If waist grows >0.5cm/week, return to maintenance for 1 week.',
+  'coach.msg.deficit_ott':'−{rate} kg/week: optimal rate ({min}–{max} kg/week). Maximum lean mass preservation. Plan perfectly calibrated. Keep unchanged.',
+  'coach.msg.deficit_alto':'−{rate} kg/week: above optimal. Consider +50 kcal from lean protein or peri-workout carbs to limit muscle catabolism.',
+  'coach.msg.prog_lento':'−{rate} kg/week: below target ({min} kg/week). Check adherence. If the plan is being followed, cut 100 kcal from evening carbs.',
+  'coach.msg.bulk_ott':'+{rate} kg/week: perfect lean surplus (Barbalho 2020). Track waist weekly: if it grows >0.5cm/week, cut 100 kcal. Protein unchanged.',
+  'coach.msg.surplus_exc':'+{rate} kg/week: too fast, fat gain risk. Cut 200 kcal from carbs. Target: +0.15-0.25 kg/week.',
+  'coach.msg.peso_su':'+{rate} kg/week in {goal_lbl}. Check: (1) meal adherence, (2) water retention (weigh in the morning fasted), (3) sodium intake. If confirmed after 5 days, cut 100 kcal from carbs.',
+  'coach.msg.fame_pegg':'Hunger {hunger}/10 and rising (trend +{trend}/day). Adherence {adher}/10. The deficit exceeds individual tolerance. {tip} Start every meal with protein: saturates hunger receptors first.',
+  'coach.msg.fame_strutt':'Hunger {hunger}/10 + adherence {adher}/10. Add 150–200g fibrous vegetables ({veggies}) to main meals: zero caloric impact, significant volumetric satiety. Protein at every meal before carbs.',
+  'coach.msg.energia_calo':'Energy {energy}/10 and worsening (trend {trend}/day). Most likely cause: insufficient peri-workout carbs. Add 25–30g rice/oats 60min before training. If it persists >5 days: check iron, B12, vitamin D.',
+  'coach.msg.energia_bassa':'Energy {energy}/10. Immediate action: (1) +20g peri-workout carbs, (2) 500ml water now, (3) sleep absolute priority. If <7h/night, caloric adaptation is impossible.',
+  'coach.msg.dig_pegg':'Digestion {dig}/10 (trend {trend}/day). 48h protocol: {digestFoods}. Temporarily eliminate legumes, lactose, wholegrains. Smaller, more frequent meals reduce digestive load.',
+  'coach.msg.dig_comp':'Digestion {dig}/10. Simplify: {digestFoods}, eliminate legumes and lactose for 2 days. Reduce portions by 20% and chew slowly.',
+  'coach.msg.ader_calo':'Adherence {adher}/10 and dropping ({trend}/day). Most common cause: plan too rigid. Identify the 2 hardest meals and simplify them: replace with quick alternatives from the same food group.{streakNote}',
+  'coach.msg.segnali_ott':'Adherence {adher}/10, energy {energy}/10 — both stable or improving.{streak} The plan is working. Keep the same routine: consistency produces compound results over time.',
+  'coach.msg.ckd':'Plan calibrated for CKD (protein ≤0.8g/kg). Monitor: oedema, blood pressure, potassium. Avoid unprescribed protein supplements. Update your doctor every 3 months with creatinine and eGFR.',
+  'coach.msg.dash':'DASH plan active. Target: Na+ <{na}mg/day, K+ ≥4700mg/day, Ca++ ≥1250mg/day. 5 servings of fruit and veg lower systolic BP by 8-14 mmHg within 2 weeks (NEJM 1997).',
+  'coach.msg.ibs':'Low-FODMAP plan active (Monash University). Avoid: wheat, onion, garlic, lentils, apples, pears. Prefer: quinoa, rice, carrots, courgette, blueberries. Elimination phase 6-8 weeks, then gradual reintroduction.',
   'coach.msg.tip_cut':'+100 kcal from lean protein (50g egg white or 100g Greek yogurt) at your lowest-calorie meal.',
   'coach.msg.tip_other':'A maintenance day every 10 days resets leptin and improves adherence.',
-  'coach.msg.streak_long':' 🔥 {n}-day streak: you\'re building a real habit.',
-  'coach.msg.streak_med':' 🔥 {n} days straight — keep it up.',
-  'coach.msg.streak_short':' 🔥 {n}-day streak.',
+  'coach.msg.streak_long':' {n}-day streak: you\'re building a real habit.',
+  'coach.msg.streak_med':' {n} days straight — keep it up.',
+  'coach.msg.streak_short':' {n}-day streak.',
   'coach.msg.streak_note':' You\'re on a {n}-day check-in streak: don\'t stop now.',
   'coach.urgenza.urgente':'urgent','coach.urgenza.programmato':'scheduled',
   'goal.label.recomp_ctx':'recomp','goal.label.cut_ctx':'cutting',
   'coach.msg.no_log_note':' Add morning weigh-ins (min. 4) to unlock trend analysis.',
   'coach.msg.no_ci_note':' Save at least 2 check-ins to activate nutritional signals.',
-  'coach.msg.ctx_cut_no_log':'⚡ Log ≥4 fasted weigh-ins to activate trend analysis.{noCheckinNote}',
-  'coach.msg.ctx_cut':'✅ Active deficit. Weigh every 2-3 days, waist 1×/week. High protein ({pro}g/day) protects lean mass.{streakNote}',
-  'coach.msg.ctx_recomp_no_log':'⚡ Recomp requires both weight and waist measurements. Stable weight + dropping waist = recomp in progress.{noCheckinNote}',
-  'coach.msg.ctx_recomp':'🔁 Target: −{min}–{max} kg/week or dropping waist. With stable weight, body composition still improves.{streakNote}',
-  'coach.msg.ctx_maintain':'⚖️ Maintenance. ±1-2 kg/day is physiological (glycogen, water). Observe for 2-3 weeks. Fibre ≥25g/day and sodium <2g/day.{streakNote}',
-  'coach.msg.ctx_bulk':'💪 Lean bulk. Target: +{min}–{max} kg/day. Strength gains and muscle volume are the primary indicators.{noLogNote}{streakNote}',
+  'coach.msg.ctx_cut_no_log':'Log ≥4 fasted weigh-ins to activate trend analysis.{noCheckinNote}',
+  'coach.msg.ctx_cut':'Active deficit. Weigh every 2-3 days, waist 1×/week. High protein ({pro}g/day) protects lean mass.{streakNote}',
+  'coach.msg.ctx_recomp_no_log':'Recomp requires both weight and waist measurements. Stable weight + dropping waist = recomp in progress.{noCheckinNote}',
+  'coach.msg.ctx_recomp':'Target: −{min}–{max} kg/week or dropping waist. With stable weight, body composition still improves.{streakNote}',
+  'coach.msg.ctx_maintain':'Maintenance. ±1-2 kg/day is physiological (glycogen, water). Observe for 2-3 weeks. Fibre ≥25g/day and sodium <2g/day.{streakNote}',
+  'coach.msg.ctx_bulk':'Lean bulk. Target: +{min}–{max} kg/day. Strength gains and muscle volume are the primary indicators.{noLogNote}{streakNote}',
   'ci.fb.default':'Solid adherence. Keep the plan unchanged: consistency is 90% of the result.',
   'ci.fb.hunger_energy':'High hunger with good energy: it\'s not a deficit issue but insufficient volume. Add 150–200g of fibrous vegetables (courgette, cucumber, spinach) to main meals. Fills you up without significant calories.',
   'ci.fb.tip_cut':'Consider adding 100 kcal from lean protein (e.g. +50g egg white) to the meal that leaves you most hungry.',
@@ -4104,7 +4110,7 @@ en:{
   'coach.micro.b12high':'Vegan >60 days: check serum B12, ferritin and zinc. Subclinical deficits impair recovery.',
   'onb2.skip':'Skip','onb2.next':'Next','onb2.prev':'← Back','onb2.start':'START NOW — IT\'S FREE',
   'onb2.slide1.badge':'Your pocket nutritionist',
-  'onb2.slide1.emoji':'⚡',
+  'onb2.slide1.emoji':'bolt',
   'onb2.slide1.title':'Not another app.\nYour actual plan.',
   'onb2.slide1.body':'Built on your real data, not generic averages.\nLike having a nutritionist available 24/7.',
   'onb2.slide1.bl0':'Calorie target personalised to your real TDEE',
@@ -4112,7 +4118,7 @@ en:{
   'onb2.slide1.bl2':'Zero server data — stays on your device',
   'onb2.slide1.hint':'3-minute setup · No subscription required',
   'onb2.slide2.badge':'Metabolic precision',
-  'onb2.slide2.emoji':'🧬',
+  'onb2.slide2.emoji':'biotech',
   'onb2.slide2.title':'More accurate than any online calculator.',
   'onb2.slide2.body':'Three metabolic equations combined with your real sport data.\nNo generic estimates.',
   'onb2.slide2.sv0':'7',
@@ -4122,14 +4128,14 @@ en:{
   'onb2.slide2.sv2':'100%',
   'onb2.slide2.sl2':'offline, always',
   'onb2.slide3.badge':'Adapts to you daily',
-  'onb2.slide3.emoji':'📊',
+  'onb2.slide3.emoji':'bar_chart',
   'onb2.slide3.title':'The plan changes\nwhen your body does.',
   'onb2.slide3.body':'No more ignoring static numbers that don\'t reflect reality.\nWhen your metabolism adapts, the plan adapts first.',
   'onb2.slide3.bl0':'Real TDEE calculated from your weight curve',
   'onb2.slide3.bl1':'Automatic suggestions when progress stalls',
   'onb2.slide3.bl2':'Refeed days and breaks managed intelligently',
   'onb2.slide4.badge':'No obsessive tracking',
-  'onb2.slide4.emoji':'✅',
+  'onb2.slide4.emoji':'check_circle',
   'onb2.slide4.title':'As flexible\nas life.',
   'onb2.slide4.body':'20-second check-in every day. No barcodes, no obsessive weighing.\nJust the signals that actually matter.',
   'onb2.slide4.quote':'Finally an app that doesn\'t make me feel guilty for skipping a session. It just adjusts.',
@@ -5316,11 +5322,12 @@ function runAutoAdjustEngine(){
 }
 function showAutoAdjustBanner(suggestion,tdeeData){
   const banner=document.getElementById('autoadj-banner');if(!banner)return;
+  const _autoAdjIconMap={'⚡':'bolt','⚠️':'warning','✅':'check_circle','📊':'bar_chart','💧':'water_drop'};
   const iconEl=document.getElementById('autoadj-icon');
   const titleEl=document.getElementById('autoadj-title');
   const bodyEl=document.getElementById('autoadj-body');
   const applyBtn=document.getElementById('autoadj-apply-btn');
-  const icons={slow_loss:'🐢',fast_loss:'⚡',maintain_drift:'⚖️'};
+  const icons={slow_loss:'trending_down',fast_loss:'bolt',maintain_drift:'balance'};
   const ico=icons[suggestion.reason];if(!ico)return;
   const rate=Math.abs(tdeeData.weeklyRate).toFixed(2);
   const delta=Math.abs(suggestion.deltaKcal);
@@ -5330,7 +5337,7 @@ function showAutoAdjustBanner(suggestion,tdeeData){
     :suggestion.reason==='fast_loss'
       ?t('autoadj.fast_loss.body',{rate,delta})
       :t('autoadj.slow_loss.body',{rate,delta});
-  if(iconEl)iconEl.textContent=ico;
+  if(iconEl){iconEl.className='material-symbols-outlined';iconEl.textContent=_autoAdjIconMap[ico]||'tune';}
   if(titleEl)titleEl.textContent=t('autoadj.'+suggestion.reason+'.title');
   if(bodyEl)bodyEl.textContent=bodyText;
   if(applyBtn){
@@ -7491,7 +7498,7 @@ function syncTrendLockCopy(){
   if(lockBanner){
     lockBanner.innerHTML=`
       <span style="font-size:13px;color:#ccc">${sanitize(t('trend.blur.expired'))}</span>
-      <button onclick="openPaywall('Trend')" style="background:none;border:none;color:#4ddcc6;font-weight:700;cursor:pointer;font-size:13px">
+      <button onclick="openPaywall('Trend')" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:13px">
         ${sanitize(t('trend.blur.cta'))}
       </button>
     `;
@@ -7650,16 +7657,13 @@ function renderCoach(){
   const d=analyzeState();
   const card=document.getElementById('coach-card');const iw=document.getElementById('coach-ico-wrap');
   const ic=document.getElementById('coach-ico');const lb=document.getElementById('coach-lbl');const ms=document.getElementById('coach-msg');
-  const isPrimary=d.ib==='#4ddcc6'||d.ib==='#F97316';
+  const isPrimary=d.ib==='var(--p)'||d.ib==='#F97316';
   /* FIX12: use CSS classes instead of inline cssText */
   const _ck=d.colorKey||'primary';
   card.className=`card-neon coach-card-${_ck}`;
   iw.className=`coach-ico-${_ck}`;
   iw.style.cssText='width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
   ic.style.color='';ic.textContent=d.ico;
-  /* Pulse the bolt icon when state is primary (optimal) */
-  if(_ck==='primary'){ic.style.animation='bolt-pulse 2.4s ease-in-out infinite';}
-  else{ic.style.animation='none';}
   lb.style.color='';lb.textContent=d.lbl;
   ms.style.color='var(--on)';ms.textContent=d.msg;
   /* Add streak badge if applicable — B2: show for streak>=1, pulse for >=7, hide for 0 */
@@ -7667,7 +7671,7 @@ function renderCoach(){
   const sbEl=document.getElementById('coach-streak-badge');
   if(sbEl){
     if(streakCount>=1){
-      sbEl.innerHTML=`<span class="streak-badge${streakCount>=7?' rfon':''}" style="margin-top:0;"><span class="fire">🔥</span> <span style="font-size:14px;font-weight:800;">${sanitize(streakCount)}</span></span>`;
+      sbEl.innerHTML=`<span class="streak-badge" style="margin-top:0;"><span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:'FILL' 1;">local_fire_department</span><span style="font-size:14px;font-weight:800;">${sanitize(streakCount)}</span></span>`;
       sbEl.style.display='block';
     }else{
       sbEl.innerHTML='';sbEl.style.display='none';
@@ -7949,17 +7953,18 @@ function getMealNames(){
   return dietData?.metadata?.mealNames||['Breakfast','Lunch','Dinner'];
 }
 function getMealEmoji(name){
+  /* Returns material symbol name — rendered as <span class="material-symbols-outlined"> */
   const _mt=canonicalMealType(name);
-  if(_mt==='breakfast')return'🌅';
-  if(_mt==='lunch')return'☀️';
-  if(_mt==='dinner')return'🌙';
+  if(_mt==='breakfast')return'wb_sunny';
+  if(_mt==='lunch')return'lunch_dining';
+  if(_mt==='dinner')return'dinner_dining';
   if(_mt==='snack'){
     const _n=String(name).toLowerCase();
-    if(_n.includes('pre')||_n.includes('morning'))return'⚡';
-    if(_n.includes('post'))return'🥤';
-    return'🍎';
+    if(_n.includes('pre')||_n.includes('morning'))return'bolt';
+    if(_n.includes('post'))return'sports_bar';
+    return'bakery_dining';
   }
-  return'🍽️';
+  return'restaurant';
 }
 function renderMeals(){
   document.querySelectorAll('button[onclick="openShoppingList()"]').forEach(b=>b.style.display=dietData?'':'none');
@@ -8056,25 +8061,25 @@ function renderTodayAction(){
   if(log.length>0&&!hasWeightToday){
     const last=log[log.length-1];const prev=log.length>=2?log[log.length-2]:null;
     const trend=prev?(Number(last.weight)<Number(prev.weight)?'↓':Number(last.weight)>Number(prev.weight)?'↑':'→'):'→';
-    if(iconEl)iconEl.textContent='⚖️';
+    if(iconEl){iconEl.className='material-symbols-outlined';iconEl.textContent='scale';}
     if(titleEl)titleEl.textContent=t('today.action.weight');
     if(bodyEl)bodyEl.textContent=t('today.action.weight.body',{val:last.weight,arrow:trend});
     if(btn){btn.style.display='';btn.textContent=t('today.action.weight.btn');btn.onclick=()=>switchTab('prog');}
     card.style.display='flex';
   }else if(!hasCheckinToday){
-    if(iconEl)iconEl.textContent='📋';
+    if(iconEl){iconEl.className='material-symbols-outlined';iconEl.textContent='assignment';}
     if(titleEl)titleEl.textContent=t('today.action.checkin');
     if(bodyEl)bodyEl.textContent=t('today.action.checkin.body');
     if(btn){btn.style.display='';btn.textContent='Check-in';btn.onclick=()=>{document.getElementById('daily-check-card')?.scrollIntoView({behavior:'smooth'});};}
     card.style.display='flex';
   }else if(mealsTotal>0&&mealsDone>=mealsTotal){
-    if(iconEl)iconEl.textContent='🎯';
+    if(iconEl){iconEl.className='material-symbols-outlined';iconEl.textContent='check_circle';}
     if(titleEl)titleEl.textContent=t('today.action.done');
     if(bodyEl)bodyEl.textContent=t('today.action.done.body');
     if(btn)btn.style.display='none';
     card.style.display='flex';
   }else{
-    if(iconEl)iconEl.textContent='🍽️';
+    if(iconEl){iconEl.className='material-symbols-outlined';iconEl.textContent='restaurant';}
     if(titleEl)titleEl.textContent=t('today.action.default');
     if(bodyEl)bodyEl.textContent=t('today.action.meals.body',{done:mealsDone,total:mealsTotal});
     if(btn){btn.style.display='';btn.textContent=t('today.action.meals.btn');btn.onclick=()=>{document.getElementById('meals-list')?.scrollIntoView({behavior:'smooth'});};}
@@ -8201,7 +8206,7 @@ function renderRefeed(){
     b.style.cssText=on
       ?'padding:0 12px;background:rgba(77,220,198,.12);border:1px solid rgba(77,220,198,.22);color:var(--p);border-radius:var(--r-pill);height:34px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;'
       :'padding:0 12px;background:rgba(255,255,255,.05);border:1px solid var(--glass-stroke);color:var(--muted);border-radius:var(--r-pill);height:34px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;';
-    if(on)b.classList.add('rfon');else b.classList.remove('rfon');
+    /* rfon removed */
   });
 }
 function toggleRefeed(){
@@ -8591,7 +8596,7 @@ function renderChart(data){
   if(!cd.length){em.style.display='block';wrap.style.display='none';if(bodyChart){try{bodyChart.destroy();}catch(e){}bodyChart=null;_chartType=null;}return;}
   em.style.display='none';
   wrap.style.display='block';
-  const color=isW?'#c0c1ff':'#4ddcc6';
+  const color=isW?'var(--sec)':'var(--p)';
   const bg=isW?'rgba(192,193,255,.10)':'rgba(77,220,198,.10)';
   const unit=isW?' cm':' kg';
   const labels=cd.map(e=>{const[y,m,d]=(e.isoDate||'').split('-');return d&&m?`${d}/${m}`:e.date||e.isoDate||'';});
@@ -9769,7 +9774,7 @@ function showOnboarding(){
   const _q=id=>document.getElementById(id);
   /* Slide 0 */
   if(_q('onb-badge-0'))_q('onb-badge-0').textContent=t('onb2.slide1.badge');
-  if(_q('onb-e0'))_q('onb-e0').textContent=t('onb2.slide1.emoji');
+  if(_q('onb-e0')){const _e=_q('onb-e0');_e.className='onb-emoji material-symbols-outlined';_e.textContent=t('onb2.slide1.emoji');}
   if(_q('onb-t0'))_q('onb-t0').textContent=t('onb2.slide1.title');
   if(_q('onb-b0'))_q('onb-b0').textContent=t('onb2.slide1.body');
   if(_q('onb-bl0-0'))_q('onb-bl0-0').textContent=t('onb2.slide1.bl0');
@@ -9778,7 +9783,7 @@ function showOnboarding(){
   if(_q('onb-hint0'))_q('onb-hint0').textContent=t('onb2.slide1.hint');
   /* Slide 1 */
   if(_q('onb-badge-1'))_q('onb-badge-1').textContent=t('onb2.slide2.badge');
-  if(_q('onb-e1'))_q('onb-e1').textContent=t('onb2.slide2.emoji');
+  if(_q('onb-e1')){const _e=_q('onb-e1');_e.className='onb-emoji material-symbols-outlined';_e.textContent=t('onb2.slide2.emoji');}
   if(_q('onb-t1'))_q('onb-t1').textContent=t('onb2.slide2.title');
   if(_q('onb-b1'))_q('onb-b1').textContent=t('onb2.slide2.body');
   if(_q('onb-sv1-0'))_q('onb-sv1-0').textContent=t('onb2.slide2.sv0');
@@ -9789,7 +9794,7 @@ function showOnboarding(){
   if(_q('onb-sl1-2'))_q('onb-sl1-2').textContent=t('onb2.slide2.sl2');
   /* Slide 2 */
   if(_q('onb-badge-2'))_q('onb-badge-2').textContent=t('onb2.slide3.badge');
-  if(_q('onb-e2'))_q('onb-e2').textContent=t('onb2.slide3.emoji');
+  if(_q('onb-e2')){const _e=_q('onb-e2');_e.className='onb-emoji material-symbols-outlined';_e.textContent=t('onb2.slide3.emoji');}
   if(_q('onb-t2'))_q('onb-t2').textContent=t('onb2.slide3.title');
   if(_q('onb-b2'))_q('onb-b2').textContent=t('onb2.slide3.body');
   if(_q('onb-bl2-0'))_q('onb-bl2-0').textContent=t('onb2.slide3.bl0');
@@ -9797,7 +9802,7 @@ function showOnboarding(){
   if(_q('onb-bl2-2'))_q('onb-bl2-2').textContent=t('onb2.slide3.bl2');
   /* Slide 3 */
   if(_q('onb-badge-3'))_q('onb-badge-3').textContent=t('onb2.slide4.badge');
-  if(_q('onb-e3'))_q('onb-e3').textContent=t('onb2.slide4.emoji');
+  if(_q('onb-e3')){const _e=_q('onb-e3');_e.className='onb-emoji material-symbols-outlined';_e.textContent=t('onb2.slide4.emoji');}
   if(_q('onb-t3'))_q('onb-t3').textContent=t('onb2.slide4.title');
   if(_q('onb-b3'))_q('onb-b3').textContent=t('onb2.slide4.body');
   if(_q('onb-qt3'))_q('onb-qt3').textContent=t('onb2.slide4.quote');
@@ -9906,9 +9911,7 @@ function _bootAfterLangGate(){
 
 
 
-<!-- ══════════════════════════════════════
-     MODAL CONFIRM
-══════════════════════════════════════ -->
+<!-- MODAL CONFIRM -->
 <div id="modal-confirm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center">
   <div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--rbox);padding:24px;max-width:320px;width:90%;display:flex;flex-direction:column;gap:16px">
     <p id="confirm-msg" class="sn" style="font-size:14px;font-weight:600;color:var(--on);margin:0;line-height:1.5"></p>
@@ -9919,9 +9922,7 @@ function _bootAfterLangGate(){
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     MODAL PRIVACY
-══════════════════════════════════════ -->
+<!-- MODAL PRIVACY -->
 <div class="modal-overlay" id="modal-privacy" onclick="closeModalOnOverlay(event,'modal-privacy')">
 <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="prv-title">
   <div class="modal-drag-handle" aria-hidden="true"></div>
@@ -10129,9 +10130,7 @@ function _bootAfterLangGate(){
 </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     MODAL AIUTO
-══════════════════════════════════════ -->
+<!-- MODAL AIUTO -->
 <!-- Shopping List Modal -->
 <div class="modal-overlay" id="modal-shopping" onclick="closeModalOnOverlay(event,'modal-shopping')">
 <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="shopping-title">
@@ -10193,7 +10192,7 @@ function _bootAfterLangGate(){
           <span class="faq-q-text">Cosa fa il Modificatore AI?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Il modificatore aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall'inizio.</div>
+        <div class="faq-answer">L\'aggiustamento aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall'inizio.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
@@ -10299,7 +10298,7 @@ function _bootAfterLangGate(){
 <!-- ── PAYWALL OVERLAY ── -->
 <!-- ── CHECKOUT PREVIEW OVERLAY ── -->
 <div id="checkout-preview-overlay" aria-modal="true" role="dialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);z-index:10002;align-items:flex-end;justify-content:center;">
-  <div id="checkout-preview-sheet" style="background:var(--s1);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform .38s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;max-height:92dvh;padding-bottom:env(safe-area-inset-bottom,16px);">
+  <div id="checkout-preview-sheet" style="background:var(--s1);border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform .38s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;max-height:92dvh;padding-bottom:env(safe-area-inset-bottom,16px);">
     <!-- drag handle -->
     <div style="width:36px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;margin:12px auto 0;"></div>
     <!-- close -->
@@ -10314,7 +10313,7 @@ function _bootAfterLangGate(){
           <span id="cpo-badge" style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:rgba(77,220,198,.2);color:var(--p);padding:3px 10px;border-radius:999px;">TREND</span>
         </div>
         <h2 id="cpo-title" style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:var(--on);margin:0 0 6px;letter-spacing:-.02em;">Iron Kinetic™ Trend</h2>
-        <p id="cpo-subtitle" style="font-size:13px;color:var(--on-v);line-height:1.5;margin:0;">Smetti di indovinare. Inizia a prevedere. I tuoi dati reali trasformati in una roadmap delle prossime 12 settimane.</p>
+        <p id="cpo-subtitle" style="font-size:13px;color:var(--on-v);line-height:1.5;margin:0;">Analisi predittiva basata sui tuoi dati reali. Proiezione a 12 settimane con correzione metabolica automatica.</p>
       </div>
 
       <!-- Plan selector -->
@@ -10347,7 +10346,7 @@ function _bootAfterLangGate(){
       </div>
 
       <!-- CTA -->
-      <button id="cpo-cta" onclick="confirmCheckoutPreview()" style="width:100%;height:54px;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);font-family:'Manrope',sans-serif;font-size:15px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:10px;touch-action:manipulation;transition:opacity .15s;box-shadow:0 8px 24px rgba(77,220,198,.32);">Attiva Trend →</button>
+      <button id="cpo-cta" onclick="confirmCheckoutPreview()" style="width:100%;height:54px;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);font-family:'Manrope',sans-serif;font-size:15px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:10px;touch-action:manipulation;transition:opacity .15s;box-shadow:0 2px 12px rgba(77,220,198,.15);">Attiva Trend →</button>
       <button onclick="closeCheckoutPreview()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-family:'Manrope',sans-serif;cursor:pointer;padding:8px;touch-action:manipulation;" id="cpo-cancel">Annulla</button>
       <p id="cpo-legal" style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;margin:8px 0 16px;">Rinnovo automatico. Cancella quando vuoi dal tuo profilo — in 10 secondi.</p>
     </div>
@@ -10357,26 +10356,26 @@ function _bootAfterLangGate(){
 <div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic Trend">
   <div id="paywall-sheet">
     <button onclick="closePaywall()" aria-label="Chiudi" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;touch-action:manipulation;min-width:44px;min-height:44px;">×</button>
-    <div id="pw-trial-badge" style="display:none;background:rgba(77,220,198,.12);color:#4ddcc6;font-size:11px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:999px;width:fit-content;margin:0 auto 16px;">⏱ <span id="pw-days-left"></span> GIORNI RIMASTI</div>
+    <div id="pw-trial-badge" style="display:none;background:rgba(77,220,198,.12);color:var(--p);font-size:10px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:999px;width:fit-content;margin:0 auto 16px;"><span id="pw-days-left"></span> GIORNI RIMASTI</div>
     <div style="width:56px;height:56px;background:rgba(77,220,198,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
-      <span class="material-symbols-outlined" style="color:#4ddcc6;font-size:28px;">trending_up</span>
+      <span class="material-symbols-outlined" style="color:var(--p);font-size:28px;font-variation-settings:'FILL' 1;">trending_up</span>
     </div>
-    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 8px;" id="pw-main-title">Sblocca l'analisi che lavora per te</h2>
-    <p style="font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:0 0 24px;" id="pw-main-sub">Smetti di indovinare i tuoi progressi. Trend trasforma i tuoi dati in previsioni concrete sulle prossime 12 settimane.</p>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 8px;" id="pw-main-title">Iron Kinetic™ Trend</h2>
+    <p style="font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:0 0 24px;" id="pw-main-sub">Analisi predittiva sul tuo metabolismo. Proiezione a 12 settimane basata sui tuoi dati di peso, aderenza e check-in.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
-      <div class="pw-feat">📈 Predictive Curve</div>
-      <div class="pw-feat">🧬 Metabolic Fingerprint</div>
-      <div class="pw-feat">📊 Weekly Report</div>
-      <div class="pw-feat">🕐 Circadian Timing</div>
-      <div class="pw-feat">🔄 Adaptive Engine</div>
-      <div class="pw-feat">🛒 Shopping List</div>
+      <div class="pw-feat">Curva Predittiva</div>
+      <div class="pw-feat">Impronta Metabolica</div>
+      <div class="pw-feat">Report Settimanale</div>
+      <div class="pw-feat">Timing Circadiano</div>
+      <div class="pw-feat">Motore Adattivo</div>
+      <div class="pw-feat">Lista della Spesa</div>
     </div>
     <div style="display:flex;gap:10px;margin-bottom:10px;">
-      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">Attiva Trend<br><span style="font-weight:400;font-size:11px;opacity:.7;">€9,99/mese · Cancella quando vuoi</span></button>
-      <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:#4ddcc6;border:1px solid rgba(77,220,198,.35);border-radius:12px;padding:16px;font-weight:800;font-size:14px;cursor:pointer;line-height:1.4;">⭐ MIGLIOR VALORE<br><span style="font-weight:600;font-size:11px;">€39,99/anno · Solo €3,33/mese</span><br><span style="font-weight:400;font-size:10px;opacity:.7;">Risparmia il 33%</span></button>
+      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€9,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.75;">Cancella quando vuoi</span></button>
+      <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.12);color:var(--p);border:1px solid rgba(77,220,198,.3);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€39,99/anno<br><span style="font-weight:600;font-size:11px;">€3,33/mese · −33%</span></button>
     </div>
-    <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:#4ddcc6;border:1px solid rgba(77,220,198,.2);border-radius:12px;padding:12px;font-weight:800;font-size:12px;cursor:pointer;margin-bottom:16px;">€99,99 una volta sola<br><span style="font-weight:400;font-size:11px;opacity:.8;">Accesso permanente — paghi una volta, per sempre</span></button>
-    <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:#888;font-size:12px;cursor:pointer;padding:8px;">Hai già un account? <span style="color:#4ddcc6;">Accedi</span></button>
+    <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);padding:12px;font-weight:700;font-size:12px;cursor:pointer;margin-bottom:16px;touch-action:manipulation;">€99,99 · Accesso permanente<br><span style="font-weight:400;font-size:11px;opacity:.7;">Pagamento unico</span></button>
+    <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:8px;">Hai già un account? <span style="color:var(--p);">Accedi</span></button>
   </div>
 </div>
 
