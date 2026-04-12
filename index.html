@@ -2764,30 +2764,38 @@ async function _doStartCheckout(plan){
   try{localStorage.removeItem('ik_checkout_retry');}catch{}
 
   try{
-    /* ── STEP 1: get session from cache, fallback to network ── */
+    /* ── STEP 1: always get a fresh token via refreshSession() ── */
+    /* getSession() returns cached/stale tokens that Edge Functions reject as
+       "Invalid JWT". refreshSession() guarantees a valid, server-verified token. */
     let accessToken=null;
     let userEmail=null;
     if(sb){
-      /* Wait for prefetch if it's still in flight (usually already done) */
-      if(_sessionPrefetchPromise) await _sessionPrefetchPromise.catch(()=>{});
-
-      if(_cachedSession?.access_token){
-        accessToken=_cachedSession.access_token;
-        userEmail=_cachedSession.user?.email||null;
-        console.log('[IK][checkout] session from cache → token=',!!accessToken,'email=',userEmail||'(none)');
-      }else{
-        /* Cache miss — fast getSession (no round-trip refresh) */
-        try{
-          const{data:sess,error:sessErr}=await sb.auth.getSession();
-          if(sessErr)console.warn('[IK][checkout] getSession error:',sessErr.message);
-          accessToken=sess?.session?.access_token||null;
-          userEmail=sess?.session?.user?.email||null;
-          _cachedSession=sess?.session||null;
-          console.log('[IK][checkout] getSession → token=',!!accessToken);
-        }catch(ex){
-          console.warn('[IK][checkout] getSession threw:',ex?.message||ex);
+      try{
+        /* First check if there's any session at all (no network call) */
+        const{data:sessCheck}=await sb.auth.getSession();
+        if(!sessCheck?.session){
+          /* No session — skip refresh, go straight to login gate */
+          console.warn('[IK][checkout] No session found — login required');
+        }else{
+          /* Force a token refresh to get a guaranteed-valid JWT */
+          console.log('[IK][checkout] Refreshing token...');
+          const{data:refreshData,error:refreshErr}=await sb.auth.refreshSession();
+          if(refreshErr){
+            console.warn('[IK][checkout] refreshSession error:',refreshErr.message);
+            /* Fallback to cached token — may still work if not expired */
+            accessToken=sessCheck.session.access_token||null;
+            userEmail=sessCheck.session.user?.email||null;
+          }else{
+            accessToken=refreshData?.session?.access_token||null;
+            userEmail=refreshData?.session?.user?.email||null;
+            _cachedSession=refreshData?.session||null;
+            console.log('[IK][checkout] Fresh token obtained → ok=',!!accessToken);
+          }
         }
+      }catch(ex){
+        console.warn('[IK][checkout] Session/refresh threw:',ex?.message||ex);
       }
+      _sessionPrefetchPromise=null;
     }
 
     /* ── STEP 2: login required — no anonymous checkout ── */
@@ -2804,8 +2812,6 @@ async function _doStartCheckout(plan){
       _showCheckoutLoginGate(plan);
       return;
     }
-    /* Token present — invalidate cache (will be re-fetched next time) */
-    _sessionPrefetchPromise=null;
 
     /* ── STEP 3: server-side checkout via Edge Function ── */
     console.log('[IK][checkout] path=Edge Function');
