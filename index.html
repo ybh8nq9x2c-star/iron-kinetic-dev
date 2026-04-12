@@ -7767,7 +7767,18 @@ function shiftDay(delta){
   const idx=days.findIndex(d=>d.d===selDay);
   const next=days[idx+delta];
   if(!next)return;
-  hap();selDay=next.d;_mealRenderCache={};/* FIX3 */buildDaySelector();renderMeals();
+  hap();
+  selDay=next.d;
+  _mealRenderCache={};
+  /* Svuota il DOM dei pasti del giorno precedente prima di renderizzare */
+  const _cont=document.getElementById('meals-list');
+  if(_cont){
+    Array.from(_cont.children).forEach(el=>{
+      if(el.id&&el.id.startsWith('meal-row-'))el.remove();
+    });
+  }
+  buildDaySelector();
+  renderMeals();
 }
 function toggleInsight(){
   const card=getEl('personal-insight-card');
@@ -7890,7 +7901,12 @@ function buildDaySelector(){
     const b=document.createElement('button');b.textContent=`G${day.d}`;b.className='day-chip sn';
     b.dataset.day=String(day.d);
     if(day.d===selDay)b.classList.add('on');
-    b.onclick=()=>{hap();selDay=day.d;buildDaySelector();renderMeals();};
+    b.onclick=()=>{
+      hap();selDay=day.d;_mealRenderCache={};
+      const _c=document.getElementById('meals-list');
+      if(_c)Array.from(_c.children).forEach(el=>{if(el.id&&el.id.startsWith('meal-row-'))el.remove();});
+      buildDaySelector();renderMeals();
+    };
     el.appendChild(b);
   });
 }
@@ -7953,18 +7969,13 @@ function getMealNames(){
   return dietData?.metadata?.mealNames||['Breakfast','Lunch','Dinner'];
 }
 function getMealEmoji(name){
-  /* Returns material symbol name — rendered as <span class="material-symbols-outlined"> */
+  /* Returns a subtle single-char indicator — NOT emoji, uses text symbols */
   const _mt=canonicalMealType(name);
-  if(_mt==='breakfast')return'wb_sunny';
-  if(_mt==='lunch')return'lunch_dining';
-  if(_mt==='dinner')return'dinner_dining';
-  if(_mt==='snack'){
-    const _n=String(name).toLowerCase();
-    if(_n.includes('pre')||_n.includes('morning'))return'bolt';
-    if(_n.includes('post'))return'sports_bar';
-    return'bakery_dining';
-  }
-  return'restaurant';
+  if(_mt==='breakfast')return'○';
+  if(_mt==='lunch')return'◐';
+  if(_mt==='dinner')return'●';
+  if(_mt==='snack')return'◇';
+  return'○';
 }
 function renderMeals(){
   document.querySelectorAll('button[onclick="openShoppingList()"]').forEach(b=>b.style.display=dietData?'':'none');
@@ -8020,7 +8031,7 @@ function renderMeals(){
           ${checked?`<span class="material-symbols-outlined sn" style="font-size:16px;color:var(--p);font-variation-settings:'FILL' 1;">check</span>`:''}
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;flex-wrap:wrap;"><span class="meal-name sn">${getMealEmoji(n)} ${sanitize(localizedMealName(n))}</span>${badge}${circBadge}${synBadge}${satietyBadge}${skipBadge}</div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span class="meal-name sn">${sanitize(localizedMealName(n))}</span>${badge}${circBadge}${synBadge}${satietyBadge}${skipBadge}</div>
           <p class="meal-desc sn">${carbLine}${sanitize(localizeMealRest(meal.rest))}</p>
         </div>
       </button>
