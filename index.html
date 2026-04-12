@@ -2675,12 +2675,7 @@ function confirmCheckoutPreview(){
   const ctaBtn=document.getElementById('cpo-cta');
   if(ctaBtn){ctaBtn.textContent=_lang==='en'?'Redirecting…':'Reindirizzamento…';ctaBtn.disabled=true;ctaBtn.style.opacity='0.7';}
   /* Lancia checkout direttamente senza timeout e senza chiudere l'overlay */
-  /* Safety timeout: se dopo 12s non c'e' stato redirect, sblocca UI */
-  const _safetyTimer=setTimeout(()=>{
-    if(ctaBtn&&ctaBtn.disabled){ctaBtn.textContent=_lang==='en'?'Retry':'Riprova';ctaBtn.disabled=false;ctaBtn.style.opacity='1';}
-    showToast(_lang==='en'?'Timeout — please retry or contact support':'Timeout — riprova o contatta il supporto',4000);
-  },12000);
-  _doStartCheckout(_cpoPlan).finally(()=>clearTimeout(_safetyTimer));
+  _doStartCheckout(_cpoPlan);
 }
 
 function _applyCheckoutPreviewLang(){
@@ -2774,9 +2769,7 @@ async function _doStartCheckout(plan){
     let userEmail=null;
     if(sb){
       /* Wait for prefetch if it's still in flight (usually already done) */
-      if(_sessionPrefetchPromise){
-        try{await Promise.race([_sessionPrefetchPromise,new Promise(r=>setTimeout(r,3000))]);}catch{}
-      }
+      if(_sessionPrefetchPromise) await _sessionPrefetchPromise.catch(()=>{});
 
       if(_cachedSession?.access_token){
         accessToken=_cachedSession.access_token;
@@ -2785,11 +2778,7 @@ async function _doStartCheckout(plan){
       }else{
         /* Cache miss — fast getSession (no round-trip refresh) */
         try{
-          const sessResult=await Promise.race([
-            sb.auth.getSession(),
-            new Promise((_,rej)=>setTimeout(()=>rej(new Error('getSession timeout')),5000))
-          ]);
-          const{data:sess,error:sessErr}=sessResult||{};
+          const{data:sess,error:sessErr}=await sb.auth.getSession();
           if(sessErr)console.warn('[IK][checkout] getSession error:',sessErr.message);
           accessToken=sess?.session?.access_token||null;
           userEmail=sess?.session?.user?.email||null;
@@ -2815,20 +2804,8 @@ async function _doStartCheckout(plan){
       _showCheckoutLoginGate(plan);
       return;
     }
-    /* Token present — force refresh to ensure JWT is fresh for the Edge Function */
+    /* Token present — invalidate cache (will be re-fetched next time) */
     _sessionPrefetchPromise=null;
-    try{
-      console.log('[IK][checkout] refreshing session to get fresh JWT...');
-      const{data:refreshData}=await sb.auth.refreshSession();
-      if(refreshData?.session?.access_token){
-        accessToken=refreshData.session.access_token;
-        console.log('[IK][checkout] session refreshed → new token obtained');
-      }else{
-        console.warn('[IK][checkout] refreshSession returned no new token, using cached');
-      }
-    }catch(refreshErr){
-      console.warn('[IK][checkout] refreshSession failed:',refreshErr?.message||refreshErr,'— using cached token');
-    }
 
     /* ── STEP 3: server-side checkout via Edge Function ── */
     console.log('[IK][checkout] path=Edge Function');
@@ -2841,19 +2818,15 @@ async function _doStartCheckout(plan){
 
     let res;
     try{
-      /* 10s timeout on EF call to prevent hang */
-      const _efController=new AbortController();
-      const _efTimeout=setTimeout(()=>_efController.abort(),10000);
       res=await fetch(edgeFnUrl,{
         method:'POST',
+        headers:{
           'Content-Type':'application/json',
-          'X-User-JWT':accessToken,
+          'Authorization':'Bearer '+accessToken,
           'apikey':SUPABASE_KEY
         },
-        body:JSON.stringify(payload),
-        signal:_efController.signal
+        body:JSON.stringify(payload)
       });
-      clearTimeout(_efTimeout);
     }catch(networkErr){
       console.error('[IK][checkout] fetch network error:',networkErr?.message||networkErr);
       throw new Error('Errore di rete — controlla la connessione e riprova');
@@ -2924,8 +2897,7 @@ async function _doStartCheckout(plan){
     if(typeof Sentry!=='undefined'){
       try{Sentry.captureException(err,{tags:{flow:'startCheckout',plan}});}catch{}
     }
-    /* Always clean up checkout keys on failure to prevent redirect loops */
-    try{localStorage.removeItem('ik_pending_checkout_plan');localStorage.removeItem('ik_checkout_retry');localStorage.removeItem('ik_auth_origin');}catch{}
+    /* Chiudi la preview solo in caso di errore, mai prima del redirect */
     closeCheckoutPreview();
     showToast(err?.message||t('toast.checkoutError'));
     _resetUI();
