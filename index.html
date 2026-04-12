@@ -3182,6 +3182,8 @@ async function _resumePostOnboardingOrBoot(){
 (()=>{
   if(new URLSearchParams(location.search).get('trend')==='success'){
     history.replaceState({},'',location.pathname);
+    /* Clear any pending checkout to prevent redirect loops */
+    try{localStorage.removeItem('ik_pending_checkout_plan');localStorage.removeItem('ik_checkout_retry');localStorage.removeItem('ik_auth_origin');}catch{}
     window._trendPolling=true;
     /* Show processing toast, then poll Supabase for up to 60s */
     const pollTrendActivation=async()=>{
