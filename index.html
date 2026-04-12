@@ -2878,23 +2878,15 @@ async function _doStartCheckout(plan){
     }
 
     console.log('[IK][checkout] Redirecting to Stripe →',data.url);
-    /* Safari iOS PWA blocca window.location.href dentro Promise async.
-       Soluzione: prova href, se la pagina non cambia entro 600ms usa window.open. */
     window.location.href=data.url;
-    setTimeout(()=>{
-      try{
-        if(document.visibilityState!=='hidden'){
-          window.open(data.url,'_blank','noopener');
-        }
-      }catch{}
-    },600);
 
   }catch(err){
     console.error('[IK][checkout] FAILED:',err?.message||err,err?.stack||'');
     if(typeof Sentry!=='undefined'){
       try{Sentry.captureException(err,{tags:{flow:'startCheckout',plan}});}catch{}
     }
-    /* Chiudi la preview solo in caso di errore, mai prima del redirect */
+    /* Always clean up checkout keys on failure to prevent redirect loops */
+    try{localStorage.removeItem('ik_pending_checkout_plan');localStorage.removeItem('ik_checkout_retry');localStorage.removeItem('ik_auth_origin');}catch{}
     closeCheckoutPreview();
     showToast(err?.message||t('toast.checkoutError'));
     _resetUI();
