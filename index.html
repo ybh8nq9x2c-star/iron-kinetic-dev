@@ -2815,8 +2815,20 @@ async function _doStartCheckout(plan){
       _showCheckoutLoginGate(plan);
       return;
     }
-    /* Token present — invalidate cache (will be re-fetched next time) */
+    /* Token present — force refresh to ensure JWT is fresh for the Edge Function */
     _sessionPrefetchPromise=null;
+    try{
+      console.log('[IK][checkout] refreshing session to get fresh JWT...');
+      const{data:refreshData}=await sb.auth.refreshSession();
+      if(refreshData?.session?.access_token){
+        accessToken=refreshData.session.access_token;
+        console.log('[IK][checkout] session refreshed → new token obtained');
+      }else{
+        console.warn('[IK][checkout] refreshSession returned no new token, using cached');
+      }
+    }catch(refreshErr){
+      console.warn('[IK][checkout] refreshSession failed:',refreshErr?.message||refreshErr,'— using cached token');
+    }
 
     /* ── STEP 3: server-side checkout via Edge Function ── */
     console.log('[IK][checkout] path=Edge Function');
