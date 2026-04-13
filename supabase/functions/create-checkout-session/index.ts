@@ -37,11 +37,11 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
-  /* ── 1. Read user JWT from custom header ──
-     We use X-User-JWT instead of Authorization because the Supabase
-     gateway validates Authorization Bearer tokens and rejects them if
-     the JWT signing secret doesn't match (common after key rotation). */
-  const accessToken = req.headers.get('X-User-JWT') ?? ''
+  /* ── 1. Read user JWT ──
+     Prefer X-User-JWT custom header; fall back to Authorization. */
+  const accessToken =
+    req.headers.get('X-User-JWT') ??
+    req.headers.get('Authorization')?.replace('Bearer ', '') ?? ''
 
   if (!accessToken) {
     console.error('[checkout] Missing X-User-JWT header')

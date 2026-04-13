@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
       {
         auth: { persistSession: false },
-        global: { headers: { Authorization: 'Bearer ' + (req.headers.get('X-User-JWT') ?? '') } },
+        global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
       }
     )
 

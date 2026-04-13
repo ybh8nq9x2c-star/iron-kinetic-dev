@@ -2819,7 +2819,7 @@ async function _doStartCheckout(plan){
     const res=await fetch(
       SUPABASE_URL+'/functions/v1/create-checkout-session',
       {method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken,'apikey':SUPABASE_KEY},
-       body:JSON.stringify({plan:plan||'monthly'})}
+       body:JSON.stringify({plan:plan||'monthly',referral_code:_ikRefGetPendingCode()})}
     ).catch(()=>{throw new Error(_lang==='en'?'Network error — check your connection':'Errore di rete — controlla la connessione');});
 
     const body=await res.json().catch(()=>({}));
