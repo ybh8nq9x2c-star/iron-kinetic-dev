@@ -1,98 +1,117 @@
-import Stripe from 'https://esm.sh/stripe@14?target=deno'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import Stripe from 'https://esm.sh/stripe@14'
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://irokninetic-production.up.railway.app',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-user-jwt',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  })
-}
-
-const MIN_PAYOUT_CENTS = 2000 // €20 minimum
+const MIN_PAYOUT_CENTS = 2000 // €20 — modifica solo questa costante per cambiare soglia
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const supabase = createClient(
+    const sb = createClient(
       Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-      {
-        auth: { persistSession: false },
-        global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
-      }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     )
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return json({ error: 'Unauthorized' }, 401)
-    }
-
-    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY')!
-    const stripe = new Stripe(stripeKey, {
-      apiVersion: '2024-06-20',
-      httpClient: Stripe.createFetchHttpClient(),
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
+      apiVersion: '2024-06-20'
     })
 
-    const { data: ud } = await supabase
+    const token = req.headers.get('Authorization')?.replace('Bearer ', '')
+    if (!token) return new Response('Unauthorized', { status: 401, headers: corsHeaders })
+
+    const { data: { user }, error: authError } = await sb.auth.getUser(token)
+    if (authError || !user) return new Response('Unauthorized', { status: 401, headers: corsHeaders })
+
+    const { data: ud } = await sb
       .from('users')
       .select('referral_credit_cents, stripe_connect_account_id, stripe_connect_onboarded')
       .eq('id', user.id)
       .single()
 
-    // Validations
+    // ── Validazioni pre-consume ──
     if (!ud?.stripe_connect_onboarded || !ud?.stripe_connect_account_id) {
-      return json({ error: 'account_not_onboarded' }, 400)
+      return new Response(
+        JSON.stringify({ error: 'account_not_onboarded' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
     if ((ud.referral_credit_cents || 0) < MIN_PAYOUT_CENTS) {
-      return json({ error: 'below_minimum', minimum: MIN_PAYOUT_CENTS }, 400)
+      return new Response(
+        JSON.stringify({ error: 'below_minimum', minimum: MIN_PAYOUT_CENTS }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
-    const amount = ud.referral_credit_cents
+    // ── STEP ATOMICO: consuma il credito a DB level ──
+    // Se due richieste arrivano in parallelo, una sola otterrà
+    // un valore non-null. L'altra riceverà null e verrà bloccata.
+    const { data: consumeResult, error: consumeError } = await sb
+      .rpc('consume_referral_credit', {
+        uid:       user.id,
+        min_cents: MIN_PAYOUT_CENTS
+      })
 
-    // Verify Stripe Connect account is still active
+    if (consumeError || consumeResult === null) {
+      return new Response(
+        JSON.stringify({ error: 'credit_already_consumed_or_below_minimum' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const amount: number = consumeResult
+
+    // ── Verifica account Stripe attivo ──
     const account = await stripe.accounts.retrieve(ud.stripe_connect_account_id)
     if (!account.payouts_enabled) {
-      return json({ error: 'payouts_disabled' }, 400)
+      // Ripristina il credito: account non pronto
+      await sb.rpc('add_referral_credit', { uid: user.id, amount })
+      return new Response(
+        JSON.stringify({ error: 'payouts_disabled' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
-    // Create transfer to Connect sub-account
-    const transfer = await stripe.transfers.create({
-      amount,
-      currency: 'eur',
-      destination: ud.stripe_connect_account_id,
-      description: `Iron Kinetic referral payout - user ${user.id}`,
-      metadata: { user_id: user.id, supabase_user_id: user.id },
-    })
+    // ── Transfer Stripe ──
+    let transfer: Stripe.Transfer
+    try {
+      transfer = await stripe.transfers.create({
+        amount,
+        currency: 'eur',
+        destination: ud.stripe_connect_account_id,
+        description: `Iron Kinetic™ referral payout — user ${user.id}`,
+        metadata: { user_id: user.id }
+      })
+    } catch (stripeErr) {
+      // Transfer fallito: ripristina il credito
+      await sb.rpc('add_referral_credit', { uid: user.id, amount })
+      console.error('[request-payout] stripe transfer failed, credit restored:', stripeErr)
+      throw stripeErr
+    }
 
-    // Record payout request
-    await supabase.from('payout_requests').insert({
-      user_id: user.id,
-      amount_cents: amount,
-      status: 'paid',
-      stripe_transfer_id: transfer.id,
+    // ── Registra payout e chiudi ──
+    await sb.from('payout_requests').insert({
+      user_id:                   user.id,
+      amount_cents:              amount,
+      status:                    'paid',
+      stripe_transfer_id:        transfer.id,
       stripe_connect_account_id: ud.stripe_connect_account_id,
-      paid_at: new Date().toISOString(),
+      paid_at:                   new Date().toISOString()
     })
 
-    // Reset user credit to zero
-    await supabase.from('users')
-      .update({ referral_credit_cents: 0 })
-      .eq('id', user.id)
-
-    console.log(`[request-payout] paid ${amount} cents to ${ud.stripe_connect_account_id}`)
-    return json({ success: true, amount_cents: amount, transfer_id: transfer.id })
+    return new Response(
+      JSON.stringify({ success: true, amount_cents: amount, transfer_id: transfer.id }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
 
   } catch (err) {
     console.error('[request-payout]', err)
-    return json({ error: (err as Error).message }, 500)
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
   }
 })

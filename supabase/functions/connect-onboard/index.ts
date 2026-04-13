@@ -1,47 +1,30 @@
-import Stripe from 'https://esm.sh/stripe@14?target=deno'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import Stripe from 'https://esm.sh/stripe@14'
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://irokninetic-production.up.railway.app',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-user-jwt',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-}
-
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  })
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const supabase = createClient(
+    const sb = createClient(
       Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-      {
-        auth: { persistSession: false },
-        global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
-      }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     )
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return json({ error: 'Unauthorized' }, 401)
-    }
-
-    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY')!
-    const stripe = new Stripe(stripeKey, {
-      apiVersion: '2024-06-20',
-      httpClient: Stripe.createFetchHttpClient(),
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
+      apiVersion: '2024-06-20'
     })
 
-    // Get or create Connect account
-    const { data: userData } = await supabase
+    const token = req.headers.get('Authorization')?.replace('Bearer ', '')
+    if (!token) return new Response('Unauthorized', { status: 401, headers: corsHeaders })
+
+    const { data: { user }, error: authError } = await sb.auth.getUser(token)
+    if (authError || !user) return new Response('Unauthorized', { status: 401, headers: corsHeaders })
+
+    const { data: userData } = await sb
       .from('users')
       .select('stripe_connect_account_id, stripe_connect_onboarded')
       .eq('id', user.id)
@@ -56,35 +39,39 @@ Deno.serve(async (req) => {
         email: user.email!,
         capabilities: { transfers: { requested: true } },
         business_type: 'individual',
-        metadata: { supabase_user_id: user.id },
+        metadata: { supabase_user_id: user.id }
       })
       accountId = account.id
 
-      await supabase.from('users')
+      await sb.from('users')
         .update({ stripe_connect_account_id: accountId })
         .eq('id', user.id)
     }
 
-    // If already onboarded, return Express dashboard login link
+    // Se già onboardato → rimanda al dashboard Stripe Express
     if (userData?.stripe_connect_onboarded && accountId) {
       const loginLink = await stripe.accounts.createLoginLink(accountId)
-      return json({ url: loginLink.url })
+      return new Response(JSON.stringify({ url: loginLink.url }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
     }
 
-    // Generate onboarding link
-    const origin = req.headers.get('origin') ?? 'https://irokninetic-production.up.railway.app'
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: `${origin}/?connect=refresh`,
-      return_url: `${origin}/?connect=success`,
-      type: 'account_onboarding',
+      refresh_url: 'https://ironkinetic.app?connect=refresh',
+      return_url:  'https://ironkinetic.app?connect=success',
+      type: 'account_onboarding'
     })
 
-    console.log(`[connect-onboard] onboarding link for user ${user.id}, account ${accountId}`)
-    return json({ url: accountLink.url })
+    return new Response(JSON.stringify({ url: accountLink.url }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
 
   } catch (err) {
     console.error('[connect-onboard]', err)
-    return json({ error: (err as Error).message }, 500)
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
   }
 })
