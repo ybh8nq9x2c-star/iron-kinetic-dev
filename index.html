@@ -2723,195 +2723,83 @@ function _applyCheckoutPreviewLang(){
   });
 }
 
-/* ── Session pre-cache: refreshed in background so checkout is instant ── */
+/* ── Session cache: refreshed once on first checkout click ── */
 let _cachedSession=null;
-let _sessionPrefetchPromise=null;
 
 function _prefetchSession(){
-  if(!sb)return;
-  if(_sessionPrefetchPromise)return;
-  _sessionPrefetchPromise=sb.auth.getSession()
-    .then(({data})=>{
-      _cachedSession=data?.session||null;
-      /* If token expires soon (<5 min), silently refresh in background */
-      if(_cachedSession){
-        const exp=_cachedSession.expires_at||0;
-        if(exp-Date.now()/1000<300){
-          sb.auth.refreshSession().then(({data:r})=>{
-            if(r?.session)_cachedSession=r.session;
-          }).catch(()=>{});
-        }
-      }
-    })
-    .catch(()=>{_cachedSession=null;});
+  if(!sb||_cachedSession)return;
+  /* Fire-and-forget: warm the token in background while preview animates in */
+  sb.auth.refreshSession()
+    .then(({data})=>{_cachedSession=data?.session||null;})
+    .catch(()=>{});
 }
 
-/* ── Real startCheckout (renamed to _doStartCheckout) ── */
 async function startCheckout(plan){
-  /* Kick off session prefetch immediately on click, then show preview */
   _prefetchSession();
   openCheckoutPreview(plan);
 }
 
 async function _doStartCheckout(plan){
-  /* ── Loading state on all checkout buttons + CTA ── */
-  const btns=document.querySelectorAll('[onclick*="startCheckout"]');
-  btns.forEach(b=>{b.disabled=true;b.style.opacity='0.6';});
   const ctaBtn=document.getElementById('cpo-cta');
-  const ctaOrigText=ctaBtn?.textContent||'';
-  if(ctaBtn){ctaBtn.disabled=true;ctaBtn.textContent=_lang==='en'?'Processing…':'Elaborazione…';ctaBtn.style.opacity='0.7';}
-  const _resetUI=()=>{
-    btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
-    if(ctaBtn){ctaBtn.disabled=false;ctaBtn.textContent=ctaOrigText;ctaBtn.style.opacity='1';}
+  const ctaOrig=ctaBtn?.textContent||'';
+  const btns=document.querySelectorAll('[onclick*="startCheckout"]');
+  const setLoading=on=>{
+    btns.forEach(b=>{b.disabled=on;b.style.opacity=on?'0.6':'1';});
+    if(ctaBtn){ctaBtn.disabled=on;ctaBtn.style.opacity=on?'0.7':'1';
+      if(on)ctaBtn.textContent=_lang==='en'?'Processing…':'Elaborazione…';
+      else ctaBtn.textContent=ctaOrig;}
   };
-  console.log('[IK][checkout] _doStartCheckout plan=',plan,'sb=',!!sb);
-
-  /* ── Always clear retry guard on a fresh attempt (user clicked again) ── */
-  try{localStorage.removeItem('ik_checkout_retry');}catch{}
+  setLoading(true);
 
   try{
-    /* ── STEP 1: always get a fresh token via refreshSession() ── */
-    /* getSession() returns cached/stale tokens that Edge Functions reject as
-       "Invalid JWT". refreshSession() guarantees a valid, server-verified token. */
-    let accessToken=null;
-    let userEmail=null;
-    if(sb){
-      try{
-        /* First check if there's any session at all (no network call) */
-        const{data:sessCheck}=await sb.auth.getSession();
-        if(!sessCheck?.session){
-          /* No session — skip refresh, go straight to login gate */
-          console.warn('[IK][checkout] No session found — login required');
-        }else{
-          /* Force a token refresh to get a guaranteed-valid JWT */
-          console.log('[IK][checkout] Refreshing token...');
-          const{data:refreshData,error:refreshErr}=await sb.auth.refreshSession();
-          if(refreshErr){
-            console.warn('[IK][checkout] refreshSession error:',refreshErr.message);
-            /* Fallback to cached token — may still work if not expired */
-            accessToken=sessCheck.session.access_token||null;
-            userEmail=sessCheck.session.user?.email||null;
-          }else{
-            accessToken=refreshData?.session?.access_token||null;
-            userEmail=refreshData?.session?.user?.email||null;
-            _cachedSession=refreshData?.session||null;
-            console.log('[IK][checkout] Fresh token obtained → ok=',!!accessToken);
-          }
-        }
-      }catch(ex){
-        console.warn('[IK][checkout] Session/refresh threw:',ex?.message||ex);
-      }
-      _sessionPrefetchPromise=null;
+    /* ── 1. Get valid session token ── */
+    let accessToken=_cachedSession?.access_token||null;
+    if(!accessToken&&sb){
+      const{data}=await sb.auth.refreshSession().catch(()=>({data:null}));
+      accessToken=data?.session?.access_token||null;
+      _cachedSession=data?.session||null;
     }
 
-    /* ── STEP 2: login required — no anonymous checkout ── */
     if(!accessToken){
-      console.warn('[IK][checkout] No session — login required before checkout');
-      _resetUI();
-      /* Chiudi preview e paywall perché mostriamo il login gate */
+      setLoading(false);
       closeCheckoutPreview();
       try{localStorage.setItem('ik_pending_checkout_plan',plan);}catch{}
-      try{localStorage.removeItem('ik_checkout_retry');}catch{}
-      const pw=document.getElementById('paywall-overlay');
-      if(pw)pw.style.display='none';
+      document.getElementById('paywall-overlay')?.style.setProperty('display','none');
       document.body.style.overflow='';
       _showCheckoutLoginGate(plan);
       return;
     }
 
-    /* ── STEP 3: server-side checkout via Edge Function ── */
-    console.log('[IK][checkout] path=Edge Function');
-    /* Safari iOS (PWA/standalone) silently drops custom headers like 'apikey'.
-       Passing it also as a query param guarantees Supabase always receives it. */
-    const edgeFnUrl=SUPABASE_URL+'/functions/v1/create-checkout-session';
-    const payload={plan:plan||'monthly',price_tier:plan||'monthly'};
-    console.log('[IK][checkout] POST',edgeFnUrl,'payload=',JSON.stringify(payload));
+    /* ── 2. Call Edge Function ── */
+    const res=await fetch(
+      SUPABASE_URL+'/functions/v1/create-checkout-session',
+      {method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken,'apikey':SUPABASE_KEY},
+       body:JSON.stringify({plan:plan||'monthly'})}
+    ).catch(()=>{throw new Error(_lang==='en'?'Network error — check your connection':'Errore di rete — controlla la connessione');});
 
-    let res;
-    try{
-      res=await fetch(edgeFnUrl,{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization':'Bearer '+accessToken,
-          'apikey':SUPABASE_KEY
-        },
-        body:JSON.stringify(payload)
-      });
-    }catch(networkErr){
-      console.error('[IK][checkout] fetch network error:',networkErr?.message||networkErr);
-      throw new Error('Errore di rete — controlla la connessione e riprova');
-    }
-
-    console.log('[IK][checkout] Edge Function status=',res.status,'ok=',res.ok);
+    const body=await res.json().catch(()=>({}));
 
     if(!res.ok){
-      let errBody={};
-      try{errBody=await res.json();}catch{try{const txt=await res.text();errBody={raw:txt};}catch{}}
-      console.error('[IK][checkout] Edge Function error — status=',res.status,'body=',JSON.stringify(errBody));
-      if(typeof Sentry!=='undefined'){
-        try{Sentry.captureMessage('[IK] checkout '+res.status+' '+JSON.stringify(errBody),{level:'error'});}catch{}
-      }
+      if(typeof Sentry!=='undefined')try{Sentry.captureMessage('[IK] checkout '+res.status,{level:'error'});}catch{}
       if(res.status===401||res.status===403){
-        /* Token rifiutato dalla Edge Function — NON riaprire il login automaticamente:
-           l'utente E' gia' loggato ma il token e' comunque rifiutato (es. SUPABASE_KEY
-           sbagliata, JWT malformato). Mostrare il login in loop non risolverebbe nulla. */
-        console.error('[IK][checkout] Token rifiutato dalla Edge Function ('+res.status+') — probabile SUPABASE_KEY errata o JWT issue');
-        try{
-          localStorage.removeItem('ik_pending_checkout_plan');
-          localStorage.removeItem('ik_checkout_retry');
-        }catch{}
-        showToast('Errore di autenticazione checkout — riprova o contatta il supporto',4000);
-        _resetUI();
-        return;
+        showToast(_lang==='en'?'Auth error — please sign out and back in':'Errore auth — esci e rientra',4000);
+        setLoading(false);return;
       }
-      if(res.status===400){
-        const detail=errBody.error||errBody.message||'Parametri non validi';
-        console.error('[IK][checkout] 400 Bad Request:',detail,'— verifica Price IDs e valore plan');
-        throw new Error('Configurazione non valida: '+detail);
-      }
-      if(res.status===404){
-        console.error('[IK][checkout] Edge Function 404 — non deployata su Supabase');
-        throw new Error('Servizio checkout non disponibile — contatta il supporto');
-      }
-      const detail=errBody.error||errBody.message||'Errore server '+res.status;
-      console.error('[IK][checkout] 5xx:',detail,'— controlla Supabase Edge Function logs');
-      throw new Error(detail);
+      throw new Error(body?.error||body?.message||'Errore server '+res.status);
     }
 
-    let data={};
-    try{data=await res.json();}catch(parseErr){
-      console.error('[IK][checkout] JSON parse error:',parseErr?.message);
-      throw new Error('Risposta non valida dal server');
-    }
-    console.log('[IK][checkout] Edge Function response body=',JSON.stringify(data));
+    if(!body?.url)throw new Error('URL checkout non ricevuto');
 
-    if(!data?.url){
-      console.error('[IK][checkout] Missing data.url — full response:',JSON.stringify(data));
-      throw new Error('URL checkout non ricevuto — controlla la Edge Function');
-    }
-
-    console.log('[IK][checkout] Redirecting to Stripe →',data.url);
-    /* Safari iOS PWA blocca window.location.href dentro Promise async.
-       Soluzione: prova href, se la pagina non cambia entro 600ms usa window.open. */
-    window.location.href=data.url;
-    setTimeout(()=>{
-      try{
-        if(document.visibilityState!=='hidden'){
-          window.open(data.url,'_blank','noopener');
-        }
-      }catch{}
-    },600);
+    /* ── 3. Redirect to Stripe (Safari PWA safe) ── */
+    window.location.href=body.url;
+    setTimeout(()=>{if(document.visibilityState!=='hidden')try{window.open(body.url,'_blank','noopener');}catch{}},600);
 
   }catch(err){
-    console.error('[IK][checkout] FAILED:',err?.message||err,err?.stack||'');
-    if(typeof Sentry!=='undefined'){
-      try{Sentry.captureException(err,{tags:{flow:'startCheckout',plan}});}catch{}
-    }
+    if(typeof Sentry!=='undefined')try{Sentry.captureException(err,{tags:{flow:'checkout',plan}});}catch{}
     /* Chiudi la preview solo in caso di errore, mai prima del redirect */
     closeCheckoutPreview();
     showToast(err?.message||t('toast.checkoutError'));
-    _resetUI();
+    setLoading(false);
   }
 }
 
