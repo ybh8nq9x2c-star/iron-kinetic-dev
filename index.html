@@ -898,6 +898,39 @@ hr{height:1px;}
 <script defer src="https://js.stripe.com/v3/" integrity="sha384-6fqKlmX+g92zPQYudcAesaq44GuuyWEYo3yugHilyWQ1WuYvjGE80tjELeDrba1b" crossorigin="anonymous"></script>
 <script>window.sentryOnLoad=function(){Sentry.init({release:'iron-kinetic@1.0.0',tracesSampleRate:0.1,replaysSessionSampleRate:0.1,replaysOnErrorSampleRate:1.0,environment:location.hostname.includes('railway')?'production':'development'});};</script>
 <script src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" crossorigin="anonymous"></script>
+<!-- SW font-heal: se Material Symbols non carica entro 4s (SW che blocca GET Google Fonts),
+     unregistra tutti i SW e ricarica. Risolve il bug icone-come-testo post SW-update. -->
+<script>
+(function(){
+  if(!('serviceWorker'in navigator))return;
+  var _fhTimer=setTimeout(function(){
+    document.fonts.load('16px "Material Symbols Outlined"','check').then(function(fonts){
+      if(!fonts.length){
+        /* Font non caricato — SW probabilmente intercetta i GET di Google Fonts */
+        navigator.serviceWorker.getRegistrations().then(function(regs){
+          var ps=regs.map(function(r){return r.unregister();});
+          Promise.all(ps).then(function(){
+            if(ps.length)sessionStorage.setItem('ik_sw_reset','1');
+            /* Non ricaricare in loop se abbiamo già resettato */
+            if(!sessionStorage.getItem('ik_sw_reset_done')){
+              sessionStorage.setItem('ik_sw_reset_done','1');
+              location.reload();
+            }
+          });
+        });
+      }else{
+        sessionStorage.removeItem('ik_sw_reset_done');
+      }
+    });
+  },4000);
+  /* Se i font caricano velocemente, cancella il timer */
+  document.fonts.ready.then(function(){
+    document.fonts.load('16px "Material Symbols Outlined"','check').then(function(f){
+      if(f.length)clearTimeout(_fhTimer);
+    });
+  });
+})();
+</script>
 </head>
 <body class="onboarding-active">
 <div class="glow-a" aria-hidden="true"></div>
@@ -2060,7 +2093,7 @@ hr{height:1px;}
             <div style="margin-bottom:12px;">
               <div data-i18n="ref.link.label" style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Il tuo link di invito</div>
               <div style="display:flex;gap:8px;align-items:center;">
-                <div id="ref-link-display" style="flex:1;background:var(--s2);border:1px solid var(--line-hi);border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--on-v);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.01em;">Caricamento...</div>
+                <div id="ref-link-display" style="flex:1;background:var(--s2);border:1px solid var(--line-hi);border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.01em;transition:color .2s;">—</div>
                 <button class="btn-icon" onclick="_refCopyLink()" aria-label="Copia link"><span class="material-symbols-outlined" style="font-size:18px;">content_copy</span></button>
                 <button class="btn-icon" onclick="_refShareLink()" aria-label="Condividi"><span class="material-symbols-outlined" style="font-size:18px;">ios_share</span></button>
               </div>
@@ -7812,6 +7845,11 @@ function toggleAccordion(id){
       lsW(SKMODTIP,'1');
     },400);
   }
+  /* Load referral data when accordion opens */
+  if(id==='referral'&&opening){
+    _ikRefLoading=false;
+    _ikRefLoad();
+  }
 }
 /* FIX15: update open accordions on resize */
 window.addEventListener('resize',()=>{
@@ -9499,6 +9537,7 @@ async function _ikRefLoad(){
       return;
     }
     const token=session.access_token;
+    if(linkEl){linkEl.textContent=t('ref.link.loading');linkEl.style.color='var(--muted)';}
     const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token,'apikey':SUPABASE_KEY}});
     if(!codeRes.ok){const errBody=await codeRes.text();console.error('[IK][referral] EF error:',codeRes.status,errBody);if(linkEl)linkEl.textContent=t('ref.error.network');if(metaEl)metaEl.textContent='Error '+codeRes.status;return;}
     const codeData=await codeRes.json();
@@ -9518,7 +9557,7 @@ async function _ikRefLoad(){
     if(notice)notice.style.display='none';
     if(amountEl)amountEl.textContent='€ '+creditEur;
     if(metaEl)metaEl.textContent=t('ref.credit.meta',{count:count||0});
-    if(linkEl){linkEl.textContent=link;linkEl.dataset.link=link;linkEl.removeAttribute('data-i18n');}
+    if(linkEl){linkEl.textContent=link;linkEl.dataset.link=link;linkEl.style.color='var(--on-v)';linkEl.removeAttribute('data-i18n');}
     if(previewEl)previewEl.textContent=creditCents>0?t('ref.credit.meta',{count:count||0}):t('ref.preview');
     /* CTA: collega conto / preleva / in attesa */
     if(ctaWrap){
@@ -9880,10 +9919,45 @@ function lazyLoadChartJs(cb){
 ═══════════════════════════════════════ */
 /* PWA */
 (()=>{
-  if('serviceWorker'in navigator){
-    navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
-    navigator.serviceWorker.addEventListener('controllerchange',()=>window.location.reload());
-  }
+  if(!('serviceWorker'in navigator))return;
+  /* Self-healing: se il SW blocca fetch esterne (fonts, supabase GET),
+     la pagina si ricarica dopo un timeout senza font. Rileva e forza update. */
+  const SW_EXPECTED_VERSION='v17'; /* bumpa insieme a sw.js CACHE_NAME */
+  navigator.serviceWorker.getRegistrations().then(regs=>{
+    regs.forEach(reg=>{
+      const sw=reg.active||reg.waiting||reg.installing;
+      if(sw){
+        /* Chiedi la versione al SW via postMessage */
+        const mc=new MessageChannel();
+        mc.port1.onmessage=e=>{
+          if(e.data&&e.data.version&&e.data.version!==SW_EXPECTED_VERSION){
+            /* SW vecchio → unregister e ricarica per prendere il nuovo */
+            reg.unregister().then(()=>location.reload());
+          }
+        };
+        sw.postMessage({type:'GET_VERSION'},[ mc.port2]);
+      }
+    });
+  });
+  navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'})
+    .then(r=>{
+      r.update().catch(()=>{});
+      /* Forza update se c'è già un SW waiting */
+      if(r.waiting){r.waiting.postMessage({type:'SKIP_WAITING'});}
+      r.addEventListener('updatefound',()=>{
+        const nw=r.installing;
+        if(!nw)return;
+        nw.addEventListener('statechange',()=>{
+          if(nw.state==='installed'&&navigator.serviceWorker.controller){
+            nw.postMessage({type:'SKIP_WAITING'});
+          }
+        });
+      });
+    }).catch(()=>{});
+  let _reloadPending=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(!_reloadPending){_reloadPending=true;window.location.reload();}
+  });
 })();
 
 let _deferredInstallPrompt=null;
