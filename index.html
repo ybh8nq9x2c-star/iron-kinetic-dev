@@ -2942,7 +2942,6 @@ async function signOut(){
     try{localStorage.removeItem('ik_checkout_retry');}catch{}
     try{localStorage.removeItem('ik_auth_origin');}catch{}
     _cachedSession=null;
-    _sessionPrefetchPromise=null;
     await sb.auth.signOut();
     /* Reload the page — cleanest way to reset all state */
     window.location.reload();
@@ -3025,7 +3024,6 @@ function _initAuthListener(){
   sb.auth.onAuthStateChange(async(event,session)=>{
     /* Always update the session cache */
     _cachedSession=session||null;
-    _sessionPrefetchPromise=null;
     if(event==='SIGNED_IN'&&session?.user){
       await syncUserAfterLogin(session.user);
       const origin=localStorage.getItem('ik_auth_origin');
