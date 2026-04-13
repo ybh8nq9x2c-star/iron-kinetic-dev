@@ -2041,7 +2041,7 @@ hr{height:1px;}
           <div class="prof-menu-ico" style="background:rgba(192,193,255,.12);"><span class="material-symbols-outlined" style="color:var(--sec);">share</span></div>
           <div style="flex:1;min-width:0;">
             <span class="prof-menu-label sn">Referral</span>
-            <p id="prof-referral-preview" style="font-size:11px;color:var(--muted);margin:0;">Invita amici · guadagna il 10%</p>
+            <p id="prof-referral-preview" data-i18n="ref.preview" style="font-size:11px;color:var(--muted);margin:0;">Invita amici · guadagna il 10%</p>
           </div>
           <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-referral" style="transition:transform .2s;">chevron_right</span>
         </div>
@@ -2049,7 +2049,7 @@ hr{height:1px;}
           <div style="padding:16px;border-top:1px solid var(--line);background:var(--s0);">
             <div style="background:linear-gradient(135deg,rgba(192,193,255,.10),rgba(77,220,198,.06));border:1px solid rgba(192,193,255,.18);border-radius:var(--r2);padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
               <div>
-                <div style="font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Credito accumulato</div>
+                <div data-i18n="ref.credit.label" style="font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Credito accumulato</div>
                 <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--sec);line-height:1;" id="ref-credit-amount">€ —</div>
                 <div id="ref-credit-meta" style="font-size:10px;color:var(--muted);margin-top:3px;">— referral confermati · min. €20</div>
               </div>
@@ -2058,25 +2058,25 @@ hr{height:1px;}
               </div>
             </div>
             <div style="margin-bottom:12px;">
-              <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Il tuo link di invito</div>
+              <div data-i18n="ref.link.label" style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Il tuo link di invito</div>
               <div style="display:flex;gap:8px;align-items:center;">
-                <div id="ref-link-display" style="flex:1;background:var(--s2);border:1px solid var(--line-hi);border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--on-v);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.01em;">Caricamento...</div>
+                <div id="ref-link-display" data-i18n="ref.link.loading" style="flex:1;background:var(--s2);border:1px solid var(--line-hi);border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--on-v);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.01em;">Caricamento...</div>
                 <button class="btn-icon" onclick="_refCopyLink()" aria-label="Copia link"><span class="material-symbols-outlined" style="font-size:18px;">content_copy</span></button>
                 <button class="btn-icon" onclick="_refShareLink()" aria-label="Condividi"><span class="material-symbols-outlined" style="font-size:18px;">ios_share</span></button>
               </div>
             </div>
             <div style="background:var(--s1);border:1px solid var(--line);border-radius:var(--r2);padding:12px 14px;margin-bottom:12px;">
-              <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Come funziona</div>
+              <div data-i18n="ref.how.title" style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Come funziona</div>
               <div style="display:flex;flex-direction:column;gap:6px;">
-                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">1</span></div><span style="font-size:12px;color:var(--on-v);">Condividi il tuo link con un amico</span></div>
-                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">2</span></div><span style="font-size:12px;color:var(--on-v);">L'amico si iscrive tramite il tuo link</span></div>
-                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">3</span></div><span style="font-size:12px;color:var(--on-v);">Tu guadagni il <strong style="color:var(--sec);">10%</strong> del suo abbonamento</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">1</span></div><span data-i18n="ref.how.1" style="font-size:12px;color:var(--on-v);">Condividi il tuo link con un amico</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">2</span></div><span data-i18n="ref.how.2" style="font-size:12px;color:var(--on-v);">L'amico si iscrive tramite il tuo link</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">3</span></div><span data-i18n="ref.how.3" style="font-size:12px;color:var(--on-v);">Tu guadagni il <strong style="color:var(--sec);">10%</strong> del suo abbonamento</span></div>
               </div>
             </div>
             <div id="ref-cta-wrap"></div>
             <div id="ref-login-notice" style="display:none;text-align:center;padding:8px 0 4px;">
               <span class="material-symbols-outlined" style="font-size:28px;color:var(--muted);display:block;margin-bottom:6px;">lock</span>
-              <p style="font-size:12px;color:var(--muted);margin:0;">Accedi con Google per attivare il programma referral.</p>
+              <p data-i18n="ref.login.notice" style="font-size:12px;color:var(--muted);margin:0;">Accedi con Google per attivare il programma referral.</p>
             </div>
           </div>
         </div>
@@ -3635,6 +3635,25 @@ it:{
   'faq.a.8':'Sì. Iron Kinetic™ è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un\'app nativa, anche offline.',
   'faq.q.9':'I miei dati vengono condivisi o venduti?',
   'faq.a.9':'No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server che raccolgono i tuoi dati sanitari, nessun analytics, nessuna pubblicità basata su di essi. L\'unica eccezione tecnica sono le richieste di font a Google (Google Fonts/Material Symbols) che non trasmettono dati personali.',
+  'ref.preview':'Invita amici · guadagna il 10%',
+  'ref.credit.label':'Credito accumulato',
+  'ref.credit.meta':'{count} referral confermati · min. €20 per prelievo',
+  'ref.credit.meta.empty':'Invita amici per accumulare credito',
+  'ref.link.label':'Il tuo link di invito',
+  'ref.link.loading':'Caricamento...',
+  'ref.how.title':'Come funziona',
+  'ref.how.1':'Condividi il tuo link con un amico',
+  'ref.how.2':"L'amico si iscrive tramite il tuo link",
+  'ref.how.3':'Tu guadagni il <strong style="color:var(--sec)">10%</strong> del suo abbonamento',
+  'ref.login.notice':'Accedi con Google per attivare il programma referral.',
+  'ref.cta.connect':'Collega il tuo conto bancario',
+  'ref.cta.connect.sub':'Tramite Stripe · sicuro · nessun costo per te',
+  'ref.cta.payout':'Preleva €{amount}',
+  'ref.cta.payout.sub':'Arriva in 1–2 giorni lavorativi sul tuo conto',
+  'ref.cta.connected':'Conto collegato',
+  'ref.cta.waiting':'Ancora €{rem} per sbloccare il prelievo',
+  'faq.q.10':'Come funziona il programma referral?',
+  'faq.a.10':'Condividi il tuo link personale con un amico. Se si iscrive e attiva un abbonamento, guadagni il <strong>10%</strong> del prezzo del suo piano come credito. Quando accumuli almeno €20, puoi prelevare i fondi collegando il tuo conto bancario tramite Stripe (sicuro e gratuito). Non puoi usare il tuo stesso link per guadagnare.',
   'prv.badge':'Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003',
   'prv.s0.h':'🛡 In sintesi',
   'prv.s0.p':'Iron Kinetic™ raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.',
@@ -4218,6 +4237,25 @@ en:{
   'faq.a.8':'Yes. Iron Kinetic™ is a Progressive Web App (PWA). On iPhone/iPad: open in Safari → Share → "Add to Home Screen". On Android: open in Chrome → "⋮" menu → "Add to Home Screen". It will work like a native app, even offline.',
   'faq.q.9':'Is my data shared or sold?',
   'faq.a.9':'No. All data (weight, plan, check-ins, preferences) stays in your device\'s localStorage. No servers collect your health data, no analytics, no ads based on it. The only technical exception is font requests to Google (Google Fonts/Material Symbols), which do not transmit personal data.',
+  'ref.preview':'Invite friends · earn 10%',
+  'ref.credit.label':'Earned credit',
+  'ref.credit.meta':'{count} referrals confirmed · min. €20 to withdraw',
+  'ref.credit.meta.empty':'Invite friends to earn credit',
+  'ref.link.label':'Your invite link',
+  'ref.link.loading':'Loading...',
+  'ref.how.title':'How it works',
+  'ref.how.1':'Share your link with a friend',
+  'ref.how.2':'Your friend signs up through your link',
+  'ref.how.3':'You earn <strong style="color:var(--sec)">10%</strong> of their subscription',
+  'ref.login.notice':'Sign in with Google to activate the referral program.',
+  'ref.cta.connect':'Link your bank account',
+  'ref.cta.connect.sub':'Via Stripe · secure · no cost to you',
+  'ref.cta.payout':'Withdraw €{amount}',
+  'ref.cta.payout.sub':'Arrives in 1–2 business days to your account',
+  'ref.cta.connected':'Account linked',
+  'ref.cta.waiting':'Another €{rem} to unlock withdrawal',
+  'faq.q.10':'How does the referral program work?',
+  'faq.a.10':'Share your personal link with a friend. If they sign up and activate a subscription, you earn <strong>10%</strong> of their plan price as credit. When you accumulate at least €20, you can withdraw the funds by linking your bank account via Stripe (secure and free). You cannot use your own link to earn rewards.',
   'prv.badge':'Updated: April 2026 · GDPR (EU Reg. 2016/679) · D.Lgs. 196/2003',
   'prv.s0.h':'🛡 In short',
   'prv.s0.p':'Iron Kinetic™ collects only the data strictly necessary to provide the service. Anonymous users keep all data in the browser localStorage. Google-account users sync account state and subscription via Supabase (EU). No health data is ever shared with third parties. Zero tracking cookies.',
@@ -9428,9 +9466,9 @@ async function _ikRefLoad(){
     if(!session){
       if(notice)notice.style.display='block';
       if(ctaWrap)ctaWrap.innerHTML='';
-      if(linkEl)linkEl.textContent='Accedi per ottenere il tuo link';
+      if(linkEl)linkEl.textContent=t('ref.login.notice');
       if(amountEl)amountEl.textContent='€ —';
-      if(metaEl)metaEl.textContent='Accedi con Google per iniziare';
+      if(metaEl)metaEl.textContent=t('ref.credit.meta.empty');
       return;
     }
     const token=session.access_token;
@@ -9456,18 +9494,18 @@ async function _ikRefLoad(){
     /* Aggiorna UI */
     if(notice)notice.style.display='none';
     if(amountEl)amountEl.textContent='€ '+creditEur;
-    if(metaEl)metaEl.textContent=(count||0)+' referral confermati · min. €20 per prelievo';
+    if(metaEl)metaEl.textContent=t('ref.credit.meta',{count:count||0});
     if(linkEl){linkEl.textContent=link;linkEl.dataset.link=link;}
-    if(previewEl)previewEl.textContent=creditCents>0?'Credito: €'+creditEur:'Invita amici · guadagna il 10%';
+    if(previewEl)previewEl.textContent=creditCents>0?t('ref.credit.meta',{count:count||0}):t('ref.preview');
     /* CTA: collega conto / preleva / in attesa */
     if(ctaWrap){
       if(!onboarded){
-        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefStartOnboarding()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">account_balance</span>Collega il tuo conto bancario</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">Tramite Stripe · sicuro · nessun costo per te</p>';
+        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefStartOnboarding()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">account_balance</span>'+t('ref.cta.connect')+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.connect.sub')+'</p>';
       }else if(canPayout){
-        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefRequestPayout()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">payments</span>Preleva €'+creditEur+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">Arriva in 1–2 giorni lavorativi sul tuo conto</p>';
+        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefRequestPayout()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">payments</span>'+t('ref.cta.payout',{amount:creditEur})+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.payout.sub')+'</p>';
       }else{
         const rem=((2000-creditCents)/100).toFixed(2);
-        ctaWrap.innerHTML='<div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 14px;display:flex;align-items:center;gap:10px;"><span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">check_circle</span><div><div style="font-size:12px;font-weight:600;color:var(--on);">Conto collegato</div><div style="font-size:10px;color:var(--muted);">Ancora €'+rem+' per sbloccare il prelievo</div></div></div>';
+        ctaWrap.innerHTML='<div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 14px;display:flex;align-items:center;gap:10px;"><span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">check_circle</span><div><div style="font-size:12px;font-weight:600;color:var(--on);">'+t('ref.cta.connected')+'</div><div style="font-size:10px;color:var(--muted);">'+t('ref.cta.waiting',{rem:rem})+'</div></div></div>';
       }
     }
   }catch(e){console.warn('[IK][referral] load error',e);}
@@ -9477,7 +9515,7 @@ async function _ikRefLoad(){
 function _refCopyLink(){
   const el=document.getElementById('ref-link-display');
   const link=el?.dataset?.link||el?.textContent||'';
-  if(!link||link==='Caricamento...')return;
+  if(!link||link===t('ref.link.loading'))return;
   navigator.clipboard.writeText(link)
     .then(()=>showToast('Link copiato!'))
     .catch(()=>showToast('Copia manuale: '+link));
@@ -9485,7 +9523,7 @@ function _refCopyLink(){
 function _refShareLink(){
   const el=document.getElementById('ref-link-display');
   const link=el?.dataset?.link||el?.textContent||'';
-  if(!link||link==='Caricamento...')return;
+  if(!link||link===t('ref.link.loading'))return;
   if(navigator.share){
     navigator.share({title:'Iron Kinetic',text:'Prova Iron Kinetic — il tuo piano nutrizionale personalizzato:',url:link}).catch(()=>{});
   }else{
@@ -10406,6 +10444,14 @@ function _bootAfterLangGate(){
         </div>
         <div class="faq-answer">No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server, account o sincronizzazione cloud. L'unica eccezione sono le richieste di font e icone a Google (Google Fonts/Material Symbols) che non trasmettono i tuoi dati personali.</div>
       </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          <span class="faq-q-text" data-i18n="faq.q.10"></span>
+          <span class="material-symbols-outlined faq-chevron">expand_more</span>
+        </div>
+        <div class="faq-answer"><p data-i18n="faq.a.10"></p></div>
+      </div>
+
 
     </div>
 
