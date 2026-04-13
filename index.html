@@ -9468,7 +9468,7 @@ function switchTab(name){
   if(_rc){try{localStorage.setItem('ik_referral_code',_rc);}catch{}history.replaceState({},'',location.pathname);}
   /* Gestione ritorno da Stripe Connect onboarding */
   const _cs=_rp.get('connect');
-  if(_cs==='success'){setTimeout(()=>{showToast('Conto bancario collegato!');_ikRefLoad();},600);}
+  if(_cs==='success'){setTimeout(()=>{showToast(t('ref.cta.connected'));_ikRefLoad();},600);}
   if(_cs==='refresh'){setTimeout(()=>_ikRefStartOnboarding(),800);}
   if(_cs){history.replaceState({},'',location.pathname);}
 })();
@@ -9500,9 +9500,9 @@ async function _ikRefLoad(){
     }
     const token=session.access_token;
     const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{headers:{Authorization:'Bearer '+token,'apikey':SUPABASE_KEY}});
-    if(!codeRes.ok){const errBody=await codeRes.text();console.error('[IK][referral] EF error:',codeRes.status,errBody);if(linkEl)linkEl.textContent='—';return;}
+    if(!codeRes.ok){const errBody=await codeRes.text();console.error('[IK][referral] EF error:',codeRes.status,errBody);if(linkEl)linkEl.textContent=t('ref.error.network');if(metaEl)metaEl.textContent='Error '+codeRes.status;return;}
     const codeData=await codeRes.json();
-    if(!codeData.code){console.error('[IK][referral] no code in response:',codeData);if(linkEl)linkEl.textContent='—';return;}
+    if(!codeData.code){console.error('[IK][referral] no code in response:',codeData);if(linkEl)linkEl.textContent=t('ref.error.network');return;}
     const link=location.origin+'?ref='+codeData.code;
     const{data:ud}=await sb.from('users')
       .select('referral_credit_cents,stripe_connect_account_id,stripe_connect_onboarded')
@@ -9531,7 +9531,7 @@ async function _ikRefLoad(){
         ctaWrap.innerHTML='<div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 14px;display:flex;align-items:center;gap:10px;"><span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">check_circle</span><div><div style="font-size:12px;font-weight:600;color:var(--on);">'+t('ref.cta.connected')+'</div><div style="font-size:10px;color:var(--muted);">'+t('ref.cta.waiting',{rem:rem})+'</div></div></div>';
       }
     }
-  }catch(e){console.warn('[IK][referral] load error',e);}
+  }catch(e){console.error('[IK][referral] load error',e);const linkEl2=document.getElementById('ref-link-display');const metaEl2=document.getElementById('ref-credit-meta');if(linkEl2)linkEl2.textContent=t('ref.error.network');if(metaEl2)metaEl2.textContent=e.message||'Error';}
   finally{_ikRefLoading=false;}
 }
 
