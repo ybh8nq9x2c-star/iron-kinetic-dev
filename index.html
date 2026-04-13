@@ -9465,13 +9465,14 @@ let _ikRefLoading=false;
 async function _ikRefLoad(){
   if(_ikRefLoading)return;
   _ikRefLoading=true;
+  const linkEl=document.getElementById('ref-link-display');
+  const amountEl=document.getElementById('ref-credit-amount');
+  const metaEl=document.getElementById('ref-credit-meta');
   try{
+    if(!sb){if(linkEl)linkEl.textContent='—';if(amountEl)amountEl.textContent='€ —';return;}
     const{data:{session}}=await sb.auth.getSession();
     const notice=document.getElementById('ref-login-notice');
     const ctaWrap=document.getElementById('ref-cta-wrap');
-    const linkEl=document.getElementById('ref-link-display');
-    const amountEl=document.getElementById('ref-credit-amount');
-    const metaEl=document.getElementById('ref-credit-meta');
     const previewEl=document.getElementById('prof-referral-preview');
     if(!session){
       if(notice)notice.style.display='block';
@@ -9482,17 +9483,14 @@ async function _ikRefLoad(){
       return;
     }
     const token=session.access_token;
-    /* Genera o recupera il codice referral dell'utente */
-    const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{
-      headers:{Authorization:'Bearer '+token}
-    });
-    const{code}=await codeRes.json();
-    const link=location.origin+'?ref='+code;
-    /* Dati utente: credito, connect status */
+    const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{headers:{Authorization:'Bearer '+token,'apikey':SUPABASE_KEY}});
+    if(!codeRes.ok){const errBody=await codeRes.text();console.error('[IK][referral] EF error:',codeRes.status,errBody);if(linkEl)linkEl.textContent='—';return;}
+    const codeData=await codeRes.json();
+    if(!codeData.code){console.error('[IK][referral] no code in response:',codeData);if(linkEl)linkEl.textContent='—';return;}
+    const link=location.origin+'?ref='+codeData.code;
     const{data:ud}=await sb.from('users')
       .select('referral_credit_cents,stripe_connect_account_id,stripe_connect_onboarded')
       .eq('id',session.user.id).single();
-    /* Conteggio referral confermati */
     const{count}=await sb.from('referrals')
       .select('*',{count:'exact',head:true})
       .eq('referrer_id',session.user.id)
@@ -9501,7 +9499,6 @@ async function _ikRefLoad(){
     const creditEur=(creditCents/100).toFixed(2);
     const canPayout=creditCents>=2000;
     const onboarded=!!ud?.stripe_connect_onboarded;
-    /* Aggiorna UI */
     if(notice)notice.style.display='none';
     if(amountEl)amountEl.textContent='€ '+creditEur;
     if(metaEl)metaEl.textContent=t('ref.credit.meta',{count:count||0});
@@ -9547,7 +9544,7 @@ async function _ikRefStartOnboarding(){
   try{
     const res=await fetch(SUPABASE_URL+'/functions/v1/connect-onboard',{
       method:'POST',
-      headers:{Authorization:'Bearer '+session.access_token}
+      headers:{Authorization:'Bearer '+session.access_token,'apikey':SUPABASE_KEY}
     });
     const{url,error}=await res.json();
     if(url){location.href=url;}
@@ -9564,7 +9561,7 @@ async function _ikRefRequestPayout(){
   try{
     const res=await fetch(SUPABASE_URL+'/functions/v1/request-payout',{
       method:'POST',
-      headers:{Authorization:'Bearer '+session.access_token}
+      headers:{Authorization:'Bearer '+session.access_token,'apikey':SUPABASE_KEY}
     });
     const body=await res.json();
     if(body.success){
