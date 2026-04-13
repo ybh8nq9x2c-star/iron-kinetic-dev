@@ -2060,7 +2060,7 @@ hr{height:1px;}
             <div style="margin-bottom:12px;">
               <div data-i18n="ref.link.label" style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Il tuo link di invito</div>
               <div style="display:flex;gap:8px;align-items:center;">
-                <div id="ref-link-display" data-i18n="ref.link.loading" style="flex:1;background:var(--s2);border:1px solid var(--line-hi);border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--on-v);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.01em;">Caricamento...</div>
+                <div id="ref-link-display" style="flex:1;background:var(--s2);border:1px solid var(--line-hi);border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--on-v);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.01em;">Caricamento...</div>
                 <button class="btn-icon" onclick="_refCopyLink()" aria-label="Copia link"><span class="material-symbols-outlined" style="font-size:18px;">content_copy</span></button>
                 <button class="btn-icon" onclick="_refShareLink()" aria-label="Condividi"><span class="material-symbols-outlined" style="font-size:18px;">ios_share</span></button>
               </div>
@@ -3652,6 +3652,11 @@ it:{
   'ref.cta.payout.sub':'Arriva in 1–2 giorni lavorativi sul tuo conto',
   'ref.cta.connected':'Conto collegato',
   'ref.cta.waiting':'Ancora €{rem} per sbloccare il prelievo',
+  'ref.copied':'Link copiato!',
+  'ref.copy.manual':'Copia manuale: ',
+  'ref.share.text':'Prova Iron Kinetic™ — il tuo piano nutrizionale personalizzato:',
+  'ref.login.first':'Accedi prima di collegare il conto',
+  'ref.opening.stripe':'Apertura Stripe...',
   'faq.q.10':'Come funziona il programma referral?',
   'faq.a.10':'Condividi il tuo link personale con un amico. Se si iscrive e attiva un abbonamento, guadagni il <strong>10%</strong> del prezzo del suo piano come credito. Quando accumuli almeno €20, puoi prelevare i fondi collegando il tuo conto bancario tramite Stripe (sicuro e gratuito). Non puoi usare il tuo stesso link per guadagnare.',
   'prv.badge':'Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003',
@@ -4254,6 +4259,11 @@ en:{
   'ref.cta.payout.sub':'Arrives in 1–2 business days to your account',
   'ref.cta.connected':'Account linked',
   'ref.cta.waiting':'Another €{rem} to unlock withdrawal',
+  'ref.copied':'Link copied!',
+  'ref.copy.manual':'Manual copy: ',
+  'ref.share.text':'Try Iron Kinetic™ — your personalized nutrition plan:',
+  'ref.login.first':'Sign in first to link your account',
+  'ref.opening.stripe':'Opening Stripe...',
   'faq.q.10':'How does the referral program work?',
   'faq.a.10':'Share your personal link with a friend. If they sign up and activate a subscription, you earn <strong>10%</strong> of their plan price as credit. When you accumulate at least €20, you can withdraw the funds by linking your bank account via Stripe (secure and free). You cannot use your own link to earn rewards.',
   'prv.badge':'Updated: April 2026 · GDPR (EU Reg. 2016/679) · D.Lgs. 196/2003',
@@ -9495,7 +9505,7 @@ async function _ikRefLoad(){
     if(notice)notice.style.display='none';
     if(amountEl)amountEl.textContent='€ '+creditEur;
     if(metaEl)metaEl.textContent=t('ref.credit.meta',{count:count||0});
-    if(linkEl){linkEl.textContent=link;linkEl.dataset.link=link;}
+    if(linkEl){linkEl.textContent=link;linkEl.dataset.link=link;linkEl.removeAttribute('data-i18n');}
     if(previewEl)previewEl.textContent=creditCents>0?t('ref.credit.meta',{count:count||0}):t('ref.preview');
     /* CTA: collega conto / preleva / in attesa */
     if(ctaWrap){
@@ -9517,23 +9527,23 @@ function _refCopyLink(){
   const link=el?.dataset?.link||el?.textContent||'';
   if(!link||link===t('ref.link.loading'))return;
   navigator.clipboard.writeText(link)
-    .then(()=>showToast('Link copiato!'))
-    .catch(()=>showToast('Copia manuale: '+link));
+    .then(()=>showToast(t('ref.copied')))
+    .catch(()=>showToast(t('ref.copy.manual')+link));
 }
 function _refShareLink(){
   const el=document.getElementById('ref-link-display');
   const link=el?.dataset?.link||el?.textContent||'';
   if(!link||link===t('ref.link.loading'))return;
   if(navigator.share){
-    navigator.share({title:'Iron Kinetic',text:'Prova Iron Kinetic — il tuo piano nutrizionale personalizzato:',url:link}).catch(()=>{});
+    navigator.share({title:'Iron Kinetic',text:t('ref.share.text'),url:link}).catch(()=>{});
   }else{
-    navigator.clipboard.writeText(link).then(()=>showToast('Link copiato!')).catch(()=>{});
+    navigator.clipboard.writeText(link).then(()=>showToast(t('ref.copied'))).catch(()=>{});
   }
 }
 async function _ikRefStartOnboarding(){
   const{data:{session}}=await sb.auth.getSession();
-  if(!session){showToast('Accedi prima di collegare il conto');return;}
-  showToast('Apertura Stripe...');
+    if(!session){showToast(t('ref.login.first'));return;}
+    showToast(t('ref.opening.stripe'));
   try{
     const res=await fetch(SUPABASE_URL+'/functions/v1/connect-onboard',{
       method:'POST',
