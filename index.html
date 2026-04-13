@@ -2833,7 +2833,8 @@ async function _doStartCheckout(plan){
         method:'POST',
         headers:{
           'Content-Type':'application/json',
-          'X-User-JWT':accessToken
+          'Authorization':'Bearer '+accessToken,
+          'apikey':SUPABASE_KEY
         },
         body:JSON.stringify(payload)
       });
