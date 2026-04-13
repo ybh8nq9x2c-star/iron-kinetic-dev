@@ -1,0 +1,22 @@
+{
+  "name": "reddit-swarm",
+  "version": "1.0.0",
+  "description": "Reddit Swarm Agent System for Iron Kinetic - multi-agent content pipeline",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js run",
+    "init": "node src/index.js init",
+    "generate": "node src/index.js generate",
+    "status": "node src/index.js status",
+    "export": "node src/index.js export"
+  },
+  "dependencies": {
+    "mongodb": "^6.12.0",
+    "openai": "^4.85.0",
+    "dotenv": "^16.4.7",
+    "uuid": "^11.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
