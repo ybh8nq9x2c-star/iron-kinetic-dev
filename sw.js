@@ -1,8 +1,8 @@
-/* Iron Kinetic — Service Worker v16
+/* Iron Kinetic — Service Worker v17
    Cache: cache-first for assets, network-first for navigation.
    Offline fallback: cached index.html.
 */
-const CACHE = 'iron-kinetic-v16';
+const CACHE = 'iron-kinetic-v17';
 const ASSETS = [
   './',
   './index.html',
@@ -63,6 +63,8 @@ self.addEventListener('fetch', (event) => {
 
   // Same-origin assets only: cache-first, then network, then skip
   const url = new URL(req.url);
+  // Skip API calls — let them go directly to the network
+  if (url.hostname.includes('supabase.co') || url.pathname.includes('/functions/')) return;
   if (url.origin !== self.location.origin) {
     // External resources (fonts, CDN scripts): network-first, cache fallback
     event.respondWith(
@@ -74,7 +76,7 @@ self.addEventListener('fetch', (event) => {
             caches.open(CACHE).then((c) => c.put(req, clone));
           }
           return res;
-        }).catch(() => cached);
+        }).catch(() => new Response('Network error', { status: 503 }));
       })
     );
     return;
