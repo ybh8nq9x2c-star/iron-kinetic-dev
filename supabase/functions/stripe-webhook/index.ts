@@ -66,7 +66,7 @@ serve(async (req) => {
       const session = event.data.object as Stripe.Checkout.Session
       const email = session.customer_details?.email
       const customerId = session.customer as string
-      const plan = session.mode === 'subscription' ? 'monthly' : 'lifetime'
+      const plan = session.metadata?.plan ?? (session.mode === 'subscription' ? 'monthly' : 'lifetime')
 
       // Idempotency check
       const skip = await checkIdempotency(event, customerId)
