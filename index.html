@@ -2051,7 +2051,7 @@ hr{height:1px;}
               <div>
                 <div data-i18n="ref.credit.label" style="font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Credito accumulato</div>
                 <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--sec);line-height:1;" id="ref-credit-amount">€ —</div>
-                <div id="ref-credit-meta" style="font-size:10px;color:var(--muted);margin-top:3px;">— referral confermati · min. €20</div>
+                <div id="ref-credit-meta" style="font-size:10px;color:var(--muted);margin-top:3px;">—</div>
               </div>
               <div style="width:44px;height:44px;border-radius:50%;background:rgba(192,193,255,.12);border:1px solid rgba(192,193,255,.2);display:flex;align-items:center;justify-content:center;">
                 <span class="material-symbols-outlined" style="font-size:22px;color:var(--sec);">savings</span>
@@ -3657,6 +3657,14 @@ it:{
   'ref.share.text':'Prova Iron Kinetic™ — il tuo piano nutrizionale personalizzato:',
   'ref.login.first':'Accedi prima di collegare il conto',
   'ref.opening.stripe':'Apertura Stripe...',
+  'ref.error.generic':'Errore: {msg}',
+  'ref.error.retry':'riprova più tardi',
+  'ref.error.network':'Errore di rete. Riprova.',
+  'ref.payout.processing':'Elaborazione prelievo...',
+  'ref.payout.success':'Prelievo inviato! Arriva in 1–2 giorni lavorativi.',
+  'ref.payout.error':'Errore nel prelievo',
+  'ref.payout.below_min':'Saldo sotto €20',
+  'ref.payout.no_account':'Collega prima il conto bancario',
   'faq.q.10':'Come funziona il programma referral?',
   'faq.a.10':'Condividi il tuo link personale con un amico. Se si iscrive e attiva un abbonamento, guadagni il <strong>10%</strong> del prezzo del suo piano come credito. Quando accumuli almeno €20, puoi prelevare i fondi collegando il tuo conto bancario tramite Stripe (sicuro e gratuito). Non puoi usare il tuo stesso link per guadagnare.',
   'prv.badge':'Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003',
@@ -4264,6 +4272,14 @@ en:{
   'ref.share.text':'Try Iron Kinetic™ — your personalized nutrition plan:',
   'ref.login.first':'Sign in first to link your account',
   'ref.opening.stripe':'Opening Stripe...',
+  'ref.error.generic':'Error: {msg}',
+  'ref.error.retry':'try again later',
+  'ref.error.network':'Network error. Please try again.',
+  'ref.payout.processing':'Processing withdrawal...',
+  'ref.payout.success':'Withdrawal sent! Arrives in 1–2 business days.',
+  'ref.payout.error':'Withdrawal error',
+  'ref.payout.below_min':'Balance below €20',
+  'ref.payout.no_account':'Link your bank account first',
   'faq.q.10':'How does the referral program work?',
   'faq.a.10':'Share your personal link with a friend. If they sign up and activate a subscription, you earn <strong>10%</strong> of their plan price as credit. When you accumulate at least €20, you can withdraw the funds by linking your bank account via Stripe (secure and free). You cannot use your own link to earn rewards.',
   'prv.badge':'Updated: April 2026 · GDPR (EU Reg. 2016/679) · D.Lgs. 196/2003',
@@ -9544,36 +9560,36 @@ async function _ikRefStartOnboarding(){
   try{
     const res=await fetch(SUPABASE_URL+'/functions/v1/connect-onboard',{
       method:'POST',
-      headers:{Authorization:'Bearer '+session.access_token,'apikey':SUPABASE_KEY}
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access_token,'apikey':SUPABASE_KEY}
     });
     const{url,error}=await res.json();
     if(url){location.href=url;}
-    else{showToast('Errore: '+(error||'riprova più tardi'));}
+    else{showToast(t('ref.error.generic',{msg:error||t('ref.error.retry')}));}
   }catch(e){
-    showToast('Errore di rete. Riprova.');
+    showToast(t('ref.error.network'));
     console.error('[IK][referral] onboard error',e);
   }
 }
 async function _ikRefRequestPayout(){
   const{data:{session}}=await sb.auth.getSession();
   if(!session)return;
-  showToast('Elaborazione prelievo...');
+  showToast(t('ref.payout.processing'));
   try{
     const res=await fetch(SUPABASE_URL+'/functions/v1/request-payout',{
       method:'POST',
-      headers:{Authorization:'Bearer '+session.access_token,'apikey':SUPABASE_KEY}
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access_token,'apikey':SUPABASE_KEY}
     });
     const body=await res.json();
     if(body.success){
-      showToast('Prelievo inviato! Arriva in 1–2 giorni lavorativi.');
+      showToast(t('ref.payout.success'));
       _ikRefLoading=false;
       _ikRefLoad();
     }else{
-      const msgs={below_minimum:'Saldo sotto €20',account_not_onboarded:'Collega prima il conto bancario'};
-      showToast(msgs[body.error]||'Errore nel prelievo');
+      const msgs={below_minimum:t('ref.payout.below_min'),account_not_onboarded:t('ref.payout.no_account')};
+      showToast(msgs[body.error]||t('ref.payout.error'));
     }
   }catch(e){
-    showToast('Errore di rete. Riprova.');
+    showToast(t('ref.error.network'));
     console.error('[IK][referral] payout error',e);
   }
 }
