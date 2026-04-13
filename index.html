@@ -16,7 +16,8 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/></noscript>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/></noscript>
 <!-- Chart.js loaded lazily on demand — see lazyLoadChartJs() -->
 <style>
 :root{
@@ -2818,7 +2819,7 @@ async function _doStartCheckout(plan){
     const res=await fetch(
       SUPABASE_URL+'/functions/v1/create-checkout-session',
       {method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken,'apikey':SUPABASE_KEY},
-       body:JSON.stringify({plan:plan||'monthly',referral_code:_ikRefGetPendingCode()})}
+       body:JSON.stringify({plan:plan||'monthly'})}
     ).catch(()=>{throw new Error(_lang==='en'?'Network error — check your connection':'Errore di rete — controlla la connessione');});
 
     const body=await res.json().catch(()=>({}));
