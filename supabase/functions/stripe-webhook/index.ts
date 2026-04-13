@@ -1,4 +1,4 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { serve } from 'https://deno.land/std@0.168.0/http/function.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14?target=deno'
 
@@ -83,6 +83,58 @@ serve(async (req) => {
           .eq('email', email)
         if (error) console.error('Supabase update error (checkout):', error)
         else console.log(`Activated Trend for ${email} — plan: ${plan}`)
+      }
+
+      // ── Referral credit logic ──
+      const referralCode   = session.metadata?.referral_code
+      const referredUserId = session.metadata?.user_id ?? session.metadata?.supabase_uid
+      const amountCents    = session.amount_total || 0
+
+      if (referralCode && referredUserId && amountCents > 0) {
+        const rewardCents = Math.round(amountCents * 0.10)
+
+        const { data: codeRow, error: codeErr } = await sb
+          .from('referral_codes')
+          .select('user_id')
+          .eq('code', referralCode)
+          .single()
+
+        if (codeErr || !codeRow) {
+          console.warn('[stripe-webhook] referral code not found:', referralCode)
+        } else if (codeRow.user_id === referredUserId) {
+          console.warn('[stripe-webhook] auto-referral blocked for user:', referredUserId)
+        } else {
+          // Prevent double-reward
+          const { count } = await sb
+            .from('referrals')
+            .select('*', { count: 'exact', head: true })
+            .eq('referred_id', referredUserId)
+            .eq('status', 'confirmed')
+
+          if ((count || 0) > 0) {
+            console.warn('[stripe-webhook] referred user already rewarded:', referredUserId)
+          } else {
+            await sb.from('referrals').insert({
+              referrer_id:            codeRow.user_id,
+              referred_id:            referredUserId,
+              code:                   referralCode,
+              status:                 'confirmed',
+              reward_amount_cents:    rewardCents,
+              stripe_subscription_id: session.subscription as string ?? null,
+              confirmed_at:           new Date().toISOString(),
+            })
+
+            await sb.rpc('add_referral_credit', {
+              uid:    codeRow.user_id,
+              amount: rewardCents,
+            })
+
+            console.log('[stripe-webhook] referral credited:', {
+              referrer: codeRow.user_id,
+              reward:   rewardCents,
+            })
+          }
+        }
       }
     }
 
@@ -206,6 +258,26 @@ serve(async (req) => {
         }
       }
     }
+
+    // ── 5. account.updated — Stripe Connect onboarding complete ──
+    if (event.type === 'account.updated') {
+      const account = event.data.object as Stripe.Account
+      const isReady =
+        account.details_submitted &&
+        account.charges_enabled   &&
+        account.payouts_enabled
+
+      if (isReady) {
+        const { error } = await sb
+          .from('users')
+          .update({ stripe_connect_onboarded: true })
+          .eq('stripe_connect_account_id', account.id)
+
+        if (error) console.error('[stripe-webhook] failed to update onboarded flag:', error)
+        else console.log('[stripe-webhook] account onboarded:', account.id)
+      }
+    }
+
   } catch (err) {
     console.error('Handler error:', err)
   }

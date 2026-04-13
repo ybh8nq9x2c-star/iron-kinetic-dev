@@ -69,9 +69,11 @@ Deno.serve(async (req) => {
 
   /* ── 3. Parse body ── */
   let plan = 'monthly'
+  let referral_code = ''
   try {
     const body = await req.json()
     plan = body?.plan ?? body?.price_tier ?? 'monthly'
+    referral_code = body?.referral_code ?? ''
   } catch {
     console.warn('[checkout] Body parse failed, defaulting plan=monthly')
   }
@@ -137,7 +139,7 @@ Deno.serve(async (req) => {
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${origin}/?trend=success`,
     cancel_url:  `${origin}/`,
-    metadata: { userId: user.id, supabase_uid: user.id, plan },
+    metadata: { userId: user.id, supabase_uid: user.id, plan, referral_code: referral_code || '' },
     ...(stripeCustomerId
       ? { customer: stripeCustomerId }
       : { customer_email: user.email }),
