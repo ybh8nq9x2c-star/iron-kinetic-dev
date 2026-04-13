@@ -2036,7 +2036,52 @@ hr{height:1px;}
         </div>
 
         <!-- Privacy -->
-        <div class="prof-menu-row" onclick="switchTab('info')">
+        <!-- Referral -->
+        <div class="prof-menu-row" onclick="toggleAccordion('referral')">
+          <div class="prof-menu-ico" style="background:rgba(192,193,255,.12);"><span class="material-symbols-outlined" style="color:var(--sec);">share</span></div>
+          <div style="flex:1;min-width:0;">
+            <span class="prof-menu-label sn">Referral</span>
+            <p id="prof-referral-preview" style="font-size:11px;color:var(--muted);margin:0;">Invita amici · guadagna il 10%</p>
+          </div>
+          <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-referral" style="transition:transform .2s;">chevron_right</span>
+        </div>
+        <div id="acc-referral" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .4s ease;">
+          <div style="padding:16px;border-top:1px solid var(--line);background:var(--s0);">
+            <div style="background:linear-gradient(135deg,rgba(192,193,255,.10),rgba(77,220,198,.06));border:1px solid rgba(192,193,255,.18);border-radius:var(--r2);padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div style="font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Credito accumulato</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--sec);line-height:1;" id="ref-credit-amount">€ —</div>
+                <div id="ref-credit-meta" style="font-size:10px;color:var(--muted);margin-top:3px;">— referral confermati · min. €20</div>
+              </div>
+              <div style="width:44px;height:44px;border-radius:50%;background:rgba(192,193,255,.12);border:1px solid rgba(192,193,255,.2);display:flex;align-items:center;justify-content:center;">
+                <span class="material-symbols-outlined" style="font-size:22px;color:var(--sec);">savings</span>
+              </div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Il tuo link di invito</div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <div id="ref-link-display" style="flex:1;background:var(--s2);border:1px solid var(--line-hi);border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--on-v);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.01em;">Caricamento...</div>
+                <button class="btn-icon" onclick="_refCopyLink()" aria-label="Copia link"><span class="material-symbols-outlined" style="font-size:18px;">content_copy</span></button>
+                <button class="btn-icon" onclick="_refShareLink()" aria-label="Condividi"><span class="material-symbols-outlined" style="font-size:18px;">ios_share</span></button>
+              </div>
+            </div>
+            <div style="background:var(--s1);border:1px solid var(--line);border-radius:var(--r2);padding:12px 14px;margin-bottom:12px;">
+              <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Come funziona</div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">1</span></div><span style="font-size:12px;color:var(--on-v);">Condividi il tuo link con un amico</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">2</span></div><span style="font-size:12px;color:var(--on-v);">L'amico si iscrive tramite il tuo link</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">3</span></div><span style="font-size:12px;color:var(--on-v);">Tu guadagni il <strong style="color:var(--sec);">10%</strong> del suo abbonamento</span></div>
+              </div>
+            </div>
+            <div id="ref-cta-wrap"></div>
+            <div id="ref-login-notice" style="display:none;text-align:center;padding:8px 0 4px;">
+              <span class="material-symbols-outlined" style="font-size:28px;color:var(--muted);display:block;margin-bottom:6px;">lock</span>
+              <p style="font-size:12px;color:var(--muted);margin:0;">Accedi con Google per attivare il programma referral.</p>
+            </div>
+          </div>
+        </div>
+
+                <div class="prof-menu-row" onclick="switchTab('info')">
           <div class="prof-menu-ico muted"><span class="material-symbols-outlined" style="color:var(--muted);">shield</span></div>
           <span class="prof-menu-label sn" id="set-btn-privacy-txt">Privacy</span>
           <span class="prof-menu-chevron material-symbols-outlined">chevron_right</span>
@@ -9344,9 +9389,148 @@ function switchTab(name){
   if(progOverlay && name!=='prog') progOverlay.style.display='none';
   if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';applyTrendBlurOverlay();syncTrendLockCopy();}
   if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
-  if(name==='set'){renderSettings();renderKcalRing();_tabDirty.set=false;trendInitPromise.then(()=>updateSubManagementCard());}
+  if(name==='set'){renderSettings();renderKcalRing();_tabDirty.set=false;trendInitPromise.then(()=>updateSubManagementCard());_ikRefLoad();}
   if(name==='info'){updateConsentUI();}
   if(name==='oggi'){try{renderTodayAction();}catch(e){}try{renderPlanUpdateNote();}catch(e){}}
+}
+
+/* ═══════════════════════════════════════
+   REFERRAL SYSTEM
+═══════════════════════════════════════ */
+(function(){
+  /* Cattura ?ref= all'avvio, salva in localStorage, pulisce l'URL */
+  const _rp=new URLSearchParams(location.search);
+  const _rc=_rp.get('ref');
+  if(_rc){try{localStorage.setItem('ik_referral_code',_rc);}catch{}history.replaceState({},'',location.pathname);}
+  /* Gestione ritorno da Stripe Connect onboarding */
+  const _cs=_rp.get('connect');
+  if(_cs==='success'){setTimeout(()=>{showToast('Conto bancario collegato!');_ikRefLoad();},600);}
+  if(_cs==='refresh'){setTimeout(()=>_ikRefStartOnboarding(),800);}
+  if(_cs){history.replaceState({},'',location.pathname);}
+})();
+
+/* Espone il codice referral al checkout */
+function _ikRefGetPendingCode(){try{return localStorage.getItem('ik_referral_code')||'';}catch{return '';}}
+
+/* Carica e renderizza la sezione referral nel profilo */
+let _ikRefLoading=false;
+async function _ikRefLoad(){
+  if(_ikRefLoading)return;
+  _ikRefLoading=true;
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    const notice=document.getElementById('ref-login-notice');
+    const ctaWrap=document.getElementById('ref-cta-wrap');
+    const linkEl=document.getElementById('ref-link-display');
+    const amountEl=document.getElementById('ref-credit-amount');
+    const metaEl=document.getElementById('ref-credit-meta');
+    const previewEl=document.getElementById('prof-referral-preview');
+    if(!session){
+      if(notice)notice.style.display='block';
+      if(ctaWrap)ctaWrap.innerHTML='';
+      if(linkEl)linkEl.textContent='Accedi per ottenere il tuo link';
+      if(amountEl)amountEl.textContent='€ —';
+      if(metaEl)metaEl.textContent='Accedi con Google per iniziare';
+      return;
+    }
+    const token=session.access_token;
+    /* Genera o recupera il codice referral dell'utente */
+    const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{
+      headers:{Authorization:'Bearer '+token}
+    });
+    const{code}=await codeRes.json();
+    const link=location.origin+'?ref='+code;
+    /* Dati utente: credito, connect status */
+    const{data:ud}=await sb.from('users')
+      .select('referral_credit_cents,stripe_connect_account_id,stripe_connect_onboarded')
+      .eq('id',session.user.id).single();
+    /* Conteggio referral confermati */
+    const{count}=await sb.from('referrals')
+      .select('*',{count:'exact',head:true})
+      .eq('referrer_id',session.user.id)
+      .eq('status','confirmed');
+    const creditCents=ud?.referral_credit_cents||0;
+    const creditEur=(creditCents/100).toFixed(2);
+    const canPayout=creditCents>=2000;
+    const onboarded=!!ud?.stripe_connect_onboarded;
+    /* Aggiorna UI */
+    if(notice)notice.style.display='none';
+    if(amountEl)amountEl.textContent='€ '+creditEur;
+    if(metaEl)metaEl.textContent=(count||0)+' referral confermati · min. €20 per prelievo';
+    if(linkEl){linkEl.textContent=link;linkEl.dataset.link=link;}
+    if(previewEl)previewEl.textContent=creditCents>0?'Credito: €'+creditEur:'Invita amici · guadagna il 10%';
+    /* CTA: collega conto / preleva / in attesa */
+    if(ctaWrap){
+      if(!onboarded){
+        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefStartOnboarding()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">account_balance</span>Collega il tuo conto bancario</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">Tramite Stripe · sicuro · nessun costo per te</p>';
+      }else if(canPayout){
+        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefRequestPayout()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">payments</span>Preleva €'+creditEur+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">Arriva in 1–2 giorni lavorativi sul tuo conto</p>';
+      }else{
+        const rem=((2000-creditCents)/100).toFixed(2);
+        ctaWrap.innerHTML='<div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 14px;display:flex;align-items:center;gap:10px;"><span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">check_circle</span><div><div style="font-size:12px;font-weight:600;color:var(--on);">Conto collegato</div><div style="font-size:10px;color:var(--muted);">Ancora €'+rem+' per sbloccare il prelievo</div></div></div>';
+      }
+    }
+  }catch(e){console.warn('[IK][referral] load error',e);}
+  finally{_ikRefLoading=false;}
+}
+
+function _refCopyLink(){
+  const el=document.getElementById('ref-link-display');
+  const link=el?.dataset?.link||el?.textContent||'';
+  if(!link||link==='Caricamento...')return;
+  navigator.clipboard.writeText(link)
+    .then(()=>showToast('Link copiato!'))
+    .catch(()=>showToast('Copia manuale: '+link));
+}
+function _refShareLink(){
+  const el=document.getElementById('ref-link-display');
+  const link=el?.dataset?.link||el?.textContent||'';
+  if(!link||link==='Caricamento...')return;
+  if(navigator.share){
+    navigator.share({title:'Iron Kinetic',text:'Prova Iron Kinetic — il tuo piano nutrizionale personalizzato:',url:link}).catch(()=>{});
+  }else{
+    navigator.clipboard.writeText(link).then(()=>showToast('Link copiato!')).catch(()=>{});
+  }
+}
+async function _ikRefStartOnboarding(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){showToast('Accedi prima di collegare il conto');return;}
+  showToast('Apertura Stripe...');
+  try{
+    const res=await fetch(SUPABASE_URL+'/functions/v1/connect-onboard',{
+      method:'POST',
+      headers:{Authorization:'Bearer '+session.access_token}
+    });
+    const{url,error}=await res.json();
+    if(url){location.href=url;}
+    else{showToast('Errore: '+(error||'riprova più tardi'));}
+  }catch(e){
+    showToast('Errore di rete. Riprova.');
+    console.error('[IK][referral] onboard error',e);
+  }
+}
+async function _ikRefRequestPayout(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session)return;
+  showToast('Elaborazione prelievo...');
+  try{
+    const res=await fetch(SUPABASE_URL+'/functions/v1/request-payout',{
+      method:'POST',
+      headers:{Authorization:'Bearer '+session.access_token}
+    });
+    const body=await res.json();
+    if(body.success){
+      showToast('Prelievo inviato! Arriva in 1–2 giorni lavorativi.');
+      _ikRefLoading=false;
+      _ikRefLoad();
+    }else{
+      const msgs={below_minimum:'Saldo sotto €20',account_not_onboarded:'Collega prima il conto bancario'};
+      showToast(msgs[body.error]||'Errore nel prelievo');
+    }
+  }catch(e){
+    showToast('Errore di rete. Riprova.');
+    console.error('[IK][referral] payout error',e);
+  }
 }
 
 /* ═══════════════════════════════════════
