@@ -1,8 +1,8 @@
-/* Iron Kinetic — Service Worker v18
-   Bumped cache version to force clear of stale caches.
+/* Iron Kinetic — Service Worker v17
+   Fixes v16: font/CDN risorse esterne ora network-first (no cache-first opaque).
    Risposte opaque mai messe in cache. SKIP_WAITING handler aggiunto.
 */
-const CACHE = 'iron-kinetic-v18';
+const CACHE = 'iron-kinetic-v17';
 const ASSETS = [
   './',
   './index.html',
@@ -18,7 +18,6 @@ const NETWORK_ONLY_ORIGINS = [
   'cdn.jsdelivr.net',
   'js.stripe.com',
   'js-de.sentry-cdn.com',
-  'qfmyhgrrkshcqxrwbyle.supabase.co',
 ];
 
 /* ── Install ── */
