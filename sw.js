@@ -18,6 +18,7 @@ const NETWORK_ONLY_ORIGINS = [
   'cdn.jsdelivr.net',
   'js.stripe.com',
   'js-de.sentry-cdn.com',
+  'qfmyhgrrkshcqxrwbyle.supabase.co',
 ];
 
 /* ── Install ── */
