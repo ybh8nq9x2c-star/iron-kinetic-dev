@@ -9499,7 +9499,7 @@ async function _ikRefLoad(){
       return;
     }
     const token=session.access_token;
-    const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{headers:{Authorization:'Bearer '+token,'apikey':SUPABASE_KEY}});
+    const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token,'apikey':SUPABASE_KEY}});
     if(!codeRes.ok){const errBody=await codeRes.text();console.error('[IK][referral] EF error:',codeRes.status,errBody);if(linkEl)linkEl.textContent=t('ref.error.network');if(metaEl)metaEl.textContent='Error '+codeRes.status;return;}
     const codeData=await codeRes.json();
     if(!codeData.code){console.error('[IK][referral] no code in response:',codeData);if(linkEl)linkEl.textContent=t('ref.error.network');return;}
