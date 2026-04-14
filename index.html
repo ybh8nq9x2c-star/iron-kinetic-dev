@@ -284,8 +284,9 @@ body.onboarding-active #onb-screen{
 .streak-badge .fire{font-size:12px;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}.bar-fill,.result-card{transition:none;}}
 /* ── Trend blur overlay ── */
-#scr-prog-blur-overlay{display:none;position:fixed;top:calc(var(--hdr-top) + var(--hdr) + 4px);left:0;right:0;bottom:calc(var(--nav-bottom) + var(--nav-h));z-index:50;background:transparent;pointer-events:none;}
-#scr-prog-blur-overlay.on{display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(8px) saturate(120%);-webkit-backdrop-filter:blur(8px) saturate(120%);background:rgba(14,14,14,.80);}
+#scr-prog{position:relative;}
+#scr-prog-blur-overlay{display:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:50;background:transparent;pointer-events:none;}
+#scr-prog-blur-overlay.on{display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(8px) saturate(120%);-webkit-backdrop-filter:blur(8px) saturate(120%);background:rgba(14,14,14,.80);pointer-events:auto;}
 #scr-prog.locked-trend .pg{pointer-events:auto!important;}
 #scr-prog.locked-trend{}
 /* ── Trackers collapsible ── */
@@ -1619,20 +1620,21 @@ hr{height:1px;}
     </div>
   </div><!-- /scr-oggi -->
 
-  <!-- Blur overlay (position:fixed) — shown only for expired/freemium -->
-  <div id="scr-prog-blur-overlay">
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px 20px;text-align:center;pointer-events:auto;width:100%;">
-      <span class="material-symbols-outlined" style="font-size:52px;color:var(--p);font-variation-settings:'FILL' 1;filter:drop-shadow(0 0 16px rgba(77,220,198,.4));">lock</span>
-      <div>
-        <p id="trend-blur-title" style="font-size:17px;font-weight:700;color:var(--on);margin:0 0 6px;line-height:1.3;font-family:'Space Grotesk',sans-serif;"></p>
-        <p id="trend-blur-days" style="font-size:12px;color:var(--muted);margin:0;line-height:1.5;"></p>
-      </div>
-      <button onclick="openPaywall('Trend')" style="background:var(--p);color:#003730;border:none;border-radius:var(--r-pill);height:48px;padding:0 32px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;pointer-events:auto;box-shadow:0 8px 24px rgba(77,220,198,.35);font-family:'Manrope',sans-serif;"><span id="trend-blur-cta"></span></button>
-    </div>
-  </div>
   <!-- PROGRESSO -->
   <div id="scr-prog" class="scr" style="display:none;">
+    <!-- Blur overlay — SCOPED inside scr-prog, position:absolute -->
+    <div id="scr-prog-blur-overlay" style="display:none;">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px 20px;text-align:center;pointer-events:auto;width:100%;">
+        <span class="material-symbols-outlined" style="font-size:52px;color:var(--p);font-variation-settings:'FILL' 1;filter:drop-shadow(0 0 16px rgba(77,220,198,.4));">lock</span>
+        <div>
+          <p id="trend-blur-title" style="font-size:17px;font-weight:700;color:var(--on);margin:0 0 6px;line-height:1.3;font-family:'Space Grotesk',sans-serif;"></p>
+          <p id="trend-blur-days" style="font-size:12px;color:var(--muted);margin:0;line-height:1.5;"></p>
+        </div>
+        <button onclick="openPaywall('Trend')" style="background:var(--p);color:#003730;border:none;border-radius:var(--r-pill);height:48px;padding:0 32px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;pointer-events:auto;box-shadow:0 8px 24px rgba(77,220,198,.35);font-family:'Manrope',sans-serif;"><span id="trend-blur-cta"></span></button>
+      </div>
+    </div>
     <div id="trend-lock-banner">
+    </div>
     </div>
     <div class="pg">
       <p class="sec-title" data-i18n="prog.title">Progresso</p>
@@ -2629,6 +2631,26 @@ function updateSubManagementCard(){
         ${t('sub.expired.cta.lifetime')}
       </button>`;
   }
+}
+
+function updateTrendLockUI(){
+  const onTrend=activeTab==='prog';
+  const locked=!trendAccess.access;
+  const overlay=document.getElementById('scr-prog-blur-overlay');
+  const lb=document.getElementById('trend-lock-banner');
+
+  if(!onTrend||!locked){
+    if(overlay){overlay.style.display='none';overlay.classList.remove('on');}
+    if(lb)lb.style.display='none';
+    return;
+  }
+  if(overlay){
+    overlay.style.display='flex';
+    overlay.classList.add('on');
+    overlay.style.pointerEvents='auto';
+    overlay.style.background='rgba(14,14,14,.80)';
+  }
+  if(lb)lb.style.display='flex';
 }
 
 function updateTrendBadge(){
@@ -7518,49 +7540,9 @@ function activatePlanAndContinue(){
 }
 
 function applyTrendBlurOverlay(){
-  const overlay=document.getElementById('scr-prog-blur-overlay');
-  const scrProg=document.getElementById('scr-prog');
-  const hasAccess=trendAccess.access;
-  // Mostra l'overlay SOLO se il tab Trend è attivo
-  const isProgVisible=scrProg&&scrProg.style.display!=='none';
-
-  if(hasAccess){
-    // UTENTE CON ACCESSO (trial o pagante): rimuovi tutto il lock
-    if(overlay){overlay.style.display='none';overlay.classList.remove('on');}
-    if(scrProg)scrProg.classList.remove('locked-trend');
-    // Riabilita tutti i card/pulsanti dentro scr-prog
-    if(scrProg){
-      scrProg.querySelectorAll('.locked-card,[disabled]').forEach(el=>{
-        el.classList.remove('locked-card');
-        el.removeAttribute('disabled');
-        el.style.pointerEvents='';
-        el.style.cursor='';
-      });
-    }
-    // Aggiorna testo blur se visibile per trial
-    const titleEl=document.getElementById('trend-blur-title');
-    const daysEl=document.getElementById('trend-blur-days');
-    if(trendAccess.mode==='trial'){
-      if(titleEl)titleEl.textContent=t('trend.blur.trialActive');
-      if(daysEl)daysEl.textContent=trendAccess.daysLeft===1?t('trend.blur.lastDay'):t('trend.blur.daysLeft').replace('{n}',trendAccess.daysLeft);
-    }
-  } else {
-    // UTENTE SENZA ACCESSO (expired/freemium): applica lock solo se il tab Trend è visibile
-    if(overlay){
-      if(isProgVisible){
-        overlay.style.display='flex';overlay.classList.add('on');overlay.style.pointerEvents='auto';overlay.style.background='rgba(14,14,14,.80)';
-      } else {
-        overlay.style.display='none';overlay.classList.remove('on');
-      }
-    }
-    if(scrProg)scrProg.classList.add('locked-trend');
-    const titleEl=document.getElementById('trend-blur-title');
-    const daysEl=document.getElementById('trend-blur-days');
-    const ctaEl=document.getElementById('trend-blur-cta');
-    if(titleEl)titleEl.textContent=t('trend.blur.expired');
-    if(daysEl)daysEl.textContent=t('trend.blur.expiredSub');
-    if(ctaEl)ctaEl.textContent=t('trend.blur.cta');
-  }
+  // Delegates entirely to the single source of truth.
+  // Never touches overlay visibility directly.
+  updateTrendLockUI();
 }
 
 function syncTrendLockCopy(){
@@ -7575,8 +7557,8 @@ function syncTrendLockCopy(){
   const blurCta=document.getElementById('trend-blur-cta');
   if(blurCta)blurCta.textContent=t('trend.blur.cta');
   if(trendAccess?.access){
-    if(lockBanner)lockBanner.style.display='none';
     updateTrendLockedLayout();
+    updateTrendLockUI();
     return;
   }
   if(blurTitle){
@@ -7602,9 +7584,10 @@ function syncTrendLockCopy(){
         ${sanitize(t('trend.blur.cta'))}
       </button>
     `;
-    lockBanner.style.display='flex';
+    updateTrendLockedLayout();
   }
-  updateTrendLockedLayout();
+  // Do NOT set lockBanner.style.display here — updateTrendLockUI() controls visibility
+  updateTrendLockUI();
   }catch(e){if(typeof IK_DEBUG!=='undefined'&&IK_DEBUG)console.warn('[IK] syncTrendLockCopy error:',e);}
 }
 
@@ -9489,9 +9472,16 @@ function switchTab(name){
       scr.style.display='none';
     }
   });
-  const progOverlay=document.getElementById('scr-prog-blur-overlay');
-  if(progOverlay && name!=='prog') progOverlay.style.display='none';
-  if(name==='prog'){const lb=document.getElementById('trend-lock-banner');if(lb)lb.style.display=trendAccess.access?'none':'block';applyTrendBlurOverlay();syncTrendLockCopy();}
+  // Hard safety: always hide lock UI when leaving Trend (mandatory)
+  if(name!=='prog'){
+    const lb=document.getElementById('trend-lock-banner');
+    if(lb)lb.style.display='none';
+    const progOverlay=document.getElementById('scr-prog-blur-overlay');
+    if(progOverlay){progOverlay.style.display='none';progOverlay.classList.remove('on');}
+  }
+  // Single source of truth handles all cases
+  updateTrendLockUI();
+  if(name==='prog'){syncTrendLockCopy();}
   if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
   if(name==='set'){renderSettings();renderKcalRing();_tabDirty.set=false;trendInitPromise.then(()=>updateSubManagementCard());_ikRefLoad();}
   if(name==='info'){updateConsentUI();}
@@ -9693,13 +9683,7 @@ function mountApp(){
   });
   /* Init Trend access (async — local check is already done at script load) */
   initTrend().then(()=>{
-    const lb=document.getElementById('trend-lock-banner');
-    const scrProg=document.getElementById('scr-prog');
-    const isOnProg=scrProg&&scrProg.style.display!=='none';
-    if(lb)lb.style.display=(trendAccess.access||!isOnProg)?'none':'block';
-    // Hide prog overlay on boot since initial tab is not 'prog'
-    const progOverlay=document.getElementById('scr-prog-blur-overlay');
-    if(progOverlay)progOverlay.style.display='none';
+    updateTrendLockUI(); // single call replaces all direct banner/overlay toggles
     if(window._trendActivatedMsg){window._trendActivatedMsg=false;toast(t('toast.trendActivated'));}
     // Safety: ensure sub card is updated after full init
     try{updateSubManagementCard();}catch(e){}
