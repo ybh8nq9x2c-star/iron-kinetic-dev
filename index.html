@@ -2374,7 +2374,7 @@ hr{height:1px;}
 
 <script>
 'use strict';
-const APP_VERSION='1.4.0';
+const APP_VERSION='1.5.0';
 const IK_DEBUG=false;
 const ikLog=(...a)=>{if(IK_DEBUG)console.log('[IK]',...a);};
 
@@ -9820,7 +9820,15 @@ function lazyLoadChartJs(cb){
 /* PWA */
 (()=>{
   if('serviceWorker'in navigator){
-    navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(r=>{
+      r.update().catch(()=>{});
+      /* Force activate waiting SW immediately */
+      if(r.waiting){r.waiting.postMessage({type:'SKIP_WAITING'});}
+      r.addEventListener('updatefound',()=>{
+        const nw=r.installing;
+        if(nw)nw.addEventListener('statechange',()=>{if(nw.state==='installed'&&r.waiting)r.waiting.postMessage({type:'SKIP_WAITING'});});
+      });
+    }).catch(()=>{});
     navigator.serviceWorker.addEventListener('controllerchange',()=>window.location.reload());
   }
 })();
