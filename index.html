@@ -7748,6 +7748,13 @@ function toggleAccordion(id){
       lsW(SKMODTIP,'1');
     },400);
   }
+  /* FIX-REF1: load referral data when accordion opens, then re-measure height */
+  if(id==='referral'&&opening){
+    _ikRefLoad().then(()=>{
+      const b=document.getElementById('acc-referral');
+      if(b&&b.style.maxHeight!=='0px')b.style.maxHeight=b.scrollHeight+'px';
+    });
+  }
 }
 /* FIX15: update open accordions on resize */
 window.addEventListener('resize',()=>{
@@ -9438,8 +9445,13 @@ async function _ikRefLoad(){
     const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{
       headers:{Authorization:'Bearer '+token}
     });
-    const{code}=await codeRes.json();
-    const link=location.origin+'?ref='+code;
+    const codeData=await codeRes.json();
+    const code=codeData?.code||codeData?.referral_code||null;
+    if(!code){
+      if(linkEl){linkEl.textContent='Errore generazione link — riprova';linkEl.dataset.link='';}
+      console.warn('[IK][referral] generate-referral-code returned no code',codeData);
+    }
+    const link=code?(location.origin+'?ref='+code):null;
     /* Dati utente: credito, connect status */
     const{data:ud}=await sb.from('users')
       .select('referral_credit_cents,stripe_connect_account_id,stripe_connect_onboarded')
@@ -9457,7 +9469,7 @@ async function _ikRefLoad(){
     if(notice)notice.style.display='none';
     if(amountEl)amountEl.textContent='€ '+creditEur;
     if(metaEl)metaEl.textContent=(count||0)+' referral confermati · min. €20 per prelievo';
-    if(linkEl){linkEl.textContent=link;linkEl.dataset.link=link;}
+    if(linkEl&&link){linkEl.textContent=link;linkEl.dataset.link=link;}
     if(previewEl)previewEl.textContent=creditCents>0?'Credito: €'+creditEur:'Invita amici · guadagna il 10%';
     /* CTA: collega conto / preleva / in attesa */
     if(ctaWrap){
@@ -9477,7 +9489,7 @@ async function _ikRefLoad(){
 function _refCopyLink(){
   const el=document.getElementById('ref-link-display');
   const link=el?.dataset?.link||el?.textContent||'';
-  if(!link||link==='Caricamento...')return;
+  if(!link||link==='Caricamento...'||link.startsWith('Errore'))return;
   navigator.clipboard.writeText(link)
     .then(()=>showToast('Link copiato!'))
     .catch(()=>showToast('Copia manuale: '+link));
@@ -9485,7 +9497,7 @@ function _refCopyLink(){
 function _refShareLink(){
   const el=document.getElementById('ref-link-display');
   const link=el?.dataset?.link||el?.textContent||'';
-  if(!link||link==='Caricamento...')return;
+  if(!link||link==='Caricamento...'||link.startsWith('Errore'))return;
   if(navigator.share){
     navigator.share({title:'Iron Kinetic',text:'Prova Iron Kinetic — il tuo piano nutrizionale personalizzato:',url:link}).catch(()=>{});
   }else{
