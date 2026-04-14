@@ -2473,7 +2473,9 @@ async function initTrend(){
     trendAccess=remote;
     updateTrendBadge();
     const lb=document.getElementById('trend-lock-banner');
-    if(lb)lb.style.display=trendAccess.access?'none':'block';
+    const _scrProg=document.getElementById('scr-prog');
+    const _isOnProg=_scrProg&&_scrProg.style.display!=='none';
+    if(lb)lb.style.display=(trendAccess.access||!_isOnProg)?'none':'block';
     if(document.getElementById('scr-set')?.style.display!=='none'){updateSubManagementCard();}
   }
   applyTrendBlurOverlay();
@@ -9472,6 +9474,7 @@ const TABS=['oggi','prog','set','info'];
 let _tabInFlight=false;
 function switchTab(name){
   if(_tabInFlight)return;_tabInFlight=true;setTimeout(()=>{_tabInFlight=false;},200);
+  activeTab=name;
   TABS.forEach(t=>{
     const scr=document.getElementById(`scr-${t}`);
     const nb=document.getElementById(`nav-${t}`);
@@ -9688,7 +9691,9 @@ function mountApp(){
   /* Init Trend access (async — local check is already done at script load) */
   initTrend().then(()=>{
     const lb=document.getElementById('trend-lock-banner');
-    if(lb)lb.style.display=trendAccess.access?'none':'block';
+    const scrProg=document.getElementById('scr-prog');
+    const isOnProg=scrProg&&scrProg.style.display!=='none';
+    if(lb)lb.style.display=(trendAccess.access||!isOnProg)?'none':'block';
     // Hide prog overlay on boot since initial tab is not 'prog'
     const progOverlay=document.getElementById('scr-prog-blur-overlay');
     if(progOverlay)progOverlay.style.display='none';
