@@ -3045,7 +3045,7 @@ async function syncUserAfterLogin(user){
   _applyUserAvatar();
   try{
     /* Check if row already exists to avoid overwriting trial_end on returning users */
-    const{data:existing}=await sb.from('users').select('id,trend_active,trial_end').eq('id',user.id).single().catch(()=>({data:null}));
+    const{data:existing}=await Promise.resolve(sb.from('users').select('id,trend_active,trial_end').eq('id',user.id).single()).catch(()=>({data:null}));
     const isNewUser=!existing;
     const trialEndDate=new Date(Date.now()+TRIAL_DAYS*86400000).toISOString();
     const upsertPayload=isNewUser
@@ -3054,7 +3054,7 @@ async function syncUserAfterLogin(user){
     const{error}=await sb.from('users').upsert(upsertPayload,{onConflict:'id'});
     if(error){console.warn('[IK] syncUserAfterLogin upsert error:',error.message);}
     /* Refresh full access state */
-    const{data}=await sb.from('users').select('trend_active,trial_end,plan').eq('id',user.id).single().catch(()=>({data:null}));
+    const{data}=await Promise.resolve(sb.from('users').select('trend_active,trial_end,plan').eq('id',user.id).single()).catch(()=>({data:null}));
     if(data?.trend_active){
       trendAccess={access:true,mode:'paid',plan:data.plan||'monthly'};
     }else if(data?.trial_end&&new Date(data.trial_end)>new Date()){
@@ -9535,9 +9535,12 @@ async function _ikRefLoad(){
       if(linkEl)linkEl.textContent=t('ref.loginNotice');
       if(amountEl)amountEl.textContent='€ —';
       if(metaEl)metaEl.textContent=t('ref.loginNotice');
+      _ikRefLoading=false;
       return;
     }
-    const token=session.access_token;
+    /* Refresh token to avoid 401 from stale JWT */
+    let token=session.access_token;
+    try{const{data:r}=await sb.auth.refreshSession();if(r?.session?.access_token)token=r.session.access_token;}catch{}
     /* Genera o recupera il codice referral dell'utente + dati completi */
     const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{
       method:'POST',
