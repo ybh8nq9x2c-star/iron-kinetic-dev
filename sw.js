@@ -1,29 +1,16 @@
-/* Iron Kinetic — Service Worker v21
-   Restored from v16 — user's original working code.
-   Version bumped to force cache clear of corrupted v17-v20.
+/* Iron Kinetic — Service Worker v22
+   Key changes vs v21:
+   - navigate + index.html: always network-first (never stale)
+   - External fonts/CDN: network-first, cache as fallback only
+   - Same-origin static assets: stale-while-revalidate (unchanged)
+   - Added SKIP_WAITING message listener for instant activation
 */
-const CACHE = 'iron-kinetic-v21';
+const CACHE = 'iron-kinetic-v22';
 const ASSETS = [
-  './',
-  './index.html',
   './manifest.webmanifest',
   './offline.html'
+  /* index.html intentionally excluded — always fetched fresh */
 ];
-
-/* OFFLINE_FALLBACK: create offline.html with:
-   <!DOCTYPE html><html><head><meta charset="utf-8">
-   <meta name="viewport" content="width=device-width,initial-scale=1">
-   <title>Iron Kinetic — Offline</title>
-   <style>body{background:#0e0e0e;color:#4ddcc6;font-family:sans-serif;
-   display:flex;flex-direction:column;align-items:center;justify-content:center;
-   height:100vh;margin:0;text-align:center;gap:16px}
-   h1{font-size:22px;margin:0}p{color:rgba(199,196,216,.6);font-size:13px;margin:0}
-   </style></head><body>
-   <span style="font-size:48px">⚡</span>
-   <h1>Iron Kinetic</h1>
-   <p>Sei offline. Riconnettiti per sincronizzare.</p>
-   </body></html>
-*/
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -43,44 +30,57 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+/* Allow index.html to trigger instant SW activation */
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-
-  // Only handle GET requests
   if (req.method !== 'GET') return;
 
-  // Navigation (page load): network-first, fall back to cached index.html or offline.html
-  if (req.mode === 'navigate') {
+  const url = new URL(req.url);
+  const isIndex = url.pathname === '/' || url.pathname.endsWith('/index.html');
+
+  // Navigation requests and index.html: always network-first, never serve stale
+  if (req.mode === 'navigate' || isIndex) {
     event.respondWith(
       fetch(req)
+        .then((res) => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then((c) => c.put(req, clone));
+          }
+          return res;
+        })
         .catch(() =>
-          caches.match('./index.html').then((r) => r || caches.match('/'))
+          caches.match('./index.html')
+            .then((r) => r || caches.match('/'))
             .then((r) => r || caches.match('./offline.html'))
         )
     );
     return;
   }
 
-  // Same-origin assets only: cache-first, then network, then skip
-  const url = new URL(req.url);
+  // External resources (fonts, CDN): network-first, cache as offline fallback only
   if (url.origin !== self.location.origin) {
-    // External resources (fonts, CDN scripts): network-first, cache fallback
     event.respondWith(
-      caches.match(req).then((cached) => {
-        if (cached) return cached;
-        return fetch(req).then((res) => {
+      fetch(req)
+        .then((res) => {
           if (res && res.status === 200) {
             const clone = res.clone();
             caches.open(CACHE).then((c) => c.put(req, clone));
           }
           return res;
-        }).catch(() => cached);
-      })
+        })
+        .catch(() => caches.match(req))
     );
     return;
   }
 
-  // Same-origin assets: cache-first, update in background (stale-while-revalidate)
+  // Same-origin static assets (manifest, icons, etc.): stale-while-revalidate
   event.respondWith(
     caches.match(req).then((cached) => {
       const networkFetch = fetch(req).then((res) => {
