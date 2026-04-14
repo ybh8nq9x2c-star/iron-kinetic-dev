@@ -1,11 +1,17 @@
-/* Iron Kinetic — Service Worker v22
-   Key changes vs v21:
+/* Iron Kinetic — Service Worker v23
+   Key changes vs v22:
+   - External origins: NOT intercepted at all (return without respondWith)
+     Fixes: "Failed to convert value to 'Response'" + CSP violations
+     Root cause: SW fetch() toward external origins was blocked by the
+     document's CSP (connect-src), causing unhandled promise rejections
+     that the browser converted into network errors for the page.
+     Fix: simply don't call event.respondWith() for external origins —
+     the browser handles them directly, unaffected by the SW.
    - navigate + index.html: always network-first (never stale)
-   - External fonts/CDN: network-first, cache as fallback only
    - Same-origin static assets: stale-while-revalidate (unchanged)
    - Added SKIP_WAITING message listener for instant activation
 */
-const CACHE = 'iron-kinetic-v22';
+const CACHE = 'iron-kinetic-v23';
 const ASSETS = [
   './manifest.webmanifest',
   './offline.html'
@@ -64,20 +70,20 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // External resources (fonts, CDN): network-first, cache as offline fallback only
+  // External resources (fonts, CDN, Supabase, Stripe, Google APIs):
+  // DO NOT intercept — let the browser handle them directly.
+  //
+  // WHY: calling fetch() from the SW toward external origins is blocked
+  // by the document's CSP (connect-src). This causes the fetch promise
+  // to reject, event.respondWith() receives a rejected promise, and the
+  // browser synthesises a network error for the page — breaking fonts,
+  // Supabase calls, Stripe, avatar images, etc.
+  //
+  // By returning without calling event.respondWith(), the browser
+  // falls through to its normal network stack, which is NOT subject
+  // to the SW's fetch restrictions and handles CSP correctly.
   if (url.origin !== self.location.origin) {
-    event.respondWith(
-      fetch(req)
-        .then((res) => {
-          if (res && res.status === 200) {
-            const clone = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, clone));
-          }
-          return res;
-        })
-        .catch(() => caches.match(req))
-    );
-    return;
+    return; // ← intentionally no event.respondWith()
   }
 
   // Same-origin static assets (manifest, icons, etc.): stale-while-revalidate
