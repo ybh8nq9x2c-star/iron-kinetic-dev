@@ -1,15 +1,17 @@
-/* Iron Kinetic — Service Worker v17
-   Cache: cache-first for same-origin assets, network-first for navigation.
-   External resources (fonts, CDN): let the browser handle them directly —
-   DO NOT intercept, avoids CSP violations from sw fetch context.
-   Offline fallback: cached index.html.
+/* Iron Kinetic — Service Worker v26
+   Fix: schermata nera causata da cache corrotto o offline.html mancante.
+   - Rimosso offline.html da ASSETS (fallisce cache.addAll se non esiste)
+   - Navigation: network-first con aggiornamento cache
+   - Dopo activate: postMessage ai client per forzare reload
+   - Cache bumped a v26 per pulire tutti i cache precedenti
 */
-const CACHE = 'iron-kinetic-v25';
+const CACHE = 'iron-kinetic-v26';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.webmanifest',
-  './offline.html'
+  './manifest.webmanifest'
+  // ⚠️ offline.html rimosso: se non esiste sul server, cache.addAll() fallisce
+  // silenziosamente e il SW non si installa correttamente → schermata nera
 ];
 
 self.addEventListener('install', (event) => {
@@ -27,39 +29,48 @@ self.addEventListener('activate', (event) => {
         Promise.all(keys.map((k) => (k !== CACHE ? caches.delete(k) : null)))
       )
       .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll({ type: 'window' }))
+      .then((clients) => {
+        // Forza reload di tutti i client aperti dopo l'attivazione
+        // così non rimangono sulla versione cachata vecchia/nera
+        clients.forEach((client) => {
+          client.postMessage({ type: 'SW_ACTIVATED' });
+        });
+      })
   );
 });
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
 
-  // Only handle GET requests
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
 
-  // ── External resources (fonts.googleapis.com, fonts.gstatic.com, CDN, Stripe, etc.)
-  // Do NOT intercept: let the browser fetch them normally.
-  // Intercepting external resources from SW context triggers CSP violations.
+  // Risorse esterne (font, CDN, Stripe, ecc.) → browser gestisce
   if (url.origin !== self.location.origin) {
-    return; // fall through to browser default fetch
+    return;
   }
 
-  // ── Navigation (page load): network-first, fall back to cached index.html
+  // Navigazione → network-first + aggiorna cache, fallback su cache
   if (req.mode === 'navigate') {
     event.respondWith(
       fetch(req)
+        .then((res) => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then((cache) => cache.put(req, clone));
+          }
+          return res;
+        })
         .catch(() =>
-          caches.match('./index.html')
-            .then((r) => r || caches.match('/'))
-            .then((r) => r || caches.match('./offline.html'))
+          caches.match('./index.html').then((r) => r || caches.match('/'))
         )
     );
     return;
   }
 
-  // ── Same-origin assets: stale-while-revalidate
-  // Serve from cache immediately, update cache in background
+  // Asset same-origin → stale-while-revalidate
   event.respondWith(
     caches.open(CACHE).then((cache) => {
       return cache.match(req).then((cached) => {
@@ -72,6 +83,6 @@ self.addEventListener('fetch', (event) => {
 
         return cached || networkFetch;
       });
-    }).catch(() => caches.match('./offline.html'))
+    })
   );
 });
