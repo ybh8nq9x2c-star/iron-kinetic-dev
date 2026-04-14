@@ -40,6 +40,3 @@ stitch/
 *.log
 .a0proj/
 supabase/.temp/
-
-__pycache__/
-.pytest_cache/
