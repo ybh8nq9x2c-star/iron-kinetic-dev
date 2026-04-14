@@ -1,8 +1,8 @@
-/* Iron Kinetic — Service Worker v20
-   Fixes v16: font/CDN risorse esterne ora network-first (no cache-first opaque).
-   Risposte opaque mai messe in cache. SKIP_WAITING handler aggiunto.
+/* Iron Kinetic — Service Worker v21
+   Restored from v16 — user's original working code.
+   Version bumped to force cache clear of corrupted v17-v20.
 */
-const CACHE = 'iron-kinetic-v20';
+const CACHE = 'iron-kinetic-v21';
 const ASSETS = [
   './',
   './index.html',
@@ -10,17 +10,21 @@ const ASSETS = [
   './offline.html'
 ];
 
-/* Domini esterni che devono andare SEMPRE in rete — mai cache-first.
-   Se la rete fallisce, fail silenzioso (no fallback opaque corrotto). */
-const NETWORK_ONLY_ORIGINS = [
-  'fonts.googleapis.com',
-  'fonts.gstatic.com',
-  'cdn.jsdelivr.net',
-  'js.stripe.com',
-  'js-de.sentry-cdn.com',
-];
+/* OFFLINE_FALLBACK: create offline.html with:
+   <!DOCTYPE html><html><head><meta charset="utf-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1">
+   <title>Iron Kinetic — Offline</title>
+   <style>body{background:#0e0e0e;color:#4ddcc6;font-family:sans-serif;
+   display:flex;flex-direction:column;align-items:center;justify-content:center;
+   height:100vh;margin:0;text-align:center;gap:16px}
+   h1{font-size:22px;margin:0}p{color:rgba(199,196,216,.6);font-size:13px;margin:0}
+   </style></head><body>
+   <span style="font-size:48px">⚡</span>
+   <h1>Iron Kinetic</h1>
+   <p>Sei offline. Riconnettiti per sincronizzare.</p>
+   </body></html>
+*/
 
-/* ── Install ── */
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE)
@@ -29,7 +33,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-/* ── Activate: elimina cache vecchie ── */
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
@@ -40,65 +43,44 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-/* ── Message: SKIP_WAITING per update immediato da HTML ── */
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-  if (event.data && event.data.type === 'GET_VERSION') {
-    event.ports[0].postMessage({ version: 'v17' });
-  }
-});
-
-/* ── Fetch ── */
 self.addEventListener('fetch', (event) => {
   const req = event.request;
 
-  // Solo GET
+  // Only handle GET requests
   if (req.method !== 'GET') return;
 
-  const url = new URL(req.url);
-
-  // Font e CDN critici: SEMPRE rete, mai cache.
-  // Se offline, fallisce silenziosamente (il browser usa il fallback di sistema).
-  if (NETWORK_ONLY_ORIGINS.some((h) => url.hostname === h || url.hostname.endsWith('.' + h))) {
-    event.respondWith(
-      fetch(req).catch(() => new Response('', { status: 503, statusText: 'Offline' }))
-    );
-    return;
-  }
-
-  // Navigazione: network-first, fallback a index.html cached o offline.html
+  // Navigation (page load): network-first, fall back to cached index.html or offline.html
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req).catch(() =>
-        caches.match('./index.html')
-          .then((r) => r || caches.match('/'))
-          .then((r) => r || caches.match('./offline.html'))
-      )
+      fetch(req)
+        .catch(() =>
+          caches.match('./index.html').then((r) => r || caches.match('/'))
+            .then((r) => r || caches.match('./offline.html'))
+        )
     );
     return;
   }
 
-  // Risorse esterne non in NETWORK_ONLY (es. Supabase JS, altri CDN):
-  // network-first, cache solo se risposta NON opaque e status 200.
+  // Same-origin assets only: cache-first, then network, then skip
+  const url = new URL(req.url);
   if (url.origin !== self.location.origin) {
+    // External resources (fonts, CDN scripts): network-first, cache fallback
     event.respondWith(
-      fetch(req)
-        .then((res) => {
-          // Non cachare mai risposte opaque (type !== 'basic'/'cors') o errori
-          if (res && res.status === 200 && res.type !== 'opaque') {
+      caches.match(req).then((cached) => {
+        if (cached) return cached;
+        return fetch(req).then((res) => {
+          if (res && res.status === 200) {
             const clone = res.clone();
             caches.open(CACHE).then((c) => c.put(req, clone));
           }
           return res;
-        })
-        .catch(() => caches.match(req).then((r) => r || new Response('', { status: 503 })))
+        }).catch(() => cached);
+      })
     );
     return;
   }
 
-  // Risorse same-origin: stale-while-revalidate
+  // Same-origin assets: cache-first, update in background (stale-while-revalidate)
   event.respondWith(
     caches.match(req).then((cached) => {
       const networkFetch = fetch(req).then((res) => {
