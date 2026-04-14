@@ -40,3 +40,6 @@ stitch/
 *.log
 .a0proj/
 supabase/.temp/
+__pycache__/
+*.pyc
+reddit-swarm/

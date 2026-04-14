@@ -1,22 +1,29 @@
-/* Iron Kinetic — Service Worker v23
-   Key changes vs v22:
-   - External origins: NOT intercepted at all (return without respondWith)
-     Fixes: "Failed to convert value to 'Response'" + CSP violations
-     Root cause: SW fetch() toward external origins was blocked by the
-     document's CSP (connect-src), causing unhandled promise rejections
-     that the browser converted into network errors for the page.
-     Fix: simply don't call event.respondWith() for external origins —
-     the browser handles them directly, unaffected by the SW.
-   - navigate + index.html: always network-first (never stale)
-   - Same-origin static assets: stale-while-revalidate (unchanged)
-   - Added SKIP_WAITING message listener for instant activation
+/* Iron Kinetic — Service Worker v16
+   Cache: cache-first for assets, network-first for navigation.
+   Offline fallback: cached index.html.
 */
-const CACHE = 'iron-kinetic-v23';
+const CACHE = 'iron-kinetic-v24';
 const ASSETS = [
+  './',
+  './index.html',
   './manifest.webmanifest',
   './offline.html'
-  /* index.html intentionally excluded — always fetched fresh */
 ];
+
+/* OFFLINE_FALLBACK: create offline.html with:
+   <!DOCTYPE html><html><head><meta charset="utf-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1">
+   <title>Iron Kinetic — Offline</title>
+   <style>body{background:#0e0e0e;color:#4ddcc6;font-family:sans-serif;
+   display:flex;flex-direction:column;align-items:center;justify-content:center;
+   height:100vh;margin:0;text-align:center;gap:16px}
+   h1{font-size:22px;margin:0}p{color:rgba(199,196,216,.6);font-size:13px;margin:0}
+   </style></head><body>
+   <span style="font-size:48px">⚡</span>
+   <h1>Iron Kinetic</h1>
+   <p>Sei offline. Riconnettiti per sincronizzare.</p>
+   </body></html>
+*/
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -36,57 +43,44 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-/* Allow index.html to trigger instant SW activation */
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
-
 self.addEventListener('fetch', (event) => {
   const req = event.request;
+
+  // Only handle GET requests
   if (req.method !== 'GET') return;
 
-  const url = new URL(req.url);
-  const isIndex = url.pathname === '/' || url.pathname.endsWith('/index.html');
-
-  // Navigation requests and index.html: always network-first, never serve stale
-  if (req.mode === 'navigate' || isIndex) {
+  // Navigation (page load): network-first, fall back to cached index.html or offline.html
+  if (req.mode === 'navigate') {
     event.respondWith(
       fetch(req)
-        .then((res) => {
-          if (res && res.status === 200) {
-            const clone = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, clone));
-          }
-          return res;
-        })
         .catch(() =>
-          caches.match('./index.html')
-            .then((r) => r || caches.match('/'))
+          caches.match('./index.html').then((r) => r || caches.match('/'))
             .then((r) => r || caches.match('./offline.html'))
         )
     );
     return;
   }
 
-  // External resources (fonts, CDN, Supabase, Stripe, Google APIs):
-  // DO NOT intercept — let the browser handle them directly.
-  //
-  // WHY: calling fetch() from the SW toward external origins is blocked
-  // by the document's CSP (connect-src). This causes the fetch promise
-  // to reject, event.respondWith() receives a rejected promise, and the
-  // browser synthesises a network error for the page — breaking fonts,
-  // Supabase calls, Stripe, avatar images, etc.
-  //
-  // By returning without calling event.respondWith(), the browser
-  // falls through to its normal network stack, which is NOT subject
-  // to the SW's fetch restrictions and handles CSP correctly.
+  // Same-origin assets only: cache-first, then network, then skip
+  const url = new URL(req.url);
   if (url.origin !== self.location.origin) {
-    return; // ← intentionally no event.respondWith()
+    // External resources (fonts, CDN scripts): network-first, cache fallback
+    event.respondWith(
+      caches.match(req).then((cached) => {
+        if (cached) return cached;
+        return fetch(req).then((res) => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then((c) => c.put(req, clone));
+          }
+          return res;
+        }).catch(() => cached);
+      })
+    );
+    return;
   }
 
-  // Same-origin static assets (manifest, icons, etc.): stale-while-revalidate
+  // Same-origin assets: cache-first, update in background (stale-while-revalidate)
   event.respondWith(
     caches.match(req).then((cached) => {
       const networkFetch = fetch(req).then((res) => {
