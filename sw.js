@@ -2,7 +2,7 @@
    Cache: cache-first for assets, network-first for navigation.
    Offline fallback: cached index.html.
 */
-const CACHE = 'iron-kinetic-v24';
+const CACHE = 'iron-kinetic-v25';
 const ASSETS = [
   './',
   './index.html',
@@ -64,19 +64,8 @@ self.addEventListener('fetch', (event) => {
   // Same-origin assets only: cache-first, then network, then skip
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) {
-    // External resources (fonts, CDN scripts): network-first, cache fallback
-    event.respondWith(
-      caches.match(req).then((cached) => {
-        if (cached) return cached;
-        return fetch(req).then((res) => {
-          if (res && res.status === 200) {
-            const clone = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, clone));
-          }
-          return res;
-        }).catch(() => cached);
-      })
-    );
+    // External resources (fonts, CDN): let browser handle directly
+    // Do NOT call event.respondWith() — avoids CSP issues and stale font cache
     return;
   }
 
@@ -94,3 +83,4 @@ self.addEventListener('fetch', (event) => {
     }).catch(() => caches.match('./offline.html'))
   );
 });
+
