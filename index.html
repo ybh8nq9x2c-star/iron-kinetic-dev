@@ -2041,7 +2041,7 @@ hr{height:1px;}
           <div class="prof-menu-ico" style="background:rgba(192,193,255,.12);"><span class="material-symbols-outlined" style="color:var(--sec);">share</span></div>
           <div style="flex:1;min-width:0;">
             <span class="prof-menu-label sn">Referral</span>
-            <p id="prof-referral-preview" style="font-size:11px;color:var(--muted);margin:0;">Invita amici · guadagna il 10%</p>
+            <p id="prof-referral-preview" data-i18n="ref.menu.preview" style="font-size:11px;color:var(--muted);margin:0;"></p>
           </div>
           <span class="prof-menu-chevron material-symbols-outlined acc-chevron" id="chevron-referral" style="transition:transform .2s;">chevron_right</span>
         </div>
@@ -2049,34 +2049,34 @@ hr{height:1px;}
           <div style="padding:16px;border-top:1px solid var(--line);background:var(--s0);">
             <div style="background:linear-gradient(135deg,rgba(192,193,255,.10),rgba(77,220,198,.06));border:1px solid rgba(192,193,255,.18);border-radius:var(--r2);padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
               <div>
-                <div style="font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Credito accumulato</div>
+                <div data-i18n="ref.section.credit.label" style="font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;"></div>
                 <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--sec);line-height:1;" id="ref-credit-amount">€ —</div>
-                <div id="ref-credit-meta" style="font-size:10px;color:var(--muted);margin-top:3px;">— referral confermati · min. €20</div>
+                <div id="ref-credit-meta" data-i18n="ref.section.credit.meta.default" style="font-size:10px;color:var(--muted);margin-top:3px;"></div>
               </div>
               <div style="width:44px;height:44px;border-radius:50%;background:rgba(192,193,255,.12);border:1px solid rgba(192,193,255,.2);display:flex;align-items:center;justify-content:center;">
                 <span class="material-symbols-outlined" style="font-size:22px;color:var(--sec);">savings</span>
               </div>
             </div>
             <div style="margin-bottom:12px;">
-              <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Il tuo link di invito</div>
+              <div data-i18n="ref.section.link.label" style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;"></div>
               <div style="display:flex;gap:8px;align-items:center;">
-                <div id="ref-link-display" style="flex:1;background:var(--s2);border:1px solid var(--line-hi);border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--on-v);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.01em;">Caricamento...</div>
-                <button class="btn-icon" onclick="_refCopyLink()" aria-label="Copia link"><span class="material-symbols-outlined" style="font-size:18px;">content_copy</span></button>
-                <button class="btn-icon" onclick="_refShareLink()" aria-label="Condividi"><span class="material-symbols-outlined" style="font-size:18px;">ios_share</span></button>
+                <div id="ref-link-display" data-i18n="ref.section.link.loading" style="flex:1;background:var(--s2);border:1px solid var(--line-hi);border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--on-v);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.01em;"></div>
+                <button class="btn-icon" onclick="_refCopyLink()" data-i18n-aria="ref.btn.copy.label"><span class="material-symbols-outlined" style="font-size:18px;">content_copy</span></button>
+                <button class="btn-icon" onclick="_refShareLink()" data-i18n-aria="ref.btn.share.label"><span class="material-symbols-outlined" style="font-size:18px;">ios_share</span></button>
               </div>
             </div>
             <div style="background:var(--s1);border:1px solid var(--line);border-radius:var(--r2);padding:12px 14px;margin-bottom:12px;">
-              <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Come funziona</div>
+              <div data-i18n="ref.section.howto.title" style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;"></div>
               <div style="display:flex;flex-direction:column;gap:6px;">
-                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">1</span></div><span style="font-size:12px;color:var(--on-v);">Condividi il tuo link con un amico</span></div>
-                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">2</span></div><span style="font-size:12px;color:var(--on-v);">L'amico si iscrive tramite il tuo link</span></div>
-                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">3</span></div><span style="font-size:12px;color:var(--on-v);">Tu guadagni il <strong style="color:var(--sec);">10%</strong> del suo abbonamento</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">1</span></div><span data-i18n="ref.section.howto.step1" style="font-size:12px;color:var(--on-v);"></span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">2</span></div><span data-i18n="ref.section.howto.step2" style="font-size:12px;color:var(--on-v);"></span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(192,193,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:var(--sec);">3</span></div><span style="font-size:12px;color:var(--on-v);"><span data-i18n="ref.section.howto.step3.pre"></span><strong style="color:var(--sec);" data-i18n="ref.section.howto.step3.pct"></strong><span data-i18n="ref.section.howto.step3.post"></span></span></div>
               </div>
             </div>
             <div id="ref-cta-wrap"></div>
             <div id="ref-login-notice" style="display:none;text-align:center;padding:8px 0 4px;">
-              <span class="material-symbols-outlined" style="font-size:28px;color:var(--muted);display:block;margin-bottom:6px;">lock</span>
-              <p style="font-size:12px;color:var(--muted);margin:0;">Accedi con Google per attivare il programma referral.</p>
+              <span class="material-symbols-outlined" style="font-size:28px;color:var(--muted);display:block;margin-bottom:6px;" data-i18n-aria="ref.login.icon.label">lock</span>
+              <p data-i18n="ref.login.text" style="font-size:12px;color:var(--muted);margin:0;"></p>
             </div>
           </div>
         </div>
@@ -3826,6 +3826,21 @@ it:{
   'ref.onboard.loginRequired': 'Accedi prima di collegare il conto',
   'ref.onboard.opening': 'Apertura Stripe...',
   'ref.share.title': 'Prova Iron Kinetic — il tuo piano nutrizionale personalizzato:',
+  'ref.section.credit.label': 'Credito accumulato',
+  'ref.section.credit.meta.default': '— referral confermati · min. €20',
+  'ref.section.link.label': 'Il tuo link di invito',
+  'ref.section.link.loading': 'Caricamento...',
+  'ref.section.howto.title': 'Come funziona',
+  'ref.section.howto.step1': 'Condividi il tuo link con un amico',
+  'ref.section.howto.step2': 'L\'amico si iscrive tramite il tuo link',
+  'ref.section.howto.step3.pre': 'Tu guadagni il ',
+  'ref.section.howto.step3.pct': '10%',
+  'ref.section.howto.step3.post': ' del suo abbonamento',
+  'ref.menu.preview': 'Invita amici · guadagna il 10%',
+  'ref.login.icon.label': 'Accesso richiesto',
+  'ref.login.text': 'Accedi con Google per attivare il programma referral.',
+  'ref.btn.copy.label': 'Copia link',
+  'ref.btn.share.label': 'Condividi',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -4437,6 +4452,21 @@ en:{
   'ref.onboard.loginRequired': 'Sign in to connect your account',
   'ref.onboard.opening': 'Opening Stripe...',
   'ref.share.title': 'Try Iron Kinetic — your personalised nutrition plan:',
+  'ref.section.credit.label': 'Accumulated credit',
+  'ref.section.credit.meta.default': '— confirmed referrals · min. €20',
+  'ref.section.link.label': 'Your invite link',
+  'ref.section.link.loading': 'Loading...',
+  'ref.section.howto.title': 'How it works',
+  'ref.section.howto.step1': 'Share your link with a friend',
+  'ref.section.howto.step2': 'Friend signs up through your link',
+  'ref.section.howto.step3.pre': 'You earn ',
+  'ref.section.howto.step3.pct': '10%',
+  'ref.section.howto.step3.post': ' of their subscription',
+  'ref.menu.preview': 'Invite friends · earn 10%',
+  'ref.login.icon.label': 'Login required',
+  'ref.login.text': 'Sign in with Google to activate the referral program.',
+  'ref.btn.copy.label': 'Copy link',
+  'ref.btn.share.label': 'Share',
 }
 };
 let _lang='en';
