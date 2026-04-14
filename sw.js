@@ -1,5 +1,7 @@
 /* Iron Kinetic — Service Worker v17
-   Cache: cache-first for assets, network-first for navigation.
+   Cache: cache-first for same-origin assets, network-first for navigation.
+   External resources (fonts, CDN): let the browser handle them directly —
+   DO NOT intercept, avoids CSP violations from sw fetch context.
    Offline fallback: cached index.html.
 */
 const CACHE = 'iron-kinetic-v25';
@@ -9,21 +11,6 @@ const ASSETS = [
   './manifest.webmanifest',
   './offline.html'
 ];
-
-/* OFFLINE_FALLBACK: create offline.html with:
-   <!DOCTYPE html><html><head><meta charset="utf-8">
-   <meta name="viewport" content="width=device-width,initial-scale=1">
-   <title>Iron Kinetic — Offline</title>
-   <style>body{background:#0e0e0e;color:#4ddcc6;font-family:sans-serif;
-   display:flex;flex-direction:column;align-items:center;justify-content:center;
-   height:100vh;margin:0;text-align:center;gap:16px}
-   h1{font-size:22px;margin:0}p{color:rgba(199,196,216,.6);font-size:13px;margin:0}
-   </style></head><body>
-   <span style="font-size:48px">⚡</span>
-   <h1>Iron Kinetic</h1>
-   <p>Sei offline. Riconnettiti per sincronizzare.</p>
-   </body></html>
-*/
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -49,47 +36,42 @@ self.addEventListener('fetch', (event) => {
   // Only handle GET requests
   if (req.method !== 'GET') return;
 
-  // Navigation (page load): network-first, fall back to cached index.html or offline.html
+  const url = new URL(req.url);
+
+  // ── External resources (fonts.googleapis.com, fonts.gstatic.com, CDN, Stripe, etc.)
+  // Do NOT intercept: let the browser fetch them normally.
+  // Intercepting external resources from SW context triggers CSP violations.
+  if (url.origin !== self.location.origin) {
+    return; // fall through to browser default fetch
+  }
+
+  // ── Navigation (page load): network-first, fall back to cached index.html
   if (req.mode === 'navigate') {
     event.respondWith(
       fetch(req)
         .catch(() =>
-          caches.match('./index.html').then((r) => r || caches.match('/'))
+          caches.match('./index.html')
+            .then((r) => r || caches.match('/'))
             .then((r) => r || caches.match('./offline.html'))
         )
     );
     return;
   }
 
-  // Same-origin assets only: cache-first, then network, then skip
-  const url = new URL(req.url);
-  if (url.origin !== self.location.origin) {
-    // External resources (fonts, CDN scripts): network-first, cache fallback
-  // fonts.gstatic.com and fonts.googleapis.com: always try network first
-  if (url.origin !== self.location.origin) {
-    event.respondWith(
-      fetch(req, {cache: 'no-cache'}).then((res) => {
-        if (res && res.status === 200) {
-          const clone = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, clone));
-        }
-        return res;
-      }).catch(() => caches.match(req).then(r => r || Promise.reject('offline')))
-    );
-    return;
-  }
-
-  // Same-origin assets: cache-first, update in background (stale-while-revalidate)
+  // ── Same-origin assets: stale-while-revalidate
+  // Serve from cache immediately, update cache in background
   event.respondWith(
-    caches.match(req).then((cached) => {
-      const networkFetch = fetch(req).then((res) => {
-        if (res && res.status === 200) {
-          const clone = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, clone));
-        }
-        return res;
-      }).catch(() => null);
-      return cached || networkFetch;
+    caches.open(CACHE).then((cache) => {
+      return cache.match(req).then((cached) => {
+        const networkFetch = fetch(req).then((res) => {
+          if (res && res.status === 200) {
+            cache.put(req, res.clone());
+          }
+          return res;
+        }).catch(() => null);
+
+        return cached || networkFetch;
+      });
     }).catch(() => caches.match('./offline.html'))
   );
 });
