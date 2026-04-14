@@ -898,6 +898,33 @@ hr{height:1px;}
 /* ── Gauth btn: use CSS var instead of hardcoded #fff/#1a1a1a ── */
 .gauth-btn{background:var(--on);color:var(--bg);}
 </style>
+<!-- ── SPLASH SCREEN: pure CSS, shows instantly before any JS ── -->
+<style>
+#ik-splash{
+  position:fixed;inset:0;z-index:99999;
+  background:#0e0e0e;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  transition:opacity .35s ease, visibility .35s ease;
+}
+#ik-splash.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.ik-splash-logo{
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  font-size:18px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:#4ddcc6;user-select:none;
+}
+.ik-splash-spinner{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid rgba(77,220,198,.15);
+  border-top-color:#4ddcc6;
+  animation:ik-spin .8s linear infinite;
+}
+@keyframes ik-spin{to{transform:rotate(360deg);}}
+</style>
+<script>
+/* Safety fallback: hide splash after 4s even if main JS stalls */
+setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classList.add('hidden');},4000);
+</script>
+
 <!-- Supabase: kept synchronous — inline boot depends on `supabase` global at parse time -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
 <script defer src="https://js.stripe.com/v3/" integrity="sha384-6fqKlmX+g92zPQYudcAesaq44GuuyWEYo3yugHilyWQ1WuYvjGE80tjELeDrba1b" crossorigin="anonymous"></script>
@@ -905,6 +932,13 @@ hr{height:1px;}
 <script src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" crossorigin="anonymous"></script>
 </head>
 <body class="onboarding-active">
+
+<!-- ── SPLASH: rendered immediately, hidden by JS once app is ready ── -->
+<div id="ik-splash" aria-hidden="true">
+  <div class="ik-splash-logo">⚡ Iron Kinetic</div>
+  <div class="ik-splash-spinner"></div>
+</div>
+
 <div class="glow-a" aria-hidden="true"></div>
 <div class="glow-b" aria-hidden="true"></div>
 
@@ -9953,11 +9987,14 @@ function installPWA(){if(_deferredInstallPrompt){_deferredInstallPrompt.prompt()
 function dismissInstallBanner(){const b=document.getElementById('install-banner');if(b)b.style.display='none';}
 
 /* ── Shared boot sequence (after all gates are cleared) ── */
+function hideSplash(){const s=document.getElementById('ik-splash');if(s)s.classList.add('hidden');}
 function _bootAfterGates(){
+  hideSplash();
   /* Ripristina avatar e nome da localStorage al boot */
   if(typeof _applyUserAvatar==='function')_applyUserAvatar();
   const consent=gdprStatus();
   if(!consent||!consent.accepted){
+    hideSplash();
     document.getElementById('gdpr-gate').classList.add('on');
     applyTranslations();
     return;
@@ -10130,11 +10167,13 @@ function _bootAfterLangGate(){
   _booted=true;
   /* PWA gate: force install-awareness on very first open */
   if(!localStorage.getItem('ik_pwa_seen')){
+    hideSplash();
     document.getElementById('pwa-gate').classList.add('on');
     return;
   }
   /* Onboarding slideshow: shown once on first launch */
   if(lsG(SK.onboardingDone)!==true){
+    hideSplash();
     showOnboarding();
     return;
   }
@@ -10159,6 +10198,7 @@ function _bootAfterLangGate(){
 
   /* Lang gate: absolute first priority — before everything else */
   if(!lsR(SK.lang)){
+    hideSplash();
     document.getElementById('lang-gate').classList.add('on');
     return; /* selectLang() continues boot */
   }
