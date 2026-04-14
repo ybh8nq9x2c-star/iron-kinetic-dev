@@ -34,9 +34,11 @@ Deno.serve(async (req) => {
     }
 
     // Genera codice univoco con retry su collisione
+    // Uses crypto.randomUUID() — cryptographically secure, NOT Math.random()
     let code: string | null = null
     for (let attempt = 0; attempt < 5; attempt++) {
-      const candidate = 'IK-' + Math.random().toString(36).substring(2, 8).toUpperCase()
+      const raw = crypto.randomUUID().replace(/-/g, '').substring(0, 6).toUpperCase()
+      const candidate = 'IK-' + raw
       const { error: insertError } = await sb
         .from('referral_codes')
         .insert({ user_id: user.id, code: candidate })

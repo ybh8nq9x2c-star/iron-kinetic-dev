@@ -84,6 +84,23 @@ Deno.serve(async (req) => {
     return json({ error: `Piano non valido: "${plan}". Valori accettati: monthly, annual, lifetime` }, 400)
   }
 
+  /* ── 3b. Validate referral_code against DB ── */
+  if (referral_code) {
+    const { data: referrer } = await supabase
+      .from('referral_codes')
+      .select('user_id')
+      .eq('code', referral_code)
+      .single()
+
+    if (!referrer || referrer.user_id === user.id) {
+      console.warn('[checkout] Invalid or self-referral code ignored:', referral_code)
+      referral_code = ''
+    } else {
+      console.log('[checkout] Valid referral code:', referral_code, 'referrer:', referrer.user_id)
+    }
+  }
+
+
   /* ── 4. Risolvi Price ID ── */
   const priceMap: Record<string, string> = {
     monthly:  Deno.env.get('STRIPE_PRICE_MONTHLY')  ?? 'price_1TLJO9JYTPcSrsvtFVhrRBAT',

@@ -75,16 +75,21 @@ Deno.serve(async (req) => {
       )
     }
 
-    // ── Transfer Stripe ──
+    // ── Transfer Stripe (with idempotency key to prevent double payout) ──
     let transfer: Stripe.Transfer
     try {
-      transfer = await stripe.transfers.create({
-        amount,
-        currency: 'eur',
-        destination: ud.stripe_connect_account_id,
-        description: `Iron Kinetic™ referral payout — user ${user.id}`,
-        metadata: { user_id: user.id }
-      })
+      transfer = await stripe.transfers.create(
+        {
+          amount,
+          currency: 'eur',
+          destination: ud.stripe_connect_account_id,
+          description: `Iron Kinetic™ referral payout — user ${user.id}`,
+          metadata: { user_id: user.id },
+        },
+        {
+          idempotencyKey: `payout_${user.id}_${Date.now()}`,
+        }
+      )
     } catch (stripeErr) {
       // Transfer fallito: ripristina il credito
       await sb.rpc('add_referral_credit', { uid: user.id, amount })

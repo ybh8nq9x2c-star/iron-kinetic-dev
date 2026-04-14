@@ -9408,7 +9408,8 @@ function switchTab(name){
   /* Cattura ?ref= all'avvio, salva in localStorage, pulisce l'URL */
   const _rp=new URLSearchParams(location.search);
   const _rc=_rp.get('ref');
-  if(_rc){try{localStorage.setItem('ik_referral_code',_rc);}catch{}history.replaceState({},'',location.pathname);}
+  const _rcSafe=_rc?_rc.replace(/[^a-zA-Z0-9_-]/g,'').slice(0,32):null;
+  if(_rcSafe){try{localStorage.setItem('ik_referral_code',_rcSafe);}catch{}history.replaceState({},'',location.pathname);}
   /* Gestione ritorno da Stripe Connect onboarding */
   const _cs=_rp.get('connect');
   if(_cs==='success'){setTimeout(()=>{showToast('Conto bancario collegato!');_ikRefLoad();},600);}
