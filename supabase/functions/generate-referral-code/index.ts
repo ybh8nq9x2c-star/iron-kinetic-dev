@@ -27,27 +27,43 @@ Deno.serve(async (req) => {
       .eq('user_id', user.id)
       .single()
 
-    if (existing?.code) {
-      return new Response(JSON.stringify({ code: existing.code }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      })
-    }
+    let code: string | null = existing?.code || null
 
-    // Genera codice univoco con retry su collisione
-    // Uses crypto.randomUUID() — cryptographically secure, NOT Math.random()
-    let code: string | null = null
-    for (let attempt = 0; attempt < 5; attempt++) {
-      const raw = crypto.randomUUID().replace(/-/g, '').substring(0, 6).toUpperCase()
-      const candidate = 'IK-' + raw
-      const { error: insertError } = await sb
-        .from('referral_codes')
-        .insert({ user_id: user.id, code: candidate })
-      if (!insertError) { code = candidate; break }
+    // Genera codice univoco con retry su collisione se non esiste
+    if (!code) {
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const raw = crypto.randomUUID().replace(/-/g, '').substring(0, 6).toUpperCase()
+        const candidate = 'IK-' + raw
+        const { error: insertError } = await sb
+          .from('referral_codes')
+          .insert({ user_id: user.id, code: candidate })
+        if (!insertError) { code = candidate; break }
+      }
     }
 
     if (!code) throw new Error('Failed to generate unique code after 5 attempts')
 
-    return new Response(JSON.stringify({ code }), {
+    // Recupera dati utente (credito, connect status)
+    const { data: userData } = await sb
+      .from('users')
+      .select('referral_credit_cents, stripe_connect_account_id, stripe_connect_onboarded')
+      .eq('id', user.id)
+      .single()
+
+    // Conta referral confermati
+    const { count } = await sb
+      .from('referrals')
+      .select('*', { count: 'exact', head: true })
+      .eq('referrer_id', user.id)
+      .eq('status', 'confirmed')
+
+    return new Response(JSON.stringify({
+      code,
+      referral_credit_cents: userData?.referral_credit_cents || 0,
+      stripe_connect_account_id: userData?.stripe_connect_account_id || null,
+      stripe_connect_onboarded: userData?.stripe_connect_onboarded || false,
+      confirmed_referrals: count || 0
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
 

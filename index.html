@@ -3635,7 +3635,8 @@ it:{
   'faq.a.8':'Sì. Iron Kinetic™ è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un\'app nativa, anche offline.',
   'faq.q.9':'I miei dati vengono condivisi o venduti?',
   'faq.a.9':'No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server che raccolgono i tuoi dati sanitari, nessun analytics, nessuna pubblicità basata su di essi. L\'unica eccezione tecnica sono le richieste di font a Google (Google Fonts/Material Symbols) che non trasmettono dati personali.',
-  'prv.badge':'Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003',
+  'faq.q.10':'Come funziona il programma referral?',
+  'faq.a.10':'Invita amici con il tuo link referral (trovi in Profilo). Guadagni il 10% su ogni pagamento effettuato dai tuoi referral. Il credito accumulato (min. €20) può essere prelevato sul tuo conto bancario tramite Stripe Connect. Nessun costo di attivazione.'
   'prv.s0.h':'🛡 In sintesi',
   'prv.s0.p':'Iron Kinetic™ raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.',
   'prv.s1.h':'1. Titolare del trattamento',
@@ -3649,8 +3650,10 @@ it:{
   'prv.s3.p1':'Peso corporeo, percentuale di grasso corporeo e misure corporee (girovita) costituiscono dati relativi alla salute ai sensi dell\'art. 9 GDPR.',
   'prv.s3.p2':'Base giuridica: consenso esplicito (art. 9 par. 2 lett. a GDPR), prestato al primo avvio e sempre revocabile da Profilo → Privacy. Questi dati sono elaborati esclusivamente nel localStorage o, per utenti registrati, su Supabase con crittografia in transito (TLS). Non sono mai condivisi con Stripe, Google Analytics o altri terzi.',
   'prv.s4.h':'4. Responsabili del trattamento (sub-processor)',
+  'prv.s4b.h':'4b. Dati programma referral',
+  'prv.s4b.p1':'Il programma referral raccoglie: codice referral univoco, credito accumulato (referral_credit_cents), stato onboarding Stripe Connect, e cronologia referral (referrer_id, referred_id, importo, data).',
+  'prv.s4b.p2':'Questi dati sono necessari per calcolare e erogare le commissioni. Base giuridica: esecuzione del contratto (art. 6 par. 1 lett. b GDPR). I dati finanziari (payout) sono gestiti da Stripe Connect con SCC UE-USA.',
   'prv.s5.h':'5. Utenti anonimi (senza account)',
-  'prv.s5.p':'Se non crei un account Google, nessun dato lascia il tuo dispositivo. Piano, peso, check-in e preferenze restano nel localStorage. Vengono cancellati svuotando i dati del sito o tramite Profilo → Ricomincia da capo.',
   'prv.s6.h':'6. Cookie e tracciamento',
   'prv.s6.p':'Iron Kinetic™ non utilizza cookie di profilazione. Nessun analytics. Nessun advertising. Nessun pixel di tracciamento. Il solo storage utilizzato è il localStorage del browser (Web Storage API). Gli utenti autenticati ricevono un cookie di sessione tecnico da Supabase, necessario per mantenere il login.',
   'prv.s7.h':'7. I tuoi diritti (artt. 15–22 GDPR)',
@@ -3798,6 +3801,31 @@ it:{
   'toast.portalError': 'Errore portale abbonamento',
   'toast.trendActivated': 'Trend attivato! Benvenuto nel coaching completo 🎯',
   'coach.satiety.badge': 'Fame alta · aderenza bassa — considera +100 kcal',
+  /* Referral system */
+  'ref.loginNotice': 'Accedi per ottenere il tuo link referral',
+  'ref.loading': 'Caricamento...',
+  'ref.error.generic': 'Errore generazione link — riprova',
+  'ref.error.retry': 'Errore di rete. Riprova.',
+  'ref.error.network': 'Errore di rete. Riprova.',
+  'ref.cta.connect': 'Collega il tuo conto bancario',
+  'ref.cta.connectSub': 'Tramite Stripe · sicuro · nessun costo per te',
+  'ref.cta.payout': 'Preleva €{amount}',
+  'ref.cta.payoutSub': 'Arriva in 1–2 giorni lavorativi sul tuo conto',
+  'ref.status.connected': 'Conto collegato',
+  'ref.status.minRemaining': 'Ancora €{amount} per sbloccare il prelievo',
+  'ref.preview.empty': 'Invita amici · guadagna il 10%',
+  'ref.preview.credit': 'Credito: €{amount}',
+  'ref.meta.confirmed': '{count} referral confermati · min. €20 per prelievo',
+  'ref.toast.copied': 'Link copiato!',
+  'ref.toast.connectSuccess': 'Conto bancario collegato!',
+  'ref.payout.processing': 'Elaborazione prelievo...',
+  'ref.payout.success': 'Prelievo inviato! Arriva in 1–2 giorni lavorativi.',
+  'ref.payout.error.below_minimum': 'Saldo sotto €20',
+  'ref.payout.error.account_not_onboarded': 'Collega prima il conto bancario',
+  'ref.payout.error.generic': 'Errore nel prelievo',
+  'ref.onboard.loginRequired': 'Accedi prima di collegare il conto',
+  'ref.onboard.opening': 'Apertura Stripe...',
+  'ref.share.title': 'Prova Iron Kinetic — il tuo piano nutrizionale personalizzato:',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -4218,7 +4246,8 @@ en:{
   'faq.a.8':'Yes. Iron Kinetic™ is a Progressive Web App (PWA). On iPhone/iPad: open in Safari → Share → "Add to Home Screen". On Android: open in Chrome → "⋮" menu → "Add to Home Screen". It will work like a native app, even offline.',
   'faq.q.9':'Is my data shared or sold?',
   'faq.a.9':'No. All data (weight, plan, check-ins, preferences) stays in your device\'s localStorage. No servers collect your health data, no analytics, no ads based on it. The only technical exception is font requests to Google (Google Fonts/Material Symbols), which do not transmit personal data.',
-  'prv.badge':'Updated: April 2026 · GDPR (EU Reg. 2016/679) · D.Lgs. 196/2003',
+  'faq.q.10':'How does the referral program work?',
+  'faq.a.10':'Invite friends with your referral link (found in Profile). Earn 10% on every payment made by your referrals. Accumulated credit (min. €20) can be withdrawn to your bank account via Stripe Connect. No activation fee.'
   'prv.s0.h':'🛡 In short',
   'prv.s0.p':'Iron Kinetic™ collects only the data strictly necessary to provide the service. Anonymous users keep all data in the browser localStorage. Google-account users sync account state and subscription via Supabase (EU). No health data is ever shared with third parties. Zero tracking cookies.',
   'prv.s1.h':'1. Data controller',
@@ -4232,8 +4261,10 @@ en:{
   'prv.s3.p1':'Body weight, body fat percentage, and body measurements (waist) constitute health-related data under GDPR Art. 9.',
   'prv.s3.p2':'Legal basis: explicit consent (GDPR Art. 9(2)(a)), given at first launch and always revocable from Profile → Privacy. This data is processed exclusively in localStorage or, for registered users, in Supabase with encryption in transit (TLS). It is never shared with Stripe, Google Analytics, or any other third party.',
   'prv.s4.h':'4. Data processors (sub-processors)',
+  'prv.s4b.h':'4b. Referral program data',
+  'prv.s4b.p1':'The referral program collects: unique referral code, accumulated credit (referral_credit_cents), Stripe Connect onboarding status, and referral history (referrer_id, referred_id, amount, date).',
+  'prv.s4b.p2':'This data is necessary to calculate and disburse commissions. Legal basis: contract performance (GDPR Art. 6(1)(b)). Financial data (payouts) is managed by Stripe Connect with EU-US SCCs.',
   'prv.s5.h':'5. Anonymous users (no account)',
-  'prv.s5.p':'If you do not create a Google account, no data leaves your device. Plan, weight, check-ins and preferences stay in localStorage. They are deleted by clearing site data or via Profile → Start over.',
   'prv.s6.h':'6. Cookies and tracking',
   'prv.s6.p':'Iron Kinetic™ does not use profiling cookies. No analytics. No advertising. No tracking pixels. The only storage used is the browser localStorage (Web Storage API). Authenticated users receive a technical session cookie from Supabase, required to maintain the login.',
   'prv.s7.h':'7. Your rights (GDPR Arts. 15–22)',
@@ -4381,6 +4412,31 @@ en:{
   'toast.portalError': 'Subscription portal error',
   'toast.trendActivated': 'Trend activated! Welcome to full coaching 🎯',
   'coach.satiety.badge': 'High hunger · low adherence — consider +100 kcal',
+  /* Referral system */
+  'ref.loginNotice': 'Sign in to get your referral link',
+  'ref.loading': 'Loading...',
+  'ref.error.generic': 'Link generation error — retry',
+  'ref.error.retry': 'Network error. Please retry.',
+  'ref.error.network': 'Network error. Please retry.',
+  'ref.cta.connect': 'Connect your bank account',
+  'ref.cta.connectSub': 'Via Stripe · secure · no cost to you',
+  'ref.cta.payout': 'Withdraw €{amount}',
+  'ref.cta.payoutSub': 'Arrives in 1–2 business days',
+  'ref.status.connected': 'Account connected',
+  'ref.status.minRemaining': '€{amount} more to unlock withdrawal',
+  'ref.preview.empty': 'Invite friends · earn 10%',
+  'ref.preview.credit': 'Credit: €{amount}',
+  'ref.meta.confirmed': '{count} confirmed referrals · min. €20 to withdraw',
+  'ref.toast.copied': 'Link copied!',
+  'ref.toast.connectSuccess': 'Bank account connected!',
+  'ref.payout.processing': 'Processing withdrawal...',
+  'ref.payout.success': 'Withdrawal sent! Arrives in 1–2 business days.',
+  'ref.payout.error.below_minimum': 'Balance under €20',
+  'ref.payout.error.account_not_onboarded': 'Connect bank account first',
+  'ref.payout.error.generic': 'Withdrawal error',
+  'ref.onboard.loginRequired': 'Sign in to connect your account',
+  'ref.onboard.opening': 'Opening Stripe...',
+  'ref.share.title': 'Try Iron Kinetic — your personalised nutrition plan:',
 }
 };
 let _lang='en';
@@ -9412,9 +9468,8 @@ function switchTab(name){
   if(_rcSafe){try{localStorage.setItem('ik_referral_code',_rcSafe);}catch{}history.replaceState({},'',location.pathname);}
   /* Gestione ritorno da Stripe Connect onboarding */
   const _cs=_rp.get('connect');
-  if(_cs==='success'){setTimeout(()=>{showToast('Conto bancario collegato!');_ikRefLoad();},600);}
+  if(_cs==='success'){setTimeout(()=>{showToast(t('ref.toast.connectSuccess'));_ikRefLoad();},600);}
   if(_cs==='refresh'){setTimeout(()=>_ikRefStartOnboarding(),800);}
-  if(_cs){history.replaceState({},'',location.pathname);}
 })();
 
 /* Espone il codice referral al checkout */
@@ -9436,51 +9491,47 @@ async function _ikRefLoad(){
     if(!session){
       if(notice)notice.style.display='block';
       if(ctaWrap)ctaWrap.innerHTML='';
-      if(linkEl)linkEl.textContent='Accedi per ottenere il tuo link';
+      if(linkEl)linkEl.textContent=t('ref.loginNotice');
       if(amountEl)amountEl.textContent='€ —';
-      if(metaEl)metaEl.textContent='Accedi con Google per iniziare';
+      if(metaEl)metaEl.textContent=t('ref.loginNotice');
       return;
     }
     const token=session.access_token;
-    /* Genera o recupera il codice referral dell'utente */
+    /* Genera o recupera il codice referral dell'utente + dati completi */
     const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{
-      headers:{Authorization:'Bearer '+token}
+      method:'POST',
+      headers:{
+        Authorization:'Bearer '+token,
+        apikey:SUPABASE_KEY,
+        'Content-Type':'application/json'
+      }
     });
     const codeData=await codeRes.json();
-    const code=codeData?.code||codeData?.referral_code||null;
-    if(!code){
-      if(linkEl){linkEl.textContent='Errore generazione link — riprova';linkEl.dataset.link='';}
-      console.warn('[IK][referral] generate-referral-code returned no code',codeData);
+    if(codeData.error||!codeData.code){
+      if(linkEl){linkEl.textContent=t('ref.error.generic');linkEl.dataset.link='';}
+      console.warn('[IK][referral] generate-referral-code error',codeData);
+      return;
     }
-    const link=code?(location.origin+'?ref='+code):null;
-    /* Dati utente: credito, connect status */
-    const{data:ud}=await sb.from('users')
-      .select('referral_credit_cents,stripe_connect_account_id,stripe_connect_onboarded')
-      .eq('id',session.user.id).single();
-    /* Conteggio referral confermati */
-    const{count}=await sb.from('referrals')
-      .select('*',{count:'exact',head:true})
-      .eq('referrer_id',session.user.id)
-      .eq('status','confirmed');
-    const creditCents=ud?.referral_credit_cents||0;
+    const code=codeData.code;
+    const link=location.origin+'?ref='+code;
+    /* Dati dal EF (evita 403 su RLS) */
+    const creditCents=codeData.referral_credit_cents||0;
     const creditEur=(creditCents/100).toFixed(2);
     const canPayout=creditCents>=2000;
-    const onboarded=!!ud?.stripe_connect_onboarded;
-    /* Aggiorna UI */
+    const onboarded=!!codeData.stripe_connect_onboarded;
+    const count=codeData.confirmed_referrals||0;
     if(notice)notice.style.display='none';
     if(amountEl)amountEl.textContent='€ '+creditEur;
-    if(metaEl)metaEl.textContent=(count||0)+' referral confermati · min. €20 per prelievo';
+    if(metaEl)metaEl.textContent=t('ref.meta.confirmed',{count:count||0});
     if(linkEl&&link){linkEl.textContent=link;linkEl.dataset.link=link;}
-    if(previewEl)previewEl.textContent=creditCents>0?'Credito: €'+creditEur:'Invita amici · guadagna il 10%';
-    /* CTA: collega conto / preleva / in attesa */
+    if(previewEl)previewEl.textContent=creditCents>0?t('ref.preview.credit',{amount:creditEur}):t('ref.preview.empty');
     if(ctaWrap){
-      if(!onboarded){
-        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefStartOnboarding()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">account_balance</span>Collega il tuo conto bancario</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">Tramite Stripe · sicuro · nessun costo per te</p>';
+        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefStartOnboarding()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">account_balance</span>'+t('ref.cta.connect')+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.connectSub')+'</p>';
       }else if(canPayout){
-        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefRequestPayout()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">payments</span>Preleva €'+creditEur+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">Arriva in 1–2 giorni lavorativi sul tuo conto</p>';
+        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefRequestPayout()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">payments</span>'+t('ref.cta.payout',{amount:creditEur})+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.payoutSub')+'</p>';
       }else{
         const rem=((2000-creditCents)/100).toFixed(2);
-        ctaWrap.innerHTML='<div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 14px;display:flex;align-items:center;gap:10px;"><span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">check_circle</span><div><div style="font-size:12px;font-weight:600;color:var(--on);">Conto collegato</div><div style="font-size:10px;color:var(--muted);">Ancora €'+rem+' per sbloccare il prelievo</div></div></div>';
+        ctaWrap.innerHTML='<div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 14px;display:flex;align-items:center;gap:10px;"><span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">check_circle</span><div><div style="font-size:12px;font-weight:600;color:var(--on);">'+t('ref.status.connected')+'</div><div style="font-size:10px;color:var(--muted);">'+t('ref.status.minRemaining',{amount:rem})+'</div></div></div>';
       }
     }
   }catch(e){console.warn('[IK][referral] load error',e);}
@@ -9490,58 +9541,61 @@ async function _ikRefLoad(){
 function _refCopyLink(){
   const el=document.getElementById('ref-link-display');
   const link=el?.dataset?.link||el?.textContent||'';
-  if(!link||link==='Caricamento...'||link.startsWith('Errore'))return;
+  if(!link||link===t('ref.loading')||link.startsWith(t('ref.error.generic')))return;
   navigator.clipboard.writeText(link)
-    .then(()=>showToast('Link copiato!'))
-    .catch(()=>showToast('Copia manuale: '+link));
+    .then(()=>showToast(t('ref.toast.copied')))
+    .catch(()=>showToast(t('ref.toast.copied')+': '+link));
 }
 function _refShareLink(){
   const el=document.getElementById('ref-link-display');
   const link=el?.dataset?.link||el?.textContent||'';
-  if(!link||link==='Caricamento...'||link.startsWith('Errore'))return;
+  if(!link||link===t('ref.loading')||link.startsWith(t('ref.error.generic')))return;
   if(navigator.share){
-    navigator.share({title:'Iron Kinetic',text:'Prova Iron Kinetic — il tuo piano nutrizionale personalizzato:',url:link}).catch(()=>{});
+    navigator.share({title:'Iron Kinetic',text:t('ref.share.title'),url:link}).catch(()=>{});
   }else{
-    navigator.clipboard.writeText(link).then(()=>showToast('Link copiato!')).catch(()=>{});
+    navigator.clipboard.writeText(link).then(()=>showToast(t('ref.toast.copied'))).catch(()=>{});
   }
 }
 async function _ikRefStartOnboarding(){
   const{data:{session}}=await sb.auth.getSession();
-  if(!session){showToast('Accedi prima di collegare il conto');return;}
-  showToast('Apertura Stripe...');
+  if(!session){showToast(t('ref.onboard.loginRequired'));return;}
+  showToast(t('ref.onboard.opening'));
   try{
     const res=await fetch(SUPABASE_URL+'/functions/v1/connect-onboard',{
       method:'POST',
-      headers:{Authorization:'Bearer '+session.access_token}
+      headers:{Authorization:'Bearer '+session.access_token,apikey:SUPABASE_KEY,'Content-Type':'application/json'}
     });
     const{url,error}=await res.json();
     if(url){location.href=url;}
-    else{showToast('Errore: '+(error||'riprova più tardi'));}
+    else{showToast(t('ref.error.generic')+': '+(error||''));}
   }catch(e){
-    showToast('Errore di rete. Riprova.');
+    showToast(t('ref.error.network'));
     console.error('[IK][referral] onboard error',e);
   }
 }
 async function _ikRefRequestPayout(){
   const{data:{session}}=await sb.auth.getSession();
   if(!session)return;
-  showToast('Elaborazione prelievo...');
+  showToast(t('ref.payout.processing'));
   try{
     const res=await fetch(SUPABASE_URL+'/functions/v1/request-payout',{
       method:'POST',
-      headers:{Authorization:'Bearer '+session.access_token}
+      headers:{Authorization:'Bearer '+session.access_token,apikey:SUPABASE_KEY,'Content-Type':'application/json'}
     });
     const body=await res.json();
     if(body.success){
-      showToast('Prelievo inviato! Arriva in 1–2 giorni lavorativi.');
+      showToast(t('ref.payout.success'));
       _ikRefLoading=false;
       _ikRefLoad();
     }else{
-      const msgs={below_minimum:'Saldo sotto €20',account_not_onboarded:'Collega prima il conto bancario'};
-      showToast(msgs[body.error]||'Errore nel prelievo');
+      const msgs={
+        below_minimum:t('ref.payout.error.below_minimum'),
+        account_not_onboarded:t('ref.payout.error.account_not_onboarded')
+      };
+      showToast(msgs[body.error]||t('ref.payout.error.generic'));
     }
   }catch(e){
-    showToast('Errore di rete. Riprova.');
+    showToast(t('ref.error.network'));
     console.error('[IK][referral] payout error',e);
   }
 }
