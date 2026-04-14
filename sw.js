@@ -1,8 +1,8 @@
-/* Iron Kinetic — Service Worker v21
-   Restored from v16 — user's original working code.
-   Version bumped to force cache clear of corrupted v17-v20.
+/* Iron Kinetic — Service Worker v17
+   Cache: cache-first for assets, network-first for navigation.
+   Offline fallback: cached index.html.
 */
-const CACHE = 'iron-kinetic-v21';
+const CACHE = 'iron-kinetic-v25';
 const ASSETS = [
   './',
   './index.html',
@@ -65,17 +65,16 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) {
     // External resources (fonts, CDN scripts): network-first, cache fallback
+  // fonts.gstatic.com and fonts.googleapis.com: always try network first
+  if (url.origin !== self.location.origin) {
     event.respondWith(
-      caches.match(req).then((cached) => {
-        if (cached) return cached;
-        return fetch(req).then((res) => {
-          if (res && res.status === 200) {
-            const clone = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, clone));
-          }
-          return res;
-        }).catch(() => cached);
-      })
+      fetch(req, {cache: 'no-cache'}).then((res) => {
+        if (res && res.status === 200) {
+          const clone = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, clone));
+        }
+        return res;
+      }).catch(() => caches.match(req).then(r => r || Promise.reject('offline')))
     );
     return;
   }
