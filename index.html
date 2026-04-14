@@ -3636,7 +3636,7 @@ it:{
   'faq.q.9':'I miei dati vengono condivisi o venduti?',
   'faq.a.9':'No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server che raccolgono i tuoi dati sanitari, nessun analytics, nessuna pubblicità basata su di essi. L\'unica eccezione tecnica sono le richieste di font a Google (Google Fonts/Material Symbols) che non trasmettono dati personali.',
   'faq.q.10':'Come funziona il programma referral?',
-  'faq.a.10':'Invita amici con il tuo link referral (trovi in Profilo). Guadagni il 10% su ogni pagamento effettuato dai tuoi referral. Il credito accumulato (min. €20) può essere prelevato sul tuo conto bancario tramite Stripe Connect. Nessun costo di attivazione.',
+  'faq.a.10':'Invita amici con il tuo link referral (trovi in Profilo → Referral). Guadagni il 10% su ogni pagamento effettuato dai tuoi referral — sia mensile che annuale. Un referral è confermato solo quando il tuo amico completa un pagamento valido. Il credito accumulato (min. €20) può essere prelevato sul tuo conto bancario tramite Stripe Connect. Per attivare il prelievo, collega il tuo conto da Profilo → Referral → Collega conto. Nessun costo di attivazione.',
   'prv.s0.h':'🛡 In sintesi',
   'prv.s0.p':'Iron Kinetic™ raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.',
   'prv.s1.h':'1. Titolare del trattamento',
@@ -4262,7 +4262,7 @@ en:{
   'faq.q.9':'Is my data shared or sold?',
   'faq.a.9':'No. All data (weight, plan, check-ins, preferences) stays in your device\'s localStorage. No servers collect your health data, no analytics, no ads based on it. The only technical exception is font requests to Google (Google Fonts/Material Symbols), which do not transmit personal data.',
   'faq.q.10':'How does the referral program work?',
-  'faq.a.10':'Invite friends with your referral link (found in Profile). Earn 10% on every payment made by your referrals. Accumulated credit (min. €20) can be withdrawn to your bank account via Stripe Connect. No activation fee.',
+  'faq.a.10':'Invite friends with your personal referral link (found in Profile → Referral). You earn 10% on every payment made by your referrals — monthly or annual. A referral is confirmed only when your friend completes a valid payment. Accumulated credit (min. €20) can be withdrawn to your bank account via Stripe Connect. To enable withdrawals, connect your account from Profile → Referral → Connect account. No activation fee.',
   'prv.s0.h':'🛡 In short',
   'prv.s0.p':'Iron Kinetic™ collects only the data strictly necessary to provide the service. Anonymous users keep all data in the browser localStorage. Google-account users sync account state and subscription via Supabase (EU). No health data is ever shared with third parties. Zero tracking cookies.',
   'prv.s1.h':'1. Data controller',
@@ -7519,6 +7519,8 @@ function applyTrendBlurOverlay(){
   const overlay=document.getElementById('scr-prog-blur-overlay');
   const scrProg=document.getElementById('scr-prog');
   const hasAccess=trendAccess.access;
+  // Mostra l'overlay SOLO se il tab Trend è attivo
+  const isProgVisible=scrProg&&scrProg.style.display!=='none';
 
   if(hasAccess){
     // UTENTE CON ACCESSO (trial o pagante): rimuovi tutto il lock
@@ -7541,8 +7543,14 @@ function applyTrendBlurOverlay(){
       if(daysEl)daysEl.textContent=trendAccess.daysLeft===1?t('trend.blur.lastDay'):t('trend.blur.daysLeft').replace('{n}',trendAccess.daysLeft);
     }
   } else {
-    // UTENTE SENZA ACCESSO (expired/freemium): applica lock
-    if(overlay){overlay.style.display='flex';overlay.classList.add('on');overlay.style.pointerEvents='auto';overlay.style.background='rgba(14,14,14,.80)';}
+    // UTENTE SENZA ACCESSO (expired/freemium): applica lock solo se il tab Trend è visibile
+    if(overlay){
+      if(isProgVisible){
+        overlay.style.display='flex';overlay.classList.add('on');overlay.style.pointerEvents='auto';overlay.style.background='rgba(14,14,14,.80)';
+      } else {
+        overlay.style.display='none';overlay.classList.remove('on');
+      }
+    }
     if(scrProg)scrProg.classList.add('locked-trend');
     const titleEl=document.getElementById('trend-blur-title');
     const daysEl=document.getElementById('trend-blur-days');
@@ -10511,6 +10519,31 @@ function _bootAfterLangGate(){
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
         <div class="faq-answer">No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server, account o sincronizzazione cloud. L'unica eccezione sono le richieste di font e icone a Google (Google Fonts/Material Symbols) che non trasmettono i tuoi dati personali.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          <span class="faq-q-text" data-i18n="faq.q.10">Come funziona il programma referral?</span>
+          <span class="material-symbols-outlined faq-chevron">expand_more</span>
+        </div>
+        <div class="faq-answer" data-i18n-html="faq.a.10.html">
+          <p style="margin:0 0 10px;">Invita amici con il tuo <strong style="color:var(--on);">link referral personale</strong>, che trovi nella sezione <em>Profilo → Referral</em>.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+            <div style="display:flex;align-items:flex-start;gap:8px;">
+              <span class="material-symbols-outlined" style="font-size:16px;color:var(--p);flex-shrink:0;margin-top:1px;font-variation-settings:'FILL' 1;">payments</span>
+              <p style="margin:0;font-size:11px;line-height:1.5;color:var(--muted);">Guadagni il <strong style="color:var(--on);">10%</strong> su ogni pagamento effettuato dai tuoi referral — sia mensile che annuale.</p>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;">
+              <span class="material-symbols-outlined" style="font-size:16px;color:var(--p);flex-shrink:0;margin-top:1px;font-variation-settings:'FILL' 1;">account_balance</span>
+              <p style="margin:0;font-size:11px;line-height:1.5;color:var(--muted);">Il credito accumulato (minimo <strong style="color:var(--on);">€20</strong>) viene prelevato sul tuo conto bancario tramite <strong style="color:var(--on);">Stripe Connect</strong>. Nessun costo di attivazione.</p>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;">
+              <span class="material-symbols-outlined" style="font-size:16px;color:var(--p);flex-shrink:0;margin-top:1px;font-variation-settings:'FILL' 1;">how_to_reg</span>
+              <p style="margin:0;font-size:11px;line-height:1.5;color:var(--muted);">Un referral è <strong style="color:var(--on);">confermato</strong> quando il tuo amico completa un pagamento valido (non solo la registrazione).</p>
+            </div>
+          </div>
+          <p style="margin:0;font-size:11px;color:var(--muted);line-height:1.5;">Per attivare il prelievo collega il tuo conto bancario da <em>Profilo → Referral → Collega conto</em>. Riceverai le istruzioni via Stripe.</p>
+        </div>
       </div>
 
     </div>
