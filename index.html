@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,user-scalable=no"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Iron Kinetic"/>
@@ -900,9 +901,10 @@ hr{height:1px;}
 </style>
 <!-- Supabase: kept synchronous — inline boot depends on `supabase` global at parse time -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
-<script defer src="https://js.stripe.com/v3/" integrity="sha384-6fqKlmX+g92zPQYudcAesaq44GuuyWEYo3yugHilyWQ1WuYvjGE80tjELeDrba1b" crossorigin="anonymous"></script>
+<script defer src="https://js.stripe.com/v3/"></script>
 <script>window.sentryOnLoad=function(){Sentry.init({release:'iron-kinetic@1.0.0',tracesSampleRate:0.1,replaysSessionSampleRate:0.1,replaysOnErrorSampleRate:1.0,environment:location.hostname.includes('railway')?'production':'development'});};</script>
-<script src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" crossorigin="anonymous"></script>
+<!-- Sentry: data-lazy="no" prevents the loader from fetching bundle.tracing.* from browser.sentry-cdn.com, which is blocked by CSP -->
+<script src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" crossorigin="anonymous" data-lazy="no"></script>
 </head>
 <body class="onboarding-active">
 <div class="glow-a" aria-hidden="true"></div>
@@ -3078,7 +3080,11 @@ async function syncUserAfterLogin(user){
       ?{id:user.id,email:user.email,trial_end:trialEndDate,trend_active:false,plan:null}
       :{id:user.id,email:user.email};
     const{error}=await sb.from('users').upsert(upsertPayload,{onConflict:'id'});
-    if(error){console.warn('[IK] syncUserAfterLogin upsert error:',error.message);}
+    if(error){
+      /* 42501 = insufficient_privilege (RLS). Add SELECT/INSERT/UPDATE policies on the
+         users table in Supabase Dashboard → Auth → Policies for auth.uid()=id to resolve. */
+      if(error.code!=='42501')console.warn('[IK] syncUserAfterLogin upsert error:',error.message);
+    }
     /* Refresh full access state */
     const{data}=await Promise.resolve(sb.from('users').select('trend_active,trial_end,plan').eq('id',user.id).single()).catch(()=>({data:null}));
     if(data?.trend_active){
@@ -9487,7 +9493,7 @@ function switchTab(name){
   updateTrendLockUI();
   if(name==='prog'){syncTrendLockCopy();}
   if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
-  if(name==='set'){renderSettings();renderKcalRing();_tabDirty.set=false;trendInitPromise.then(()=>updateSubManagementCard());_ikRefLoad();}
+  if(name==='set'){renderSettings();renderKcalRing();_tabDirty.set=false;trendInitPromise.then(()=>updateSubManagementCard());sb&&sb.auth.getSession().then(({data:{session}})=>{if(session)_ikRefLoad();});}
   if(name==='info'){updateConsentUI();}
   if(name==='oggi'){try{renderTodayAction();}catch(e){}try{renderPlanUpdateNote();}catch(e){}}
 }
@@ -9534,7 +9540,11 @@ async function _ikRefLoad(){
     }
     /* Refresh token to avoid 401 from stale JWT */
     let token=session.access_token;
-    try{const{data:r}=await sb.auth.refreshSession();if(r?.session?.access_token)token=r.session.access_token;}catch{}
+    try{
+      const{data:r}=await sb.auth.refreshSession();
+      if(r?.session?.access_token){token=r.session.access_token;}
+      else{_ikRefLoading=false;return;} /* refresh yielded no token — session dead, abort */
+    }catch{_ikRefLoading=false;return;}
     /* Genera o recupera il codice referral dell'utente + dati completi */
     const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{
       method:'POST',
