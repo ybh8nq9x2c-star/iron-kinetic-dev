@@ -3636,7 +3636,7 @@ it:{
   'faq.q.9':'I miei dati vengono condivisi o venduti?',
   'faq.a.9':'No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server che raccolgono i tuoi dati sanitari, nessun analytics, nessuna pubblicità basata su di essi. L\'unica eccezione tecnica sono le richieste di font a Google (Google Fonts/Material Symbols) che non trasmettono dati personali.',
   'faq.q.10':'Come funziona il programma referral?',
-  'faq.a.10':'Invita amici con il tuo link referral (trovi in Profilo). Guadagni il 10% su ogni pagamento effettuato dai tuoi referral. Il credito accumulato (min. €20) può essere prelevato sul tuo conto bancario tramite Stripe Connect. Nessun costo di attivazione.'
+  'faq.a.10':'Invita amici con il tuo link referral (trovi in Profilo). Guadagni il 10% su ogni pagamento effettuato dai tuoi referral. Il credito accumulato (min. €20) può essere prelevato sul tuo conto bancario tramite Stripe Connect. Nessun costo di attivazione.',
   'prv.s0.h':'🛡 In sintesi',
   'prv.s0.p':'Iron Kinetic™ raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.',
   'prv.s1.h':'1. Titolare del trattamento',
@@ -4247,7 +4247,7 @@ en:{
   'faq.q.9':'Is my data shared or sold?',
   'faq.a.9':'No. All data (weight, plan, check-ins, preferences) stays in your device\'s localStorage. No servers collect your health data, no analytics, no ads based on it. The only technical exception is font requests to Google (Google Fonts/Material Symbols), which do not transmit personal data.',
   'faq.q.10':'How does the referral program work?',
-  'faq.a.10':'Invite friends with your referral link (found in Profile). Earn 10% on every payment made by your referrals. Accumulated credit (min. €20) can be withdrawn to your bank account via Stripe Connect. No activation fee.'
+  'faq.a.10':'Invite friends with your referral link (found in Profile). Earn 10% on every payment made by your referrals. Accumulated credit (min. €20) can be withdrawn to your bank account via Stripe Connect. No activation fee.',
   'prv.s0.h':'🛡 In short',
   'prv.s0.p':'Iron Kinetic™ collects only the data strictly necessary to provide the service. Anonymous users keep all data in the browser localStorage. Google-account users sync account state and subscription via Supabase (EU). No health data is ever shared with third parties. Zero tracking cookies.',
   'prv.s1.h':'1. Data controller',
@@ -9526,6 +9526,7 @@ async function _ikRefLoad(){
     if(linkEl&&link){linkEl.textContent=link;linkEl.dataset.link=link;}
     if(previewEl)previewEl.textContent=creditCents>0?t('ref.preview.credit',{amount:creditEur}):t('ref.preview.empty');
     if(ctaWrap){
+      if(!onboarded){
         ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefStartOnboarding()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">account_balance</span>'+t('ref.cta.connect')+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.connectSub')+'</p>';
       }else if(canPayout){
         ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefRequestPayout()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">payments</span>'+t('ref.cta.payout',{amount:creditEur})+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.payoutSub')+'</p>';
