@@ -3854,6 +3854,19 @@ it:{
   'ref.login.text': 'Accedi con Google per attivare il programma referral.',
   'ref.btn.copy.label': 'Copia link',
   'ref.btn.share.label': 'Condividi',
+  /* Audit fix keys */
+  'day.label':'Giorno {n}',
+  'aria.kcal.ring':'{completed} / {target} kcal — {remaining} rimaste',
+  'feature.refeed':'Refeed AI',
+  'sub.plan.trend':'Trend {name}','sub.plan.trial':'Trial — {days} giorni','sub.plan.base':'Piano Base',
+  'prof.giorni':'giorni','prof.variazione':'variaz.',
+  'set.unita':'Unità: {cur}/{max}',
+  'aria.close':'Chiudi',
+  'aria.kcal.tracker':'Tracciatore calorie','aria.kcal.ring.svg':'Anello Kcal','aria.kcal.progress':'Progresso calorico',
+  'aria.mod.minus':'−100 kcal','aria.mod.plus':'+100 kcal',
+  'sport.label.strength':'Forza/Potenza','sport.label.endurance':'Resistenza','sport.label.team':'Squadra/Ibrido','sport.label.fitness':'Fitness Generale','sport.label.powerlifting':'Powerlifting/Sollevamento Pesi','sport.label.combat':'Sport da Combattimento',
+  'sport.system.strength':'ATP-CP / Glicolitico','sport.system.endurance':'Aerobico','sport.system.team':'Glicolitico Misto','sport.system.fitness':'Misto','sport.system.powerlifting':'ATP-CP / Forza Massimale','sport.system.combat':'Glicolitico / Fosfageno',
+  'res.detail.sport':'Sport','res.detail.sistema':'Sistema energetico','aria.info':'Info',
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -4480,6 +4493,19 @@ en:{
   'ref.login.text': 'Sign in with Google to activate the referral program.',
   'ref.btn.copy.label': 'Copy link',
   'ref.btn.share.label': 'Share',
+  /* Audit fix keys */
+  'day.label':'Day {n}',
+  'aria.kcal.ring':'{completed} / {target} kcal — {remaining} remaining',
+  'feature.refeed':'Refeed AI',
+  'sub.plan.trend':'Trend {name}','sub.plan.trial':'Trial — {days} days','sub.plan.base':'Base Plan',
+  'prof.giorni':'days','prof.variazione':'change',
+  'set.unita':'Units: {cur}/{max}',
+  'aria.close':'Close',
+  'aria.kcal.tracker':'Calorie tracker','aria.kcal.ring.svg':'Kcal ring','aria.kcal.progress':'Calorie progress',
+  'aria.mod.minus':'−100 kcal','aria.mod.plus':'+100 kcal',
+  'sport.label.strength':'Strength/Power','sport.label.endurance':'Endurance','sport.label.team':'Team/Hybrid','sport.label.fitness':'General Fitness','sport.label.powerlifting':'Powerlifting','sport.label.combat':'Combat Sports',
+  'sport.system.strength':'ATP-CP / Glycolytic','sport.system.endurance':'Aerobic','sport.system.team':'Mixed Glycolytic','sport.system.fitness':'Mixed','sport.system.powerlifting':'ATP-CP / Max Strength','sport.system.combat':'Glycolytic / Phosphagen',
+  'res.detail.sport':'Sport','res.detail.sistema':'Energy system','aria.info':'Info',
 }
 };
 let _lang='en';
@@ -4772,6 +4798,13 @@ function applyTranslations(deferOffscreen){
   /* reset buttons aria-labels */
   document.querySelector('button[onclick="resetT(\'water\')"]')?.setAttribute('aria-label',t('aria.reset.water'));
   document.querySelector('button[onclick="resetT(\'salt\')"]')?.setAttribute('aria-label',t('aria.reset.salt'));
+  /* static HTML aria-labels */
+  document.getElementById('kcal-ring-wrap')?.setAttribute('aria-label',t('aria.kcal.tracker'));
+  document.querySelector('#kcal-ring-wrap svg[role="img"]')?.setAttribute('aria-label',t('aria.kcal.ring.svg'));
+  document.querySelector('svg[aria-label="Progresso calorico"]')?.setAttribute('aria-label',t('aria.kcal.progress'));
+  document.querySelector('button[aria-label="−100 kcal"]')?.setAttribute('aria-label',t('aria.mod.minus'));
+  document.querySelector('button[aria-label="+100 kcal"]')?.setAttribute('aria-label',t('aria.mod.plus'));
+  document.querySelector('button[onclick="dismissInstallBanner()"]')?.setAttribute('aria-label',t('aria.close'));
   /* refeed card */
   const rfTitle=document.querySelector('#refeed-card .t-xxs');
   if(rfTitle)rfTitle.textContent=t('oggi.refeed.title');
@@ -5513,7 +5546,7 @@ function renderFingerprint(){
   if(!fp){card.style.display='none';return;}
   card.style.display='block';
   const bar=(v,color)=>`<div style="height:6px;border-radius:3px;background:var(--s3);overflow:hidden;"><div style="width:${Math.min(100,Math.max(0,v))}%;height:100%;background:${color};border-radius:3px;transition:width .4s;"></div></div>`;
-  const tip=(key)=>`<button class="sn" onclick="showFingerprintTip('${key}')" style="background:none;border:none;color:var(--muted);font-size:11px;padding:0 0 0 4px;cursor:pointer;vertical-align:middle;line-height:1;" aria-label="Info">ⓘ</button>`;
+  const tip=(key)=>`<button class="sn" onclick="showFingerprintTip('${key}')" style="background:none;border:none;color:var(--muted);font-size:11px;padding:0 0 0 4px;cursor:pointer;vertical-align:middle;line-height:1;" aria-label="${t('aria.info')}">ⓘ</button>`;
   cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
     <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.efficienza')}</span>${tip('efficiency')}
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--p);margin:2px 0 4px;">${fp.efficiency}%</p>
@@ -6491,7 +6524,7 @@ const FOOD_ALIASES={
   'tofu':'tofu','soya bean curd':'tofu',
   'tempeh':'tempeh',
   'seitan':'seitan','wheat gluten':'seitan',
-  'ceci':'legumi','fagioli':'legumi','lenticchie':'legumi','legumes':'legumi','beans':'legumi','chickpeas':'legumi',
+  'fagioli':'legumi','lenticchie':'legumi','legumes':'legumi','beans':'legumi','chickpeas':'legumi',
   /* carboidrati */
   'riso basmati':'riso basmati','basmati':'riso basmati',
   'riso integrale':'riso integrale','brown rice':'riso integrale',
@@ -6509,7 +6542,7 @@ const FOOD_ALIASES={
   'gallette di riso':'gallette','rice cakes':'gallette',
   'mais':'mais','corn':'mais','granoturco':'mais',
   'polenta':'polenta',
-  'frutta':'frutta','fruit':'frutta','mele':'frutta','banana':'frutta','arance':'frutta','mela':'frutta',
+  'frutta':'frutta','fruit':'frutta','mele':'frutta','arance':'frutta','mela':'frutta',
   /* grassi/latticini */
   'olio d\'oliva':'olio oliva','olio evo':'olio oliva','olio extravergine':'olio oliva','evo':'olio oliva','olive oil':'olio oliva',
   'avocado':'avocado',
@@ -6939,34 +6972,38 @@ function buildMeal(mName,prot,carb,fat,proTarget,carbTarget,kcalTarget,macros,ta
   return{carbSource,baseAmount:carbG,rest,_protG:protG,_carbG:carbG,targetKcal:kcalTarget,_meta:{protein:prot,carb:carb,fat:resolvedFat||fat}};
 }
 
+/* ── Food i18n helper: translates Italian food names to English ── */
+const _foodI18n={'Yogurt greco':'Greek yogurt','Avena':'Oats','Pane integrale':'Whole wheat bread','Burro di arachidi':'Peanut butter','Fiocchi di latte':'Cottage cheese','Bresaola':'Bresaola','Prosciutto crudo':'Prosciutto','Ricotta':'Ricotta','Uova':'Eggs','Pancetta':'Bacon','Tonno':'Tuna','Frutti di bosco':'Mixed berries','Mandorle':'Almonds','Noci':'Walnuts','Semi di chia':'Chia seeds','Semi di lino':'Flax seeds','Semi di zucca':'Pumpkin seeds','Semi di girasole':'Sunflower seeds','Cioccolato fondente 85%':'Dark chocolate 85%','Banana matura':'Ripe banana','Burro di mandorle':'Almond butter','Pera':'Pear','Mela':'Apple','Cetrioli':'Cucumbers','Pomodorini':'Cherry tomatoes','Avocado':'Avocado','Albume strapazzato':'Scrambled egg white','Uova sode':'Boiled eggs','Salmone affumicato':'Smoked salmon','Fragole':'Strawberries','Mirtilli':'Blueberries','Carote crude':'Raw carrots','Riso soffiato':'Puffed rice','Tofu':'Tofu','Tacchino':'Turkey','Yogurt senza lattosio':'Lactose-free yogurt','Latte vegetale':'Plant milk','Latte riso':'Rice milk','Latte mandorla':'Almond milk','Latte cocco':'Coconut milk','Latte avena':'Oat milk','Frutta mista':'Mixed fruit','Pesche':'Peaches','Arancia':'Orange','Mango':'Mango','Proteine vegetali':'Plant protein','Semi di canapa':'Hemp seeds','Burro mandorle':'Almond butter','Fagioli':'Beans','Lenticchie':'Lentils','Hummus':'Hummus','Zucchine grigliate':'Grilled zucchini','Carote al vapore':'Steamed carrots','Spinaci saltati':'Sautéd spinach','Lattuga':'Lettuce','Pomodori datterini':'Date tomatoes','Fagiolini':'Green beans','Sedano rapa':'Celeriac','Bok choy al vapore':'Steamed bok choy','Bietola al vapore':'Steamed chard','Finocchio':'Fennel','Rucola':'Arugula','Banana':'Banana','Verdure crude miste':'Mixed raw vegetables','Ravanelli':'Radishes','Olio EVO':'EVO oil','Miele':'Honey','Cannella q.b.':'Cinnamon to taste','Pomodori':'Tomatoes','Pane di segale':'Rye bread','Bevanda soia':'Soy drink'};
+const _lf=txt=>_lang==='en'?(txt.replace(/\b[\wàèéìòùÀÈÉÌÒÙ]+\b/g,m=>_foodI18n[m]||m)):txt;
+
 /* ── SNACK: proteici + IG basso, FODMAP-safe se IBS ── */
 function buildSnack(taste,style,DB,excluded,proTarget,carbTarget,day,mealIdx,isIBS){
   /* Snack dolci — IG moderato-basso, proteici */
   const sweet=[
-    {rest:'Yogurt greco 170g + Frutti di bosco 80g + Mandorle 15g (Ca++, omega-3)',carbSource:null,baseAmount:0},
-    {rest:'Avena 40g + Frutti di bosco 100g + Semi di chia 10g (fibra, omega-3)',carbSource:null,baseAmount:0},
-    {rest:'Cioccolato fondente 85% 30g + Noci 20g (flavonoidi, omega-3)',carbSource:null,baseAmount:0},
-    {rest:'Banana matura 1 + Burro di mandorle 20g (potassio, grassi mono)',carbSource:null,baseAmount:0},
-    {rest:'Pera 1 + Fiocchi di latte 100g + Semi di chia 8g (fibra solubile)',carbSource:null,baseAmount:0},
-    {rest:'Mela 1 + Burro di arachidi 20g + Cannella q.b. (indice glicemico basso)',carbSource:null,baseAmount:0},
+    {rest:_lf('Yogurt greco 170g + Frutti di bosco 80g + Mandorle 15g (Ca++, omega-3)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Avena 40g + Frutti di bosco 100g + Semi di chia 10g (fibra, omega-3)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Cioccolato fondente 85% 30g + Noci 20g (flavonoidi, omega-3)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Banana matura 1 + Burro di mandorle 20g (potassio, grassi mono)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Pera 1 + Fiocchi di latte 100g + Semi di chia 8g (fibra solubile)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Mela 1 + Burro di arachidi 20g + Cannella q.b. (indice glicemico basso)'),carbSource:null,baseAmount:0},
   ];
   /* Snack salati — proteici, low-carb */
   const savory=[
-    {rest:'Ricotta 150g + Pomodorini 80g + Olio EVO 5g (Ca++, omega-6)',carbSource:null,baseAmount:0},
-    {rest:'Tonno al naturale 100g + Avocado 80g (omega-3, omega-9)',carbSource:null,baseAmount:0},
-    {rest:'Uova sode 2 + Avocado 80g (proteine complete, grassi insaturi)',carbSource:null,baseAmount:0},
-    {rest:'Albume strapazzato 150g + Verdure crude miste (proteina magra)',carbSource:null,baseAmount:0},
-    {rest:'Fiocchi di latte 150g + Ravanelli 60g + Olio EVO 5g (proteina magra)',carbSource:null,baseAmount:0},
-    {rest:'Salmone affumicato 80g + Cetrioli 80g + Olio EVO 5g (omega-3)',carbSource:null,baseAmount:0},
+    {rest:_lf('Ricotta 150g + Pomodorini 80g + Olio EVO 5g (Ca++, omega-6)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Tonno al naturale 100g + Avocado 80g (omega-3, omega-9)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Uova sode 2 + Avocado 80g (proteine complete, grassi insaturi)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Albume strapazzato 150g + Verdure crude miste (proteina magra)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Fiocchi di latte 150g + Ravanelli 60g + Olio EVO 5g (proteina magra)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Salmone affumicato 80g + Cetrioli 80g + Olio EVO 5g (omega-3)'),carbSource:null,baseAmount:0},
   ];
   /* FODMAP-safe alternatives */
   const ibsSafe=[
-    {rest:'Yogurt senza lattosio 150g + Fragole 80g + Mandorle 20g',carbSource:null,baseAmount:0},
-    {rest:'Uova sode 2 + Carote crude 100g + Olio EVO 5g',carbSource:null,baseAmount:0},
-    {rest:'Tofu 100g + Cetrioli 100g + Semi di zucca 20g (Zn, Mg)',carbSource:null,baseAmount:0},
-    {rest:'Riso soffiato 30g + Burro di mandorle 20g + Mirtilli 60g',carbSource:null,baseAmount:0},
-    {rest:'Fiocchi di latte 150g + Carote crude 80g + Olio EVO 5g',carbSource:null,baseAmount:0},
-    {rest:'Tacchino 80g + Cetrioli 100g + Semi di girasole 15g (FODMAP-safe)',carbSource:null,baseAmount:0},
+    {rest:_lf('Yogurt senza lattosio 150g + Fragole 80g + Mandorle 20g'),carbSource:null,baseAmount:0},
+    {rest:_lf('Uova sode 2 + Carote crude 100g + Olio EVO 5g'),carbSource:null,baseAmount:0},
+    {rest:_lf('Tofu 100g + Cetrioli 100g + Semi di zucca 20g (Zn, Mg)'),carbSource:null,baseAmount:0},
+    {rest:_lf('Riso soffiato 30g + Burro di mandorle 20g + Mirtilli 60g'),carbSource:null,baseAmount:0},
+    {rest:_lf('Fiocchi di latte 150g + Carote crude 80g + Olio EVO 5g'),carbSource:null,baseAmount:0},
+    {rest:_lf('Tacchino 80g + Cetrioli 100g + Semi di girasole 15g (FODMAP-safe)'),carbSource:null,baseAmount:0},
   ];
   let pool=isIBS?ibsSafe:taste==='dolce'?sweet:taste==='salato'?savory:[...sweet,...savory];
   /* ── Allergen exclusion filter (CRITICAL: was missing) ── */
@@ -6999,61 +7036,65 @@ function buildBreakfast(taste,style,DB,excluded,proTarget,carbTarget,macros,isIB
   const noGluten=excluded.some(e=>e.includes('glut')||e.includes('celi'));
   const noLattosio=excluded.some(e=>e.includes('lattosio')||e.includes('latte'))||style==='vegano';
   const d=((day||1)-1+_regenSeed*7); /* seed shifts rotation on regen so same day picks differently */
-  const pick=(arr)=>arr[d%arr.length];
+  const pick=(arr)=>{
+    if(!excluded||!excluded.length)return arr[d%arr.length];
+    const hasAllergen=(item)=>{const r=(item.rest||'').toLowerCase();return excluded.some(e=>{const a=e.toLowerCase();if(a.includes('lattosio')||a.includes('latte'))return r.includes('yogurt')||r.includes('latte')||r.includes('ricotta')||r.includes('fiocchi di latte');if(a.includes('glut')||a.includes('celi'))return r.includes('pane ')||r.includes('avena ')||r.includes('pasta')||r.includes('farro');if(a.includes('uovo')||a.includes('uova'))return r.includes('uova')||r.includes('uovo')||r.includes('albume');if(a.includes('pesce'))return r.includes('salmone')||r.includes('tonno');if(a.includes('soia'))return r.includes('tofu')||r.includes('soia');if(a.includes('arachidi'))return r.includes('arachidi');if(a.includes('frutta secca')||a.includes('noci'))return r.includes('noci')||r.includes('mandorle');return false;});};
+    const safe=arr.filter(s=>!hasAllergen(s));return(safe.length?safe:arr)[d%arr.length];
+  };
 
   if(isIBS){
     if(style==='vegano') return pick([
-      {carbSource:'avena',baseAmount:50,rest:'Avena senza glutine 50g, Latte riso 200ml, Fragole 80g, Semi di chia 10g (FODMAP-safe)'},
-      {carbSource:'riso', baseAmount:45,rest:'Riso soffiato 45g, Latte riso 200ml, Mirtilli 80g, Semi di zucca 15g (FODMAP-safe)'},
+      {carbSource:'avena',baseAmount:50,rest:_lf('Avena senza glutine 50g, Latte riso 200ml, Fragole 80g, Semi di chia 10g (FODMAP-safe)')},
+      {carbSource:'riso', baseAmount:45,rest:_lf('Riso soffiato 45g, Latte riso 200ml, Mirtilli 80g, Semi di zucca 15g (FODMAP-safe)')},
     ]);
     return pick([
-      {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt senza lattosio 150g, Mirtilli 80g, Mandorle 20g (FODMAP-safe)'},
-      {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt senza lattosio 150g, Fragole 80g, Noci 15g (FODMAP-safe)'},
-      {carbSource:'riso', baseAmount:45,rest:'Riso soffiato 45g, Yogurt senza lattosio 130g, Banana matura 80g, Semi di chia 10g (FODMAP-safe)'},
+      {carbSource:'avena',baseAmount:50,rest:_lf('Avena 50g, Yogurt senza lattosio 150g, Mirtilli 80g, Mandorle 20g (FODMAP-safe)')},
+      {carbSource:'avena',baseAmount:50,rest:_lf('Avena 50g, Yogurt senza lattosio 150g, Fragole 80g, Noci 15g (FODMAP-safe)')},
+      {carbSource:'riso', baseAmount:45,rest:_lf('Riso soffiato 45g, Yogurt senza lattosio 130g, Banana matura 80g, Semi di chia 10g (FODMAP-safe)')},
     ]);
   }
   if(taste==='salato'){
     if(style==='vegano') return pick([
-      {carbSource:'pane',baseAmount:60,rest:'Pane integrale 60g, Avocado 100g, Pomodori, Olio EVO 10g, Semi di canapa 15g'},
-      {carbSource:'pane',baseAmount:60,rest:'Pane di segale 60g, Hummus 80g, Cetrioli, Olio EVO 8g, Semi di lino 10g'},
+      {carbSource:'pane',baseAmount:60,rest:_lf('Pane integrale 60g, Avocado 100g, Pomodori, Olio EVO 10g, Semi di canapa 15g')},
+      {carbSource:'pane',baseAmount:60,rest:_lf('Pane di segale 60g, Hummus 80g, Cetrioli, Olio EVO 8g, Semi di lino 10g')},
     ]);
     if(noLattosio) return pick([
-      {carbSource:'pane',baseAmount:60,rest:'Pane integrale 60g, Uova strapazzate 3, Avocado 70g, Olio EVO 8g'},
-      {carbSource:'pane',baseAmount:55,rest:'Pane di segale 55g, Uova sode 2, Salmone affumicato 50g, Olio EVO 8g'},
+      {carbSource:'pane',baseAmount:60,rest:_lf('Pane integrale 60g, Uova strapazzate 3, Avocado 70g, Olio EVO 8g')},
+      {carbSource:'pane',baseAmount:55,rest:_lf('Pane di segale 55g, Uova sode 2, Salmone affumicato 50g, Olio EVO 8g')},
     ]);
     return pick([
-      {carbSource:'pane',baseAmount:60,rest:'Pane integrale 60g, Uova strapazzate 3, Pomodori, Olio EVO 10g (TEF +25%)'},
-      {carbSource:'pane',baseAmount:55,rest:'Pane di segale 55g, Ricotta 80g, Avocado 70g, Olio EVO 8g'},
-      {carbSource:'pane',baseAmount:60,rest:'Pane integrale 60g, Tacchino 60g, Pomodori datterini, Olio EVO 8g'},
+      {carbSource:'pane',baseAmount:60,rest:_lf('Pane integrale 60g, Uova strapazzate 3, Pomodori, Olio EVO 10g (TEF +25%)')},
+      {carbSource:'pane',baseAmount:55,rest:_lf('Pane di segale 55g, Ricotta 80g, Avocado 70g, Olio EVO 8g')},
+      {carbSource:'pane',baseAmount:60,rest:_lf('Pane integrale 60g, Tacchino 60g, Pomodori datterini, Olio EVO 8g')},
     ]);
   }
   if(taste==='dolce'){
     if(style==='vegano') return pick([
-      {carbSource:'avena',baseAmount:60,rest:'Avena 60g, Latte vegetale 200ml, Frutti di bosco 100g, Semi di chia 15g, Proteine vegetali 20g'},
-      {carbSource:'avena',baseAmount:60,rest:'Avena 60g, Latte mandorla 200ml, Banana 80g, Burro di arachidi 20g, Semi di lino 10g'},
+      {carbSource:'avena',baseAmount:60,rest:_lf('Avena 60g, Latte vegetale 200ml, Frutti di bosco 100g, Semi di chia 15g, Proteine vegetali 20g')},
+      {carbSource:'avena',baseAmount:60,rest:_lf('Avena 60g, Latte mandorla 200ml, Banana 80g, Burro di arachidi 20g, Semi di lino 10g')},
     ]);
     if(noLattosio) return pick([
-      {carbSource:'avena',baseAmount:55,rest:'Avena 55g, Bevanda soia 200ml, Banana, Mandorle 25g, Semi di lino 10g'},
-      {carbSource:'avena',baseAmount:55,rest:'Avena 55g, Latte cocco 150ml, Mango 80g, Noci 20g, Semi di chia 10g'},
+      {carbSource:'avena',baseAmount:55,rest:_lf('Avena 55g, Bevanda soia 200ml, Banana, Mandorle 25g, Semi di lino 10g')},
+      {carbSource:'avena',baseAmount:55,rest:_lf('Avena 55g, Latte cocco 150ml, Mango 80g, Noci 20g, Semi di chia 10g')},
     ]);
     return pick([
-      {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt greco 150g, Frutti di bosco 80g, Miele 8g, Noci 20g'},
-      {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt greco 150g, Banana 80g, Burro di mandorle 15g, Cannella q.b.'},
-      {carbSource:'avena',baseAmount:55,rest:'Avena 55g, Yogurt bianco 180g, Pesche 90g, Mandorle 20g, Miele 6g'},
+      {carbSource:'avena',baseAmount:50,rest:_lf('Avena 50g, Yogurt greco 150g, Frutti di bosco 80g, Miele 8g, Noci 20g')},
+      {carbSource:'avena',baseAmount:50,rest:_lf('Avena 50g, Yogurt greco 150g, Banana 80g, Burro di mandorle 15g, Cannella q.b.')},
+      {carbSource:'avena',baseAmount:55,rest:_lf('Avena 55g, Yogurt bianco 180g, Pesche 90g, Mandorle 20g, Miele 6g')},
     ]);
   }
   /* misto */
   if(style==='vegano'){
     const b=pick([
-      {carbSource:'avena',baseAmount:55,rest:'Avena 55g, Latte avena 200ml, Frutta mista 130g, Burro mandorle 20g, Semi chia 10g'},
-      {carbSource:'avena',baseAmount:55,rest:'Avena 55g, Latte avena 200ml, Mela 100g, Noci 20g, Semi di canapa 10g'},
+      {carbSource:'avena',baseAmount:55,rest:_lf('Avena 55g, Latte avena 200ml, Frutta mista 130g, Burro mandorle 20g, Semi chia 10g')},
+      {carbSource:'avena',baseAmount:55,rest:_lf('Avena 55g, Latte avena 200ml, Mela 100g, Noci 20g, Semi di canapa 10g')},
     ]);
     return b?{...b,_meta:{protein:'tofu',carb:b.carbSource||'avena',fat:'mandorle'}}:b;
   }
   const b=pick([
-    {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt greco 130g, Frutta 130g, Noci 20g, Miele 8g'},
-    {carbSource:'avena',baseAmount:50,rest:'Avena 50g, Yogurt greco 150g, Fragole 100g, Mandorle 20g'},
-    {carbSource:'pane', baseAmount:55,rest:'Pane integrale 55g, Uova strapazzate 2, Arancia 120g, Mandorle 15g'},
+    {carbSource:'avena',baseAmount:50,rest:_lf('Avena 50g, Yogurt greco 130g, Frutta 130g, Noci 20g, Miele 8g')},
+    {carbSource:'avena',baseAmount:50,rest:_lf('Avena 50g, Yogurt greco 150g, Fragole 100g, Mandorle 20g')},
+    {carbSource:'pane', baseAmount:55,rest:_lf('Pane integrale 55g, Uova strapazzate 2, Arancia 120g, Mandorle 15g')},
   ]);
   return b?{...b,_meta:{protein:'uova',carb:b.carbSource||'avena',fat:'mandorle'}}:b;
 }
@@ -7418,7 +7459,7 @@ function goStep(n){
     if(!prefState.taste){toast(t('toast.selGusto'));hap('error');return;}
     if(!prefState.dietStyle){toast(t('toast.selStile'));hap('error');return;}
   }
-  curStep=n;
+  curStep=n;lsW('ik_onb_step',String(n));
   const totalSteps=5;
   for(let i=0;i<totalSteps;i++){
     const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===n);
@@ -7428,10 +7469,13 @@ function goStep(n){
   document.getElementById('onb-screen').scrollTo({top:0,behavior:'smooth'});
 }
 
+let _genLock=false;
 function runCalcAndGenerate(){
   hap('medium');
+  if(_genLock)return;_genLock=true;
   const _genBtn=document.querySelector('button[onclick="runCalcAndGenerate()"]');
   const _genBtnTxt=_genBtn?.textContent;
+  if(!profState.age||!profState.height||!profState.weight||!profState.goal){toast(t('toast.compilaCorpo'));_genLock=false;if(_genBtn){_genBtn.disabled=false;_genBtn.textContent=_genBtnTxt;}return;}
   if(_genBtn){_genBtn.disabled=true;_genBtn.textContent=t('onb.btn.generating');}
   prefState.extraFoods=document.getElementById('f-extra-foods').value||'';
   prefState.intolerances=document.getElementById('f-intolerances').value||'';
@@ -7461,10 +7505,10 @@ function runCalcAndGenerate(){
   const _die=t('prof.die');
   det+=`\n${t('res.detail.acqua')}: ${res.waterTarget}L${_die} · ${t('res.detail.fibra')}: ≥${res.fiberTarget||25}g${_die} · Na+: <${res.sodiumMax||2000}mg${_die}`;
   /* ISSN/ACSM Sport Adaptation Detail */
-  const _sportLabels={strength:'Forza/Potenza',endurance:'Resistenza',team:'Squadra/Ibrido',fitness:'Fitness Generale',powerlifting:'Powerlifting/Sollevamento Pesi',combat:'Sport da Combattimento'};
-  const _sportSystems={strength:'ATP-CP / Glicolitico',endurance:'Aerobico',team:'Glicolitico Misto',fitness:'Misto',powerlifting:'ATP-CP / Forza Massimale',combat:'Glicolitico / Fosfageno'};
+  const _sportLabels={strength:t('sport.label.strength'),endurance:t('sport.label.endurance'),team:t('sport.label.team'),fitness:t('sport.label.fitness'),powerlifting:t('sport.label.powerlifting'),combat:t('sport.label.combat')};
+  const _sportSystems={strength:t('sport.system.strength'),endurance:t('sport.system.endurance'),team:t('sport.system.team'),fitness:t('sport.system.fitness'),powerlifting:t('sport.system.powerlifting'),combat:t('sport.system.combat')};
   const _sk=profState.sport||'fitness';
-  det+=`\n─ Sport: ${_sportLabels[_sk]||_sk} · Sistema energetico: ${_sportSystems[_sk]||'—'}`;
+  det+=`\n─ ${t('res.detail.sport')}: ${_sportLabels[_sk]||_sk} · ${t('res.detail.sistema')}: ${_sportSystems[_sk]||'—'}`;
   if(profState.trainTime){
     /* Chrononutrition timing anchored to training time (ISSN Position Stand 2017) */
     const [hh,mm]=profState.trainTime.split(':').map(Number);
@@ -7508,6 +7552,7 @@ function runCalcAndGenerate(){
   window._pendingRes=res;
   toast(t('toast.pianoGen'));
   if(_genBtn){_genBtn.disabled=false;_genBtn.textContent=_genBtnTxt||'⚡ Genera il Mio Piano';}
+  _genLock=false;
 }
 
 function activateGeneratedPlan(){
@@ -7539,6 +7584,7 @@ function activateGeneratedPlan(){
   if(!lsR(SK.progStart))lsW(SK.progStart,String(Date.now()));
   dietData=patched;
   mountApp();
+  lsW('ik_onb_step','0'); /* Clear onboarding state on completion */
   toast(t('toast.pianoAttivato'));
 }
 
@@ -7998,7 +8044,7 @@ function buildDaySelector(){
   _daySelectorDietId=_dietId;
   el.innerHTML='';
   (dietData.days||[]).forEach(day=>{
-    const b=document.createElement('button');b.textContent=`G${day.d}`;b.className='day-chip sn';
+    const b=document.createElement('button');b.textContent=t('day.label',{n:day.d});b.className='day-chip sn';
     b.dataset.day=String(day.d);
     if(day.d===selDay)b.classList.add('on');
     b.onclick=()=>{
@@ -8220,17 +8266,18 @@ function renderPlanUpdateNote(){
     const sign=delta>0?'+':'';
     const msg=lang==='en'?`📣 Plan updated this week: ${sign}${delta} kcal`:`📣 Piano aggiornato questa settimana: ${sign}${delta} kcal`;
     noteEl.className='note-box has-feedback';noteEl.style.cssText='position:relative;margin:0 14px 8px;';
-    noteEl.innerHTML=`<span>${sanitize(msg)}</span><button onclick="lsW(SKPLANBADGE,'seen');this.parentElement.remove()" style="position:absolute;top:6px;right:8px;background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;line-height:1;padding:0;" aria-label="Chiudi">✕</button>`;
+    noteEl.innerHTML=`<span>${sanitize(msg)}</span><button onclick="lsW(SKPLANBADGE,'seen');this.parentElement.remove()" style="position:absolute;top:6px;right:8px;background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;line-height:1;padding:0;" aria-label="${t('aria.close')}">✕</button>`;
   }else if(noteEl){noteEl.remove();}
 }
 
 /* ── Kcal ring: back-fill targetKcal for plans saved before this feature ──
    Called once in mountApp(). Uses base kcal (no modifier) to approximate
    the stored portion split — exact enough since modifier is layered at display time. */
+const MEAL_DIST={2:[0.45,0.55],3:[0.25,0.40,0.35],4:[0.20,0.35,0.10,0.35],5:[0.20,0.30,0.10,0.30,0.10]};
 function migrateTargetKcal(){
   if(!dietData)return;
   const mNames=getMealNames();
-  const dist={2:[0.45,0.55],3:[0.25,0.40,0.35],4:[0.20,0.35,0.10,0.35],5:[0.20,0.30,0.10,0.30,0.10]}[mNames.length]||[0.25,0.40,0.35];
+  const dist=MEAL_DIST[mNames.length]||[0.25,0.40,0.35];
   const base=baseKcal();
   let changed=false;
   (dietData.days||[]).forEach(day=>{
@@ -8241,6 +8288,11 @@ function migrateTargetKcal(){
         changed=true;
       }
     });
+    /* Fix rounding drift: apply remainder to largest meal */
+    const _kcalArr=mNames.map((_,mi)=>Math.round(base*dist[mi]));
+    const _kcalSum=_kcalArr.reduce((a,b)=>a+b,0);
+    const _drift=Math.round(base)-_kcalSum;
+    if(_drift!==0){const _mxI=_kcalArr.indexOf(Math.max(..._kcalArr));const _mn=mNames[_mxI];if(day[_mn]&&typeof day[_mn].targetKcal==='number')day[_mn].targetKcal+=_drift;}
   });
   if(changed)lsS(SK.diet,dietData);
 }
@@ -8253,7 +8305,7 @@ function getCompletedMealKcal(dayNum){
   if(!day)return 0;
   const mNames=getMealNames();
   const total=calcMacros().kcal||baseKcal();
-  const dist={2:[0.45,0.55],3:[0.25,0.40,0.35],4:[0.20,0.35,0.10,0.35],5:[0.20,0.30,0.10,0.30,0.10]}[mNames.length]||[0.25,0.40,0.35];
+  const dist=MEAL_DIST[mNames.length]||[0.25,0.40,0.35];
   let sum=0;
   mNames.forEach((n,mi)=>{
     if(lsR(mk(dayNum,n))==='1'){
@@ -8301,7 +8353,7 @@ function renderKcalRing(){
   const pctEl=getEl('oggi-kcal-pct');
   if(pctEl)pctEl.textContent=t('oggi.kcal.pct',{pct:Math.round(pct*100)});
   const ringWrap=document.getElementById('kcal-ring-wrap');
-  if(ringWrap)ringWrap.setAttribute('aria-label',`${completedKcal} / ${targetKcal} kcal — ${kcalRimaste} rimaste`);
+  if(ringWrap)ringWrap.setAttribute('aria-label',t('aria.kcal.ring',{completed:completedKcal,target:targetKcal,remaining:kcalRimaste}));
 }
 
 /* ═══════════════════════════════════════
@@ -8328,7 +8380,7 @@ function toggleRefeed(){
     else lsW(SK.refeed,toISO());
     renderRefeed();renderMacros();renderCoach();renderMeals();
     toast(t(isRefeed()?'toast.refeedOn':'toast.refeedOff'));
-  },'Refeed AI');
+ },t('feature.refeed'));
 }
 
 /* ═══════════════════════════════════════
@@ -8373,7 +8425,7 @@ function renderProfileHeader(){
   _applyUserAvatar();
   const subEl=document.getElementById('prof-user-sub');
   if(subEl){
-    const plan=trendAccess?.mode==='paid'?'Trend '+String(trendAccess.plan||''):trendAccess?.mode==='trial'?`Trial — ${trendAccess.daysLeft||7} giorni`:'Piano Base';
+    const plan=trendAccess?.mode==='paid'?t('sub.plan.trend',{name:trendAccess.plan||''}):trendAccess?.mode==='trial'?t('sub.plan.trial',{days:trendAccess.daysLeft||7}):t('sub.plan.base');
     subEl.textContent=plan;
   }
   /* Stat: giorni piano, peso attuale, variazione */
@@ -8387,7 +8439,7 @@ function renderProfileHeader(){
   const sk=lsR('ik_prog_start')||lsR(SK.progStart);
   const daysActive=sk?Math.max(1,Math.round((Date.now()-new Date(sk).getTime())/86400000)):0;
   if(daysEl)daysEl.textContent=daysActive>0?String(daysActive):'—';
-  if(dLbl)dLbl.textContent=_lang==='en'?'days':'giorni';
+  if(dLbl)dLbl.textContent=t('prof.giorni');
   /* Peso attuale */
   const sorted=log.filter(e=>e.weight>0).sort((a,b)=>a.isoDate>b.isoDate?-1:1);
   const lastW=sorted[0]?.weight;
@@ -8399,7 +8451,7 @@ function renderProfileHeader(){
     dEl.textContent=(delta>0?'+':'')+delta;
     dEl.style.color=delta<0?'var(--p)':delta>0?'var(--red)':'var(--on)';
   }else if(dEl){dEl.textContent='—';}
-  if(dDelta)dDelta.textContent=_lang==='en'?'change':'variaz.';
+  if(dDelta)dDelta.textContent=t('prof.variazione');
   /* Sub preview under abbonamento menu item */
   const spEl=document.getElementById('prof-sub-preview');
   if(spEl){
@@ -8429,7 +8481,7 @@ function renderSettings(){
   });}
   {const PHASE_HINTS={it:{1:'Fase 1: adattamento (sett. 1-4). Avanza quando il peso cala con costanza.',2:'Fase 2: ottimizzazione (sett. 5-8). Avanza se l\'energia è stabile.',3:'Fase 3: consolidamento (sett. 9-15). Avanza quando il peso si è stabilizzato.',4:'Fase 4: reverse diet. Aumenta le kcal di +100/sett. fino al TDEE.'},en:{1:'Phase 1: adaptation (wk 1-4). Advance when weight drops consistently.',2:'Phase 2: optimisation (wk 5-8). Advance when energy is stable.',3:'Phase 3: consolidation (wk 9-15). Advance when weight has stabilised.',4:'Phase 4: reverse diet. Increase kcal +100/wk until TDEE is reached.'}};const _phLang=lsR(SK.lang)==='en'?'en':'it';let phHint=document.getElementById('phase-hint');if(phHint)phHint.textContent=PHASE_HINTS[_phLang][getPhase()]||'';}
   renderRefeed();renderModDisplay();
-  {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_U;const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}
+  {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent=t('set.unita',{cur:cur,max:MAX_U});const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}
   const prof=getProfile();if(prof)_renderProfileCard(prof);
   _renderPrefsCard();
   renderProfileHeader();
@@ -8505,7 +8557,7 @@ function applyMod(u){
   else{const n=Math.max(MIN_UNITS,Math.min(MAX_UNITS,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
   renderModDisplay();scheduleRender(renderMacros,renderCoach,renderMeals);
   const cur=getMod();
-  const lbl=getEl('mod-units-label');if(lbl)lbl.textContent='Unità: '+cur+'/'+MAX_UNITS;
+  const lbl=getEl('mod-units-label');if(lbl)lbl.textContent=t('set.unita',{cur:cur,max:MAX_UNITS});
   const stepper=getEl('mod-stepper');
   if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
 }
@@ -8956,7 +9008,7 @@ function swapMealComponent(dayNum, mealName, component){
   const mNames=getMealNames();
   const mealIdx=Math.max(0,mNames.indexOf(mealName));
   const macros=calcDailyMacros(); /* full modifier-adjusted — passed for context only */
-  const dist={2:[0.45,0.55],3:[0.25,0.40,0.35],4:[0.20,0.35,0.10,0.35],5:[0.20,0.30,0.10,0.30,0.10]}[mNames.length]||[0.25,0.40,0.35];
+  const dist=MEAL_DIST[mNames.length]||[0.25,0.40,0.35];
   /* Use BASE macros: modifier delta is layered at display time via finalCarb() */
   const kcalT=Math.round(baseKcal()*dist[mealIdx]);
   const proT =Math.round(basePro() *dist[mealIdx]);
@@ -8998,12 +9050,7 @@ function regenSingleMeal(dayNum,mealName){
   const mealIdx=Math.max(0,mNames.indexOf(mealName));
   const macros=calcDailyMacros(); /* full modifier-adjusted — passed for context only */
 
-  const dist={
-    2:[0.45,0.55],
-    3:[0.25,0.40,0.35],
-    4:[0.20,0.35,0.10,0.35],
-    5:[0.20,0.30,0.10,0.30,0.10],
-  }[mNames.length]||[0.25,0.40,0.35];
+  const dist=MEAL_DIST[mNames.length]||[0.25,0.40,0.35];
 
   /* Use BASE macros for slot portioning: the AI-modifier delta is added at display time
      by finalCarb() → baseAmount+modForSrc().  Computing carbT from macros.carbs would
@@ -9656,6 +9703,9 @@ function showOnb(){
   setTaste(prefState.taste||'misto');
   setDietStyle(prefState.dietStyle||'onnivoro');
   applyTranslations();
+  /* Restore interrupted onboarding step */
+  const _savedOnbStep=parseInt(lsR('ik_onb_step')||'0');
+  if(_savedOnbStep>0&&_savedOnbStep<5){curStep=_savedOnbStep;goStep(_savedOnbStep);}
 }
 function mountApp(){
   document.body.classList.remove('onboarding-active');
