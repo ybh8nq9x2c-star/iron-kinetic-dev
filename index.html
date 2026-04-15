@@ -927,7 +927,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
 <!-- Supabase: kept synchronous — inline boot depends on `supabase` global at parse time -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
-<script defer src="https://js.stripe.com/v3/" integrity="sha384-6fqKlmX+g92zPQYudcAesaq44GuuyWEYo3yugHilyWQ1WuYvjGE80tjELeDrba1b" crossorigin="anonymous"></script>
+<script defer src="https://js.stripe.com/v3/" crossorigin="anonymous"></script>
 <script>window.sentryOnLoad=function(){Sentry.init({release:'iron-kinetic@1.0.0',tracesSampleRate:0.1,replaysSessionSampleRate:0.1,replaysOnErrorSampleRate:1.0,environment:location.hostname.includes('railway')?'production':'development'});};</script>
 <script src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" crossorigin="anonymous"></script>
 </head>
@@ -1672,7 +1672,6 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       </div>
     </div>
     <div id="trend-lock-banner">
-    </div>
     </div>
     <div class="pg">
       <p class="sec-title" data-i18n="prog.title">Progresso</p>
@@ -10003,6 +10002,8 @@ function _bootAfterGates(){
     const consent=gdprStatus();
     if(!consent||!consent.accepted){
       hideSplash();
+      const as=document.getElementById('app-shell');if(as)as.classList.remove('on');
+      const os=document.getElementById('onb-screen');if(os)os.classList.remove('on');
       const gg=document.getElementById('gdpr-gate');
       if(gg){gg.classList.add('on');applyTranslations();return;}
     }
@@ -10251,11 +10252,12 @@ function _bootAfterLangGate(){
   applyTranslations();
   const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);
   const savedPrefs=getPrefs();if(savedPrefs)Object.assign(prefState,savedPrefs);
-  /* Auth listener must be active before any gate so OAuth redirect is caught */
-  _initAuthListener();
-  /* Pre-warm session cache so the first checkout click is instant */
-  _prefetchSession();
-  _bootAfterLangGate();
+  try{_initAuthListener();}catch(e){console.warn('IK boot: _initAuthListener error',e);}
+  try{_prefetchSession();}catch(e){console.warn('IK boot: _prefetchSession error',e);}
+  try{_bootAfterLangGate();}catch(e){
+    console.error('IK boot: _bootAfterLangGate fatal',e);
+    try{showOnb();}catch(e2){document.body.classList.add('onboarding-active');const s=document.getElementById('onb-screen');if(s){s.style.display='flex';s.classList.add('on');}}
+  }
 })();
 /* WATCHDOG: se dopo 4s non è visibile nessun contenuto, forza onboarding */
 setTimeout(function(){
