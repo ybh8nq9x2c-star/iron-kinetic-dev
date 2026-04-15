@@ -1,12 +1,20 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const ALLOWED_ORIGINS = [
+  'https://irokninetic-production.up.railway.app',
+  'https://iron-kinetic.app',
+  'http://localhost:3000',
+]
+function corsHeaders(req: Request) {
+  const origin = req.headers.get('Origin') || ''
+  return {
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  }
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) })
 
   try {
     const sb = createClient(
@@ -15,10 +23,10 @@ Deno.serve(async (req) => {
     )
 
     const token = req.headers.get('Authorization')?.replace('Bearer ', '')
-    if (!token) return new Response('Unauthorized', { status: 401, headers: corsHeaders })
+    if (!token) return new Response('Unauthorized', { status: 401, headers: corsHeaders(req) })
 
     const { data: { user }, error: authError } = await sb.auth.getUser(token)
-    if (authError || !user) return new Response('Unauthorized', { status: 401, headers: corsHeaders })
+    if (authError || !user) return new Response('Unauthorized', { status: 401, headers: corsHeaders(req) })
 
     // Idempotente: restituisce il codice esistente se già creato
     const { data: existing } = await sb
@@ -64,14 +72,14 @@ Deno.serve(async (req) => {
       stripe_connect_onboarded: userData?.stripe_connect_onboarded || false,
       confirmed_referrals: count || 0
     }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders(req), 'Content-Type': 'application/json' }
     })
 
   } catch (err) {
     console.error('[generate-referral-code]', err)
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders(req), 'Content-Type': 'application/json' }
     })
   }
 })

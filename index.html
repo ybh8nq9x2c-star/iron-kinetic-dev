@@ -2429,8 +2429,12 @@ const STRIPE_PK='pk_live_51TJVZ2JYTPcSrsvtjpVbCEtvJFpC9pIj5n0PPOSPLtIGcQ12rc6YOH
 /* Supabase client — graceful no-op if CDN blocked */
 const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}catch{return null;}})();
 
-/* Global trend access state — optimistic default prevents flash of paywall on load */
-let trendAccess={access:true,mode:'trial',daysLeft:TRIAL_DAYS};
+/* Global trend access state — closure prevents console override */
+const _trendState={access:true,mode:'trial',daysLeft:TRIAL_DAYS,_serverValidated:false};
+function getTrendAccess(){return{..._trendState};}
+function setTrendAccess(v){Object.assign(_trendState,v,{_serverValidated:true});}
+/* Legacy compat — read-only proxy */
+let trendAccess=new Proxy(_trendState,{set(){console.warn('[IK] trendAccess is read-only — use server verification');return false;}});
 
 /* Sync check for anonymous users (no network needed) */
 function _checkTrendLocal(){
@@ -2500,7 +2504,7 @@ let _trendInitResolve;const trendInitPromise=new Promise(r=>{_trendInitResolve=r
 async function initTrend(){
   /* Keep optimistic trial default until server responds — prevents flash of expired state */
   const user=await getUser();
-  if(!user)trendAccess=_checkTrendLocal();
+  if(!user)setTrendAccess(_checkTrendLocal());
   updateTrendBadge();
   const subMgmt=document.getElementById('set-sub-manage');
   if(subMgmt)subMgmt.style.display=trendAccess.mode==='paid'?'block':'none';
@@ -2508,8 +2512,8 @@ async function initTrend(){
   if(subStatus&&trendAccess.mode==='paid')subStatus.textContent=t('set.sub.active');
   /* Then async Supabase check (refines if logged in) */
   const remote=await checkTrendAccess();
-  if(JSON.stringify(remote)!==JSON.stringify(trendAccess)){
-    trendAccess=remote;
+  if(JSON.stringify(remote)!==JSON.stringify(getTrendAccess())){
+    setTrendAccess(remote);
     updateTrendBadge();
     const lb=document.getElementById('trend-lock-banner');
     const _scrProg=document.getElementById('scr-prog');
@@ -3115,10 +3119,10 @@ async function syncUserAfterLogin(user){
     /* Refresh full access state */
     const{data}=await Promise.resolve(sb.from('users').select('trend_active,trial_end,plan').eq('id',user.id).single()).catch(()=>({data:null}));
     if(data?.trend_active){
-      trendAccess={access:true,mode:'paid',plan:data.plan||'monthly'};
+      setTrendAccess({access:true,mode:'paid',plan:data.plan||'monthly'});
     }else if(data?.trial_end&&new Date(data.trial_end)>new Date()){
       const left=Math.ceil((new Date(data.trial_end)-new Date())/86400000);
-      trendAccess={access:true,mode:'trial',daysLeft:left};
+      setTrendAccess({access:true,mode:'trial',daysLeft:left});
     }
   }catch(e){console.warn('[IK] syncUserAfterLogin exception:',e);}
   updateTrendBadge();
@@ -3221,7 +3225,7 @@ async function _resumePostOnboardingOrBoot(){
         try{
           const{data}=await sb.from('users').select('trend_active,plan').eq('id',user.id).single();
           if(data?.trend_active){
-            trendAccess={access:true,mode:'paid',plan:data.plan||'monthly'};
+            setTrendAccess({access:true,mode:'paid',plan:data.plan||'monthly'});
             updateTrendBadge();
             if(typeof updateSubManagementCard==='function')updateSubManagementCard();
             showToast(t('toast.trendActivated'),4000);
@@ -5299,8 +5303,9 @@ function calcMacros(){
   const carbs=Math.max(carbFloor, rawCarbs);
   const modified=m!==0||ref||rev>0;
 
-  const _s=getDayMacroShift(),_c=Math.round(Math.max(carbFloor,carbs*_s.carbMult)),_f=Math.round(Math.max(fatFloor,fat*_s.fatMult)),_k=Math.max(kcalFloor,Math.round(pro*4+_c*4+_f*9));  /* MISSING3: body composition shift */
-  const bcs=getBodyCompShift();if(bcs){kcal+=bcs.shift;const _bcMsg=bcs.msg;}
+  const _s=getDayMacroShift(),_c=Math.round(Math.max(carbFloor,carbs*_s.carbMult)),_f=Math.round(Math.max(fatFloor,fat*_s.fatMult));
+  let _k=Math.max(kcalFloor,Math.round(pro*4+_c*4+_f*9));
+  const bcs=getBodyCompShift();if(bcs){_k=Math.max(kcalFloor,_k+bcs.shift);}  /* body comp shift now applied to _k */
   const _result={kcal:_k,pro,carbs:_c,fat:_f,modified,refeedActive:ref,reverseWeeks:rev,dayType:_s.label};
   _macroCache=_result;_macroCacheKey=_ck;
   return _result;
@@ -5367,7 +5372,7 @@ function runAdaptiveEngine(){
     if(lsR(SK_ADAPTIVE)===toISO())return;
     let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
     if(arr.length<3)return;
-    const recent=arr.slice(0,5);
+    const recent=arr.slice(-5);  // was slice(0,5) — use LAST 5 sessions, not first
     const avgE=avg(recent.map(c=>+(c.energy||5)));
     const avgH=avg(recent.map(c=>+(c.hunger||5)));
     const avgA=avg(recent.map(c=>+(c.adherence||5)));
@@ -7014,7 +7019,26 @@ function buildSnack(taste,style,DB,excluded,proTarget,carbTarget,day,mealIdx,isI
     {rest:'Fiocchi di latte 150g + Carote crude 80g + Olio EVO 5g',carbSource:null,baseAmount:0},
     {rest:'Tacchino 80g + Cetrioli 100g + Semi di girasole 15g (FODMAP-safe)',carbSource:null,baseAmount:0},
   ];
-  const pool=isIBS?ibsSafe:taste==='dolce'?sweet:taste==='salato'?savory:[...sweet,...savory];
+  let pool=isIBS?ibsSafe:taste==='dolce'?sweet:taste==='salato'?savory:[...sweet,...savory];
+  /* ── Allergen exclusion filter (CRITICAL: was missing) ── */
+  if(excluded&&excluded.length){
+    const hasAllergen=(item)=>{
+      const r=item.rest.toLowerCase();
+      return excluded.some(e=>{
+        const a=e.toLowerCase();
+        if(a.includes('lattosio')||a.includes('latte'))  return r.includes('yogurt')||r.includes('latte')||r.includes('ricotta')||r.includes('fiocchi di latte')||r.includes('fiocchi di mandorla');
+        if(a.includes('glut')||a.includes('celi'))       return r.includes('pane ')||r.includes('avena ')||r.includes('pasta')||r.includes('farro')||r.includes('grano');
+        if(a.includes('uovo')||a.includes('uova'))       return r.includes('uova')||r.includes('uovo')||r.includes('albume')||r.includes('maionese');
+        if(a.includes('pesce'))                          return r.includes('salmone')||r.includes('tonno')||r.includes('acciugh')||r.includes('alice');
+        if(a.includes('soia'))                           return r.includes('tofu')||r.includes('soia');
+        if(a.includes('arachidi'))                       return r.includes('arachidi');
+        if(a.includes('frutta secca')||a.includes('noci')) return r.includes('noci')||r.includes('mandorle')||r.includes('nocciole');
+        return false; // unknown allergen — safe default
+      });
+    };
+    const filtered=pool.filter(s=>!hasAllergen(s));
+    if(filtered.length>0) pool=filtered; // keep filtered, fallback to full pool if empty
+  }
   /* Prime-offset indexing avoids day/slot collisions; _regenSeed shifts on regen */
   const idx=(((day||1)-1)*5+((mealIdx||0)*3)+_regenSeed*3)%pool.length;
   const snack=pool[idx];
@@ -7361,14 +7385,14 @@ function analyzeState(){
 /* ═══════════════════════════════════════
    ONBOARDING — new 5-step flow
 ═══════════════════════════════════════ */
-function setSex(s){profState.sex=s;document.getElementById('sex-m').classList.toggle('seg-on',s==='M');document.getElementById('sex-f').classList.toggle('seg-on',s==='F');}
-function setWk(n){profState.workoutsWk=n;document.getElementById('wk-label').textContent=t('onb.wk.selected',{n});document.querySelectorAll('#wk-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});if(n===6)toast(t('onb.wk.cap6'));}
-function setSt(n){profState.stepsDay=n;document.getElementById('st-label').textContent=t('onb.st.selected',{n:n.toLocaleString(_lang==='en'?'en-US':'it-IT')});document.querySelectorAll('#st-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});}
+function setSex(s){profState.sex=s;const m=document.getElementById('sex-m'),f=document.getElementById('sex-f');if(m)m.classList.toggle('seg-on',s==='M');if(f)f.classList.toggle('seg-on',s==='F');}
+function setWk(n){profState.workoutsWk=n;const lbl=document.getElementById('wk-label');if(lbl)lbl.textContent=t('onb.wk.selected',{n});document.querySelectorAll('#wk-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});if(n===6)toast(t('onb.wk.cap6'));}
+function setSt(n){profState.stepsDay=n;const lbl=document.getElementById('st-label');if(lbl)lbl.textContent=t('onb.st.selected',{n:n.toLocaleString(_lang==='en'?'en-US':'it-IT')});document.querySelectorAll('#st-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});}
 function setGoal(btn){
   profState.goal=btn.dataset.goal;profState.goalMod=parseInt(btn.dataset.mod);
   document.querySelectorAll('#goal-wrap button').forEach(b=>b.classList.toggle('seg-on',b===btn));
   const s3btn=document.getElementById('to-step3-btn');
-  s3btn.disabled=false;s3btn.style.opacity='1';s3btn.style.cursor='pointer';
+  if(s3btn){s3btn.disabled=false;s3btn.style.opacity='1';s3btn.style.cursor='pointer';}
 }
 function setMealsCount(n){
   prefState.mealsCount=n;

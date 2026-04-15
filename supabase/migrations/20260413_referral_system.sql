@@ -87,4 +87,25 @@ ALTER TABLE referrals         ENABLE ROW LEVEL SECURITY;
 ALTER TABLE payout_requests   ENABLE ROW LEVEL SECURITY;
 
 -- referral_codes: owner can see/manage their own code
-DROP POLICY IF EXISTS 
+DROP POLICY IF EXISTS referral_codes_owner ON referral_codes;
+CREATE POLICY referral_codes_owner ON referral_codes
+  FOR ALL USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- referrals: referrer or referred can read; only system can insert/update
+DROP POLICY IF EXISTS referrals_read ON referrals;
+CREATE POLICY referrals_read ON referrals
+  FOR SELECT USING (auth.uid() = referrer_id OR auth.uid() = referred_id);
+
+DROP POLICY IF EXISTS referrals_insert ON referrals;
+CREATE POLICY referrals_insert ON referrals
+  FOR INSERT WITH CHECK (true); -- system creates via service_role on checkout
+
+DROP POLICY IF EXISTS referrals_update ON referrals;
+CREATE POLICY referrals_update ON referrals
+  FOR UPDATE USING (true); -- system updates via service_role on webhook
+
+-- payout_requests: owner can read their own payouts
+DROP POLICY IF EXISTS payout_requests_owner ON payout_requests;
+CREATE POLICY payout_requests_owner ON payout_requests
+  FOR SELECT USING (auth.uid() = user_id);
