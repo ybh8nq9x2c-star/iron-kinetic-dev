@@ -1390,8 +1390,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
         <!-- Pricing CTAs -->
         <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;"><span id="onb-price-monthly">€6,99/mese</span><br><span id="onb-price-monthly-sub" style="font-weight:400;font-size:10px;opacity:.7;">Cancella quando vuoi</span></button>
-          <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:var(--p);border:1px solid rgba(77,220,198,.35);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;"><span id="onb-price-annual">€69,99/anno</span><br><span id="onb-price-annual-sub" style="font-weight:400;font-size:10px;opacity:.7;">💰 Risparmia il 17%</span></button>
+          <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€6,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;">Cancella quando vuoi</span></button>
+          <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:var(--p);border:1px solid rgba(77,220,198,.35);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€69,99/anno<br><span style="font-weight:400;font-size:10px;opacity:.7;">💰 Risparmia il 17%</span></button>
         </div>
         <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.2);border-radius:var(--r);padding:10px 8px;font-weight:800;font-size:11px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:8px;">€179,99 · Accesso permanente</button>
         <!-- Trial CTA -->
@@ -3319,10 +3319,6 @@ it:{
   'onb.paywall.lockSub':'Curva predittiva · Impronta Metabolica · Report Settimanale · Coach AI · e altro ancora',
   'onb.paywall.trial':'Attiva la prova gratuita di 7 giorni',
   'onb.paywall.trialNote':'Trend attivo per 7 giorni · Poi solo il piano base è gratuito · Nessun addebito automatico',
-  'onb.price.monthly':'€6,99/mese',
-  'onb.price.monthly.sub':'Cancella quando vuoi',
-  'onb.price.annual':'€69,99/anno',
-  'onb.price.annual.sub':'💰 Risparmia il 17%',
   'trend.blur.trialActive':'Prova gratuita attiva',
   'trend.blur.lastDay':'Ultimo giorno di prova',
   'trend.blur.daysLeft':'{n} giorni rimasti',
@@ -3949,10 +3945,6 @@ en:{
   'onb.paywall.lockSub':'Predictive Curve · Metabolic Fingerprint · Weekly Report · AI Coach · and more',
   'onb.paywall.trial':'Start your free 7-day trial',
   'onb.paywall.trialNote':'Trend active for 7 days · Then only the base plan is free · No automatic charge',
-  'onb.price.monthly':'€6,99/month',
-  'onb.price.monthly.sub':'Cancel anytime',
-  'onb.price.annual':'€69,99/year',
-  'onb.price.annual.sub':'💰 Save 17%',
   'trend.blur.trialActive':'Free trial active',
   'trend.blur.lastDay':'Last day of trial',
   'trend.blur.daysLeft':'{n} days remaining',
@@ -4663,18 +4655,6 @@ function applyTranslations(deferOffscreen){
     else if(v==='Cookie'||v==='Cookies')lbl.textContent=t('info.app.cookie');
     else if(v==='Tracking')lbl.textContent=t('info.app.tracking');
   });
-  /* onb paywall pricing (if visible) */
-  const _pwVis=document.getElementById('onb-paywall-choice');
-  if(_pwVis&&_pwVis.style.display!=='none'){
-    const _lt2=document.getElementById('onb-trend-lock-title');if(_lt2)_lt2.textContent=t('onb.paywall.lockTitle');
-    const _ls2=document.getElementById('onb-trend-lock-sub');if(_ls2)_ls2.textContent=t('onb.paywall.lockSub');
-    const _tb2=document.getElementById('onb-trial-btn-txt');if(_tb2)_tb2.textContent=t('onb.paywall.trial');
-    const _tn2=document.getElementById('onb-trial-note');if(_tn2)_tn2.textContent=t('onb.paywall.trialNote');
-    const _pm2=document.getElementById('onb-price-monthly');if(_pm2)_pm2.textContent=t('onb.price.monthly');
-    const _pms2=document.getElementById('onb-price-monthly-sub');if(_pms2)_pms2.textContent=t('onb.price.monthly.sub');
-    const _pa2=document.getElementById('onb-price-annual');if(_pa2)_pa2.textContent=t('onb.price.annual');
-    const _pas2=document.getElementById('onb-price-annual-sub');if(_pas2)_pas2.textContent=t('onb.price.annual.sub');
-  }
   /* ── end i18n static patch ── */
   /* ── extra always-run patches ── */
   const _fatLbl=document.getElementById('macro-fat-lbl');
@@ -7549,10 +7529,6 @@ function runCalcAndGenerate(){
     const _ls=document.getElementById('onb-trend-lock-sub');if(_ls)_ls.textContent=t('onb.paywall.lockSub');
     const _tb=document.getElementById('onb-trial-btn-txt');if(_tb)_tb.textContent=t('onb.paywall.trial');
     const _tn=document.getElementById('onb-trial-note');if(_tn)_tn.textContent=t('onb.paywall.trialNote');
-    const _pm=document.getElementById('onb-price-monthly');if(_pm)_pm.textContent=t('onb.price.monthly');
-    const _pms=document.getElementById('onb-price-monthly-sub');if(_pms)_pms.textContent=t('onb.price.monthly.sub');
-    const _pa=document.getElementById('onb-price-annual');if(_pa)_pa.textContent=t('onb.price.annual');
-    const _pas=document.getElementById('onb-price-annual-sub');if(_pas)_pas.textContent=t('onb.price.annual.sub');
   }
 
   /* Store temporarily */
@@ -9989,7 +9965,15 @@ function lazyLoadChartJs(cb){
         if(nw)nw.addEventListener('statechange',()=>{if(nw.state==='installed'&&r.waiting)r.waiting.postMessage({type:'SKIP_WAITING'});});
       });
     }).catch(()=>{});
-    navigator.serviceWorker.addEventListener('controllerchange',()=>window.location.reload());
+    /* Reload only when SW updates AFTER page is already loaded (not on first claim).
+       _swReady flag ensures we don't reload during the initial boot sequence. */
+    let _swReady=false;
+    setTimeout(()=>{_swReady=true;},2000);
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{
+      if(_swReady)window.location.reload();
+    });
+    /* Ignore SW_ACTIVATED messages from old sw.js v26 — no action needed */
+    navigator.serviceWorker.addEventListener('message',()=>{});
   }
 })();
 
@@ -10102,7 +10086,7 @@ function showOnboarding(){
   const _q=id=>document.getElementById(id);
   /* Slide 0 */
   if(_q('onb-badge-0'))_q('onb-badge-0').textContent=t('onb2.slide1.badge');
-  if(_q('onb-e0')){const _e=_q('onb-e0');_e.className='onb-emoji material-symbols-outlined font-loaded';_e.textContent=t('onb2.slide1.emoji');}
+  if(_q('onb-e0')){const _e=_q('onb-e0');_e.className='onb-emoji material-symbols-outlined';_e.textContent=t('onb2.slide1.emoji');}
   if(_q('onb-t0'))_q('onb-t0').textContent=t('onb2.slide1.title');
   if(_q('onb-b0'))_q('onb-b0').textContent=t('onb2.slide1.body');
   if(_q('onb-bl0-0'))_q('onb-bl0-0').textContent=t('onb2.slide1.bl0');
@@ -10111,7 +10095,7 @@ function showOnboarding(){
   if(_q('onb-hint0'))_q('onb-hint0').textContent=t('onb2.slide1.hint');
   /* Slide 1 */
   if(_q('onb-badge-1'))_q('onb-badge-1').textContent=t('onb2.slide2.badge');
-  if(_q('onb-e1')){const _e=_q('onb-e1');_e.className='onb-emoji material-symbols-outlined font-loaded';_e.textContent=t('onb2.slide2.emoji');}
+  if(_q('onb-e1')){const _e=_q('onb-e1');_e.className='onb-emoji material-symbols-outlined';_e.textContent=t('onb2.slide2.emoji');}
   if(_q('onb-t1'))_q('onb-t1').textContent=t('onb2.slide2.title');
   if(_q('onb-b1'))_q('onb-b1').textContent=t('onb2.slide2.body');
   if(_q('onb-sv1-0'))_q('onb-sv1-0').textContent=t('onb2.slide2.sv0');
@@ -10122,7 +10106,7 @@ function showOnboarding(){
   if(_q('onb-sl1-2'))_q('onb-sl1-2').textContent=t('onb2.slide2.sl2');
   /* Slide 2 */
   if(_q('onb-badge-2'))_q('onb-badge-2').textContent=t('onb2.slide3.badge');
-  if(_q('onb-e2')){const _e=_q('onb-e2');_e.className='onb-emoji material-symbols-outlined font-loaded';_e.textContent=t('onb2.slide3.emoji');}
+  if(_q('onb-e2')){const _e=_q('onb-e2');_e.className='onb-emoji material-symbols-outlined';_e.textContent=t('onb2.slide3.emoji');}
   if(_q('onb-t2'))_q('onb-t2').textContent=t('onb2.slide3.title');
   if(_q('onb-b2'))_q('onb-b2').textContent=t('onb2.slide3.body');
   if(_q('onb-bl2-0'))_q('onb-bl2-0').textContent=t('onb2.slide3.bl0');
@@ -10130,7 +10114,7 @@ function showOnboarding(){
   if(_q('onb-bl2-2'))_q('onb-bl2-2').textContent=t('onb2.slide3.bl2');
   /* Slide 3 */
   if(_q('onb-badge-3'))_q('onb-badge-3').textContent=t('onb2.slide4.badge');
-  if(_q('onb-e3')){const _e=_q('onb-e3');_e.className='onb-emoji material-symbols-outlined font-loaded';_e.textContent=t('onb2.slide4.emoji');}
+  if(_q('onb-e3')){const _e=_q('onb-e3');_e.className='onb-emoji material-symbols-outlined';_e.textContent=t('onb2.slide4.emoji');}
   if(_q('onb-t3'))_q('onb-t3').textContent=t('onb2.slide4.title');
   if(_q('onb-b3'))_q('onb-b3').textContent=t('onb2.slide4.body');
   if(_q('onb-qt3'))_q('onb-qt3').textContent=t('onb2.slide4.quote');

@@ -1,10 +1,15 @@
 {
-  "name": "dietpro-pwa",
+  "name": "iron-kinetic",
   "version": "1.0.0",
+  "description": "Iron Kinetic PWA",
+  "main": "server.js",
   "scripts": {
-    "start": "node node_modules/.bin/serve -s . -p ${PORT:-3000} --no-clipboard"
+    "start": "node server.js"
   },
   "dependencies": {
-    "serve": "^14.2.3"
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
