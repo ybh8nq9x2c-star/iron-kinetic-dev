@@ -43,3 +43,4 @@ supabase/.temp/
 __pycache__/
 *.pyc
 reddit-swarm/
+backups/*.html
