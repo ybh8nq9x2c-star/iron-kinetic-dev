@@ -16,7 +16,7 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/></noscript>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" media="print" onload="this.media='all'"/>
 <style>.material-symbols-outlined{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;}</style>
 <!-- Chart.js loaded lazily on demand — see lazyLoadChartJs() -->
 <style>
@@ -27,7 +27,7 @@
   --sec:#c0c1ff; --sec-dim:rgba(192,193,255,.12);
   --bg:#0e0e0e; --s0:#131313; --s1:#1c1b1b; --s2:#201f1f; --s3:#2a2a2a; --s4:#353534;
   --on:#e5e2e1; --on-v:rgba(199,196,216,.85);
-  --muted:rgba(199,196,216,.55); --dim:rgba(199,196,216,.28);
+  --muted:rgba(199,196,216,.60); --dim:rgba(199,196,216,.47);
   --red:#FF3B30; --orange:#FF9F0A; --blue:#0A84FF; --purple:#BF5AF2;
   --line:rgba(255,255,255,.06); --line-hi:rgba(255,255,255,.10);
   --r:16px; --r2:12px; --r3:8px; --r-pill:999px; --rbox:var(--r);
@@ -195,7 +195,7 @@ textarea.inp{height:auto;padding:12px 14px;resize:none;line-height:1.5;}
 .install-banner{position:fixed;bottom:calc(var(--nav-bottom) + var(--nav-h) + 8px);left:12px;right:12px;background:var(--s1);border:1px solid rgba(77,220,198,.22);border-radius:var(--r2);padding:10px 12px;display:flex;align-items:center;gap:10px;z-index:490;box-shadow:var(--glass-shadow);}
 #toast{position:fixed;bottom:calc(var(--nav-bottom) + var(--nav-h) + 14px + var(--kb-offset));left:50%;transform:translateX(-50%) translateY(16px) scale(.95);background:rgba(20,20,20,.96);border:1px solid rgba(77,220,198,.22);color:var(--on);font-size:12px;font-weight:600;font-family:'Manrope',sans-serif;padding:9px 18px;border-radius:var(--r-pill);opacity:0;transition:opacity .22s cubic-bezier(.4,0,.2,1),transform .22s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;z-index:500;max-width:calc(100vw - 40px);overflow:hidden;text-overflow:ellipsis;box-shadow:0 8px 32px rgba(0,0,0,.4);}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0) scale(1);}
-#onb-screen{display:none;position:fixed;inset:0;padding-top:var(--sat);padding-bottom:calc(var(--nav-bottom) + var(--nav-h) + 16px + var(--kb-offset));z-index:100;background:var(--bg);flex-direction:column;overflow-y:scroll;-webkit-overflow-scrolling:touch;scroll-padding-bottom:calc(var(--nav-bottom) + var(--nav-h) + var(--kb-offset) + 16px);}
+#onb-screen{display:none;position:fixed;inset:0;min-width:320px;padding-top:var(--sat);padding-bottom:calc(var(--nav-bottom) + var(--nav-h) + 16px + var(--kb-offset));z-index:100;background:var(--bg);flex-direction:column;overflow-y:scroll;-webkit-overflow-scrolling:touch;scroll-padding-bottom:calc(var(--nav-bottom) + var(--nav-h) + var(--kb-offset) + 16px);}
 #onb-screen.on{display:flex;}
 #app-shell{display:none;height:100%;height:100dvh;min-height:0;position:relative;overflow:hidden;}
 #app-shell.on{display:block;}
@@ -227,6 +227,7 @@ body.onboarding-active #onb-screen{
 #wChart{display:block;width:100%!important;height:165px!important;touch-action:pan-x;}
 /* Pulse animations removed — continuous animations signal vibe-coded, not professional */
 .coach-ico-primary{background:rgba(77,220,198,.12);color:var(--p);}
+.coach-badge-inline{padding:8px 10px;border-radius:var(--r2);font-size:11px;font-weight:600;line-height:1.5;}
 .row{display:flex;align-items:center;}.rowb{display:flex;align-items:center;justify-content:space-between;}
 .g2{gap:8px;}.g3{gap:10px;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -244,7 +245,7 @@ body.onboarding-active #onb-screen{
 .range-wrap input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--p);border:2px solid #0e0e0e;box-shadow:0 0 0 4px rgba(77,220,198,.16);margin-top:-8px;}
 .range-wrap input[type="range"]::-moz-range-track{height:6px;border-radius:999px;background:rgba(255,255,255,.08);}
 .range-wrap input[type="range"]::-moz-range-thumb{width:22px;height:22px;border:none;border-radius:50%;background:var(--p);box-shadow:0 0 0 4px rgba(77,220,198,.16);}
-.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;overflow-x:auto;}
 .micro-chip{height:36px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--s2);color:var(--on-v);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;touch-action:manipulation;}
 .active-chip{background:rgba(77,220,198,.12)!important;border-color:rgba(77,220,198,.28)!important;color:var(--p)!important;}
 /* Food tag chips for onboarding */
@@ -929,7 +930,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
 <script defer src="https://js.stripe.com/v3/" integrity="sha384-TEBuKD1DvAKebMS0TGTXn/tbig+nnYNsMC4sr0OzgYs2xAHR2yDLZH+va8tKT47x" crossorigin="anonymous"></script>
 <script>window.sentryOnLoad=function(){Sentry.init({release:'iron-kinetic@1.0.0',tracesSampleRate:0.1,replaysSessionSampleRate:0.1,replaysOnErrorSampleRate:1.0,environment:location.hostname.includes('railway')?'production':'development'});};</script>
-<script src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" integrity="sha384-7xGRbA4IumR22TZkO0qKKawombfOd6XW9Uz+IONGHGkfwIoXAnhqlPRe8UXOVIKQ" crossorigin="anonymous"></script>
+<script defer src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" integrity="sha384-7xGRbA4IumR22TZkO0qKKawombfOd6XW9Uz+IONGHGkfwIoXAnhqlPRe8UXOVIKQ" crossorigin="anonymous"></script>
 </head>
 <body class="onboarding-active">
 
@@ -1103,20 +1104,20 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
   <div class="onb-step on" id="step-0" style="gap:14px;">
     <p class="sec-label" style="margin-bottom:0;" id="onb-step0-lbl">Il tuo corpo</p>
     <div>
-      <label class="field-label" for="sex-m">Sesso biologico</label>
+      <label class="field-label" for="sex-m" data-i18n="onb.field.sesso">Sesso biologico</label>
       <div class="seg-wrap">
         <button class="seg-btn seg-on sn" id="sex-m" onclick="setSex('M')">Uomo</button>
         <button class="seg-btn sn" id="sex-f" onclick="setSex('F')">Donna</button>
       </div>
     </div>
     <div class="grid2">
-      <div><label class="field-label" for="f-age">Età (anni)</label><input class="inp" id="f-age" type="number" inputmode="numeric" placeholder="28" min="16" max="80"/></div>
-      <div><label class="field-label" for="f-height">Altezza (cm)</label><input class="inp" id="f-height" type="number" inputmode="numeric" placeholder="178" min="140" max="220"/></div>
+      <div><label class="field-label" for="f-age" data-i18n="onb.field.eta">Età (anni)</label><input class="inp" id="f-age" type="number" inputmode="numeric" placeholder="28" min="16" max="80"/></div>
+      <div><label class="field-label" for="f-height" data-i18n="onb.field.altezza">Altezza (cm)</label><input class="inp" id="f-height" type="number" inputmode="numeric" placeholder="178" min="140" max="220"/></div>
     </div>
     <div class="grid2">
-      <div><label class="field-label" for="f-weight">Peso (kg)</label><input class="inp" id="f-weight" type="number" inputmode="decimal" step="0.1" placeholder="78.5" min="40" max="250"/></div>
+      <div><label class="field-label" for="f-weight" data-i18n="onb.field.peso">Peso (kg)</label><input class="inp" id="f-weight" type="number" inputmode="decimal" step="0.1" placeholder="78.5" min="40" max="250"/></div>
       <div>
-        <label class="field-label" for="f-bf">Grasso corporeo (%)</label>
+        <label class="field-label" for="f-bf" data-i18n="onb.field.bf">Grasso corporeo (%)</label>
         <input class="inp" id="f-bf" type="number" inputmode="decimal" step="0.5" placeholder="16" min="4" max="50"/>
         <p style="font-size:9px;color:var(--dim);margin-top:4px;font-weight:500;" class="sn">Opzionale. Se inserito, il calcolo diventa più preciso.</p>
       </div>
@@ -1128,7 +1129,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
   <div class="onb-step" id="step-1" style="gap:14px;">
     <p class="sec-label" style="margin-bottom:0;" id="onb-step1-lbl">La tua attività</p>
     <div>
-      <label class="field-label">Allenamenti / settimana</label>
+      <label class="field-label" data-i18n="onb.field.allenamenti">Allenamenti / settimana</label>
       <div class="seg-wrap" id="wk-seg">
         <button class="seg-btn sn" onclick="setWk(0)">0</button>
         <button class="seg-btn sn" onclick="setWk(2)">2</button>
@@ -1140,7 +1141,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="wk-label">Selezionato: —</p>
     </div>
     <div>
-      <label class="field-label">Passi giornalieri medi</label>
+      <label class="field-label" data-i18n="onb.field.passi">Passi giornalieri medi</label>
       <div class="seg-wrap" id="st-seg">
         <button class="seg-btn sn" onclick="setSt(3000)">3k</button>
         <button class="seg-btn sn" onclick="setSt(5000)">5k</button>
@@ -1151,7 +1152,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="st-label">Selezionato: —</p>
     </div>
     <div>
-      <label class="field-label" for="f-sport">Sport praticato</label>
+      <label class="field-label" for="f-sport" data-i18n="onb.field.sport">Sport praticato</label>
       <select class="inp" id="f-sport" onchange="profState.sport=this.value;" style="font-size:15px!important;color:var(--on);background:var(--s1);">
         <option value="strength">Forza / Potenza (Pesistica, Sprint)</option>
         <option value="endurance">Resistenza (Corsa, Ciclismo)</option>
@@ -1162,7 +1163,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       </select>
     </div>
     <div>
-      <label class="field-label" for="f-train-time">Orario di allenamento</label>
+      <label class="field-label" for="f-train-time" data-i18n="onb.field.trainTime">Orario di allenamento</label>
       <input class="inp" id="f-train-time" type="time" onchange="profState.trainTime=this.value;" style="font-size:16px!important;color:var(--on);"/>
       <p style="font-size:10px;color:var(--dim);margin-top:5px;font-weight:500;line-height:1.5;" class="sn">⏱ Cruciale per il nutrient timing: i pasti pre/post-workout verranno calibrati su questo orario.</p>
     </div>
@@ -1176,7 +1177,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
   <div class="onb-step" id="step-2" style="gap:14px;">
     <p class="sec-label" style="margin-bottom:0;" id="onb-step2-lbl">Cosa vuoi ottenere</p>
     <div>
-      <label class="field-label">Obiettivo primario</label>
+      <label class="field-label" data-i18n="onb.field.obiettivo">Obiettivo primario</label>
       <div style="display:flex;flex-direction:column;gap:8px;" id="goal-wrap">
         <button class="seg-btn sn" data-goal="cut_extreme" data-mod="-500" style="height:auto;min-height:50px;border-radius:var(--r);padding:10px 14px;line-height:1.3;" onclick="setGoal(this)">🔥 <strong>Dimagrire veloce</strong><br><span style="font-size:10px;opacity:.7;font-weight:400;">Definizione intensiva · −500 kcal</span></button>
         <button class="seg-btn sn" data-goal="recomp"      data-mod="-200" style="height:auto;min-height:50px;border-radius:var(--r);padding:10px 14px;line-height:1.3;" onclick="setGoal(this)">🔁 <strong>Dimagrire e tonificare</strong><br><span style="font-size:10px;opacity:.7;font-weight:400;">Ricomposizione · approccio bilanciato</span></button>
@@ -1196,7 +1197,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
     <!-- Numero pasti -->
     <div>
-      <label class="field-label">Quanti pasti al giorno?</label>
+      <label class="field-label" data-i18n="onb.field.pasti">Quanti pasti al giorno?</label>
       <div class="seg-wrap" id="meals-seg">
         <button class="seg-btn sn" onclick="setMealsCount(2)">2</button>
         <button class="seg-btn sn" onclick="setMealsCount(3)">3</button>
@@ -1207,7 +1208,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
     <!-- Preferenza dolce/salato -->
     <div>
-      <label class="field-label">Gusto prevalente</label>
+      <label class="field-label" data-i18n="onb.field.gusto">Gusto prevalente</label>
       <div class="seg-wrap" id="taste-seg">
         <button class="seg-btn sn" onclick="setTaste('salato')" id="taste-salato">Salato</button>
         <button class="seg-btn sn" onclick="setTaste('dolce')" id="taste-dolce">Dolce</button>
@@ -1217,7 +1218,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
     <!-- Stile alimentare -->
     <div>
-      <label class="field-label">Stile alimentare</label>
+      <label class="field-label" data-i18n="onb.field.stile">Stile alimentare</label>
       <div class="seg-wrap" id="diet-style-seg">
         <button class="seg-btn sn" onclick="setDietStyle('onnivoro')" style="font-size:10px;">Onnivoro</button>
         <button class="seg-btn sn" onclick="setDietStyle('vegetariano')" style="font-size:10px;">Vegetariano</button>
@@ -1227,13 +1228,13 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
     <!-- Intolleranze/allergie -->
     <div>
-      <label class="field-label">Intolleranze / alimenti da escludere</label>
+      <label class="field-label" data-i18n="onb.field.intolleranze">Intolleranze / alimenti da escludere</label>
       <input class="inp" id="f-intolerances" type="text" placeholder="es. lattosio, glutine, frutta secca…" style="font-size:16px !important;"/>
     </div>
 
     <!-- Protocollo clinico opzionale -->
     <div id="clinical-section">
-      <label class="field-label">Protocollo clinico (opzionale)</label>
+      <label class="field-label" data-i18n="onb.field.clinical">Protocollo clinico (opzionale)</label>
       <p style="font-size:10px;color:var(--dim);margin-bottom:8px;font-weight:500;" class="sn">Solo se hai una diagnosi medica specifica. Adatta proteine, sodio e selezione cibi.</p>
       <div style="display:flex;flex-wrap:wrap;gap:6px;" id="clinical-chips">
         <button class="food-tag" id="cp-none"    onclick="setClinical(null,this)"      style="background:rgba(77,220,198,.14);border-color:rgba(77,220,198,.32);color:var(--p);">✓ Nessuno</button>
@@ -1328,10 +1329,11 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <input class="inp" id="f-extra-foods" type="text" placeholder="es. broccoli, zucchine, mele, skyr…"/>
     </div>
 
-    <div class="row g2">
+    <div class="row g2" id="gen-btn-row" aria-busy="false">
       <button class="btn btn-ghost sn" onclick="goStep(3)" style="flex:1;">← Indietro</button>
-      <button class="btn btn-primary sn" onclick="runCalcAndGenerate()" style="flex:2;">⚡ Calcola il mio piano personalizzato →</button>
+      <button class="btn btn-primary sn" id="btn-generate-plan" onclick="runCalcAndGenerate()" style="flex:2;">⚡ Calcola il mio piano personalizzato →</button>
     </div>
+    <div id="gen-status" aria-live="polite" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"></div>
 
     <!-- Result reveal -->
     <div class="result-card" id="result-card">
@@ -1428,8 +1430,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           </div>
         </div>
         <div id="coach-streak-badge" style="position:absolute;top:14px;right:14px;"></div>
-        <div id="coach-micro-badge" style="display:none;margin-top:10px;padding:8px 10px;border-radius:var(--r2);font-size:11px;font-weight:600;line-height:1.5;"></div>
-        <div id="coach-bodycomp-badge" style="display:none;margin-top:8px;padding:8px 10px;border-radius:var(--r2);font-size:11px;font-weight:600;line-height:1.5;"></div>
+        <div id="coach-micro-badge" class="coach-badge-inline" style="display:none;margin-top:10px;"></div>
+        <div id="coach-bodycomp-badge" class="coach-badge-inline" style="display:none;margin-top:8px;"></div>
       </div>
 
       <!-- Adaptive Macro Engine Banner -->
@@ -2427,7 +2429,7 @@ const TRIAL_DAYS=7;
 const STRIPE_PK='pk_live_51TJVZ2JYTPcSrsvtjpVbCEtvJFpC9pIj5n0PPOSPLtIGcQ12rc6YOHChFq5uaP7RZ63Gmeu1ZuQF806vWIW7b4EA007qCJNHGX';
 
 /* Supabase client — graceful no-op if CDN blocked */
-const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}catch{return null;}})();
+const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}catch(e){console.error('[IK] Supabase init failed:',e);return null;}})();
 
 /* Global trend access state — closure prevents console override */
 const _trendState={access:true,mode:'trial',daysLeft:TRIAL_DAYS,_serverValidated:false};
@@ -2505,25 +2507,28 @@ async function checkTrendAccess(){
   return{access:false,mode:'expired'};
 }
 
+/* MED-09: module-level trend element cache */
+const _trendEls={};
+function _getTrendEl(id){if(!_trendEls[id])_trendEls[id]=document.getElementById(id);return _trendEls[id];}
 let _trendInitResolve;const trendInitPromise=new Promise(r=>{_trendInitResolve=r;});
 async function initTrend(){
   /* Keep optimistic trial default until server responds — prevents flash of expired state */
   const user=await getUser();
   if(!user){setTrendAccess(_checkTrendLocal());updateTrendBadge();}
-  const subMgmt=document.getElementById('set-sub-manage');
+  const subMgmt=_getTrendEl('set-sub-manage');
   if(subMgmt)subMgmt.style.display=trendAccess.mode==='paid'?'block':'none';
-  const subStatus=document.getElementById('set-sub-status');
+  const subStatus=_getTrendEl('set-sub-status');
   if(subStatus&&trendAccess.mode==='paid')subStatus.textContent=t('set.sub.active');
   /* Then async Supabase check (refines if logged in) */
   const remote=await checkTrendAccess();
   if(JSON.stringify(remote)!==JSON.stringify(getTrendAccess())){
     setTrendAccess(remote);
     updateTrendBadge();
-    const lb=document.getElementById('trend-lock-banner');
-    const _scrProg=document.getElementById('scr-prog');
+    const lb=_getTrendEl('trend-lock-banner');
+    const _scrProg=_getTrendEl('scr-prog');
     const _isOnProg=_scrProg&&_scrProg.style.display!=='none';
     if(lb)lb.style.display=(trendAccess.access||!_isOnProg)?'none':'block';
-    if(document.getElementById('scr-set')?.style.display!=='none'){updateSubManagementCard();}
+    if(_getTrendEl('scr-set')?.style.display!=='none'){updateSubManagementCard();}
   }
   applyTrendBlurOverlay();
   syncTrendLockCopy();
@@ -2551,7 +2556,7 @@ function updateSubManagementCard(){
     if(progLbl)progLbl.textContent='';
     if(progRgt)progRgt.textContent='';
     if(progBar)progBar.style.width='0%';
-    if(ctaWrap)ctaWrap.innerHTML=`
+    if(ctaWrap)ctaWrap.innerHTML=sanitize(`
       <p style="font-size:11px;color:var(--muted);margin:0 0 8px;line-height:1.5">${t('sub.anon.prompt')}</p>
       <button onclick="signInWithGoogle()" class="btn btn-primary w100"
         style="font-size:12px;height:44px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px">
@@ -2562,7 +2567,7 @@ function updateSubManagementCard(){
           <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
         </svg>
         ${t('sub.anon.cta')}
-      </button>`;
+      </button>`);
     return;
   }
 
@@ -2594,7 +2599,7 @@ function updateSubManagementCard(){
     if(progLbl)progLbl.textContent=t('sub.trial.prog.left',{d:TRIAL_DAYS-d});
     if(progRgt)progRgt.textContent=t('sub.trial.prog.right',{d});
     if(progBar){progBar.style.width=`${Math.round(pct*100)}%`;progBar.style.background=col;}
-    ctaWrap.innerHTML=`
+    ctaWrap.innerHTML=sanitize(`
       <button onclick="startCheckout('monthly')" class="btn btn-primary w100"
         style="font-size:12px;height:44px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">star</span>
@@ -2607,7 +2612,7 @@ function updateSubManagementCard(){
       <button onclick="startCheckout('lifetime')" class="btn btn-ghost w100"
         style="font-size:11px;height:36px;color:var(--muted)">
         ${t('sub.trial.cta.lifetime')}
-      </button>`;
+      </button>`);
 
   }else if(mode==='paid'){
     const isLT=plan==='lifetime';
@@ -2622,12 +2627,12 @@ function updateSubManagementCard(){
     if(progLbl)progLbl.textContent=t('sub.paid.prog.left');
     if(progRgt)progRgt.textContent=t(isLT?'sub.paid.prog.right.lifetime':isAN?'sub.paid.prog.right.annual':'sub.paid.prog.right.monthly');
     if(progBar){progBar.style.width='100%';progBar.style.background='var(--p)';}
-    ctaWrap.innerHTML=`
+    ctaWrap.innerHTML=sanitize(`
       <button onclick="openBillingPortal()" class="btn btn-ghost w100"
         style="font-size:12px;height:44px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;border-color:var(--p);color:var(--p)">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">manage_accounts</span>
         ${t('sub.paid.cta.manage')}
-      </button>`;
+      </button>`);
 
   }else if(mode==='grace'){
     const h=hoursLeft||0;
@@ -2643,12 +2648,12 @@ function updateSubManagementCard(){
     if(progLbl)progLbl.textContent=t('sub.grace.prog.left');
     if(progRgt)progRgt.textContent=t('sub.grace.prog.right',{h});
     if(progBar){progBar.style.width=`${Math.round((h/48)*100)}%`;progBar.style.background='var(--orange)';}
-    ctaWrap.innerHTML=`
+    ctaWrap.innerHTML=sanitize(`
       <button onclick="openBillingPortal()" class="btn w100"
         style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:12px;height:44px;font-weight:800;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">warning</span>
         ${t('sub.grace.cta.update')}
-      </button>`;
+      </button>`);
 
   }else{
     badge.textContent=t('sub.badge.expired');
@@ -2661,7 +2666,7 @@ function updateSubManagementCard(){
     if(progLbl)progLbl.textContent=t('sub.expired.prog.left');
     if(progRgt)progRgt.textContent='';
     if(progBar)progBar.style.width='0%';
-    ctaWrap.innerHTML=`
+    ctaWrap.innerHTML=sanitize(`
       <button onclick="startCheckout('monthly')" class="btn btn-primary w100"
         style="font-size:12px;height:44px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">star</span>
@@ -2674,7 +2679,7 @@ function updateSubManagementCard(){
       <button onclick="startCheckout('lifetime')" class="btn btn-ghost w100"
         style="font-size:11px;height:36px;color:var(--muted)">
         ${t('sub.expired.cta.lifetime')}
-      </button>`;
+      </button>`);
   }
 }
 
@@ -2734,17 +2739,31 @@ function openPaywall(featureName=''){
     daysEl.textContent=String(trendAccess.daysLeft);
   }else{badge.style.display='none';}
   requestAnimationFrame(()=>{sheet.style.transform='translateY(0)';});
-  document.body.style.overflow='hidden';
+  _modalTrigger=document.activeElement;if(sheet)trapFocus(sheet);
 }
 
 function closePaywall(){
   const sheet=document.getElementById('paywall-sheet');
+  const overlay=document.getElementById('paywall-overlay');
+  if(overlay)releaseFocus(overlay.querySelector('.modal-sheet')||overlay);
   if(sheet)sheet.style.transform='translateY(100%)';
-  setTimeout(()=>{
+  /* MED-13: use transitionend instead of fixed setTimeout */
+  const _afterClose=()=>{
     const o=document.getElementById('paywall-overlay');
     if(o)o.style.display='none';
     document.body.style.overflow='';
-  },350);
+    if(_modalTrigger){try{_modalTrigger.focus();}catch{}}_modalTrigger=null;
+  };
+  if(sheet){
+    const _fallback=setTimeout(_afterClose,500);
+    sheet.addEventListener('transitionend',function handler(){
+      clearTimeout(_fallback);
+      sheet.removeEventListener('transitionend',handler);
+      _afterClose();
+    },{once:true});
+  }else{
+    _afterClose();
+  }
 }
 
 /* ══════════════════════════════════════
@@ -2779,8 +2798,10 @@ function selectCheckoutPlan(plan){
   _cpoPlan=plan;
   const mEl=document.getElementById('cpo-monthly');
   const aEl=document.getElementById('cpo-annual');
+  const lEl=document.getElementById('cpo-lifetime');
   if(mEl)mEl.classList.toggle('cpo-selected',plan==='monthly');
   if(aEl)aEl.classList.toggle('cpo-selected',plan==='annual');
+  if(lEl)lEl.classList.toggle('cpo-selected',plan==='lifetime');
   const cta=document.getElementById('cpo-cta');
   if(cta){
     const price=plan==='annual'?'€69,99':plan==='monthly'?'€6,99':'€179,99';
@@ -2801,7 +2822,13 @@ function confirmCheckoutPreview(){
 
 function _applyCheckoutPreviewLang(){
   const it=_lang!=='en';
-  const s=(id,txt)=>{const e=document.getElementById(id);if(e)e.textContent=txt;};
+  /* MED-08: cache all element references once */
+  const refs={};
+  ['cpo-subtitle','cpo-choose','cpo-features-title','cpo-m-label','cpo-m-note','cpo-a-label','cpo-a-note','cpo-best-badge','cpo-cancel','cpo-legal',
+   'cpo-l-label','cpo-l-note',
+   'cpo-f1-t','cpo-f1-s','cpo-f2-t','cpo-f2-s','cpo-f3-t','cpo-f3-s','cpo-f4-t','cpo-f4-s','cpo-f5-t','cpo-f5-s','cpo-f6-t','cpo-f6-s']
+    .forEach(id=>{refs[id]=document.getElementById(id);});
+  const s=(id,txt)=>{const e=refs[id]||(refs[id]=document.getElementById(id));if(e)e.textContent=txt;};
   s('cpo-subtitle',it
     ?'Analisi predittiva basata sui tuoi dati reali. Proiezione a 12 settimane con correzione metabolica automatica.'
     :'Predictive analysis based on your real data. 12-week projection with automatic metabolic correction.');
@@ -2907,7 +2934,6 @@ async function _doStartCheckout(plan){
 
     /* ── 3. Redirect to Stripe (Safari PWA safe) ── */
     window.location.href=body.url;
-    setTimeout(()=>{if(document.visibilityState!=='hidden')try{window.open(body.url,'_blank','noopener');}catch(e2){console.warn('[IK] window.open fallback failed',e2);}},600);
 
   }catch(err){
     if(typeof Sentry!=='undefined')try{Sentry.captureException(err,{tags:{flow:'checkout',plan}});}catch(e2){console.warn('[IK] Sentry capture failed',e2);}
@@ -2936,7 +2962,7 @@ function _showCheckoutLoginGate(plan){
   if(tit)tit.textContent=t('checkout.login.title');
   if(sub)sub.textContent=t('checkout.login.sub');
   if(badge)badge.textContent=t('checkout.login.badge');
-  if(gcta){gcta.innerHTML='<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.14 15.89-5.81l-7.73-6C29.99 37.88 27.14 38.5 24 38.5c-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> '+t('checkout.login.cta');
+  if(gcta){gcta.innerHTML=sanitize('<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.14 15.89-5.81l-7.73-6C29.99 37.88 27.14 38.5 24 38.5c-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> '+t('checkout.login.cta'));
   }
   try{localStorage.setItem('ik_auth_origin','checkout');}catch{}
   ov.classList.add('on');
@@ -2957,7 +2983,7 @@ async function openBillingPortal(){
       headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json','apikey':SUPABASE_KEY},
     });
     if(!res.ok){
-      const errBody=await res.json().catch(()=>({}));
+      const errBody=await res.json().catch(e=>{console.warn('[IK] portal parse error:',e);return{};});
       console.error('[IK] portal error',res.status,errBody);
       if(res.status===404)throw new Error('Portal non configurato — contatta il supporto');
       if(res.status===401||res.status===403)throw new Error(t('toast.sessionExpired'));
@@ -3051,8 +3077,8 @@ async function syncUserAfterLogin(user){
   /* ── Salva nome Google e avatar da user_metadata (Supabase OAuth) ── */
   const googleName=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||null;
   const googleAvatar=user.user_metadata?.avatar_url||user.user_metadata?.picture||null;
-  if(googleName)try{localStorage.setItem('ik_user_name',googleName);}catch{}
-  if(googleAvatar)try{localStorage.setItem('ik_user_avatar',googleAvatar);}catch{}
+  if(googleName)try{sessionStorage.setItem('ik_user_name',googleName);}catch{}
+  if(googleAvatar)try{sessionStorage.setItem('ik_user_avatar',googleAvatar);}catch{}
   _applyUserAvatar();
   try{
     /* Check if row already exists to avoid overwriting trial_end on returning users */
@@ -3217,7 +3243,7 @@ function updateServerDataLabel(){
 }
 
 /* ── FIX 1: sanitize helper ── */
-function sanitize(s){if(s==null)return '';const str=String(s);const d=document.createElement('div');d.textContent=str;return d.innerHTML.replace(/[\r\n\t]+/g,' ').trim();}
+let _sanitizeDiv;function sanitize(s){if(s==null)return '';const str=String(s);if(!_sanitizeDiv)_sanitizeDiv=document.createElement('div');_sanitizeDiv.textContent=str;return _sanitizeDiv.innerHTML.replace(/[\r\n\t]+/g,' ').trim();}
 /* ═══════════════════════════════════════
    KEYS
 ═══════════════════════════════════════ */
@@ -3812,6 +3838,8 @@ it:{
   'toast.loginRequired': "Accedi per gestire l'abbonamento",
   'toast.sessionExpired': 'Sessione scaduta, riaccedi',
   'toast.portalError': 'Errore portale abbonamento',
+  'toast.planAdjusted': '✅ Piano aggiornato',
+  'share.copied': 'Copiato negli appunti',
   'toast.trendActivated': 'Trend attivato! Benvenuto nel coaching completo 🎯',
   'coach.satiety.badge': 'Fame alta · aderenza bassa — considera +100 kcal',
   /* Referral system */
@@ -4451,6 +4479,8 @@ en:{
   'toast.loginRequired': 'Sign in to manage your subscription',
   'toast.sessionExpired': 'Session expired, please sign in again',
   'toast.portalError': 'Subscription portal error',
+  'toast.planAdjusted': '✅ Plan adjusted',
+  'share.copied': 'Copied to clipboard',
   'toast.trendActivated': 'Trend activated! Welcome to full coaching 🎯',
   'coach.satiety.badge': 'High hunger · low adherence — consider +100 kcal',
   /* Referral system */
@@ -4515,7 +4545,7 @@ const lsW=(k,v)=>{try{localStorage.setItem(k,v);}catch{}};
 let _regenSeed=parseInt(lsR('ik-rseed')||'0'); /* persisted across reloads — FIX2 */
 function t(key,vars={}){
   const s=LANG[_lang]?.[key]??LANG.it?.[key]??key;
-  return Object.entries(vars).reduce((r,[k,v])=>r.replace(new RegExp(`\\{${k}\\}`,'g'),String(v)),s);
+  return Object.entries(vars).reduce((r,[k,v])=>{const token='{'+k+'}';return r.split(token).join(String(v));},s);
 }
 function applyLang(){
   _trApplied=false;
@@ -4529,7 +4559,6 @@ function setLang(lang){
   document.documentElement.lang=_lang;
   _mealRenderCache={}; /* FIX3: invalidate meal cache on lang change */
   applyLang();
-  scheduleRender(renderCoach,renderMeals,renderMacros,renderSettings,renderCheckinAnalytics,renderTrackers);
 }
 function initLang(){
   const s=lsR(SK.lang);
@@ -4554,7 +4583,7 @@ const _HELP_FEATURES=[
 function renderHelpFeatures(){
   const el=document.getElementById('help-features-list');
   if(!el)return;
-  el.innerHTML=_HELP_FEATURES.map(f=>`
+  el.innerHTML=sanitize(_HELP_FEATURES.map(f=>`
     <div class="help-feature-item">
       <div class="help-feature-head">
         <div class="help-feature-ico">
@@ -4563,7 +4592,7 @@ function renderHelpFeatures(){
         <span class="help-feature-name sn">${sanitize(t(f.key+'.title'))}</span>
       </div>
       <p class="help-feature-desc sn">${sanitize(t(f.key+'.desc'))}</p>
-    </div>`).join('');
+    </div>`).join(''));
 }
 function applyTranslations(deferOffscreen){
   /* ── i18n static patch ── */
@@ -4612,10 +4641,10 @@ function applyTranslations(deferOffscreen){
   const _lL=document.getElementById('lang-label-txt');if(_lL)_lL.textContent=t('set.lang.label');
   const _mS=document.getElementById('mod-status');
   if(_mS&&(_mS.textContent.trim()==='Base invariata'||_mS.textContent.trim()==='Unchanged'))_mS.textContent=t('set.mod.base');
-  document.getElementById('btn-export-data') && (document.getElementById('btn-export-data').textContent=t('set.dati.esporta'));
-  document.getElementById('btn-import-data') && (document.getElementById('btn-import-data').textContent=t('set.dati.importa'));
+  {const _e=getEl('btn-export-data');if(_e)_e.textContent=t('set.dati.esporta');}
+  {const _i=getEl('btn-import-data');if(_i)_i.textContent=t('set.dati.importa');}
   document.querySelectorAll('[onclick="resetProfile()"]').forEach(b=>b.textContent=t('set.rigenera'));
-  document.getElementById('btn-change-diet') && (document.getElementById('btn-change-diet').textContent=t('set.dati.ricomincia'));
+  {const _c=getEl('btn-change-diet');if(_c)_c.textContent=t('set.dati.ricomincia');}
   document.querySelectorAll('[onclick="applyMod(0)"]').forEach(b=>{if(b.textContent.includes('Reset')||b.textContent.includes('reset'))b.textContent=t('set.mod.reset');});
   document.querySelectorAll('[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
   /* danger zone accordion warning text */
@@ -4669,7 +4698,7 @@ function applyTranslations(deferOffscreen){
     const v=p.textContent.trim();
     if(v==='Hai altre domande?'||v==='Any other questions?')p.textContent=t('help.contact.title');
     if(v.includes('Scrivici a')||v.includes('Reach us at')||v.includes('support@ironkinetic'))
-      p.innerHTML=t('help.contact.sub.email');
+      p.innerHTML=sanitize(t('help.contact.sub.email'));
   });
   /* Help modal disclaimer */
   const _hdTitleAlways=document.getElementById('help-disclaimer-title');
@@ -5126,12 +5155,12 @@ function applyTranslations(deferOffscreen){
   if(_pid('pwa-sub'))_pid('pwa-sub').textContent=t('pwa.sub');
   if(_pid('pwa-skip-note'))_pid('pwa-skip-note').textContent=t('pwa.skip');
   if(_pid('pwa-btn'))_pid('pwa-btn').textContent=t('pwa.btn');
-  if(_pid('pwa-ios-1'))_pid('pwa-ios-1').innerHTML=t('pwa.ios.step1');
-  if(_pid('pwa-ios-2'))_pid('pwa-ios-2').innerHTML=t('pwa.ios.step2');
-  if(_pid('pwa-ios-3'))_pid('pwa-ios-3').innerHTML=t('pwa.ios.step3');
-  if(_pid('pwa-and-1'))_pid('pwa-and-1').innerHTML=t('pwa.android.step1');
-  if(_pid('pwa-and-2'))_pid('pwa-and-2').innerHTML=t('pwa.android.step2');
-  if(_pid('pwa-and-3'))_pid('pwa-and-3').innerHTML=t('pwa.android.step3');
+  if(_pid('pwa-ios-1'))_pid('pwa-ios-1').innerHTML=sanitize(t('pwa.ios.step1'));
+  if(_pid('pwa-ios-2'))_pid('pwa-ios-2').innerHTML=sanitize(t('pwa.ios.step2'));
+  if(_pid('pwa-ios-3'))_pid('pwa-ios-3').innerHTML=sanitize(t('pwa.ios.step3'));
+  if(_pid('pwa-and-1'))_pid('pwa-and-1').innerHTML=sanitize(t('pwa.android.step1'));
+  if(_pid('pwa-and-2'))_pid('pwa-and-2').innerHTML=sanitize(t('pwa.android.step2'));
+  if(_pid('pwa-and-3'))_pid('pwa-and-3').innerHTML=sanitize(t('pwa.android.step3'));
   /* confirm modal buttons */
   const _cfCancelBtn=document.getElementById('confirm-cancel-btn');
   if(_cfCancelBtn&&!_cfCancelBtn.dataset.custom)_cfCancelBtn.textContent=t('confirm.cancel');
@@ -5189,7 +5218,8 @@ const EL={};function getEl(id){return EL[id]||(EL[id]=document.getElementById(id
 ═══════════════════════════════════════ */
 const hap=t=>{try{if(navigator.vibrate)navigator.vibrate(t==='medium'?20:t==='error'?[8,8,8]:10);}catch{}};
 const toISO=()=>new Date().toISOString().slice(0,10);
-const isoDisp=iso=>{if(!iso)return'';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;};
+const isoDisp=iso=>{if(!iso)return '';const d=new Date(iso+'T00:00:00');return d.toLocaleDateString(_lang==='en'?'en-GB':'it-IT',{day:'numeric',month:'short',year:'numeric'});};
+const fmtNum=(n,dec=0)=>n.toLocaleString(_lang==='en'?'en-GB':'it-IT',{minimumFractionDigits:dec,maximumFractionDigits:dec});
 const dk=t=>`ik_tk_${toISO()}_${t}`;
 const mk=(d,n)=>`ik_ml_${toISO()}_d${d}_${n}`;
 
@@ -5244,11 +5274,12 @@ let _chartType=null; /* track active chart type: 'weight'|'waist'|'prediction' *
 let _predCache=null,_predKey='';
 let _fpCache=null,_fpKey='';
 let _tdeeCache=null,_tdeeCacheKey='';
-function _logKey(){return getLog().map(e=>e.isoDate+e.weight).join('|');}
+let _logKeyCache=null,_logKeyCacheRaw='';
+function _logKey(){const raw=getLog().map(e=>e.isoDate+e.weight).join('|');if(_logKeyCache&&_logKeyCacheRaw===raw)return _logKeyCache;_logKeyCache=raw;_logKeyCacheRaw=raw;return raw;}
 function getCachedPrediction(){const k=_logKey();if(_predCache&&_predKey===k)return _predCache;_predCache=calcPredictiveCurve();_predKey=k;return _predCache;}
 function getCachedFingerprint(){const k=_logKey()+lsR(SK.profile);if(_fpCache&&_fpKey===k)return _fpCache;_fpCache=calcMetabolicFingerprint();_fpKey=k;return _fpCache;}
 function getCachedTDEE(){const p=getProfile();if(!p)return null;const k=JSON.stringify({w:p.weight,s:p.sex,a:p.age,h:p.height,bf:p.bf,wk:p.workoutsWk,st:p.stepsDay});if(_tdeeCache&&_tdeeCacheKey===k)return _tdeeCache;_tdeeCache=calculateUserMacros(p);_tdeeCacheKey=k;return _tdeeCache;}
-function invalidateLogCaches(){_predCache=null;_predKey='';_fpCache=null;_fpKey='';}
+function invalidateLogCaches(){_predCache=null;_predKey='';_fpCache=null;_fpKey='';_logKeyCache=null;_logKeyCacheRaw='';}
 function calcMacros(){
   const p=getProfile();
   const _ck=JSON.stringify({w:p?.weight,g:p?.goal,s:p?.sex,mod:getMod()??0,ref:isRefeed()?1:0,ph:getPhase()??1,base:baseKcal()});
@@ -5343,7 +5374,7 @@ function getHungerDistributionBias(){let arr=[];try{arr=JSON.parse(localStorage.
 function getMealSkipRates(){if(!dietData)return{};const nms=getMealNames(),c={};nms.forEach(n=>c[n]={d:0,t:0});const now=new Date();for(let i=0;i<14;i++){const d=new Date(now.getTime()-i*86400000),dow=d.getDay()===0?7:d.getDay();nms.forEach(n=>{c[n].t++;if(lsR(mk(dow,n))==='1')c[n].d++})}const r={};nms.forEach(n=>r[n]=c[n].t?1-c[n].d/c[n].t:0);return r}
 function getAdaptedMealDistribution(){const nms=getMealNames(),n=nms.length,std={2:[.45,.55],3:[.25,.4,.35],4:[.2,.35,.1,.35],5:[.2,.3,.1,.3,.1]}[n]||Array(n).fill(1/n),sr=getMealSkipRates();if(!Object.values(sr).some(v=>v>.2))return std;const raw=nms.map(n=>Math.max(.05,1-sr[n]*.6)),sum=raw.reduce((a,v)=>a+v,0);let a=raw.map(v=>Math.round(v/sum*100)/100),d=1-a.reduce((x,v)=>x+v,0);a[a.length-1]=Math.round((a[a.length-1]+d)*100)/100;const b=getHungerDistributionBias();if(b.intensity>.2&&a.length>=2){const sh=b.intensity*.08;if(b.frontLoad){a[0]=Math.round((a[0]+sh)*100)/100;a[a.length-1]=Math.round((a[a.length-1]-sh)*100)/100}else if(b.backLoad){a[0]=Math.round((a[0]-sh)*100)/100;a[a.length-1]=Math.round((a[a.length-1]+sh)*100)/100}a=a.map(v=>Math.max(.08,v));const s2=a.reduce((x,v)=>x+v,0);a=a.map(v=>Math.round(v/s2*100)/100)}const _ttRaw=lsR(SK.trainTime)||'';if(_ttRaw&&a.length>=3){const [_tH,_tM]=_ttRaw.split(':').map(Number);const trainHour=_tH+(_tM||0)/60;const mealH=a.length;// Meal window assumed 07:00-21:00. IF user skips breakfast (IF protocol)
   // distribution bias from Feature B/C already compensates via skip rates.
-  const _mHrs=Array.from({length:mealH},(_,i)=>7+(14/(mealH-1||1))*i);const _pre=_mHrs.map((h,i)=>({i,d:Math.abs(h-(trainHour-1.5))})).sort((a,b)=>a.d-b.d)[0].i;const _post=_mHrs.map((h,i)=>({i,d:Math.abs(h-(trainHour+0.75))})).sort((a,b)=>a.d-b.d)[0].i;a[_pre]=Math.round(Math.min(a[_pre]*1.12,0.35)*100)/100;a[_post]=Math.round(Math.min(a[_post]*1.10,0.35)*100)/100;const _sN=a.reduce((x,v)=>x+v,0);a=a.map(v=>Math.round(v/_sN*100)/100);const _dN=1-a.reduce((x,v)=>x+v,0);a[a.length-1]=Math.round((a[a.length-1]+_dN)*100)/100}return a}
+  const _mHrs=Array.from({length:mealH},(_,i)=>7+(14/(mealH-1||1))*i);const _pre=_mHrs.map((h,i)=>({i,d:Math.abs(h-(trainHour-1.5))})).sort((a,b)=>a.d-b.d)[0].i;const _post=_mHrs.map((h,i)=>({i,d:Math.abs(h-(trainHour+0.75))})).sort((a,b)=>a.d-b.d)[0].i;a[_pre]=Math.round(Math.min(a[_pre]*1.12,0.35)*100)/100;a[_post]=Math.round(Math.min(a[_post]*1.10,0.35)*100)/100;const _sN=a.reduce((x,v)=>x+v,0);a=a.map(v=>Math.round(v/_sN*100)/100);const _dN=1-a.reduce((x,v)=>x+v,0);a[a.length-1]=Math.round((a[a.length-1]+_dN)*100)/100}/* MED-18: clamp & renormalize */a.forEach((v,i)=>{if(v<0.05)a[i]=0.05;});const _clampedSum=a.reduce((x,v)=>x+v,0);a=a.map(v=>Math.round(v/_clampedSum*100)/100);const _finalDelta=1-a.reduce((x,v)=>x+v,0);a[a.length-1]=Math.round((a[a.length-1]+_finalDelta)*100)/100;return a}
 
 /* ── Feature D: Progressive Protein ── */
 function getProgressiveProRate(base,goal,startMs){if(goal!=='cut_extreme'&&goal!=='recomp')return base;if(!startMs)return base;const w=Math.min(Math.floor((Date.now()-startMs)/(7*24*3606*1000)),24);if(w<4)return base;const inc=Math.floor(w/4)*.10,cap=goal==='cut_extreme'?2.6:2.4;return Math.min(base+inc,cap)}
@@ -5466,7 +5497,7 @@ function applyAutoAdj(){
   renderMacros();renderMeals();renderKcalRing();
   banner.style.display='none';banner._suggestion=null;
   const lang=lsR(SK.lang)==='en'?'en':'it';
-  showToast(lang==='en'?'✅ Plan adjusted':'✅ Piano aggiornato');
+  showToast(t('toast.planAdjusted'));
 }
 function dismissAutoAdj(){
   const banner=document.getElementById('autoadj-banner');
@@ -5548,7 +5579,7 @@ function renderFingerprint(){
   card.style.display='block';
   const bar=(v,color)=>`<div style="height:6px;border-radius:3px;background:var(--s3);overflow:hidden;"><div style="width:${Math.min(100,Math.max(0,v))}%;height:100%;background:${color};border-radius:3px;transition:width .4s;"></div></div>`;
   const tip=(key)=>`<button class="sn" onclick="showFingerprintTip('${key}')" style="background:none;border:none;color:var(--muted);font-size:11px;padding:0 0 0 4px;cursor:pointer;vertical-align:middle;line-height:1;" aria-label="${t('aria.info')}">ⓘ</button>`;
-  cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+  cont.innerHTML=sanitize(`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
     <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.efficienza')}</span>${tip('efficiency')}
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--p);margin:2px 0 4px;">${fp.efficiency}%</p>
       ${bar(fp.efficiency,'var(--p)')}
@@ -5563,7 +5594,7 @@ function renderFingerprint(){
     <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.perditaReale')}</span>${tip('weekly')}
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.avgWeekly}kg/w</p>
       <p class="muted sn" style="font-size:10px;margin-top:2px;">${t('fp.mediaSettimanaleFP')}</p></div>
-  </div>`;
+  </div>`);
   },'Metabolic Fingerprint',true);
 }
 
@@ -5739,7 +5770,7 @@ Tracking nutrition daily with Iron Kinetic™ PWA`
     :`💪 ${weeks} settimane su Iron Kinetic™${lost?` · ${lost>0?lost+'kg persi':Math.abs(lost)+'kg guadagnati'}`:''}
 Nutrizione quotidiana con Iron Kinetic™ PWA`;
   if(navigator.share){navigator.share({title:'Iron Kinetic',text}).catch(()=>{});}
-  else{navigator.clipboard?.writeText(text);showToast(lang==='en'?'Copied to clipboard':'Copiato negli appunti');}
+  else{navigator.clipboard?.writeText(text);showToast(t('share.copied'));}
 }
 
 /* ── Feature 6: Weekly Metabolic Report ── */
@@ -5832,7 +5863,7 @@ function renderWeeklyReport(){
       :['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
     const now_dow=new Date().getDay();// 0=sun
     // Map: i=0 is 6 days ago
-    barEl.innerHTML=days7.map((item,i)=>{
+    barEl.innerHTML=sanitize(days7.map((item,i)=>{
       const realDow=((now_dow-6+i)+7)%7;// 0-indexed sun=0
       const lblIdx=(realDow+6)%7;// convert to mon=0
       const color=item.p>=80?'var(--p)':item.p>=50?'var(--orange)':'rgba(199,196,216,.2)';
@@ -5841,7 +5872,7 @@ function renderWeeklyReport(){
         <div class="wr-bar-track"><div class="wr-bar-fill" style="height:${h}px;background:${color};min-height:4px;"></div></div>
         <span class="wr-bar-lbl">${dayLabels[lblIdx]}</span>
       </div>`;
-    }).join('');
+    }).join(''));
   }
   /* Chart label i18n */
   const lbl=document.getElementById('wr-chart-lbl');
@@ -5967,12 +5998,15 @@ function applyMILP(kcal, pro, carbs, fat, sex, goal){
    TDEE ENGINE — Gerarchia 3 formule + TEF + DASH
 ══════════════════════════════════════════════════════ */
 function calculateUserMacros(p){
-  const w   = parseFloat(p.weight);
+  let w   = parseFloat(p.weight);
   const bf  = parseFloat(p.bf);
   const goal= p.goal||'maintain';
   const sex = p.sex||'M';
-  const age = parseFloat(p.age)||30;
-  const ht  = parseFloat(p.height)||175; /* cm */
+  let age = parseFloat(p.age);
+  let ht  = parseFloat(p.height); /* cm */
+  if(!w||isNaN(w)||w<30||w>300)return null;
+  if(!ht||isNaN(ht)||ht<100||ht>250)return null;
+  if(!age||isNaN(age)||age<10||age>100)age=30;
   const htM = ht/100;
   const bmi = w/(htM*htM);
   const clinical = p.clinical||null; /* 'CKD','DASH','IBD_acute','IBD_remiss','IBS','T2D' */
@@ -6306,8 +6340,9 @@ function localizeMealRest(rest=''){
     'flavonoidi':'flavonoids','potassio':'potassium',
     'Zn, Mg':'Zn, Mg',
   };
-  /* Replace all known Italian phrases, longest first to avoid partial matches */
-  const sorted=Object.keys(map).sort((a,b)=>b.length-a.length);
+  /* MED-15: cache sorted keys at function level (map is const, so sorted is stable) */
+  if(!localizeMealRest._sorted){localizeMealRest._sorted=Object.keys(map).sort((a,b)=>b.length-a.length);}
+  const sorted=localizeMealRest._sorted;
   let out=rest;
   sorted.forEach(it=>{
     if(out.includes(it))out=out.split(it).join(map[it]);
@@ -6720,11 +6755,13 @@ function resolveExtraFoods(extraFoodsStr){
    fibra target, varietà proteica 48h, DASH portions
 ══════════════════════════════════════════════════════ */
 function getLocalMealNames(n){
+  if(n<2||n>6){console.warn('[IK] getLocalMealNames: invalid meal count',n,'— clamping to 3');n=3;}
   const map={
     2:[t('meal.pranzo'),t('meal.cena')],
     3:[t('meal.colazione'),t('meal.pranzo'),t('meal.cena')],
     4:[t('meal.colazione'),t('meal.pranzo'),t('meal.spuntino'),t('meal.cena')],
     5:[t('meal.colazione'),t('meal.pranzo'),t('meal.spuntino.pre'),t('meal.cena'),t('meal.spuntino.post')],
+    6:[t('meal.colazione'),t('meal.spuntino.pre'),t('meal.pranzo'),t('meal.spuntino'),t('meal.cena'),t('meal.spuntino.post')],
   };
   return map[n]||map[3];
 }
@@ -7302,12 +7339,13 @@ function analyzeState(){
         msg:t('coach.msg.fame_strutt',{hunger:avgHunger.toFixed(1),adher:avgAdherence?.toFixed(1)||'—',veggies:t('coach.foods.veggies')})};
     }
     /* 6c. Energy very low and still falling */
+    // Intentional: 6d supersedes 6c for edge case where energy<=3.5 but trend is flat/stable
     if(avgEnergy!==null&&avgEnergy<=4&&sEnergy<-0.3){
       return{ico:'bolt',ib:'#EAB308',gl:'rgba(234,179,8,.22)',br:'#FBBF24',
         lbl:t('coach.lbl.energia_calo'),
         msg:t('coach.msg.energia_calo',{energy:avgEnergy.toFixed(1),trend:sEnergy.toFixed(2)})};
     }
-    /* 6d. Energy moderately low */
+    /* 6d. Energy moderately low — catches cases where energy is very low but trend is not falling (superset of 6c threshold) */
     if(avgEnergy!==null&&avgEnergy<=3.5){
       return{ico:'bolt',ib:'#EAB308',gl:'rgba(234,179,8,.22)',br:'#FBBF24',
         lbl:t('coach.lbl.energia_bassa'),
@@ -7430,12 +7468,14 @@ function validateOnbField(id,min,max,labelKey){
   const v=parseFloat(el.value);
   if(isNaN(v)||v<min||v>max){
     el.style.borderColor='var(--red)';
+    el.setAttribute('aria-invalid','true');
     el.focus();
     showToast(`${t(labelKey)}: ${min}–${max}`);
     setTimeout(()=>{el.style.borderColor='';},1800);
     return false;
   }
   el.style.borderColor='';
+  el.removeAttribute('aria-invalid');
   return true;
 }
 
@@ -7450,6 +7490,9 @@ function goStep(n){
     const h=parseFloat(document.getElementById('f-height').value);
     const w=parseFloat(document.getElementById('f-weight').value);
     profState.age=age;profState.height=h;profState.weight=w;
+    /* O-06: Health warnings for extreme BMI / young age */
+    {const _bmi=w/((h/100)*(h/100));if(_bmi>50)showToast(t('onb.bmiWarning')||'⚠️ BMI molto alto – consulta un medico prima di iniziare',5000);}
+    if(age<18)showToast(t('onb.ageWarning')||'⚠️ Sei minorenne – consulta un medico prima di iniziare',5000);
     const bf=parseFloat(document.getElementById('f-bf').value);
     profState.bf=(!isNaN(bf)&&bf>0)?bf:null;
   }
@@ -7475,10 +7518,11 @@ let _genLock=false;
 function runCalcAndGenerate(){
   hap('medium');
   if(_genLock)return;_genLock=true;
-  const _genBtn=document.querySelector('button[onclick="runCalcAndGenerate()"]');
+  const _genBtn=document.getElementById('btn-generate-plan');
   const _genBtnTxt=_genBtn?.textContent;
   if(!profState.age||!profState.height||!profState.weight||!profState.goal){toast(t('toast.compilaCorpo'));_genLock=false;if(_genBtn){_genBtn.disabled=false;_genBtn.textContent=_genBtnTxt;}return;}
   if(_genBtn){_genBtn.disabled=true;_genBtn.textContent=t('onb.btn.generating');}
+  const _genRow=document.getElementById('gen-btn-row');if(_genRow)_genRow.setAttribute('aria-busy','true');
   prefState.extraFoods=document.getElementById('f-extra-foods').value||'';
   prefState.intolerances=document.getElementById('f-intolerances').value||'';
 
@@ -7535,7 +7579,7 @@ function runCalcAndGenerate(){
     const meal=day1[mn];if(!meal)return;
     html+=`<div class="plan-insight-row"><span class="material-symbols-outlined" style="font-size:16px;color:var(--p);flex-shrink:0;margin-top:1px;">restaurant</span><div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;">${localizedMealName(mn)}</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;">${meal.rest}</p></div></div>`;
   });
-  previewEl.innerHTML=html;
+  previewEl.innerHTML=sanitize(html);
   document.getElementById('plan-preview').style.display='block';
   document.getElementById('result-card').classList.add('on');
 
@@ -7554,6 +7598,8 @@ function runCalcAndGenerate(){
   window._pendingRes=res;
   toast(t('toast.pianoGen'));
   if(_genBtn){_genBtn.disabled=false;_genBtn.textContent=_genBtnTxt||'⚡ Genera il Mio Piano';}
+  const _genRow2=document.getElementById('gen-btn-row');if(_genRow2)_genRow2.setAttribute('aria-busy','false');
+  const _genStatus=document.getElementById('gen-status');if(_genStatus)_genStatus.textContent=t('toast.pianoGen');
   _genLock=false;
 }
 
@@ -7636,12 +7682,12 @@ function syncTrendLockCopy(){
     }
   }
   if(lockBanner){
-    lockBanner.innerHTML=`
+    lockBanner.innerHTML=sanitize(`
       <span style="font-size:13px;color:#ccc">${sanitize(t('trend.blur.expired'))}</span>
       <button onclick="openPaywall('Trend')" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:13px">
         ${sanitize(t('trend.blur.cta'))}
       </button>
-    `;
+    `);
     updateTrendLockedLayout();
   }
   // Do NOT set lockBanner.style.display here — updateTrendLockUI() controls visibility
@@ -7667,7 +7713,7 @@ function setCheckTag(btn,tag){selectedCheckTag=tag;document.querySelectorAll('.m
 function saveDailyCheckin(){
   const entry={iso:toISO(),hunger:parseInt(document.getElementById('ci-hunger')?.value||'5',10),energy:parseInt(document.getElementById('ci-energy')?.value||'6',10),adherence:parseInt(document.getElementById('ci-adherence')?.value||'8',10),digestion:parseInt(document.getElementById('ci-digestion')?.value||'8',10),tag:selectedCheckTag};
   const arr=[entry,...lsG(SK.checkins,[]).filter(x=>x.iso!==entry.iso)].slice(0,30);
-  lsS(SK.checkins,arr);
+  lsS(SK.checkins,arr);_invalidateCheckinsCache();
   updateStreaks();
   updateAdherenceCalendar();
   if(activeTab==='prog')renderCalendar();
@@ -7794,6 +7840,13 @@ function getMicroRisk(){
   return null;
 }
 
+/* MED-23: module-level cache for parsed checkins data */
+let _coachCheckinsCache=null;
+function _getCachedCheckins(slice){
+  if(!_coachCheckinsCache){try{_coachCheckinsCache=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch(e){console.warn('[IK] checkins parse error',e);_coachCheckinsCache=[];}}
+  return slice?_coachCheckinsCache.slice(slice):_coachCheckinsCache;
+}
+function _invalidateCheckinsCache(){_coachCheckinsCache=null;}
 function renderCoach(){
   const d=analyzeState();
   const card=document.getElementById('coach-card');const iw=document.getElementById('coach-ico-wrap');
@@ -7819,7 +7872,7 @@ function renderCoach(){
     }
   }
   /* Satiety badge — FIX6: hunger>=7 and adherence<=5 */
-  let _cksCoach=[];try{_cksCoach=JSON.parse(localStorage.getItem(SK.checkins)||'[]').slice(-3);}catch(e){console.warn('[IK] coach checkins parse error',e);}
+  let _cksCoach=_getCachedCheckins(-3);
   const _avgHCoach=_cksCoach.length?_cksCoach.reduce((a,c)=>a+(+c.hunger||5),0)/_cksCoach.length:0;
   const _avgACoach=_cksCoach.length?_cksCoach.reduce((a,c)=>a+(+c.adherence||5),0)/_cksCoach.length:10;
   const _showSatiety=_avgHCoach>=7&&_avgACoach<=5;
@@ -8022,7 +8075,7 @@ function addWater(a){hap();const mx=getWMAX();const c=gT('water');if(c>=mx){toas
 function addSalt(a){hap();const c=gT('salt');if(c>=SMAX){toast(t('toast.saleLimite'));hap('error');return;}const n=Math.min(SMAX,parseFloat((c+a).toFixed(1)));sT('salt',n);scheduleRender(renderTrackers,renderCoach);toast(`+${a}g → ${n.toFixed(1)}g`);}
 function addSteps(a){hap();const n=parseInt(lsR(dk('steps'))||'0')+a;const capped=Math.min(30000,n);lsW(dk('steps'),capped.toString());if(n>30000)toast(t('toast.stepsCap')||'⚠️ Max 30.000 passi');renderTrackers();toast(`+${a.toLocaleString()} → ${capped.toLocaleString()}`);}
 function toggleWk(){hap('medium');const n=gT('workout')>=1?0:1;sT('workout',n);renderTrackers();toast(t(n?'toast.wkCompletato':'toast.wkRimosso'));}
-function resetT(tp){hap();const prev=gT(tp);sT(tp,0);renderTrackers();showToast(t('toast.azzerato')+' — '+'<button onclick="sT(\''+tp+'\','+prev+');renderTrackers();closeToast()" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:inherit">'+t('toast.undo')+'</button>',4000);}
+function resetT(tp){hap();const prev=gT(tp);sT(tp,0);renderTrackers();showToast(t('toast.azzerato')+' — ',4000);const _toastEl=document.getElementById('toast');if(_toastEl){const _undoBtn=document.createElement('button');_undoBtn.textContent=t('toast.undo');_undoBtn.style.cssText='background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:inherit;font-family:inherit;margin-left:4px;';_undoBtn.addEventListener('click',()=>{sT(tp,prev);renderTrackers();_toastEl.classList.remove('on');});_toastEl.appendChild(_undoBtn);}}
 
 /* ═══════════════════════════════════════
    MEALS — dynamic meal count from plan
@@ -8190,7 +8243,7 @@ function renderMeals(){
     _mealRenderCache[cacheKey]=newHTML;
     const existing=document.getElementById(rowId);
     if(existing){existing.outerHTML=newHTML;}
-    else{cont.insertAdjacentHTML('beforeend',newHTML);}
+    else{cont.insertAdjacentHTML('beforeend',sanitize(newHTML));}
   });
   document.getElementById('meals-done').textContent=done;
   const dateEl=document.getElementById('oggi-date-label');
@@ -8324,6 +8377,7 @@ function getCompletedMealKcal(dayNum){
 function renderKcalRing(){
   const ring=document.getElementById('kcal-ring');
   if(!ring||!dietData)return;
+  /* MED-27: KCAL_CIRC = 2 * π * r where r=88 (SVG circle at line ~1908) → 2*π*88 ≈ 552.92, rounded to 552.9 */
   const KCAL_CIRC=552.9;
   const targetKcal=calcMacros().kcal||0;
   const completedKcal=getCompletedMealKcal(selDay)||0;
@@ -8349,6 +8403,7 @@ function renderKcalRing(){
   }
   if(tgtEl){tgtEl.style.display='none';}
   /* mini ring oggi */
+  /* MED-27: KCAL_CIRC2 = 2 * π * r where r=17 (SVG circle at line ~1497, oggi mini ring) → 2*π*17 ≈ 106.81, rounded to 106.8 */
   const KCAL_CIRC2=106.8;
   const r2=getEl('kcal-ring-oggi');
   if(r2){r2.style.strokeDashoffset=KCAL_CIRC2*(1-pct);r2.style.stroke=ringColor;}
@@ -8400,8 +8455,8 @@ function getPhaseLiveDesc(phaseIndex){
 }
 /* ── _applyUserAvatar: applica avatar e nome Google all'header e al profilo ── */
 function _applyUserAvatar(){
-  const avatarUrl=localStorage.getItem('ik_user_avatar');
-  const displayName=localStorage.getItem('ik_user_name');
+  const avatarUrl=sessionStorage.getItem('ik_user_avatar');
+  const displayName=sessionStorage.getItem('ik_user_name');
   /* Header navbar */
   const hdrImg=document.getElementById('hdr-av-img');
   if(hdrImg){
@@ -8469,6 +8524,8 @@ function renderProfileHeader(){
   }
 }
 
+/* MED-25: PHASE_HINTS extracted to module scope — created once, not per renderSettings call */
+const _PHASE_HINTS={it:{1:'Fase 1: adattamento (sett. 1-4). Avanza quando il peso cala con costanza.',2:'Fase 2: ottimizzazione (sett. 5-8). Avanza se l\'energia è stabile.',3:'Fase 3: consolidamento (sett. 9-15). Avanza quando il peso si è stabilizzato.',4:'Fase 4: reverse diet. Aumenta le kcal di +100/sett. fino al TDEE.'},en:{1:'Phase 1: adaptation (wk 1-4). Advance when weight drops consistently.',2:'Phase 2: optimisation (wk 5-8). Advance when energy is stable.',3:'Phase 3: consolidation (wk 9-15). Advance when weight has stabilised.',4:'Phase 4: reverse diet. Increase kcal +100/wk until TDEE is reached.'}};
 function renderSettings(){
   if(!dietData){const prof=getProfile();if(prof)_renderProfileCard(prof);renderProfileHeader();return;}
   const m=dietData.metadata||{};
@@ -8481,7 +8538,7 @@ function renderSettings(){
     const p=i+1,b=document.createElement('button');b.textContent=t('misc.fase')+' '+p;b.className='phase-chip sn';
     if(getPhase()===p)b.classList.add('on');b.onclick=(e)=>{e.stopPropagation();hap();setPhase(p);};el.appendChild(b);
   });}
-  {const PHASE_HINTS={it:{1:'Fase 1: adattamento (sett. 1-4). Avanza quando il peso cala con costanza.',2:'Fase 2: ottimizzazione (sett. 5-8). Avanza se l\'energia è stabile.',3:'Fase 3: consolidamento (sett. 9-15). Avanza quando il peso si è stabilizzato.',4:'Fase 4: reverse diet. Aumenta le kcal di +100/sett. fino al TDEE.'},en:{1:'Phase 1: adaptation (wk 1-4). Advance when weight drops consistently.',2:'Phase 2: optimisation (wk 5-8). Advance when energy is stable.',3:'Phase 3: consolidation (wk 9-15). Advance when weight has stabilised.',4:'Phase 4: reverse diet. Increase kcal +100/wk until TDEE is reached.'}};const _phLang=lsR(SK.lang)==='en'?'en':'it';let phHint=document.getElementById('phase-hint');if(phHint)phHint.textContent=PHASE_HINTS[_phLang][getPhase()]||'';}
+  {const _phLang=lsR(SK.lang)==='en'?'en':'it';let phHint=document.getElementById('phase-hint');if(phHint)phHint.textContent=_PHASE_HINTS[_phLang][getPhase()]||'';}
   renderRefeed();renderModDisplay();
   {const MAX_U=5,MIN_U=-5,cur=getMod();const lbl=getEl('mod-units-label');if(lbl)lbl.textContent=t('set.unita',{cur:cur,max:MAX_U});const bm=document.querySelector('.mod-stepper-btn:not(.pos)');const bp=document.querySelector('.mod-stepper-btn.pos');if(bm)bm.disabled=cur<=MIN_U;if(bp)bp.disabled=cur>=MAX_U;}
   const prof=getProfile();if(prof)_renderProfileCard(prof);
@@ -8557,35 +8614,27 @@ function applyMod(u){
   _macroCache=null;
   hap();if(u===0){lsW(SK.mod,'0');toast(t('toast.modAzzerato'));}
   else{const n=Math.max(MIN_UNITS,Math.min(MAX_UNITS,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
+  /* N-10: Floor guard — ensure mod never pushes target below safe minimum */
+  {const p=getProfile();const floorKcal=(p&&p.sex==='F')?1200:1500;const base=baseKcal();const modTarget=base+getMod()*100;if(modTarget<floorKcal){lsW(SK.mod,String(Math.ceil((floorKcal-base)/100)));}}
   renderModDisplay();scheduleRender(renderMacros,renderCoach,renderMeals);
   const cur=getMod();
   const lbl=getEl('mod-units-label');if(lbl)lbl.textContent=t('set.unita',{cur:cur,max:MAX_UNITS});
   const stepper=getEl('mod-stepper');
   if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
 }
-const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
-function clearAppData(){Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
+const KEEP_PREFIX=['ikgdpr','iklang','iknotif','ik_trial_start'];
+async function clearAppData(){if(typeof sb!=='undefined'&&sb)try{await sb.auth.signOut();}catch{}Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
 
 /* ── Custom confirm modal (FIX1) ── */
+/* MED-29: openConfirmModal delegates to showConfirm for single implementation */
 function openConfirmModal(title,body,okLabel,cancelLabel,onOk){
-  document.getElementById('confirm-modal-title').textContent=title;
-  document.getElementById('confirm-modal-body').textContent=body;
-  const okBtn=document.getElementById('confirm-modal-ok');
-  const cancelBtn=document.getElementById('confirm-modal-cancel');
-  okBtn.textContent=okLabel;
-  cancelBtn.textContent=cancelLabel;
-  okBtn.onclick=()=>{closeConfirmModal();onOk();};
-  cancelBtn.onclick=closeConfirmModal;
-  const ov=document.getElementById('confirm-modal-overlay');
-  ov.style.display='flex';
-  requestAnimationFrame(()=>ov.classList.add('on'));
-  trapFocus(ov);
+  showConfirm(title + (body ? '\n' + body : ''),onOk);
+  /* Override button labels if custom ones were provided */
+  const cancelBtn=getEl('confirm-cancel-btn');if(cancelBtn){cancelBtn.textContent=cancelLabel;cancelBtn.dataset.custom='1';}
+  const okBtn=getEl('confirm-ok-btn');if(okBtn){okBtn.textContent=okLabel;okBtn.dataset.custom='1';}
 }
 function closeConfirmModal(){
-  const ov=document.getElementById('confirm-modal-overlay');
-  if(!ov)return;
-  ov.classList.remove('on');
-  setTimeout(()=>{ov.style.display='none';},300);
+  closeConfirm(false);
 }
 
 let _confirmCb=null;
@@ -8595,10 +8644,11 @@ function showConfirm(msg,cb){
   /* Populate button text each time (language may have changed) */
   const cancelBtn=getEl('confirm-cancel-btn');if(cancelBtn&&!cancelBtn.dataset.custom)cancelBtn.textContent=t('confirm.cancel');
   const okBtn=getEl('confirm-ok-btn');if(okBtn&&!okBtn.dataset.custom)okBtn.textContent=t('confirm.ok');
-  getEl('modal-confirm').style.display='flex';
+  const modal=getEl('modal-confirm');modal.style.display='flex';_modalTrigger=document.activeElement;trapFocus(modal);
 }
 function closeConfirm(runCb){
   const modal=getEl('modal-confirm');if(!modal)return;
+  releaseFocus(modal);
   modal.style.display='none';
   const cb=_confirmCb;_confirmCb=null;
   /* Restore default two-button layout (cancel + ok) */
@@ -8649,7 +8699,7 @@ function _doResetProfile(keepLog){
   dietData=null;
   profState={sex:'M',age:null,height:null,weight:null,bf:null,workoutsWk:null,stepsDay:null,goal:null,goalMod:0,tdee:null,targetKcal:null,pro:null,carbs:null,fat:null,sport:'strength',trainTime:''};
   prefState={mealsCount:3,taste:'misto',dietStyle:'onnivoro',intolerances:'',foods:[],extraFoods:''};
-  curStep=0;
+  curStep=0;selDay=1;_mealRenderCache=null;_regenSeed=0;_tabDirty={};activeTab='oggi';
   for(let i=0;i<5;i++){const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===0);const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===0);dot.classList.remove('completed');}}
   const rc=document.getElementById('result-card');if(rc)rc.classList.remove('on');
   /* Return to onboarding Step 1 */
@@ -8697,7 +8747,7 @@ function resetProfile(){
 function changeDiet(){
   showConfirm(t('confirm.deleteAll'),()=>{
     [SK.diet,SK.phase,SK.mod,SK.refeed,SK.progStart,SK.p4Start].forEach(k=>{try{localStorage.removeItem(k);}catch{}});
-    if(bodyChart){bodyChart.destroy();bodyChart=null;_chartType=null;}dietData=null;showOnb();toast(t('toast.pianoEl'));
+    if(bodyChart){bodyChart.destroy();bodyChart=null;_chartType=null;}dietData=null;prefState={};profState={};showOnb();toast(t('toast.pianoEl'));
   });return;
 }
 
@@ -8721,9 +8771,9 @@ function logMetric(){
 }
 function deleteEntry(ts){showConfirm(t('confirm.eliminaVoce'),()=>{saveLog(getLog().filter(e=>e.ts!==ts));invalidateLogCaches();renderProgress();renderCoach();toast(t('toast.voceEliminata'));});}
 function renderProgressStats(){
-  const log=getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1);
+  const log=getLog().sort((a,b)=>(a.isoDate||'').localeCompare(b.isoDate||''));
   if(log.length>=1){const last=log[log.length-1].weight;document.getElementById('st-w').textContent=`${last}kg`;if(log.length>=2){const d=(last-log[0].weight).toFixed(1);const el=document.getElementById('st-wdiff');el.textContent=`${d>0?'+':''}${d}kg`;el.style.color=d<=0?'var(--p)':'var(--red)';}}
-  const wl=getLog().filter(e=>e.waist!=null&&e.waist>0).sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1);
+  const wl=getLog().filter(e=>e.waist!=null&&e.waist>0).sort((a,b)=>(a.isoDate||'').localeCompare(b.isoDate||''));
   if(wl.length>=1){document.getElementById('st-wst').textContent=`${wl[wl.length-1].waist}cm`;if(wl.length>=2){const d=(wl[wl.length-1].waist-wl[0].waist).toFixed(1);const el=document.getElementById('st-wstdiff');el.textContent=`${d>0?'+':''}${d}cm`;el.style.color=d<=0?'var(--p)':'var(--red)';}}
   /* Monthly delta for chart header */
   const deltaEl=document.getElementById('chart-monthly-delta');
@@ -8758,7 +8808,7 @@ function renderChart(data){
   }
   const isW=chartMode==='waist';
   const cd=isW?data.filter(e=>e.waist!=null&&e.waist>0):data.filter(e=>e.weight!=null&&Number(e.weight)>0);
-  if(!cd.length){em.style.display='block';wrap.style.display='none';if(bodyChart){try{bodyChart.destroy();}catch(e){}bodyChart=null;_chartType=null;}return;}
+  if(!cd.length){em.style.display='block';wrap.style.display='none';if(bodyChart){try{bodyChart.destroy();}catch(e){console.warn('[IK] chart destroy error:',e)}bodyChart=null;_chartType=null;}return;}
   em.style.display='none';
   wrap.style.display='block';
   const color=isW?'var(--sec)':'var(--p)';
@@ -8768,7 +8818,7 @@ function renderChart(data){
   /* Round to max 1 decimal to eliminate float storage artifacts (e.g. 73.800000000001) */
   const values=cd.map(e=>Math.round((isW?Number(e.waist):Number(e.weight))*10)/10);
   const fmtV=v=>{const n=Math.round(v*10)/10;return(n%1===0?String(Math.round(n)):n.toFixed(1))+unit;};
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  requestAnimationFrame(()=>{
     const needType=isW?'waist':'weight';
     if(!cv.offsetWidth||!cv.offsetHeight){cv.width=wrap.offsetWidth||300;cv.height=165;}
     if(bodyChart&&_chartType===needType){
@@ -8784,7 +8834,7 @@ function renderChart(data){
       bodyChart.update('none');
       return;
     }
-    if(bodyChart){try{bodyChart.destroy();}catch(e){}bodyChart=null;}
+    if(bodyChart){try{bodyChart.destroy();}catch(e){console.warn('[IK] chart destroy error:',e)}bodyChart=null;}
     bodyChart=new Chart(cv,{
       type:'line',
       data:{labels,datasets:[{data:values,borderColor:color,backgroundColor:bg,borderWidth:2.25,pointBackgroundColor:color,pointBorderWidth:0,pointRadius:3,pointHoverRadius:4,tension:.35,fill:true}]},
@@ -8794,7 +8844,7 @@ function renderChart(data){
                 y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#8A8A8A',font:{family:'Manrope',size:10,weight:'600'},callback:v=>fmtV(v)},border:{display:false}}}}
     });
     _chartType=needType;
-  }));
+  });
 }
 function renderProgress(){
   const log=getLog().sort((a,b)=>(a.isoDate||'')<(b.isoDate||'')?-1:1);
@@ -8802,7 +8852,7 @@ function renderProgress(){
 }
 function switchChart(mode,btn){
   hap();chartMode=mode;
-  if(bodyChart&&_chartType!==mode){try{bodyChart.destroy();}catch(e){}bodyChart=null;_chartType=null;}
+  if(bodyChart&&_chartType!==mode){try{bodyChart.destroy();}catch(e){console.warn('[IK] chart destroy error:',e)}bodyChart=null;_chartType=null;}
   document.querySelectorAll('.chart-tab').forEach(b=>{
     const on=b===btn;b.style.background=on?'rgba(77,220,198,.12)':'rgba(255,255,255,.05)';
     b.style.borderColor=on?'rgba(77,220,198,.22)':'var(--glass-stroke)';b.style.color=on?'var(--p)':'var(--on-v)';
@@ -8868,25 +8918,25 @@ function importBackup(evt){
       /* ── Confirm before destructive operation ── */
       showConfirm(t('confirm.importa',{n:Object.keys(d).length}),()=>{
 
-      /* ── B4C: Handle structured export (new format) ── */
+      let importErrors=0;
       const isStructured=!!(d._appVersion||d._schemaVersion);
       if(isStructured){
         /* Write structured fields to localStorage */
-        if(d.profile)try{localStorage.setItem(SK.profile,JSON.stringify(d.profile));}catch{}
-        if(d.prefs)try{localStorage.setItem(SK.prefs,JSON.stringify(d.prefs));}catch{}
-        if(d.diet)try{localStorage.setItem(SK.diet,JSON.stringify(d.diet));}catch{}
-        if(d.wLog)try{localStorage.setItem(SK.wLog,JSON.stringify(d.wLog));}catch{}
-        if(d.checkins)try{localStorage.setItem(SK.checkins,JSON.stringify(d.checkins));}catch{}
+        if(d.profile)try{localStorage.setItem(SK.profile,JSON.stringify(d.profile));}catch(e){console.warn('[IK] import error:',e);importErrors++;}
+        if(d.prefs)try{localStorage.setItem(SK.prefs,JSON.stringify(d.prefs));}catch(e){console.warn('[IK] import error:',e);importErrors++;}
+        if(d.diet)try{localStorage.setItem(SK.diet,JSON.stringify(d.diet));}catch(e){console.warn('[IK] import error:',e);importErrors++;}
+        if(d.wLog)try{localStorage.setItem(SK.wLog,JSON.stringify(d.wLog));}catch(e){console.warn('[IK] import error:',e);importErrors++;}
+        if(d.checkins)try{localStorage.setItem(SK.checkins,JSON.stringify(d.checkins));_invalidateCheckinsCache();}catch(e){console.warn('[IK] import error:',e);importErrors++;}
         if(d.phase)lsW(SK.phase,d.phase);
         if(d.mod)lsW(SK.mod,d.mod);
         if(d.refeed)lsW(SK.refeed,d.refeed);
-        if(d.streaks)try{localStorage.setItem('ik_streaks',d.streaks);}catch{}
+        if(d.streaks)try{localStorage.setItem('ik_streaks',d.streaks);}catch(e){console.warn('[IK] import error:',e);importErrors++;}
       }else{
         /* Legacy flat format: write all keys directly */
         const oldKeys=[];
         for(let i=0;i<localStorage.length;i++)oldKeys.push(localStorage.key(i));
-        Object.entries(d).forEach(([k,v])=>{try{localStorage.setItem(k,v);}catch{}});
-        oldKeys.forEach(k=>{if(!(k in d)){try{localStorage.removeItem(k);}catch{}}});
+        Object.entries(d).forEach(([k,v])=>{try{localStorage.setItem(k,v);}catch(e){console.warn('[IK] import error:',e);importErrors++;}});
+        oldKeys.forEach(k=>{if(!(k in d)){try{localStorage.removeItem(k);}catch(e){console.warn('[IK] import error:',e);importErrors++;}}});
       }
 
       /* ── Migration guards: repair missing/malformed new keys ── */
@@ -8900,7 +8950,7 @@ function importBackup(evt){
           });
           localStorage.setItem('ik_streaks',JSON.stringify(s));
         }
-      }catch{localStorage.removeItem('ik_streaks');}
+      }catch(e){console.warn('[IK] import error:',e);importErrors++;localStorage.removeItem('ik_streaks');}
 
       try{
         const raw=localStorage.getItem(SK.checkins);
@@ -8908,9 +8958,9 @@ function importBackup(evt){
           const arr=JSON.parse(raw);
           if(!Array.isArray(arr))throw new Error();
           const clean=arr.filter(c=>c&&typeof c==='object'&&c.iso);
-          if(clean.length!==arr.length)localStorage.setItem(SK.checkins,JSON.stringify(clean));
+          if(clean.length!==arr.length){localStorage.setItem(SK.checkins,JSON.stringify(clean));_invalidateCheckinsCache();}
         }
-      }catch{localStorage.removeItem(SK.checkins);}
+      }catch(e){console.warn('[IK] import error:',e);importErrors++;localStorage.removeItem(SK.checkins);}
 
       try{
         const raw=localStorage.getItem('ik_notif_schedule');
@@ -8918,7 +8968,7 @@ function importBackup(evt){
           const s=JSON.parse(raw);
           if(typeof s!=='object'||Array.isArray(s))throw new Error();
         }
-      }catch{localStorage.removeItem('ik_notif_schedule');}
+      }catch(e){console.warn('[IK] import error:',e);importErrors++;localStorage.removeItem('ik_notif_schedule');}
 
       /* ── Mount app ── */
       const planRaw=localStorage.getItem(SK.diet);
@@ -8929,6 +8979,7 @@ function importBackup(evt){
         /* B4D: versioned success toast */
         dietData=parsed;mountApp();toast(t('toast.backupImp')+(d._exportedAt?` (${d._exportedAt})`:''));
       }else{dietData=null;showOnb();toast(t('toast.noPianoBackup'));}
+      if(importErrors>0)showToast(`⚠️ ${importErrors} import error(s) — some data may be incomplete`,4000);
       }); // end showConfirm callback
 
     }catch(err){toast(`⚠️ ${err.message||t('toast.errExp')}`);}
@@ -9126,7 +9177,7 @@ function openShoppingList(){
   const categories=generateShoppingList();
   const isEmpty=Object.values(categories).every(arr=>arr.length===0);
   if(isEmpty){
-    shopEl.innerHTML=`<div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;">${t('shopping.empty')}</span></div>`;
+    shopEl.innerHTML=sanitize(`<div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;">${t('shopping.empty')}</span></div>`);
     openModal('shopping');
     return;
   }
@@ -9152,7 +9203,7 @@ function openShoppingList(){
     }
   });
 
-  shopEl.innerHTML=html;
+  shopEl.innerHTML=sanitize(html);
   openModal('shopping');
   },'Shopping List');
 }
@@ -9180,31 +9231,47 @@ function generateShoppingList(){
 
   /* Helper: pick category from food name keywords */
   const pickCat=name=>{
-    if(name.includes('pollo')||name.includes('manzo')||name.includes('tonno')||name.includes('salmone')||
-       name.includes('tacchino')||name.includes('merluzzo')||name.includes('uova')||name.includes('uovo')||
-       name.includes('albume')||name.includes('tofu')||name.includes('legumi')||name.includes('seitan')||
-       name.includes('prosciutto')||name.includes('branzino')||name.includes('platessa')||
-       name.includes('sgombro')||name.includes('trota')||name.includes('orata')||name.includes('sardine')||
-       name.includes('pesce spada')||name.includes('gamberetti')||name.includes('proteine'))return'proteine';
-    if(name.includes('riso')||name.includes('pasta')||name.includes('patate')||name.includes('avena')||
-       name.includes('pane')||name.includes('quinoa')||name.includes('farro')||name.includes('frutta')||
-       name.includes('banana')||name.includes('mela')||name.includes('arancia')||name.includes('mango')||
-       name.includes('mirtilli')||name.includes('fragole')||name.includes('frutti di bosco')||
-       name.includes('couscous')||name.includes('orzo')||name.includes('mais')||name.includes('polenta')||
-       name.includes('soffiato')||name.includes('carb'))return'carboidrati';
-    if(name.includes('olio')||name.includes('mandorle')||name.includes('noci')||name.includes('avocado')||
-       name.includes('nocciole')||name.includes('pistacchi')||name.includes('tahini')||
-       name.includes('olive')||name.includes('burro di')||name.includes('burro arachidi')||
-       name.includes('semi di')||name.includes('semi lino')||name.includes('semi zucca')||
-       name.includes('semi chia')||name.includes('semi '))return'grassi';
-    if(name.includes('yogurt')||name.includes('fiocchi di latte')||name.includes('fiocchi latte')||
-       name.includes('ricotta')||name.includes('latte')||name.includes('parmigiano'))return'latticini';
-    if(name.includes('verdure')||name.includes('broccoli')||name.includes('spinaci')||
-       name.includes('zucchine')||name.includes('carote')||name.includes('asparagi')||
-       name.includes('cavolfiore')||name.includes('fagiolini')||name.includes('melanzane')||
-       name.includes('peperoni')||name.includes('radicchio')||name.includes('cetrioli')||
-       name.includes('pomodori')||name.includes('insalata')||name.includes('lattuga')||
-       name.includes('sedano')||name.includes('bok choy'))return'verdure';
+    /* MED-33: English food name mappings alongside Italian */
+    if(name.includes('pollo')||name.includes('chicken')||name.includes('manzo')||name.includes('beef')||
+       name.includes('tonno')||name.includes('tuna')||name.includes('salmone')||name.includes('salmon')||
+       name.includes('tacchino')||name.includes('turkey')||name.includes('merluzzo')||name.includes('cod')||
+       name.includes('uova')||name.includes('uovo')||name.includes('egg')||
+       name.includes('albume')||name.includes('egg white')||name.includes('tofu')||
+       name.includes('legumi')||name.includes('legume')||name.includes('beans')||name.includes('lentils')||
+       name.includes('seitan')||name.includes('prosciutto')||name.includes('ham')||
+       name.includes('branzino')||name.includes('platessa')||name.includes('plaice')||
+       name.includes('sgombro')||name.includes('mackerel')||name.includes('trota')||name.includes('trout')||
+       name.includes('orata')||name.includes('sardine')||name.includes('sardines')||
+       name.includes('pesce spada')||name.includes('swordfish')||name.includes('gamberetti')||name.includes('shrimp')||
+       name.includes('proteine')||name.includes('protein'))return'proteine';
+    if(name.includes('riso')||name.includes('rice')||name.includes('pasta')||name.includes('patate')||name.includes('potato')||
+       name.includes('avena')||name.includes('oat')||name.includes('pane')||name.includes('bread')||
+       name.includes('quinoa')||name.includes('farro')||name.includes('spelt')||name.includes('frutta')||name.includes('fruit')||
+       name.includes('banana')||name.includes('mela')||name.includes('apple')||name.includes('arancia')||name.includes('orange')||
+       name.includes('mango')||name.includes('mirtilli')||name.includes('blueberri')||
+       name.includes('fragole')||name.includes('strawberri')||name.includes('frutti di bosco')||name.includes('berr')||
+       name.includes('couscous')||name.includes('orzo')||name.includes('barley')||name.includes('mais')||name.includes('corn')||
+       name.includes('polenta')||name.includes('soffiato')||name.includes('carb'))return'carboidrati';
+    if(name.includes('olio')||name.includes('oil')||name.includes('mandorle')||name.includes('almond')||
+       name.includes('noci')||name.includes('walnut')||name.includes('avocado')||
+       name.includes('nocciole')||name.includes('hazelnut')||name.includes('pistacchi')||name.includes('pistachio')||
+       name.includes('tahini')||name.includes('olive')||
+       name.includes('burro di')||name.includes('burro arachidi')||name.includes('peanut butter')||
+       name.includes('semi di')||name.includes('semi lino')||name.includes('flaxseed')||
+       name.includes('semi zucca')||name.includes('pumpkin seed')||name.includes('semi chia')||name.includes('chia seed')||
+       name.includes('semi ')||name.includes('seed'))return'grassi';
+    if(name.includes('yogurt')||name.includes('fiocchi di latte')||name.includes('fiocchi latte')||name.includes('cottage cheese')||
+       name.includes('ricotta')||name.includes('latte')||name.includes('milk')||name.includes('parmigiano')||name.includes('parmesan')||
+       name.includes('cheese')||name.includes('mozzarella'))return'latticini';
+    if(name.includes('verdure')||name.includes('vegetable')||name.includes('broccoli')||name.includes('broccoli')||
+       name.includes('spinaci')||name.includes('spinach')||name.includes('zucchine')||name.includes('zucchini')||
+       name.includes('carote')||name.includes('carrot')||name.includes('asparagi')||name.includes('asparagus')||
+       name.includes('cavolfiore')||name.includes('cauliflower')||name.includes('fagiolini')||name.includes('green bean')||
+       name.includes('melanzane')||name.includes('eggplant')||name.includes('peperoni')||name.includes('pepper')||
+       name.includes('radicchio')||name.includes('cetrioli')||name.includes('cucumber')||
+       name.includes('pomodori')||name.includes('tomato')||name.includes('insalata')||name.includes('salad')||
+       name.includes('lattuga')||name.includes('lettuce')||name.includes('sedano')||name.includes('celery')||
+       name.includes('bok choy')||name.includes('kale')||name.includes('onion')||name.includes('garlic'))return'verdure';
     return'altro';
   };
 
@@ -9450,7 +9517,7 @@ function renderCalendar(){
   for(let d=new Date(startDate);d<=lastDay;d.setDate(d.getDate()+1)){
     const dd=String(d.getDate()).padStart(2,'0');
     const dayData=calData[dd]||{};
-    const adherence=(dayData.meals||0)/(dayData.total||3);
+    const adherence=(dayData.total||3)>0?(dayData.meals||0)/(dayData.total||3):0;
     let cssClass='cal-empty';
     if(dayData.checkin && adherence>=0.8){
       cssClass='cal-green';
@@ -9465,7 +9532,7 @@ function renderCalendar(){
   }
   html+=`</div>`;
 
-  calEl.innerHTML=html;
+  calEl.innerHTML=sanitize(html);
 }
 
 function updateAdherenceCalendar(){
@@ -9480,7 +9547,7 @@ function updateAdherenceCalendar(){
   let done=0;
   /* Use selDay (plan day 1-7) not the calendar day-of-month */
   mNames.forEach(n=>{
-    if(lsR(mk(selDay,n))==='1')done++;
+    if(lsR(mk(selDay||1,n))==='1')done++;
   });
 
   /* Backfill: also count meals from the plan day matching today's weekday
@@ -9514,7 +9581,7 @@ function updateAdherenceCalendar(){
 const TABS=['oggi','prog','set','info'];
 let _tabInFlight=false;
 function switchTab(name){
-  if(_tabInFlight)return;_tabInFlight=true;setTimeout(()=>{_tabInFlight=false;},200);
+  if(_tabInFlight)return;_tabInFlight=true;
   activeTab=name;
   TABS.forEach(t=>{
     const scr=document.getElementById(`scr-${t}`);
@@ -9544,6 +9611,7 @@ function switchTab(name){
   if(name==='set'){renderSettings();renderKcalRing();_tabDirty.set=false;trendInitPromise.then(()=>updateSubManagementCard());_ikRefLoad();}
   if(name==='info'){updateConsentUI();}
   if(name==='oggi'){try{renderTodayAction();}catch(e){}try{renderPlanUpdateNote();}catch(e){}}
+  _tabInFlight=false;
 }
 
 /* ═══════════════════════════════════════
@@ -9619,12 +9687,12 @@ async function _ikRefLoad(){
     if(previewEl)previewEl.textContent=creditCents>0?t('ref.preview.credit',{amount:creditEur}):t('ref.preview.empty');
     if(ctaWrap){
       if(!onboarded){
-        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefStartOnboarding()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">account_balance</span>'+t('ref.cta.connect')+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.connectSub')+'</p>';
+        ctaWrap.innerHTML=sanitize('<button class="btn btn-primary w100" onclick="_ikRefStartOnboarding()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">account_balance</span>'+t('ref.cta.connect')+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.connectSub')+'</p>');
       }else if(canPayout){
-        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefRequestPayout()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">payments</span>'+t('ref.cta.payout',{amount:creditEur})+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.payoutSub')+'</p>';
+        ctaWrap.innerHTML=sanitize('<button class="btn btn-primary w100" onclick="_ikRefRequestPayout()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">payments</span>'+t('ref.cta.payout',{amount:creditEur})+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.payoutSub')+'</p>');
       }else{
         const rem=((2000-creditCents)/100).toFixed(2);
-        ctaWrap.innerHTML='<div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 14px;display:flex;align-items:center;gap:10px;"><span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">check_circle</span><div><div style="font-size:12px;font-weight:600;color:var(--on);">'+t('ref.status.connected')+'</div><div style="font-size:10px;color:var(--muted);">'+t('ref.status.minRemaining',{amount:rem})+'</div></div></div>';
+        ctaWrap.innerHTML=sanitize('<div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 14px;display:flex;align-items:center;gap:10px;"><span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">check_circle</span><div><div style="font-size:12px;font-weight:600;color:var(--on);">'+t('ref.status.connected')+'</div><div style="font-size:10px;color:var(--muted);">'+t('ref.status.minRemaining',{amount:rem})+'</div></div></div>');
       }
     }
   }catch(e){console.warn('[IK][referral] load error',e);}
@@ -10168,7 +10236,7 @@ function showOnboarding(){
   /* Convert \n to <br> in all titles */
   ['onb-t0','onb-t1','onb-t2','onb-t3','onb-t4'].forEach(id=>{
     const el=document.getElementById(id);
-    if(el)el.innerHTML=el.textContent.replace(/\n/g,'<br>');
+    if(el)el.innerHTML=sanitize(el.textContent.split('\n').join('<br>'));
   });
   /* Buttons */
   /* onb-start-btn rimosso dalla slide — gestito dal nav button */
@@ -10300,7 +10368,7 @@ setTimeout(function(){
   if(!anyVisible){
     console.error('IK WATCHDOG: black screen detected after 4s — forcing onboarding');
     try{
-      try{localStorage.removeItem('ik_pwa_seen');}catch{}
+       /* removed ik_pwa_seen deletion — PWA gate should not re-show */
        booted=false;
       _bootAfterLangGate();
     }catch(e){
@@ -10330,25 +10398,24 @@ setTimeout(function(){
 <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="prv-title">
   <div class="modal-drag-handle" aria-hidden="true"></div>
   <div class="modal-header">
-    <span class="modal-title" id="prv-title">🛡 Privacy &amp; GDPR</span>
+    <span class="modal-title" id="prv-title" data-i18n="prv.title">🛡 Privacy &amp; GDPR</span>
     <button class="modal-close" onclick="closeModal('modal-privacy')" aria-label="Close privacy"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
   </div>
   <div class="modal-body">
 
     <!-- Badge -->
-    <div class="prv-badge" id="prv-badge-txt">Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003</div>
+    <div class="prv-badge" id="prv-badge-txt" data-i18n="prv.badge">Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003</div>
 
-    <!-- Section 0 — Summary -->
     <div class="prv-section">
       <div class="prv-highlight">
-        <p class="prv-h2" id="prv-s0-h" style="margin-bottom:6px;">🛡 In sintesi</p>
+        <p class="prv-h2" id="prv-s0-h" style="margin-bottom:6px;" data-i18n="prv.s0.h">🛡 In sintesi</p>
         <p class="prv-p" id="prv-s0-p">Iron Kinetic™ raccoglie solo i dati strettamente necessari per fornirti il servizio. Gli utenti anonimi mantengono tutti i dati nel localStorage del browser. Gli utenti con account Google sincronizzano stato e abbonamento su Supabase (EU). Nessun dato sanitario è mai condiviso con terze parti. Zero cookie di tracking.</p>
       </div>
     </div>
 
     <!-- Section 1 — Titolare -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s1-h">1. Titolare del trattamento</p>
+      <p class="prv-h2" id="prv-s1-h" data-i18n="prv.s1.h">1. Titolare del trattamento</p>
       <p class="prv-p">
         <strong id="prv-s1-name">[iron kinetic tm]</strong><br>
         <span id="prv-s1-addr">[strada di caprile 30]</span><br>
@@ -10359,7 +10426,7 @@ setTimeout(function(){
 
     <!-- Section 2 — Dati raccolti -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s2-h">2. Dati raccolti e finalità</p>
+      <p class="prv-h2" id="prv-s2-h" data-i18n="prv.s2.h">2. Dati raccolti e finalità</p>
       <p class="prv-p" id="prv-s2-p">La seguente tabella descrive ogni categoria di dato trattato, la finalità, la base giuridica e il periodo di conservazione.</p>
       <table class="prv-table" id="prv-s2-table">
         <thead>
@@ -10416,7 +10483,7 @@ setTimeout(function(){
 
     <!-- Section 3 — Dati sanitari Art.9 -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s3-h">3. Dati sanitari — Art. 9 GDPR</p>
+      <p class="prv-h2" id="prv-s3-h" data-i18n="prv.s3.h">3. Dati sanitari — Art. 9 GDPR</p>
       <div class="prv-highlight" style="border-color:rgba(255,159,10,.3);background:rgba(255,159,10,.06);">
         <p class="prv-p" style="color:var(--on);" id="prv-s3-p1">Peso corporeo, percentuale di grasso corporeo e misure corporee (girovita) costituiscono <strong>dati relativi alla salute</strong> ai sensi dell'art. 9 GDPR.</p>
       </div>
@@ -10425,7 +10492,7 @@ setTimeout(function(){
 
     <!-- Section 4 — Sub-processor -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s4-h">4. Responsabili del trattamento (sub-processor)</p>
+      <p class="prv-h2" id="prv-s4-h" data-i18n="prv.s4.h">4. Responsabili del trattamento (sub-processor)</p>
       <div class="prv-processor" id="prv-s4-list">
         <div class="prv-proc-item">
           <div class="prv-proc-name">Supabase Inc. (USA)</div>
@@ -10462,25 +10529,25 @@ setTimeout(function(){
 
     <!-- Section 5 — Utenti anonimi -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s5-h">5. Utenti anonimi (senza account)</p>
+      <p class="prv-h2" id="prv-s5-h" data-i18n="prv.s5.h">5. Utenti anonimi (senza account)</p>
       <p class="prv-p" id="prv-s5-p">Se non crei un account Google, <strong>i tuoi dati sanitari e il tuo piano restano nel localStorage del tuo dispositivo</strong> e non vengono trasferiti a Supabase. Piano, peso, check-in e preferenze vengono cancellati svuotando i dati del sito o tramite <em>Profilo → Ricomincia da capo</em>. Nota: i dati tecnici di crash ed errori (stacktrace anonimi, tipo browser) possono essere inviati a Sentry per il monitoraggio della stabilità dell'app, ma non contengono dati personali né sanitari.</p>
     </div>
 
     <!-- Section 5b — Freemium vs Subscription -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s5b-h">5b. Dati e abbonamento (freemium / premium)</p>
+      <p class="prv-h2" id="prv-s5b-h" data-i18n="prv.s5b.h">5b. Dati e abbonamento (freemium / premium)</p>
       <p class="prv-p" id="prv-s5b-p">Iron Kinetic™ offre un periodo di prova gratuito di 7 giorni per le funzionalità Trend. Al termine della prova, l'accesso Trend richiede un abbonamento mensile o un pagamento una tantum lifetime. I dati sanitari (peso, misure, piano alimentare) sono accessibili indipendentemente dallo stato dell'abbonamento. Lo stato dell'abbonamento (piano, data scadenza trial, ID cliente Stripe) è conservato su Supabase per gli utenti autenticati e in localStorage per gli utenti anonimi. La disdetta dell'abbonamento non comporta la cancellazione dei dati sanitari.</p>
     </div>
 
     <!-- Section 6 — Cookie -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s6-h">6. Cookie e tracciamento</p>
+      <p class="prv-h2" id="prv-s6-h" data-i18n="prv.s6.h">6. Cookie e tracciamento</p>
       <p class="prv-p" id="prv-s6-p"><strong>Zero cookie di profilazione.</strong> Zero analytics. Zero advertising. Zero pixel di tracciamento. Il storage principale è il localStorage del browser (Web Storage API). Il SDK Sentry utilizza localStorage per il monitoraggio degli errori e può impostare cookie tecnici necessari al tracciamento delle sessioni di crash. Gli utenti autenticati ricevono un cookie di sessione tecnico da Supabase, necessario per mantenere il login.</p>
     </div>
 
     <!-- Section 7 — Diritti -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s7-h">7. I tuoi diritti (artt. 15–22 GDPR)</p>
+      <p class="prv-h2" id="prv-s7-h" data-i18n="prv.s7.h">7. I tuoi diritti (artt. 15–22 GDPR)</p>
       <p class="prv-p" style="margin-bottom:10px;">Per esercitare qualsiasi diritto scrivi a <strong>[<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4b3b22382228242727240b2c262a222765282426">[email&#160;protected]</a>]</strong>.</p>
       <div class="prv-rights-grid" id="prv-s7-grid">
         <div class="prv-right-item"><span class="prv-right-ico">👁</span><span class="prv-right-label">Accesso (Art.15)</span><span class="prv-right-desc">Richiedi copia dei dati che ti riguardano scrivendo al titolare.</span></div>
@@ -10496,19 +10563,19 @@ setTimeout(function(){
 
     <!-- Section 8 — Età minima -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s8-h">8. Età minima</p>
+      <p class="prv-h2" id="prv-s8-h" data-i18n="prv.s8.h">8. Età minima</p>
       <p class="prv-p" id="prv-s8-p">Il servizio è riservato a utenti di età <strong>≥ 16 anni</strong> (GDPR art. 8; D.Lgs. 196/2003 mod. D.Lgs. 101/2018). Non raccogliamo consapevolmente dati di minori di 16 anni. Se sei un genitore/tutore e ritieni che un minore abbia usato il servizio, scrivici per la cancellazione immediata dei dati.</p>
     </div>
 
     <!-- Section 9 — Trasferimenti internazionali -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s9-h">9. Trasferimenti internazionali</p>
+      <p class="prv-h2" id="prv-s9-h" data-i18n="prv.s9.h">9. Trasferimenti internazionali</p>
       <p class="prv-p" id="prv-s9-p">Supabase e Stripe hanno sede negli USA. I trasferimenti sono coperti da <strong>Clausole Contrattuali Standard (SCC)</strong> della Commissione UE. Google LLC è soggetta alle stesse SCC nell'ambito del Data Privacy Framework UE–USA.</p>
     </div>
 
     <!-- Section 10 — Modifiche -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-s10-h">10. Modifiche alla presente informativa</p>
+      <p class="prv-h2" id="prv-s10-h" data-i18n="prv.s10.h">10. Modifiche alla presente informativa</p>
       <p class="prv-p" id="prv-s10-p">In caso di modifiche sostanziali, gli utenti verranno notificati tramite avviso nell'app. Data ultimo aggiornamento: <strong>Aprile 2026</strong>.</p>
     </div>
 
