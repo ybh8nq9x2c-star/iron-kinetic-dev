@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
           metadata: { user_id: user.id },
         },
         {
-          idempotencyKey: `payout_${user.id}_${Date.now()}`,
+          idempotencyKey: `payout_${user.id}_${consumeResult}`,
         }
       )
     } catch (stripeErr) {
@@ -122,7 +122,7 @@ Deno.serve(async (req) => {
 
   } catch (err) {
     console.error('[request-payout]', err)
-    return new Response(JSON.stringify({ error: err.message }), {
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { ...corsHeaders(req), 'Content-Type': 'application/json' }
     })

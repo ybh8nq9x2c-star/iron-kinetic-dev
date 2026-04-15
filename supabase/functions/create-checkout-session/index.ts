@@ -187,12 +187,12 @@ Deno.serve(async (req) => {
     console.error('[checkout] Stripe error:', msg)
 
     if (msg.includes('No such price')) {
-      return json({ error: `Price ID non trovato su Stripe (${priceId}). Verifica che i Price ID siano in modalità live.` }, 500)
+      return json({ error: 'Errore durante la creazione della sessione di pagamento. Riprova più tardi.' }, 500)
     }
     if (msg.includes('Invalid API Key') || msg.includes('No such api key')) {
-      return json({ error: 'Stripe API key non valida. Verifica STRIPE_SECRET_KEY nei Supabase secrets.' }, 500)
+      return json({ error: 'Errore durante la creazione della sessione di pagamento. Riprova più tardi.' }, 500)
     }
 
-    return json({ error: `Errore Stripe: ${msg}` }, 500)
+    return json({ error: 'Errore durante la creazione della sessione di pagamento. Riprova più tardi.' }, 500)
   }
 })

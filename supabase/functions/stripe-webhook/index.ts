@@ -54,7 +54,7 @@ serve(async (req) => {
     )
   } catch (err) {
     console.error('Webhook signature error:', err.message)
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 })
+    return new Response('Webhook signature verification failed', { status: 400 })
   }
 
   console.log('Stripe event:', event.type, event.id)
