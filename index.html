@@ -927,9 +927,9 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
 <!-- Supabase: kept synchronous — inline boot depends on `supabase` global at parse time -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
-<script defer src="https://js.stripe.com/v3/" crossorigin="anonymous"></script>
+<script defer src="https://js.stripe.com/v3/" integrity="sha384-TEBuKD1DvAKebMS0TGTXn/tbig+nnYNsMC4sr0OzgYs2xAHR2yDLZH+va8tKT47x" crossorigin="anonymous"></script>
 <script>window.sentryOnLoad=function(){Sentry.init({release:'iron-kinetic@1.0.0',tracesSampleRate:0.1,replaysSessionSampleRate:0.1,replaysOnErrorSampleRate:1.0,environment:location.hostname.includes('railway')?'production':'development'});};</script>
-<script src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" crossorigin="anonymous"></script>
+<script src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" integrity="sha384-7xGRbA4IumR22TZkO0qKKawombfOd6XW9Uz+IONGHGkfwIoXAnhqlPRe8UXOVIKQ" crossorigin="anonymous"></script>
 </head>
 <body class="onboarding-active">
 
@@ -1536,9 +1536,9 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
         <!-- Day selector with arrows -->
         <div class="pasti-day-sel">
-          <button onclick="shiftDay(-1)" class="btn-icon sn" style="width:30px;height:30px;flex-shrink:0;" aria-label="Giorno precedente"><span class="material-symbols-outlined" style="font-size:15px;">chevron_left</span></button>
+          <button onclick="shiftDay(-1)" class="btn-icon sn" style="width:44px;height:44px;flex-shrink:0;" aria-label="Giorno precedente"><span class="material-symbols-outlined" style="font-size:15px;">chevron_left</span></button>
           <div id="day-sel" style="display:flex;gap:5px;flex:1;overflow-x:auto;scrollbar-width:none;"></div>
-          <button onclick="shiftDay(1)" class="btn-icon sn" style="width:30px;height:30px;flex-shrink:0;" aria-label="Giorno successivo"><span class="material-symbols-outlined" style="font-size:15px;">chevron_right</span></button>
+          <button onclick="shiftDay(1)" class="btn-icon sn" style="width:44px;height:44px;flex-shrink:0;" aria-label="Giorno successivo"><span class="material-symbols-outlined" style="font-size:15px;">chevron_right</span></button>
         </div>
         <!-- Refeed (shown by renderRefeed when phase=2) -->
         <div id="refeed-card" style="display:none;border-bottom:1px solid var(--line);">
@@ -2159,7 +2159,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
       <!-- Notif button (compat) -->
       <div style="display:none;">
-        <button id="notif-perm-btn" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
+        <button id="notif-perm-btn-alt" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
       </div>
       <div style="height:8px;"></div>
     </div>
@@ -5196,8 +5196,9 @@ const mk=(d,n)=>`ik_ml_${toISO()}_d${d}_${n}`;
 /* Storage */
 const lsG=(k,fb=null)=>{try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):fb;}catch{return fb;}};
 const lsS=(k,v)=>{
-  const _prev=localStorage.getItem(k);
+  let _prev=null;
   try{
+    _prev=localStorage.getItem(k);
     localStorage.setItem(k,JSON.stringify(v));
     const _tabMap={};
     _tabMap[SK.diet]    =['oggi','prog','set'];
@@ -5336,7 +5337,7 @@ function avg(arr){return arr.length?arr.reduce((a,v)=>a+v,0)/arr.length:0;}
 function getDayMacroShift(){const w=gT('workout')>=1;return w?{carbMult:1.15,fatMult:0.90,label:'training'}:{carbMult:0.90,fatMult:1.05,label:'rest'}}
 
 /* ── Feature C: Circadian Hunger Distribution Bias ── */
-function getHungerDistributionBias(){let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins))||[]}catch{}const r=arr.slice(-14);if(r.length<5)return{frontLoad:false,backLoad:false,intensity:0};const e=r.filter(c=>['routine','workout'].includes(c.tag)).map(c=>c.hunger||5),l=r.filter(c=>['social','stress'].includes(c.tag)).map(c=>c.hunger||5),ae=e.length?e.reduce((a,v)=>a+v,0)/e.length:5,al=l.length?l.reduce((a,v)=>a+v,0)/l.length:5,oa=r.reduce((a,c)=>a+(c.hunger||5),0)/r.length;if(oa>6.5&&ae>al+1)return{frontLoad:true,backLoad:false,intensity:Math.min(1,(ae-5)/5)};if(oa>6.5&&al>ae+1)return{frontLoad:false,backLoad:true,intensity:Math.min(1,(al-5)/5)};return{frontLoad:false,backLoad:false,intensity:0}}
+function getHungerDistributionBias(){let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins))||[]}catch(e){console.warn("[IK] parse error",e);}const r=arr.slice(-14);if(r.length<5)return{frontLoad:false,backLoad:false,intensity:0};const e=r.filter(c=>['routine','workout'].includes(c.tag)).map(c=>c.hunger||5),l=r.filter(c=>['social','stress'].includes(c.tag)).map(c=>c.hunger||5),ae=e.length?e.reduce((a,v)=>a+v,0)/e.length:5,al=l.length?l.reduce((a,v)=>a+v,0)/l.length:5,oa=r.reduce((a,c)=>a+(c.hunger||5),0)/r.length;if(oa>6.5&&ae>al+1)return{frontLoad:true,backLoad:false,intensity:Math.min(1,(ae-5)/5)};if(oa>6.5&&al>ae+1)return{frontLoad:false,backLoad:true,intensity:Math.min(1,(al-5)/5)};return{frontLoad:false,backLoad:false,intensity:0}}
 
 /* ── Feature B: Meal Skip Learning ── */
 function getMealSkipRates(){if(!dietData)return{};const nms=getMealNames(),c={};nms.forEach(n=>c[n]={d:0,t:0});const now=new Date();for(let i=0;i<14;i++){const d=new Date(now.getTime()-i*86400000),dow=d.getDay()===0?7:d.getDay();nms.forEach(n=>{c[n].t++;if(lsR(mk(dow,n))==='1')c[n].d++})}const r={};nms.forEach(n=>r[n]=c[n].t?1-c[n].d/c[n].t:0);return r}
@@ -5351,7 +5352,7 @@ function getProgressiveProRate(base,goal,startMs){if(goal!=='cut_extreme'&&goal!
 function runAdaptiveEngine(){
   requireTrend(()=>{
     if(lsR(SK_ADAPTIVE)===toISO())return;
-    let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
+    let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch(e){console.warn("[IK] parse error",e);}
     if(arr.length<3)return;
     const recent=arr.slice(-5);  // was slice(0,5) — use LAST 5 sessions, not first
     const avgE=avg(recent.map(c=>+(c.energy||5)));
@@ -5448,7 +5449,7 @@ function showAutoAdjustBanner(suggestion,tdeeData){
     :suggestion.reason==='fast_loss'
       ?t('autoadj.fast_loss.body',{rate,delta})
       :t('autoadj.slow_loss.body',{rate,delta});
-  if(iconEl){iconEl.className='material-symbols-outlined';iconEl.textContent=_autoAdjIconMap[ico]||'tune';}
+  if(iconEl){iconEl.className='material-symbols-outlined';iconEl.textContent=ico||'tune';}
   if(titleEl)titleEl.textContent=t('autoadj.'+suggestion.reason+'.title');
   if(bodyEl)bodyEl.textContent=bodyText;
   if(applyBtn){
@@ -5701,6 +5702,7 @@ function renderPredictionChart(){
 }
 
 function renderRealTDEE(){
+  if(!trendAccess?.access)return; /* HIGH-15: paywall gate — skip if no trend access */
   const card=document.getElementById('real-tdee-card');if(!card)return;
   const data=calcRealTDEE();
   if(!data){card.style.display='none';return;}
@@ -5745,7 +5747,7 @@ function generateWeeklyReport(){
   const now=new Date();
   const isoWeekAgo=new Date(now-7*24*3600*1000).toISOString().slice(0,10);
   const log=getLog().filter(e=>e.isoDate&&e.isoDate>=isoWeekAgo&&Number(e.weight)>0).sort((a,b)=>a.isoDate<b.isoDate?-1:1);
-  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
+  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch(e){console.warn("[IK] parse error",e);}
   const ciWeek=arr.filter(c=>c.iso>=isoWeekAgo);
   const weightChange=log.length>=2?Math.round((Number(log[log.length-1].weight)-Number(log[0].weight))*10)/10:null;
   const avgF=(k)=>ciWeek.length?Math.round(avg(ciWeek.map(c=>+(c[k]||5)))*10)/10:null;
@@ -7161,7 +7163,7 @@ function analyzeState(){
 
   /* ── Check-in medi + TREND (ultimi 7) — COM-B model ── */
   let checkins=[];
-  try{checkins=JSON.parse(localStorage.getItem(SK.checkins)||'[]').slice(0,7);}catch{}
+  try{checkins=JSON.parse(localStorage.getItem(SK.checkins)||'[]').slice(0,7);}catch(e){console.warn("[IK] parse error",e);}
   /* Reverse so oldest first for regression */
   const ci7=[...checkins].reverse();
   const avg7=k=>checkins.length>=2?checkins.reduce((a,v)=>a+(+v[k]||0),0)/checkins.length:null;
@@ -7734,7 +7736,7 @@ function editDailyCheckin(){
   if(saveBtn)saveBtn.textContent=t('oggi.checkin.salva');
 }
 function restoreTodayCheckin(){
-  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
+  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch(e){console.warn("[IK] parse error",e);}
   const today=arr.find(x=>x.iso===toISO());if(!today)return;
   const map={'ci-hunger':today.hunger,'ci-energy':today.energy,'ci-adherence':today.adherence,'ci-digestion':today.digestion};
   Object.entries(map).forEach(([id,val])=>{const el=document.getElementById(id);if(el&&val!=null)el.value=val;});
@@ -7744,7 +7746,7 @@ function restoreTodayCheckin(){
   if(ciBtn)ciBtn.textContent=t('oggi.checkin.aggiorna')||'Aggiorna check-in';
 }
 function renderCheckinAnalytics(){
-  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch{}
+  let arr=[];try{arr=JSON.parse(localStorage.getItem(SK.checkins)||'[]');}catch(e){console.warn("[IK] parse error",e);}
   const last7=arr.slice(0,7);
   const avg=(k)=>last7.length?last7.reduce((a,v)=>a+(+v[k]||0),0)/last7.length:null;
   ['hunger','energy','adherence','digestion'].forEach(k=>{
@@ -8209,7 +8211,7 @@ function renderTodayAction(){
   const log=getLog().sort((a,b)=>a.isoDate<b.isoDate?-1:1);
   const today=toISO();
   const hasWeightToday=log.some(e=>e.isoDate===today&&e.weight);
-  let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch{}
+  let arr=[];try{arr=JSON.parse(localStorage.getItem('ik_checkins')||'[]');}catch(e){console.warn("[IK] parse error",e);}
   const hasCheckinToday=arr.some(c=>c.iso===today);
   const names=getMealNames();
   const dow=new Date().getDay()===0?7:new Date().getDay();
@@ -8462,7 +8464,7 @@ function renderProfileHeader(){
   const tdeeDisp=document.getElementById('set-hero-tdee-display');
   if(tdeeDisp&&prof){
     let _tkc=prof.targetKcal;
-    if(!_tkc&&typeof calculateUserMacros==='function'){try{_tkc=calculateUserMacros(prof).targetKcal;}catch{}}
+    if(!_tkc&&typeof calculateUserMacros==='function'){try{_tkc=calculateUserMacros(prof).targetKcal;}catch(e){console.warn("[IK] calcMacros fallback",e);}}
     if(_tkc)tdeeDisp.innerHTML=`${Math.round(_tkc)} <span style="font-size:13px;opacity:.5;font-weight:500;">kcal</span>`;
   }
 }
@@ -9254,7 +9256,7 @@ function generateShoppingList(){
 ═══════════════════════════════════════ */
 function updateStreaks(){
   let streaks={};
-  try{streaks=JSON.parse(localStorage.getItem('ik_streaks')||'{}');}catch{}
+  try{streaks=JSON.parse(localStorage.getItem('ik_streaks')||'{}');}catch(e){console.warn("[IK] parse error",e);}
 
   const iso=toISO();
   const checkins=[];
@@ -9321,7 +9323,7 @@ function updateStreaks(){
 
 function getStreakCount(type){
   let streaks={};
-  try{streaks=JSON.parse(localStorage.getItem('ik_streaks')||'{}');}catch{}
+  try{streaks=JSON.parse(localStorage.getItem('ik_streaks')||'{}');}catch(e){console.warn("[IK] parse error",e);}
   return streaks[type]?.count||0;
 }
 
@@ -9472,7 +9474,7 @@ function updateAdherenceCalendar(){
   const key=`ik_cal_${yyyy}-${mm}`;
 
   let calData={};
-  try{calData=JSON.parse(localStorage.getItem(key)||'{}');}catch{}
+  try{calData=JSON.parse(localStorage.getItem(key)||'{}');}catch(e){console.warn("[IK] parse error",e);}
 
   const mNames=getMealNames();
   let done=0;
@@ -9493,7 +9495,7 @@ function updateAdherenceCalendar(){
     }
   }
 
-  let hasCheckin=false;try{const _ci=JSON.parse(localStorage.getItem(SK.checkins)||'[]');hasCheckin=_ci.some(c=>c.iso===iso);}catch{}
+  let hasCheckin=false;try{const _ci=JSON.parse(localStorage.getItem(SK.checkins)||'[]');hasCheckin=_ci.some(c=>c.iso===iso);}catch(e){console.warn("[IK] parse error",e);}
 
   calData[dd]={
     meals:done,
