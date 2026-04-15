@@ -64,10 +64,11 @@ Deno.serve(async (req) => {
       })
     }
 
+    const APP_URL = Deno.env.get('APP_URL') || 'https://irokninetic-production.up.railway.app'
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: 'https://ironkinetic.app?connect=refresh',
-      return_url:  'https://ironkinetic.app?connect=success',
+      refresh_url: `${APP_URL}?connect=refresh`,
+      return_url:  `${APP_URL}?connect=success`,
       type: 'account_onboarding'
     })
 

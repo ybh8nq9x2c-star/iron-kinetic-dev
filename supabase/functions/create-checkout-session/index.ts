@@ -103,9 +103,12 @@ Deno.serve(async (req) => {
 
   /* ── 4. Risolvi Price ID ── */
   const priceMap: Record<string, string> = {
-    monthly:  Deno.env.get('STRIPE_PRICE_MONTHLY')  ?? 'price_1TLJO9JYTPcSrsvtFVhrRBAT',
-    annual:   Deno.env.get('STRIPE_PRICE_ANNUAL')   ?? 'price_1TLJO9JYTPcSrsvts1UjmFlr',
-    lifetime: Deno.env.get('STRIPE_PRICE_LIFETIME') ?? 'price_1TLJOAJYTPcSrsvtvdSkbwGr',
+    monthly:  Deno.env.get('STRIPE_PRICE_MONTHLY')  || '',
+    annual:   Deno.env.get('STRIPE_PRICE_ANNUAL')   || '',
+    lifetime: Deno.env.get('STRIPE_PRICE_LIFETIME') || '',
+  }
+  for (const [k, v] of Object.entries(priceMap)) {
+    if (!v) throw new Error(`Missing env var STRIPE_PRICE_${k.toUpperCase()}`)
   }
   const priceId = priceMap[plan]
   console.log('[checkout] plan=', plan, 'priceId=', priceId)

@@ -124,15 +124,30 @@ serve(async (req) => {
               confirmed_at:           new Date().toISOString(),
             })
 
-            await sb.rpc('add_referral_credit', {
-              uid:    codeRow.user_id,
-              amount: rewardCents,
-            })
+            // Cap referral credits at €500 (50000 cents)
+            const { data: referrerData } = await sb
+              .from('users')
+              .select('referral_credit_cents')
+              .eq('id', codeRow.user_id)
+              .single()
 
-            console.log('[stripe-webhook] referral credited:', {
-              referrer: codeRow.user_id,
-              reward:   rewardCents,
-            })
+            const currentCredits = referrerData?.referral_credit_cents ?? 0
+            if (currentCredits >= 50000) {
+              console.warn('[stripe-webhook] referral credit cap reached (€500):', {
+                referrer: codeRow.user_id,
+                current: currentCredits,
+              })
+            } else {
+              await sb.rpc('add_referral_credit', {
+                uid:    codeRow.user_id,
+                amount: rewardCents,
+              })
+
+              console.log('[stripe-webhook] referral credited:', {
+                referrer: codeRow.user_id,
+                reward:   rewardCents,
+              })
+            }
           }
         }
       }
