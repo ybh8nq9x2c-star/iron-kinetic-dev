@@ -9997,25 +9997,42 @@ function dismissInstallBanner(){const b=document.getElementById('install-banner'
 /* ── Shared boot sequence (after all gates are cleared) ── */
 function hideSplash(){const s=document.getElementById('ik-splash');if(s)s.classList.add('hidden');}
 function _bootAfterGates(){
-  hideSplash();
-  /* Ripristina avatar e nome da localStorage al boot */
-  if(typeof _applyUserAvatar==='function')_applyUserAvatar();
-  const consent=gdprStatus();
-  if(!consent||!consent.accepted){
+  try{
     hideSplash();
-    document.getElementById('gdpr-gate').classList.add('on');
-    applyTranslations();
-    return;
-  }
-  const raw=localStorage.getItem(SK.diet);
-  if(raw){
-    try{
-      const parsed=JSON.parse(raw);validateSchema(parsed);
-      const p=getProfile();if(p?.targetKcal){parsed.metadata.baseKcal=p.targetKcal;parsed.metadata.basePro=p.pro;parsed.metadata.baseCarbs=p.carbs;parsed.metadata.baseFat=p.fat;}
-      dietData=parsed;mountApp();
-    }catch{try{localStorage.removeItem(SK.diet);}catch{}showOnb();toast(t('toast.pianoCorrotto'));}
-  }else{
-    showOnb();
+    if(typeof _applyUserAvatar==='function')_applyUserAvatar();
+    const consent=gdprStatus();
+    if(!consent||!consent.accepted){
+      hideSplash();
+      const gg=document.getElementById('gdpr-gate');
+      if(gg){gg.classList.add('on');applyTranslations();return;}
+    }
+  }catch(e){console.warn('IK boot: gdpr gate error',e);}
+
+  try{
+    const raw=localStorage.getItem(SK.diet);
+    if(raw){
+      try{
+        const parsed=JSON.parse(raw);validateSchema(parsed);
+        const p=getProfile();if(p?.targetKcal){parsed.metadata.baseKcal=p.targetKcal;parsed.metadata.basePro=p.pro;parsed.metadata.baseCarbs=p.carbs;parsed.metadata.baseFat=p.fat;}
+        dietData=parsed;mountApp();
+      }catch(e){
+        console.warn('IK boot: dietData parse error, resetting',e);
+        try{localStorage.removeItem(SK.diet);}catch{}
+        try{toast(t('toast.pianoCorrotto'));}catch{}
+        showOnb();
+      }
+    }else{
+      showOnb();
+    }
+  }catch(e){
+    console.error('IK boot: bootAfterGates fatal error',e);
+    try{showOnb();}catch(e2){
+      document.body.classList.add('onboarding-active');
+      const s=document.getElementById('onb-screen');
+      if(s){s.style.display='flex';s.classList.add('on');}
+      const a=document.getElementById('app-shell');
+      if(a)a.classList.remove('on');
+    }
   }
 }
 
@@ -10173,20 +10190,39 @@ let _booted=false;
 function _bootAfterLangGate(){
   if(_booted)return;
   _booted=true;
-  /* PWA gate: force install-awareness on very first open */
-  if(!localStorage.getItem('ik_pwa_seen')){
-    hideSplash();
-    document.getElementById('pwa-gate').classList.add('on');
-    return;
+
+  try{
+    /* PWA gate: force install-awareness on very first open */
+    if(!localStorage.getItem('ik_pwa_seen')){
+      hideSplash();
+      const pg=document.getElementById('pwa-gate');
+      if(pg){pg.classList.add('on');return;}
+    }
+  }catch(e){console.warn('IK boot: pwa gate error',e);}
+
+  try{
+    /* Onboarding slideshow: shown once on first launch */
+    if(lsG(SK.onboardingDone)!==true){
+      hideSplash();
+      showOnboarding();
+      return;
+    }
+  }catch(e){
+    console.warn('IK boot: onboarding gate error',e);
+    try{
+      document.body.classList.add('onboarding-active');
+      const onbScr=document.getElementById('onb-screen');
+      if(onbScr){onbScr.classList.add('on');}
+      return;
+    }catch(e2){console.error('IK boot: onb fallback failed',e2);}
   }
-  /* Onboarding slideshow: shown once on first launch */
-  if(lsG(SK.onboardingDone)!==true){
-    hideSplash();
-    showOnboarding();
-    return;
+
+  try{
+    _resumePostOnboardingOrBoot();
+  }catch(e){
+    console.warn('IK boot: resumePostOnboarding error',e);
+    _bootAfterGates();
   }
-  /* Onboarding done — check for post-onboarding auth return or proceed normally */
-  _resumePostOnboardingOrBoot();
 }
 
 /* ENTRY POINT */
@@ -10221,6 +10257,32 @@ function _bootAfterLangGate(){
   _prefetchSession();
   _bootAfterLangGate();
 })();
+/* WATCHDOG: se dopo 4s non è visibile nessun contenuto, forza onboarding */
+setTimeout(function(){
+  const appShellVisible=document.getElementById('app-shell')?.classList.contains('on');
+  const onbScreenVisible=document.getElementById('onb-screen')?.classList.contains('on');
+  const onbOverlayVisible=document.getElementById('onboarding-overlay')?.style.display==='flex';
+  const langGateVisible=document.getElementById('lang-gate')?.classList.contains('on');
+  const gdprGateVisible=document.getElementById('gdpr-gate')?.classList.contains('on');
+  const pwaGateVisible=document.getElementById('pwa-gate')?.classList.contains('on');
+  const authGateVisible=document.getElementById('auth-gate')?.classList.contains('on');
+
+  const anyVisible=appShellVisible||onbScreenVisible||onbOverlayVisible||
+                   langGateVisible||gdprGateVisible||pwaGateVisible||authGateVisible;
+
+  if(!anyVisible){
+    console.error('IK WATCHDOG: black screen detected after 4s — forcing onboarding');
+    try{
+      try{localStorage.removeItem('ik_pwa_seen');}catch{}
+      _booted=false;
+      _bootAfterLangGate();
+    }catch(e){
+      document.body.classList.add('onboarding-active');
+      const s=document.getElementById('onb-screen');
+      if(s){s.style.display='flex';s.classList.add('on');}
+    }
+  }
+},4000);
 </script>
 
 
