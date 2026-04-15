@@ -2438,17 +2438,22 @@ let trendAccess=new Proxy(_trendState,{set(){console.warn('[IK] trendAccess is r
 
 /* Sync check for anonymous users (no network needed) */
 function _checkTrendLocal(){
-  let stored=localStorage.getItem('ik_trial_start');
-  const ts=parseInt(stored,10);
-  /* Reset corrupted or future-dated timestamps */
-  if(!stored||isNaN(ts)||ts>Date.now()){
-    localStorage.setItem('ik_trial_start',String(Date.now()));
-    return{access:true,mode:'trial',daysLeft:TRIAL_DAYS};
-  }
-  const elapsed=(Date.now()-ts)/86400000;
-  const left=Math.max(0,TRIAL_DAYS-elapsed);
-  if(left<=0)return{access:false,mode:'expired'};
-  return{access:true,mode:'trial',daysLeft:Math.ceil(left)};
+  try{
+    let stored=localStorage.getItem('ik_trial_start');
+    const resets=parseInt(localStorage.getItem('ik_trial_resets')||'0');
+    if(resets>1)return{access:false,mode:'expired'}; // max 1 reset allowed
+    const ts=parseInt(stored,10);
+    /* Reset corrupted or future-dated timestamps */
+    if(!stored||isNaN(ts)||ts>Date.now()){
+      localStorage.setItem('ik_trial_start',String(Date.now()));
+      if(stored)localStorage.setItem('ik_trial_resets',String(resets+1));
+      return{access:true,mode:'trial',daysLeft:TRIAL_DAYS};
+    }
+    const elapsed=(Date.now()-ts)/86400000;
+    const left=Math.max(0,TRIAL_DAYS-elapsed);
+    if(left<=0)return{access:false,mode:'expired'};
+    return{access:true,mode:'trial',daysLeft:Math.ceil(left)};
+  }catch(e){return{access:false,mode:'expired'};}
 }
 
 async function getUser(){
@@ -2504,8 +2509,7 @@ let _trendInitResolve;const trendInitPromise=new Promise(r=>{_trendInitResolve=r
 async function initTrend(){
   /* Keep optimistic trial default until server responds — prevents flash of expired state */
   const user=await getUser();
-  if(!user)setTrendAccess(_checkTrendLocal());
-  updateTrendBadge();
+  if(!user){setTrendAccess(_checkTrendLocal());updateTrendBadge();}
   const subMgmt=document.getElementById('set-sub-manage');
   if(subMgmt)subMgmt.style.display=trendAccess.mode==='paid'?'block':'none';
   const subStatus=document.getElementById('set-sub-status');
@@ -2694,6 +2698,7 @@ function updateTrendLockUI(){
   if(lb)lb.style.display='flex';
 }
 
+let _graceToastShown=false;
 function updateTrendBadge(){
   const badge=document.getElementById('trend-access-badge');
   if(!badge)return;
@@ -2701,7 +2706,7 @@ function updateTrendBadge(){
   else if(trendAccess.mode==='grace'){
     badge.textContent='⚠️ TREND';badge.style.color='#f5a623';
     const hours=trendAccess.hoursLeft||48;
-    showToast('⚠️ Pagamento in ritardo — accesso attivo per altre '+hours+' ore',8000);
+    if(!_graceToastShown){_graceToastShown=true;showToast('⚠️ Pagamento in ritardo — accesso attivo per altre '+hours+' ore',8000);}
   }
   else if(trendAccess.mode==='trial'){badge.textContent='⏱ '+trendAccess.daysLeft+'gg';badge.style.color='#f5a623';}
   else{badge.textContent='TREND';badge.style.color='var(--muted)';}
@@ -2841,7 +2846,7 @@ function _prefetchSession(){
   /* Fire-and-forget: warm the token in background while preview animates in */
   sb.auth.refreshSession()
     .then(({data})=>{_cachedSession=data?.session||null;})
-    .catch(()=>{});
+    .catch(e=>{console.warn('[IK] session prefetch failed',e);});
 }
 
 async function startCheckout(plan){
@@ -2890,7 +2895,7 @@ async function _doStartCheckout(plan){
     const body=await res.json().catch(()=>({}));
 
     if(!res.ok){
-      if(typeof Sentry!=='undefined')try{Sentry.captureMessage('[IK] checkout '+res.status,{level:'error'});}catch{}
+      if(typeof Sentry!=='undefined')try{Sentry.captureMessage('[IK] checkout '+res.status,{level:'error'});}catch(e2){console.warn('[IK] Sentry capture failed',e2);}
       if(res.status===401||res.status===403){
         showToast(_lang==='en'?'Auth error — please sign out and back in':'Errore auth — esci e rientra',4000);
         setLoading(false);return;
@@ -2902,10 +2907,10 @@ async function _doStartCheckout(plan){
 
     /* ── 3. Redirect to Stripe (Safari PWA safe) ── */
     window.location.href=body.url;
-    setTimeout(()=>{if(document.visibilityState!=='hidden')try{window.open(body.url,'_blank','noopener');}catch{}},600);
+    setTimeout(()=>{if(document.visibilityState!=='hidden')try{window.open(body.url,'_blank','noopener');}catch(e2){console.warn('[IK] window.open fallback failed',e2);}},600);
 
   }catch(err){
-    if(typeof Sentry!=='undefined')try{Sentry.captureException(err,{tags:{flow:'checkout',plan}});}catch{}
+    if(typeof Sentry!=='undefined')try{Sentry.captureException(err,{tags:{flow:'checkout',plan}});}catch(e2){console.warn('[IK] Sentry capture failed',e2);}
     /* Chiudi la preview solo in caso di errore, mai prima del redirect */
     closeCheckoutPreview();
     showToast(err?.message||t('toast.checkoutError'));
@@ -2938,66 +2943,7 @@ function _showCheckoutLoginGate(plan){
   document.body.style.overflow='hidden';
 }
 
-async function _clientSideCheckout(plan,email){
-  console.log('[IK][checkout] _clientSideCheckout plan=',plan,'email=',email||'(none)');
-
-  /* ── CRITICAL FIX: stripe.redirectToCheckout() requires Stripe Connect
-     or a server-created Session ID. Without a server, we CANNOT use
-     redirectToCheckout with lineItems in live mode — Stripe blocks it.
-     The correct client-side path is to use pre-configured Payment Links.
-     If you don't have Payment Links, this path will always fail in live mode.
-     Solution: ensure Edge Function is deployed, or configure Payment Links below. ── */
-
-  /* Load Stripe SDK lazily */
-  await new Promise((resolve,reject)=>{
-    if(typeof Stripe!=='undefined'){resolve();return;}
-    const s=document.createElement('script');
-    s.src='https://js.stripe.com/v3/';
-    s.onload=()=>{console.log('[IK][checkout] Stripe SDK loaded');resolve();};
-    s.onerror=()=>reject(new Error(t('toast.stripeUnavailable')));
-    document.head.appendChild(s);
-  });
-  if(typeof Stripe==='undefined'){
-    console.error('[IK][checkout] Stripe SDK unavailable after load attempt');
-    showToast(t('toast.stripeUnavailable'));
-    return;
-  }
-
-  const priceMap={
-    monthly:'price_1TLJO9JYTPcSrsvtFVhrRBAT',
-    annual:'price_1TLJO9JYTPcSrsvts1UjmFlr',
-    lifetime:'price_1TLJOAJYTPcSrsvtvdSkbwGr'
-  };
-  const priceId=priceMap[plan]||priceMap.monthly;
-  console.log('[IK][checkout] priceId=',priceId,'mode=',plan==='lifetime'?'payment':'subscription');
-
-  /* successUrl MUST be absolute — window.location.origin guarantees https://domain.com */
-  const successUrl=window.location.origin+window.location.pathname+'?trend=success';
-  /* cancelUrl must also be absolute */
-  const cancelUrl=window.location.origin+window.location.pathname;
-  console.log('[IK][checkout] successUrl=',successUrl,'cancelUrl=',cancelUrl);
-
-  const stripe=Stripe(STRIPE_PK);
-
-  /* NOTE: redirectToCheckout with lineItems only works if your Stripe account
-     has "client-only integration" enabled. In live mode this is usually disabled.
-     If this throws "No such price" or "Integration error", the Edge Function
-     must be used instead. Check Stripe dashboard → Developers → Logs for details. */
-  const{error}=await stripe.redirectToCheckout({
-    lineItems:[{price:priceId,quantity:1}],
-    mode:plan==='lifetime'?'payment':'subscription',
-    successUrl:successUrl,
-    cancelUrl:cancelUrl,
-    ...(email?{customerEmail:email}:{})
-  });
-  if(error){
-    console.error('[IK][checkout] stripe.redirectToCheckout error:',error.message,'code=',error.code||'n/a','type=',error.type||'n/a');
-    if(typeof Sentry!=='undefined'){
-      try{Sentry.captureException(new Error('[IK] Stripe redirectToCheckout: '+error.message),{tags:{plan,priceId}});}catch{}
-    }
-    throw new Error(error.message);
-  }
-}
+function _clientSideCheckout(){console.warn('[IK] _clientSideCheckout is deprecated; use _doStartCheckout');_doStartCheckout();}
 
 async function openBillingPortal(){
   const user=await getUser();
@@ -3030,9 +2976,11 @@ async function openAuthModal(){
   const email=prompt(_lang==='it'?'Inserisci la tua email per accedere:':'Enter your email to sign in:');
   if(!email||!email.includes('@'))return;
   if(!sb){showToast('Auth non configurata');return;}
-  const{error}=await sb.auth.signInWithOtp({email});
-  if(error)showToast(error.message);
-  else showToast('✉️ Link di accesso inviato a '+email);
+  try{
+    const{error}=await sb.auth.signInWithOtp({email});
+    if(error)showToast(error.message);
+    else showToast('✉️ Link di accesso inviato a '+email);
+  }catch(e){console.warn('[IK] signInWithOtp error',e);showToast(_lang==='en'?'Sign-in error — please try again':'Errore di accesso — riprova');}
 }
 
 function showTrialExpiringSoon(){
@@ -3108,7 +3056,7 @@ async function syncUserAfterLogin(user){
   _applyUserAvatar();
   try{
     /* Check if row already exists to avoid overwriting trial_end on returning users */
-    const{data:existing}=await Promise.resolve(sb.from('users').select('id,trend_active,trial_end').eq('id',user.id).single()).catch(()=>({data:null}));
+    const{data:existing}=await Promise.resolve(sb.from('users').select('id,trend_active,trial_end').eq('id',user.id).single()).catch(e=>{console.warn('[IK] syncUser DB error',e);return{data:null};});
     const isNewUser=!existing;
     const trialEndDate=new Date(Date.now()+TRIAL_DAYS*86400000).toISOString();
     const upsertPayload=isNewUser
@@ -3117,15 +3065,15 @@ async function syncUserAfterLogin(user){
     const{error}=await sb.from('users').upsert(upsertPayload,{onConflict:'id'});
     if(error){console.warn('[IK] syncUserAfterLogin upsert error:',error.message);}
     /* Refresh full access state */
-    const{data}=await Promise.resolve(sb.from('users').select('trend_active,trial_end,plan').eq('id',user.id).single()).catch(()=>({data:null}));
+    const{data}=await Promise.resolve(sb.from('users').select('trend_active,trial_end,plan').eq('id',user.id).single()).catch(e=>{console.warn('[IK] syncUser DB error',e);return{data:null};});
     if(data?.trend_active){
       setTrendAccess({access:true,mode:'paid',plan:data.plan||'monthly'});
     }else if(data?.trial_end&&new Date(data.trial_end)>new Date()){
       const left=Math.ceil((new Date(data.trial_end)-new Date())/86400000);
       setTrendAccess({access:true,mode:'trial',daysLeft:left});
     }
+    updateTrendBadge();
   }catch(e){console.warn('[IK] syncUserAfterLogin exception:',e);}
-  updateTrendBadge();
 }
 
 /* ── Auth state listener (set up once at boot) ── */
@@ -3143,7 +3091,7 @@ function _initAuthListener(){
         _bootAfterGates();
         setTimeout(()=>showToast(t('toast.loginOk')),400);
       }
-      initTrend();
+      await initTrend();
       updateServerDataLabel?.();
 
       /* ── Resume pending checkout after login ── */
@@ -3186,7 +3134,7 @@ async function _resumePostOnboardingOrBoot(){
         }
         return;
       }
-    }catch{}
+    }catch(e){console.warn('[IK] resumePostOnboarding error',e);}
     /* Session not ready yet — show gate again */
     openPostOnboardingAuthGate();
     return;
@@ -3200,7 +3148,7 @@ async function _resumePostOnboardingOrBoot(){
         _bootAfterGates();
         return;
       }
-    }catch{}
+    }catch(e){console.warn('[IK] resumePostOnboarding error',e);}
     /* No valid session — replay slideshow so auth gate follows naturally at the end */
     lsS(SK.onboardingDone,false);
     showOnboarding();
@@ -3236,7 +3184,7 @@ async function _resumePostOnboardingOrBoot(){
             if(document.getElementById('scr-set')?.style.display!=='none'){renderSettings();}
             return;
           }
-        }catch{}
+        }catch(e){console.warn('[IK] pollTrendActivation error',e);}
         await new Promise(r=>setTimeout(r,5000));
       }
       window._trendActivatedMsg='Payment still processing — refresh to check status';
@@ -3249,12 +3197,12 @@ async function _resumePostOnboardingOrBoot(){
 /* ── FIX 5: global error handler (Sentry-aware) ── */
 window.addEventListener('unhandledrejection',e=>{
   console.error('Unhandled:',e.reason);
-  if(typeof Sentry!=='undefined')try{Sentry.captureException(e.reason);}catch{}
-  try{showToast(t('toast.errore'));}catch{}
+  if(typeof Sentry!=='undefined')try{Sentry.captureException(e.reason);}catch(e2){console.warn('[IK] Sentry capture failed',e2);}
+  try{showToast(t('toast.errore'));}catch(e2){console.warn('[IK] toast error',e2);}
 });
 window.onerror=(msg,src,line)=>{
   console.error('Error:',msg,src,line);
-  if(typeof Sentry!=='undefined')try{Sentry.captureException(new Error(msg+' at '+src+':'+line));}catch{}
+  if(typeof Sentry!=='undefined')try{Sentry.captureException(new Error(msg+' at '+src+':'+line));}catch(e2){console.warn('[IK] Sentry capture failed',e2);}
   return false;
 };
 /* ── FIX: server data label updater ── */
@@ -5364,7 +5312,7 @@ function getAdaptedMealDistribution(){const nms=getMealNames(),n=nms.length,std=
   const _mHrs=Array.from({length:mealH},(_,i)=>7+(14/(mealH-1||1))*i);const _pre=_mHrs.map((h,i)=>({i,d:Math.abs(h-(trainHour-1.5))})).sort((a,b)=>a.d-b.d)[0].i;const _post=_mHrs.map((h,i)=>({i,d:Math.abs(h-(trainHour+0.75))})).sort((a,b)=>a.d-b.d)[0].i;a[_pre]=Math.round(Math.min(a[_pre]*1.12,0.35)*100)/100;a[_post]=Math.round(Math.min(a[_post]*1.10,0.35)*100)/100;const _sN=a.reduce((x,v)=>x+v,0);a=a.map(v=>Math.round(v/_sN*100)/100);const _dN=1-a.reduce((x,v)=>x+v,0);a[a.length-1]=Math.round((a[a.length-1]+_dN)*100)/100}return a}
 
 /* ── Feature D: Progressive Protein ── */
-function getProgressiveProRate(base,goal,startMs){if(goal!=='cut_extreme'&&goal!=='recomp')return base;if(!startMs)return base;const w=Math.floor((Date.now()-startMs)/(7*24*3600*1000));if(w<4)return base;const inc=Math.floor(w/4)*.10,cap=goal==='cut_extreme'?2.6:2.4;return Math.min(base+inc,cap)}
+function getProgressiveProRate(base,goal,startMs){if(goal!=='cut_extreme'&&goal!=='recomp')return base;if(!startMs)return base;const w=Math.min(Math.floor((Date.now()-startMs)/(7*24*3606*1000)),24);if(w<4)return base;const inc=Math.floor(w/4)*.10,cap=goal==='cut_extreme'?2.6:2.4;return Math.min(base+inc,cap)}
 
 /* ── Feature 1: Adaptive Macro Engine ── */
 function runAdaptiveEngine(){
@@ -6057,7 +6005,7 @@ function calculateUserMacros(p){
   /* ── EA SAFETY GATE (Mountjoy 2018 IOC / RED-S prevention) ──
      Energy Availability = (EI - EEE) / LBM ≥ 30 kcal/kg FFM
      EA < 20 = clinical RED-S risk; EA < 30 = subclinical zone */
-  const eee=(parseInt(p.workoutsWk)||0)*350; /* estimated exercise energy expenditure */
+  const eee=(parseInt(p.workoutsWk)||0)*350/7; /* daily avg exercise energy expenditure (weekly total / 7) */
   if(p.bf&&!isNaN(parseFloat(p.bf))){
     const _lbm=w*(1-parseFloat(p.bf)/100);
     if(_lbm>0){
@@ -6128,10 +6076,11 @@ function calculateUserMacros(p){
   targetKcal=constrained.kcal;
 
   /* ── TEF (Westerterp 2004) ──
-     Effetto termogenico aggiunto al TDEE netto registrato.
-     Proteine inducono TEF 3× superiore ai grassi. */
+     NOTE: activity multipliers derived from total energy expenditure studies
+     already include TEF implicitly. Adding half-TEF on top overestimates by
+     30-60 kcal. Kept as comment for documentation; not added to tdeeRaw. */
   const tef=calcTEF(pro,carbs,fat);
-  const tdee=tdeeRaw+Math.round(tef*0.5);
+  const tdee=tdeeRaw; /* was: tdeeRaw+Math.round(tef*0.5) — removed to avoid double-count */
 
   /* ── MICRONUTRIENTI TARGET (EFSA DRV) ── */
   const fiberTarget =Math.max(NC.fiberMinG,Math.round(carbs*0.13)); /* ~13% carbs */
@@ -7596,7 +7545,7 @@ function activateGeneratedPlan(){
 function activatePlanAndContinue(){
   hap('medium');
   /* Start 7-day trial if not already running */
-  if(!localStorage.getItem('ik_trial_start'))localStorage.setItem('ik_trial_start',Date.now().toString());
+  if(!localStorage.getItem('ik_trial_start'))lsW('ik_trial_start',Date.now().toString());
   activateGeneratedPlan();
 }
 
@@ -7822,7 +7771,7 @@ function renderCoach(){
     }
   }
   /* Satiety badge — FIX6: hunger>=7 and adherence<=5 */
-  const _cksCoach=JSON.parse(localStorage.getItem(SK.checkins)||'[]').slice(-3);
+  let _cksCoach=[];try{_cksCoach=JSON.parse(localStorage.getItem(SK.checkins)||'[]').slice(-3);}catch(e){console.warn('[IK] coach checkins parse error',e);}
   const _avgHCoach=_cksCoach.length?_cksCoach.reduce((a,c)=>a+(+c.hunger||5),0)/_cksCoach.length:0;
   const _avgACoach=_cksCoach.length?_cksCoach.reduce((a,c)=>a+(+c.adherence||5),0)/_cksCoach.length:10;
   const _showSatiety=_avgHCoach>=7&&_avgACoach<=5;
@@ -8714,7 +8663,7 @@ function logMetric(){
   document.getElementById('log-w').value='';document.getElementById('log-wst').value='';
   document.getElementById('log-w').blur();document.getElementById('log-wst').blur();
   renderProgress();renderCoach();renderMacros();
-  try{runAutoAdjustEngine();}catch(e){}
+  try{runAutoAdjustEngine();}catch(e){console.warn('[IK] autoAdjust error',e);}
 }
 function deleteEntry(ts){showConfirm(t('confirm.eliminaVoce'),()=>{saveLog(getLog().filter(e=>e.ts!==ts));invalidateLogCaches();renderProgress();renderCoach();toast(t('toast.voceEliminata'));});}
 function renderProgressStats(){
@@ -9101,7 +9050,7 @@ function regenSingleMeal(dayNum,mealName){
   const fat=fatsList[(dayNum-1)%fatsList.length];
 
   /* MISSING4: satiety-based hunger filter */
-  const _cks=JSON.parse(localStorage.getItem(SK.checkins)||'[]').slice(-3);
+  let _cks=[];try{_cks=JSON.parse(localStorage.getItem(SK.checkins)||'[]').slice(-3);}catch(e){console.warn('[IK] checkins parse error in regenSingleMeal',e);}
   const _avgH=_cks.length?_cks.reduce((a,c)=>a+(+c.hunger||5),0)/_cks.length:5;
   let candidates=Object.keys(FOOD_DB);
   if(_avgH>7) candidates=candidates.filter(f=>!FOOD_DB[f].satiety||FOOD_DB[f].satiety>=2.0);
@@ -9356,7 +9305,7 @@ function scheduleLocalReminder(type,hour){
     const sched=JSON.parse(localStorage.getItem('ik_notif_schedule')||'{}');
     sched[type]={hour:hour||8,enabled:true,updated:Date.now()};
     localStorage.setItem('ik_notif_schedule',JSON.stringify(sched));
-  }catch{}
+  }catch(e){console.warn('[IK] notif schedule save error',e);}
   if(!('serviceWorker' in navigator)||Notification.permission!=='granted')return;
   /* Schedule via setTimeout until next occurrence — graceful fallback */
   const now=new Date();
@@ -9396,9 +9345,8 @@ function updateNotifUI(){
   }
   if(status){
     if(perm==='granted'){
-      const sched=JSON.parse(localStorage.getItem('ik_notif_schedule')||'{}');
+      let sched={};try{sched=JSON.parse(localStorage.getItem('ik_notif_schedule')||'{}');}catch(e){console.warn('[IK] notif schedule parse error',e);}
       const h=sched.checkin?.hour||8;
-      status.textContent=t('prog.notif.schedule',{h});
       status.style.color='var(--p)';
     }else if(perm==='denied'){
       status.textContent=t('prog.notif.blocked');
@@ -9591,7 +9539,7 @@ async function _ikRefLoad(){
     }
     /* Refresh token to avoid 401 from stale JWT */
     let token=session.access_token;
-    try{const{data:r}=await sb.auth.refreshSession();if(r?.session?.access_token)token=r.session.access_token;}catch{}
+    try{const{data:r}=await sb.auth.refreshSession();if(r?.session?.access_token)token=r.session.access_token;}catch(e){console.warn('[IK] referral refreshSession failed',e);}
     /* Genera o recupera il codice referral dell'utente + dati completi */
     const codeRes=await fetch(SUPABASE_URL+'/functions/v1/generate-referral-code',{
       method:'POST',
@@ -9735,7 +9683,7 @@ function mountApp(){
     updateConsentUI?.();updateStreaks?.();updateNotifUI?.();updateServerDataLabel?.();
     migrateTargetKcal?.();
     try{restoreTodayCheckin?.();}catch{}
-    try{runAutoAdjustEngine?.();}catch(e){}
+    try{runAutoAdjustEngine?.();}catch(e){console.warn('[IK] autoAdjust error',e);}
     try{renderTodayAction?.();}catch(e){}
     try{renderPlanUpdateNote?.();}catch(e){}
     requestIdleCallback
@@ -10064,8 +10012,8 @@ function _bootAfterGates(){
 /* ── PWA gate acknowledgment: saves flag, continues boot ── */
 function acknowledgedPWA(){
   hap();
-  localStorage.setItem('ik_pwa_seen','1');
-  document.getElementById('pwa-gate').classList.remove('on');
+  try{localStorage.setItem('ik_pwa_seen','1');}catch(e){console.warn('IK: pwa flag save failed',e);}
+  const _pg=document.getElementById('pwa-gate');if(_pg)_pg.classList.remove('on');
   /* Lang already selected at this point (lang-gate ran first) */
   initLang();applyTranslations();
   const savedProf=getProfile();if(savedProf)Object.assign(profState,savedProf);
@@ -10207,7 +10155,7 @@ function _onbFinish(){
 /* ── Language gate: shown once on absolute first open ── */
 function selectLang(lang){
   setLang(lang);
-  document.getElementById('lang-gate').classList.remove('on');
+  const _lg=document.getElementById('lang-gate');if(_lg)_lg.classList.remove('on');
   _bootAfterLangGate();
 }
 
