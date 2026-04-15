@@ -719,7 +719,8 @@ body.onboarding-active #onb-screen{
 #paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9999;align-items:flex-end;justify-content:center;}
 #paywall-sheet{background:var(--s1);border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;padding:28px 24px 32px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
 #trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
-#scr-prog.locked-trend{display:flex!important;flex-direction:column;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#scr-prog.locked-trend{flex-direction:column;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#scr-prog.locked-trend[style*="display: block"],#scr-prog.locked-trend[style*="display:block"]{display:flex!important;}
 #scr-prog.locked-trend .pg{flex:1;display:flex;flex-direction:column;overflow-y:auto!important;-webkit-overflow-scrolling:touch;pointer-events:auto!important;}
 #trend-lock-banner.locked-card{flex-direction:column;margin:auto 0;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px 16px;pointer-events:auto;cursor:auto;}
 [onclick*="startCheckout"]:disabled{cursor:not-allowed;pointer-events:none;}
@@ -9502,7 +9503,7 @@ function switchTab(name){
     if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}
     if(!scr)return;
     if(t===name){
-      scr.style.display='block';
+      scr.style.display=scr.classList.contains('locked-trend')?'flex':'block';
       requestAnimationFrame(()=>scr.classList.add('tab-enter'));
       setTimeout(()=>scr.classList.remove('tab-enter'),200);
     } else {
@@ -9697,7 +9698,7 @@ function mountApp(){
   const dow=new Date().getDay();const days=dietData.days||[];const match=days.find(d=>d.d===(dow===0?7:dow));
   selDay=(match||days[0]).d;
   /* Hide non-oggi screens before any render */
-  TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t==='oggi'?'block':'none';});
+  TABS.forEach(t=>{const scr=document.getElementById(`scr-${t}`);if(scr)scr.style.display=t==='oggi'?(scr.classList.contains('locked-trend')?'flex':'block'):'none';});
   document.getElementById('nav-oggi').classList.add('on');
   ['nav-prog','nav-set','nav-info'].forEach(id=>{const b=document.getElementById(id);if(b){b.classList.remove('on');b.classList.add('inactive');}});
   /* Critical path — runs before first paint */
@@ -10259,6 +10260,7 @@ function _bootAfterLangGate(){
 })();
 /* WATCHDOG: se dopo 4s non è visibile nessun contenuto, forza onboarding */
 setTimeout(function(){
+  if(_booted)return; // Already booted — watchdog not needed
   const appShellVisible=document.getElementById('app-shell')?.classList.contains('on');
   const onbScreenVisible=document.getElementById('onb-screen')?.classList.contains('on');
   const onbOverlayVisible=document.getElementById('onboarding-overlay')?.style.display==='flex';
