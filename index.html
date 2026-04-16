@@ -1149,12 +1149,12 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
     <div>
       <label class="field-label" for="f-sport" data-i18n="onb.field.sport">Sport praticato</label>
       <select class="inp" id="f-sport" onchange="profState.sport=this.value;" style="font-size:15px!important;color:var(--on);background:var(--s1);">
-        <option value="strength">Forza / Potenza (Pesistica, Sprint)</option>
-        <option value="endurance">Resistenza (Corsa, Ciclismo)</option>
-        <option value="team">Sport di Squadra / Ibrido (Calcio, Basket, Rugby)</option>
-        <option value="fitness">Fitness Generale</option>
-        <option value="powerlifting">Powerlifting / Sollevamento Pesi</option>
-        <option value="combat">Sport da Combattimento (MMA, Boxe, Judo)</option>
+        <option value="strength" data-i18n="sport.label.strength">Forza / Potenza (Pesistica, Sprint)</option>
+        <option value="endurance" data-i18n="sport.label.endurance">Resistenza (Corsa, Ciclismo)</option>
+        <option value="team" data-i18n="sport.label.team">Sport di Squadra / Ibrido (Calcio, Basket, Rugby)</option>
+        <option value="fitness" data-i18n="sport.label.fitness">Fitness Generale</option>
+        <option value="powerlifting" data-i18n="sport.label.powerlifting">Powerlifting / Sollevamento Pesi</option>
+        <option value="combat" data-i18n="sport.label.combat">Sport da Combattimento (MMA, Boxe, Judo)</option>
       </select>
     </div>
     <div>
@@ -1224,7 +1224,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
     <!-- Intolleranze/allergie -->
     <div>
       <label class="field-label" data-i18n="onb.field.intolleranze">Intolleranze / alimenti da escludere</label>
-      <input class="inp" id="f-intolerances" type="text" placeholder="es. lattosio, glutine, frutta secca…" style="font-size:16px !important;"/>
+      <input class="inp" id="f-intolerances" type="text" placeholder=" " data-i18n-ph="onb.field.intolleranze.ph" style="font-size:16px !important;"/>
     </div>
 
     <!-- Protocollo clinico opzionale -->
@@ -4539,7 +4539,8 @@ const lsR=k=>{try{return localStorage.getItem(k);}catch{return null;}};
 const lsW=(k,v)=>{try{localStorage.setItem(k,v);}catch{}};
 let _regenSeed=parseInt(lsR('ik-rseed')||'0'); /* persisted across reloads — FIX2 */
 function t(key,vars={}){
-  const s=LANG[_lang]?.[key]??LANG.it?.[key]??key;
+  const s=LANG[_lang]?.[key]??LANG.it?.[key];
+  if(s===undefined){if(IK_DEBUG)console.warn('[IK] missing translation key:',key);return key;}
   return Object.entries(vars).reduce((r,[k,v])=>{const token='{'+k+'}';return r.split(token).join(String(v));},s);
 }
 function applyLang(){
@@ -4596,6 +4597,9 @@ function applyTranslations(deferOffscreen){
   /* FIX7: generic data-i18n pass — replaces fragile text-matching */
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     el.textContent=t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{
+    el.setAttribute('aria-label',t(el.dataset.i18nAria));
   });
   ['ci-hunger','ci-energy','ci-adherence','ci-digestion'].forEach((id,i)=>{
     const keys=['oggi.checkin.fame','oggi.checkin.energia','oggi.checkin.aderenza','oggi.checkin.digestione'];
