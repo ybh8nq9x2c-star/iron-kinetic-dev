@@ -4,12 +4,39 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Iron Kinetic"/>
 <meta name="theme-color" content="#0e0e0e"/>
 <meta name="format-detection" content="telephone=no,date=no,email=no,address=no"/>
+<meta name="application-name" content="Iron Kinetic"/>
 <title>Iron Kinetic</title>
 <link rel="manifest" href="manifest.webmanifest"/>
+<script>
+/* ── PWA manifest injection — replaces external manifest with inline Blob so
+   display:standalone is guaranteed even if the server file is missing/wrong ── */
+(function(){
+  try{
+    const IK_MANIFEST={
+      name:'Iron Kinetic',short_name:'Iron Kinetic',
+      start_url:'/',scope:'/',
+      display:'standalone',
+      background_color:'#0e0e0e',theme_color:'#0e0e0e',
+      orientation:'portrait-primary',
+      icons:[
+        {src:'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 192 192\'%3E%3Crect width=\'192\' height=\'192\' rx=\'40\' fill=\'%230e0e0e\'/%3E%3Ctext x=\'96\' y=\'136\' text-anchor=\'middle\' font-size=\'108\' font-family=\'system-ui\'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E',sizes:'192x192',type:'image/svg+xml',purpose:'any maskable'},
+        {src:'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 512 512\'%3E%3Crect width=\'512\' height=\'512\' rx=\'110\' fill=\'%230e0e0e\'/%3E%3Ctext x=\'256\' y=\'360\' text-anchor=\'middle\' font-size=\'300\' font-family=\'system-ui\'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E',sizes:'512x512',type:'image/svg+xml',purpose:'any maskable'}
+      ]
+    };
+    const blob=new Blob([JSON.stringify(IK_MANIFEST)],{type:'application/manifest+json'});
+    const blobUrl=URL.createObjectURL(blob);
+    /* Replace existing manifest link or create new one */
+    const existing=document.querySelector('link[rel="manifest"]');
+    if(existing){existing.href=blobUrl;}
+    else{const l=document.createElement('link');l.rel='manifest';l.href=blobUrl;document.head.appendChild(l);}
+  }catch(e){console.warn('[IK] manifest injection failed',e);}
+})();
+</script>
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230e0e0e'/%3E%3Ctext x='90' y='128' text-anchor='middle' font-size='100' font-family='system-ui'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -2425,7 +2452,7 @@ const TRIAL_DAYS=7;
 const STRIPE_PK='pk_live_51TJVZ2JYTPcSrsvtjpVbCEtvJFpC9pIj5n0PPOSPLtIGcQ12rc6YOHChFq5uaP7RZ63Gmeu1ZuQF806vWIW7b4EA007qCJNHGX';
 
 /* Supabase client — graceful no-op if CDN blocked */
-const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}catch(e){console.error('[IK] Supabase init failed:',e);return null;}})();
+const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,storage:window.localStorage,storageKey:'ik_sb_session',autoRefreshToken:true,detectSessionInUrl:true}});}catch(e){console.error('[IK] Supabase init failed:',e);return null;}})();
 
 /* Global trend access state — closure prevents console override */
 const _trendState={access:true,mode:'trial',daysLeft:TRIAL_DAYS,_serverValidated:false};
@@ -3077,8 +3104,8 @@ async function syncUserAfterLogin(user){
   /* ── Salva nome Google e avatar da user_metadata (Supabase OAuth) ── */
   const googleName=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||null;
   const googleAvatar=user.user_metadata?.avatar_url||user.user_metadata?.picture||null;
-  if(googleName)try{sessionStorage.setItem('ik_user_name',googleName);}catch{}
-  if(googleAvatar)try{sessionStorage.setItem('ik_user_avatar',googleAvatar);}catch{}
+  if(googleName)try{localStorage.setItem('ik_user_name',googleName);}catch{}
+  if(googleAvatar)try{localStorage.setItem('ik_user_avatar',googleAvatar);}catch{}
   _applyUserAvatar();
   try{
     /* Check if row already exists to avoid overwriting trial_end on returning users */
@@ -8481,8 +8508,8 @@ function getPhaseLiveDesc(phaseIndex){
 }
 /* ── _applyUserAvatar: applica avatar e nome Google all'header e al profilo ── */
 function _applyUserAvatar(){
-  const avatarUrl=sessionStorage.getItem('ik_user_avatar');
-  const displayName=sessionStorage.getItem('ik_user_name');
+  const avatarUrl=localStorage.getItem('ik_user_avatar');
+  const displayName=localStorage.getItem('ik_user_name');
   /* Header navbar */
   const hdrImg=document.getElementById('hdr-av-img');
   if(hdrImg){
