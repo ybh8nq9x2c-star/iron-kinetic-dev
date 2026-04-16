@@ -8257,7 +8257,7 @@ function renderMeals(){
     _mealRenderCache[cacheKey]=newHTML;
     const existing=document.getElementById(rowId);
     if(existing){existing.outerHTML=newHTML;}
-    else{cont.insertAdjacentHTML('beforeend',sanitize(newHTML));}
+    else{cont.insertAdjacentHTML('beforeend',newHTML);}
   });
   document.getElementById('meals-done').textContent=done;
   const dateEl=document.getElementById('oggi-date-label');
