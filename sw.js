@@ -8,13 +8,20 @@
      su connessioni lente (il reload avveniva mentre la pagina stava ancora
      caricando, portando di nuovo a schermata nera).
    - Navigation: network-first puro, fallback su cache solo se offline.
+   - [SW-05] AbortController with 10s timeout on all fetch requests.
 */
 const CACHE = 'iron-kinetic-v27';
 
+// [SW-05] Request timeout: all fetch calls use AbortController with 10s limit
+const TIMEOUT_MS = 10_000;
+
 self.addEventListener('install', (event) => {
-  // Nessun asset precachato: evita che un fetch lento blocchi l'install
+  // Cache static shell assets only (not index.html — avoids slow-fetch install failures)
+  const SHELL_ASSETS = ['/manifest.webmanifest', '/offline.html'];
   event.waitUntil(
-    caches.open(CACHE).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then((c) => c.addAll(SHELL_ASSETS).catch(() => {/* shell assets optional */}))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -51,17 +58,22 @@ self.addEventListener('fetch', (event) => {
   // Se offline: prova cache, altrimenti errore visibile (meglio del nero)
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
-        .then((res) => {
-          if (res && res.status === 200) {
-            caches.open(CACHE).then((c) => c.put(req, res.clone()));
-          }
-          return res;
-        })
-        .catch(() =>
-          caches.match('./index.html')
-            .then((r) => r || caches.match('/'))
-        )
+      (function () {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+        return fetch(req, { signal: ctrl.signal })
+          .then((res) => {
+            if (res && res.status === 200) {
+              caches.open(CACHE).then((c) => c.put(req, res.clone())).catch((e) => console.warn('[SW] cache put failed:', e.message));
+            }
+            clearTimeout(timer);
+            return res;
+          })
+          .catch(() =>
+            caches.match('./index.html')
+              .then((r) => r || caches.match('/'))
+          );
+      })()
     );
     return;
   }
@@ -69,10 +81,13 @@ self.addEventListener('fetch', (event) => {
   // Asset same-origin (manifest, icone, ecc.): stale-while-revalidate
   event.respondWith(
     caches.match(req).then((cached) => {
-      const networkFetch = fetch(req).then((res) => {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+      const networkFetch = fetch(req, { signal: ctrl.signal }).then((res) => {
         if (res && res.status === 200) {
-          caches.open(CACHE).then((c) => c.put(req, res.clone()));
+          caches.open(CACHE).then((c) => c.put(req, res.clone())).catch((e) => console.warn('[SW] cache put failed:', e.message));
         }
+        clearTimeout(timer);
         return res;
       }).catch(() => null);
       return cached || networkFetch;

@@ -12,7 +12,10 @@ app.use((req, res, next) => {
     res.setHeader('Expires', '0');
     res.setHeader('Service-Worker-Allowed', '/');
   } else {
-    // Tutti gli altri asset statici: cache 1 anno (cambiano raramente)
+    // [SRV-01] Immutable cache strategy for all static assets:
+    // Assets are served with a 1-year max-age and the `immutable` directive.
+    // This is safe because the app uses content-hashed filenames or
+    // busts the cache via the Service Worker version bump on deploy.
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
   }
   next();
@@ -21,8 +24,11 @@ app.use((req, res, next) => {
 // Serve tutti i file statici dalla cartella root
 app.use(express.static(path.join(__dirname), { index: 'index.html' }));
 
-// Fallback SPA: qualsiasi route non trovata → index.html
+// Fallback SPA: only for non-static routes (exclude extensions like .ico, .js, .css, etc.)
 app.get('*', (req, res) => {
+  if (/\.[a-zA-Z0-9]{1,8}$/.test(req.path)) {
+    return res.status(404).send('Not found');
+  }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
