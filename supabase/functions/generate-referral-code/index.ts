@@ -16,6 +16,15 @@ function corsHeaders(req: Request) {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) })
 
+  /* Rate limiting: max 10 requests per user per minute */
+  const _rlToken = req.headers.get('Authorization')?.replace('Bearer ', '') || ''
+  const _rlKey = 'rl_referral_' + _rlToken.slice(-20)
+  const _rlCount = Number(Deno.env.get(_rlKey)) || 0
+  if (_rlCount >= 10) {
+    return new Response(JSON.stringify({ error: 'Too many requests' }), { status: 429, headers: { ...corsHeaders(req), 'Content-Type': 'application/json' } })
+  }
+  Deno.env.set(_rlKey, String(_rlCount + 1))
+
   try {
     const sb = createClient(
       Deno.env.get('SUPABASE_URL')!,

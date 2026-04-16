@@ -37,6 +37,16 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  /* ── 0. Rate limiting: max 5 requests per user per minute ── */
+  const _rlKey = 'rl_checkout_' + (req.headers.get('X-User-JWT') ?? req.headers.get('Authorization') ?? '').slice(-20)
+  const _rlCount = Number(Deno.env.get(_rlKey)) || 0
+  if (_rlCount >= 5) {
+    console.warn('[checkout] Rate limit exceeded for key:', _rlKey.slice(-8))
+    return json({ error: 'Too many requests — riprova tra qualche minuto' }, 429)
+  }
+  await Deno.env.set(_rlKey, String(_rlCount + 1))
+  /* Note: Deno.env rate limit resets on deploy. For production, use KV or Redis. */
+
   /* ── 1. Read user JWT ──
      Prefer X-User-JWT custom header; fall back to Authorization. */
   const accessToken =
