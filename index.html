@@ -292,7 +292,6 @@ body.onboarding-active #onb-screen{
 #scr-prog-blur-overlay{display:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:50;background:transparent;pointer-events:none;}
 #scr-prog-blur-overlay.on{display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(8px) saturate(120%);-webkit-backdrop-filter:blur(8px) saturate(120%);background:rgba(14,14,14,.80);pointer-events:auto;}
 #scr-prog.locked-trend .pg{pointer-events:auto!important;}
-#scr-prog.locked-trend{}
 /* ── Trackers collapsible ── */
 #trackers-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
 #trackers-chevron{transition:transform .25s ease;color:var(--muted);font-size:18px;}
@@ -917,7 +916,9 @@ hr{height:1px;}
 @keyframes ik-spin{to{transform:rotate(360deg);}}
 </style>
 <script>
-/* Safety fallback: hide splash after 4s even if main JS stalls */
+/* [INFO-02] Safety fallback: hide splash after 4s even if main JS stalls.
+   Intentionally duplicates logic in main boot — if main JS loads correctly
+   the splash is hidden much earlier. This is a defense-in-depth timer. */
 setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classList.add('hidden');},4000);
 </script>
 
@@ -2505,6 +2506,10 @@ async function checkTrendAccess(){
 /* MED-09: module-level trend element cache */
 const _trendEls={};
 function _getTrendEl(id){if(!_trendEls[id])_trendEls[id]=document.getElementById(id);return _trendEls[id];}
+/* [INFO-05] trendInitPromise — manual resolve gate.
+   Resolved once after checkTrendAccess() completes.
+   Prefer this pattern over bare async/await to guarantee single-resolution.
+   TODO: consider replacing with an explicit state machine if complexity grows. */
 let _trendInitResolve;const trendInitPromise=new Promise(r=>{_trendInitResolve=r;});
 async function initTrend(){
   /* Keep optimistic trial default until server responds — prevents flash of expired state */
@@ -7168,7 +7173,11 @@ function analyzeState(){
   /* ── Regressione lineare sui 14 giorni più recenti ──
      Stima la pendenza kg/settimana (slope×7) robusta agli outlier */
   const recent=log.filter(e=>e.isoDate&&e.weight).slice(-14);
-  let weeklyRate=null;
+/* [INFO-16] weeklyRate sign convention:
+   Positive = weight LOSS, Negative = weight GAIN.
+   The negation (−slope) converts the raw regression slope so that
+   a decreasing weight trend (good for cut) produces a positive rate.
+   Keep this convention consistent across all coach messages. */
   if(recent.length>=4){
     const n=recent.length;
     const t0=new Date(recent[0].isoDate).getTime();
@@ -8793,6 +8802,10 @@ function renderProgressStats(){
     }
   }
 }
+/* [INFO-15] sanitizeHistRow — generates inline HTML per history entry.
+   For 100+ entries consider event delegation on #hist-list parent
+   instead of per-row onclick handlers. Current implementation is
+   acceptable for typical usage (< 50 entries). */
 function sanitizeHistRow(e){
   const waist=e.waist?`<span style="font-size:12px;font-weight:600;color:var(--on);" class="sn">⌀${sanitize(e.waist)}<span style="font-size:9px;color:var(--muted);">cm</span></span>`:'';
   return `<div class="hist-row"><span style="font-size:12px;font-weight:600;color:var(--muted);" class="sn">${sanitize(e.date)}</span><div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--p);" class="sn">${sanitize(e.weight)}<span style="font-size:9px;color:var(--muted);font-weight:600;margin-left:2px;">kg</span></span>${waist}<button onclick="deleteEntry(${Number(e.ts)})" style="font-size:11px;font-weight:600;color:var(--dim);background:none;border:none;padding:4px 8px;touch-action:manipulation;" class="sn" aria-label="${sanitize(t('aria.delete.entry'))}">del</button></div></div>`;
@@ -10653,82 +10666,82 @@ setTimeout(function(){
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Come funziona il calcolo del TDEE?</span>
+          <span class="faq-q-text" data-i18n="faq.q.0">Come funziona il calcolo del TDEE?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Se inserisci la percentuale di grasso corporeo, viene usata la formula <strong>Katch-McArdle</strong> basata sulla massa magra. Altrimenti viene usata la formula <strong>Mifflin-St Jeor</strong>. Il TDEE finale viene moltiplicato per un fattore di attività calcolato da allenamenti settimanali e passi giornalieri.</div>
+        <div class="faq-answer" data-i18n-html="faq.a.0">Se inserisci la percentuale di grasso corporeo, viene usata la formula <strong>Katch-McArdle</strong> basata sulla massa magra. Altrimenti viene usata la formula <strong>Mifflin-St Jeor</strong>. Il TDEE finale viene moltiplicato per un fattore di attività calcolato da allenamenti settimanali e passi giornalieri.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Come viene generato il piano alimentare?</span>
+          <span class="faq-q-text" data-i18n="faq.q.1">Come viene generato il piano alimentare?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Il piano viene generato automaticamente in base ai tuoi cibi preferiti, al numero di pasti scelto, al gusto (dolce/salato/misto) e allo stile alimentare (onnivoro/vegetariano/vegano). Le porzioni sono calcolate per raggiungere il tuo target proteico e calorico personale. Nessun JSON esterno necessario.</div>
+        <div class="faq-answer" data-i18n-html="faq.a.1">Il piano viene generato automaticamente in base ai tuoi cibi preferiti, al numero di pasti scelto, al gusto (dolce/salato/misto) e allo stile alimentare (onnivoro/vegetariano/vegano). Le porzioni sono calcolate per raggiungere il tuo target proteico e calorico personale. Nessun JSON esterno necessario.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Cosa fa il Modificatore AI?</span>
+          <span class="faq-q-text" data-i18n="faq.q.2">Cosa fa il Modificatore AI?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">L\'aggiustamento aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall'inizio.</div>
+        <div class="faq-answer" data-i18n-html="faq.a.2">L'aggiustamento aumenta o diminuisce le calorie target di 100 kcal per unità (±25g carbs). Usalo per fare micro-aggiustamenti quando noti stallo del peso, fame eccessiva o energia bassa — senza dover rifare il profilo dall'inizio.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Cos'è il Refeed Day?</span>
+          <span class="faq-q-text" data-i18n="faq.q.3">Cos'è il Refeed Day?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Un refeed è un giorno di aumento calorico controllato: +880 kcal, 220g carbs da riso, patate, avena per stimolare la leptina e prevenire l'adattamento metabolico durante il taglio. Va pianificato ogni 7-10 giorni in Fase 2. Proteine e grassi invariati (Dirlewanger 2000).</div>
+        <div class="faq-answer" data-i18n-html="faq.a.3">Un refeed è un giorno di aumento calorico controllato: +880 kcal, 220g carbs da riso, patate, avena per stimolare la leptina e prevenire l'adattamento metabolico durante il taglio. Va pianificato ogni 7-10 giorni in Fase 2. Proteine e grassi invariati (Dirlewanger 2000).</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Come funziona il Coach AI?</span>
+          <span class="faq-q-text" data-i18n="faq.q.4">Come funziona il Coach AI?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Il coach analizza: la tua curva di peso (ultimi 7 giorni), la variazione del girovita, l'assunzione di acqua e sale, i giorni dall'ultimo refeed, e la fase attiva. Sulla base di questi dati mostra un'analisi contestuale: stallo metabolico, rischio catabolico, ricomposizione, ritenzione idrica o progressione ottimale. Tutto avviene localmente, senza AI esterna.</div>
+        <div class="faq-answer" data-i18n-html="faq.a.4">Il coach analizza: la tua curva di peso (ultimi 7 giorni), la variazione del girovita, l'assunzione di acqua e sale, i giorni dall'ultimo refeed, e la fase attiva. Sulla base di questi dati mostra un'analisi contestuale: stallo metabolico, rischio catabolico, ricomposizione, ritenzione idrica o progressione ottimale. Tutto avviene localmente, senza AI esterna.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Come faccio il backup e ripristino?</span>
+          <span class="faq-q-text" data-i18n="faq.q.5">Come faccio il backup e ripristino?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Da <em>Profilo → Dati</em> puoi esportare un file JSON con tutti i tuoi dati. Per ripristinare, usa <em>Importa Backup</em>. Il file contiene profilo, piano, log del peso, check-in e impostazioni. Conservalo in un posto sicuro — è l'unico modo per recuperare i dati se cambi dispositivo o svuoti il browser.</div>
+        <div class="faq-answer" data-i18n-html="faq.a.5">Da <em>Profilo → Dati</em> puoi esportare un file JSON con tutti i tuoi dati. Per ripristinare, usa <em>Importa Backup</em>. Il file contiene profilo, piano, log del peso, check-in e impostazioni. Conservalo in un posto sicuro — è l'unico modo per recuperare i dati se cambi dispositivo o svuoti il browser.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Perché il peso varia molto giornalmente?</span>
+          <span class="faq-q-text" data-i18n="faq.q.6">Perché il peso varia molto giornalmente?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Fluttuazioni di 1-2 kg al giorno sono normali e dipendono da: acqua corporea, glicogeno muscolare, contenuto intestinale, ciclo ormonale (donne). Il Coach riconosce la ritenzione idrica (sale alto + acqua bassa) e ti avvisa quando il peso è "falsato". Analizza sempre il trend su 7+ giorni, non il singolo pesata.</div>
+        <div class="faq-answer" data-i18n-html="faq.a.6">Fluttuazioni di 1-2 kg al giorno sono normali e dipendono da: acqua corporea, glicogeno muscolare, contenuto intestinale, ciclo ormonale (donne). Il Coach riconosce la ritenzione idrica (sale alto + acqua bassa) e ti avvisa quando il peso è "falsato". Analizza sempre il trend su 7+ giorni, non il singolo pesata.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">L'app è adatta a tutti?</span>
+          <span class="faq-q-text" data-i18n="faq.q.7">L'app è adatta a tutti?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Iron Kinetic™ è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.</div>
+        <div class="faq-answer" data-i18n-html="faq.a.7">Iron Kinetic™ è uno strumento di supporto al coaching nutrizionale per adulti sani (16+ anni). Non è un dispositivo medico e non sostituisce il parere di un medico, nutrizionista o dietologo. In caso di patologie, disturbi alimentari o condizioni mediche particolari, consulta sempre un professionista sanitario prima di seguire qualsiasi piano nutrizionale.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">Posso installare l'app sul telefono?</span>
+          <span class="faq-q-text" data-i18n="faq.q.8">Posso installare l'app sul telefono?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">Sì. Iron Kinetic™ è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un'app nativa, anche offline.</div>
+        <div class="faq-answer" data-i18n-html="faq.a.8">Sì. Iron Kinetic™ è una Progressive Web App (PWA). Su iPhone/iPad: apri in Safari → Condividi → "Aggiungi a schermata Home". Su Android: apri in Chrome → menu "⋮" → "Aggiungi a schermata Home". Funzionerà come un'app nativa, anche offline.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span class="faq-q-text">I miei dati vengono inviati da qualche parte?</span>
+          <span class="faq-q-text" data-i18n="faq.q.9">I miei dati vengono inviati da qualche parte?</span>
           <span class="material-symbols-outlined faq-chevron">expand_more</span>
         </div>
-        <div class="faq-answer">No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server, account o sincronizzazione cloud. L'unica eccezione sono le richieste di font e icone a Google (Google Fonts/Material Symbols) che non trasmettono i tuoi dati personali.</div>
+        <div class="faq-answer" data-i18n-html="faq.a.9">No. Tutti i dati (peso, piano, check-in, preferenze) rimangono nel localStorage del tuo dispositivo. Non esistono server, account o sincronizzazione cloud. L'unica eccezione sono le richieste di font e icone a Google (Google Fonts/Material Symbols) che non trasmettono i tuoi dati personali.</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
