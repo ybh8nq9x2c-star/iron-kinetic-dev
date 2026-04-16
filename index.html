@@ -58,8 +58,8 @@ body{margin:0;height:100%;height:100dvh;width:100%;overflow:hidden;overscroll-be
 .glow-a,.glow-b{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
 .glow-a{top:20%;right:-10%;width:50%;height:40%;background:rgba(77,220,198,.06);filter:blur(80px);}
 .glow-b{bottom:10%;left:-10%;width:50%;height:40%;background:rgba(49,49,192,.06);filter:blur(80px);}
-.scr{position:absolute;top:0;left:var(--sal);right:var(--sar);bottom:0;padding-top:var(--page-top);padding-bottom:calc(var(--page-bottom) + var(--kb-offset) + var(--sat));overflow-y:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;scroll-padding-bottom:calc(var(--page-bottom) + var(--sat) + 16px);z-index:1;}
-.scr::-webkit-scrollbar{display:none;}.scr{scrollbar-width:none;-ms-overflow-style:none;}
+.scr{position:absolute;top:0;left:var(--sal);right:var(--sar);bottom:0;padding-top:var(--page-top);padding-bottom:calc(var(--page-bottom) + var(--kb-offset) + var(--sat));overflow-y:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;scroll-padding-bottom:calc(var(--page-bottom) + var(--sat) + 16px);z-index:1;scrollbar-width:none;-ms-overflow-style:none;opacity:1;transition:opacity .15s ease;}
+.scr::-webkit-scrollbar{display:none;}
 #hdr{position:fixed;top:var(--hdr-top);left:max(12px,var(--sal));right:max(12px,var(--sar));height:var(--hdr);z-index:200;padding:0 16px;border-radius:16px;background:rgba(20,20,20,.92);border:1px solid var(--line-hi);box-shadow:0 4px 24px rgba(0,0,0,.32);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:space-between;}
 .hdr-logo{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;letter-spacing:.02em;color:var(--p);text-transform:uppercase;line-height:1;user-select:none;}
 .hdr-right{display:flex;align-items:center;gap:10px;}
@@ -99,7 +99,6 @@ button:focus-visible{outline:2px solid var(--p);outline-offset:2px;}
 .btn-neon-o{background:rgba(77,220,198,.12);border:1px solid rgba(77,220,198,.22);color:var(--p);}
 .btn-danger-o{background:rgba(255,59,48,.08);border:1px solid rgba(255,59,48,.20);color:var(--red);}
 .btn-sm{height:40px;font-size:11px;border-radius:var(--r2);}
-.btn-xs{height:34px;font-size:10px;border-radius:var(--r3);}
 .btn-icon{width:44px;height:44px;border-radius:var(--r2);background:rgba(255,255,255,.05);border:1px solid var(--glass-stroke);color:var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;touch-action:manipulation;}
 .btn-icon:active{transform:scale(.9) translateZ(0);}
 .inp{width:100%;height:52px;background:var(--s1);border:1px solid var(--line);border-radius:var(--r2);padding:0 14px;font-size:16px !important;font-family:'Manrope',sans-serif;font-weight:600;color:var(--on);-webkit-appearance:none;appearance:none;-webkit-box-shadow:none;box-shadow:none;outline:none;transition:border-color .15s,background .15s;}
@@ -748,10 +747,6 @@ body.onboarding-active #onb-screen{
 /* Note: --p-inverse, --card-pad already defined here — removed duplicate :root */
 
 /* ── Tab transition: fade instead of hard display switch ── */
-.scr{
-  opacity:1;
-  transition:opacity .15s ease;
-}
 .scr.tab-exit{opacity:0;pointer-events:none;}
 .scr.tab-enter{animation:tabFadeIn .18s ease forwards;}
 @keyframes tabFadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
@@ -1074,7 +1069,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
   <div class="hdr-right">
     <span id="hdr-plan" class="hdr-plan" style="display:none;"></span>
     <div class="hdr-av">
-      <img id="hdr-av-img" src="" alt="Profile avatar" draggable="false" style="display:none;" onerror="this.style.display='none'"/>
+      <img id="hdr-av-img" src="" alt="Profile avatar" draggable="false" style="display:none;" onerror="this.onerror=null;this.style.display='none'"/>
     </div>
   </div>
 </header>
@@ -1874,7 +1869,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <!-- ── USER HEADER: avatar + nome + stats ── -->
       <div class="prof-user-header">
         <div class="prof-avatar" id="prof-avatar-wrap">
-          <img id="prof-avatar-img" src="" alt="Avatar" draggable="false" style="display:none;" onerror="this.style.display='none';document.getElementById('prof-avatar-icon').style.display='flex';"/>
+          <img id="prof-avatar-img" src="" alt="Avatar" draggable="false" style="display:none;" onerror="this.onerror=null;this.style.display='none';document.getElementById('prof-avatar-icon').style.display='flex';"/>
           <span id="prof-avatar-icon" class="material-symbols-outlined prof-avatar-fallback" style="font-variation-settings:'FILL' 1;">account_circle</span>
         </div>
         <div style="text-align:center;">
@@ -2415,7 +2410,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
 <script>
 'use strict';
-const APP_VERSION='1.5.0';
+const APP_VERSION='2.0.0';
 const IK_DEBUG=false;
 const ikLog=(...a)=>{if(IK_DEBUG)console.log('[IK]',...a);};
 
@@ -2577,7 +2572,7 @@ function updateSubManagementCard(){
   const{mode,daysLeft,hoursLeft,plan}=trendAccess;
   const setRing=(pct,color)=>{
     const offset=CIRC*(1-Math.min(1,Math.max(0,pct)));
-    if(ring){requestAnimationFrame(()=>{requestAnimationFrame(()=>{ring.style.strokeDashoffset=offset;ring.style.stroke=color;});});}
+    if(ring){requestAnimationFrame(()=>{ring.style.strokeDashoffset=offset;ring.style.stroke=color;});}
   };
   const badgeStyle=(bg,color,border)=>
     `font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block;background:${bg};color:${color};border:1px solid ${border}`;
@@ -5055,7 +5050,6 @@ function applyTranslations(deferOffscreen){
   });
   const monthLabel=document.querySelector('#chart-monthly-delta+.t-xxs.muted');
   if(monthLabel)monthLabel.textContent=t('prog.chart.questeMese');
-  const chartRealEl=document.querySelector('#scr-prog .t-xxs.muted[class]');
   // analytics labels
   document.querySelectorAll('.analytics-lab').forEach(e=>{
     const v=e.textContent.trim();
@@ -5067,7 +5061,8 @@ function applyTranslations(deferOffscreen){
   const calLegend=document.querySelector('#adherence-calendar')?.previousElementSibling;
   if(calLegend)calLegend.textContent=t('prog.calendar.legend');
   const notifStatusTxt=document.getElementById('notif-status-txt');
-  const perm=('Notification'in window)?Notification.permission:(localStorage.getItem('ik_notif_perm')||'default');
+  const _rawPerm=('Notification'in window)?Notification.permission:(lsR('ik_notif_perm')||'default');
+  const perm=['granted','denied','default'].includes(_rawPerm)?_rawPerm:'default';
   if(notifStatusTxt&&perm==='default')notifStatusTxt.textContent=t('prog.notif.subtitle');
   const notifBtn=document.getElementById('notif-perm-btn');
   if(notifBtn&&perm!=='granted')notifBtn.textContent=t('prog.notif.btn');
@@ -5185,7 +5180,7 @@ function applyTranslations(deferOffscreen){
       p.textContent=t('set.danger.warn');
   });
   }; /* end _offscreen */
-  if(deferOffscreen)(window.requestIdleCallback||window.setTimeout)(_offscreen,{timeout:300});
+  if(deferOffscreen){if(window.requestIdleCallback)window.requestIdleCallback(_offscreen,{timeout:300});else setTimeout(_offscreen,300);}
   else _offscreen();
 }
 
@@ -8194,7 +8189,7 @@ function renderMeals(){
     if(!k.startsWith(day.d+'_'))return;
     const mealName=k.slice(String(day.d).length+1);
     if(!mNames.includes(mealName)){
-      document.getElementById('meal-row-'+CSS.escape(mealName)+'-'+day.d)?.remove();
+      document.getElementById('meal-row-'+(CSS&&CSS.escape?CSS.escape(mealName):mealName.replace(/[.!#$%&'*+/=?^@{|}~()\[\]]/g,'\\$&'))+'-'+day.d)?.remove();
       delete _mealRenderCache[k];
     }
   });
@@ -8431,7 +8426,7 @@ function renderRefeed(){
 }
 function toggleRefeed(){
   requireTrend(()=>{
-    _macroCache=null;
+    _macroCache=null;_mealRenderCache={};
     hap('medium');
     if(isRefeed())try{localStorage.removeItem(SK.refeed);}catch{}
     else lsW(SK.refeed,toISO());
@@ -8611,7 +8606,7 @@ function renderModDisplay(){
 }
 function applyMod(u){
   const MAX_UNITS=5,MIN_UNITS=-5;
-  _macroCache=null;
+  _macroCache=null;_mealRenderCache={};
   hap();if(u===0){lsW(SK.mod,'0');toast(t('toast.modAzzerato'));}
   else{const n=Math.max(MIN_UNITS,Math.min(MAX_UNITS,getMod()+u));lsW(SK.mod,String(n));toast(t('toast.modApplicato',{delta:(u>0?'+':'')+u*100}));}
   /* N-10: Floor guard — ensure mod never pushes target below safe minimum */
@@ -9452,7 +9447,7 @@ function scheduleLocalReminder(type,hour){
 }
 
 function updateNotifUI(){
-  const perm=('Notification' in window)?Notification.permission:(localStorage.getItem('ik_notif_perm')||'default');
+  const _rawPerm=('Notification' in window)?Notification.permission:(lsR('ik_notif_perm')||'default');const perm=['granted','denied','default'].includes(_rawPerm)?_rawPerm:'default';
   const btn=document.getElementById('notif-perm-btn');
   const status=document.getElementById('notif-status-txt');
   if(btn){
@@ -10028,6 +10023,7 @@ function lazyLoadChartJs(cb){
   s.src='https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
   s.crossOrigin='anonymous';
   s.onload=cb;
+  s.onerror=()=>{console.error('[IK] Chart.js CDN load failed');if(typeof cb==='function')cb();};
   document.head.appendChild(s);
 }
 {
@@ -10061,9 +10057,12 @@ function lazyLoadChartJs(cb){
     let _swReady=false;
     setTimeout(()=>{_swReady=true;},2000);
     navigator.serviceWorker.addEventListener('controllerchange',()=>{
-      if(_swReady)window.location.reload();
+      if(!_swReady)return;
+      const _rl=Number(sessionStorage.getItem('_swReloadCount'))||0;
+      if(_rl<3){sessionStorage.setItem('_swReloadCount',String(_rl+1));window.location.reload();}
+      else{console.warn('[IK] SW controllerchange: max reloads reached, skipping');}
     });
-    /* Ignore SW_ACTIVATED messages from old sw.js v26 — no action needed */
+    /* Intentional no-op: absorbs SW_ACTIVATED messages from sw.js to prevent unhandled events */
     navigator.serviceWorker.addEventListener('message',()=>{});
   }
 })();
@@ -10320,16 +10319,17 @@ function _bootAfterLangGate(){
 
 /* ENTRY POINT */
 (()=>{
-  /* ── Clean up any stale checkout flags from a previous abandoned session ──
-     If the user got to Stripe and came back (or closed the tab), we must
-     never block them from trying again. Flags are cleared here unconditionally
-     unless we're in the middle of a live OAuth redirect (ik_auth_origin set). */
+  /* ── Clean up stale checkout flags from a previous abandoned session ──
+     Only clear flags older than 30 min to avoid removing active checkout state. */
   try{
     const origin=localStorage.getItem('ik_auth_origin');
     if(origin!=='checkout'&&origin!=='post_onboarding'){
-      localStorage.removeItem('ik_checkout_retry');
-      /* Keep ik_pending_checkout_plan only if we're mid-OAuth; otherwise clear */
-      localStorage.removeItem('ik_pending_checkout_plan');
+      const _checkoutTs=Number(localStorage.getItem('ik_checkout_ts'))||0;
+      if(!_checkoutTs||(Date.now()-_checkoutTs)>1800000){
+        localStorage.removeItem('ik_checkout_retry');
+        localStorage.removeItem('ik_pending_checkout_plan');
+        localStorage.removeItem('ik_checkout_ts');
+      }
     }
   }catch{}
 
