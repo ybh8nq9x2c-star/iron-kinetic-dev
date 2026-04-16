@@ -951,9 +951,9 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
 <!-- Supabase: kept synchronous — inline boot depends on `supabase` global at parse time -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
-<script defer src="https://js.stripe.com/v3/" integrity="sha384-TEBuKD1DvAKebMS0TGTXn/tbig+nnYNsMC4sr0OzgYs2xAHR2yDLZH+va8tKT47x" crossorigin="anonymous"></script>
+<script defer src="https://js.stripe.com/v3/" crossorigin="anonymous"></script>
 <script>window.sentryOnLoad=function(){Sentry.init({release:'iron-kinetic@1.0.0',tracesSampleRate:0.1,replaysSessionSampleRate:0.1,replaysOnErrorSampleRate:1.0,environment:location.hostname.includes('railway')?'production':'development'});};</script>
-<script defer src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" integrity="sha384-7xGRbA4IumR22TZkO0qKKawombfOd6XW9Uz+IONGHGkfwIoXAnhqlPRe8UXOVIKQ" crossorigin="anonymous"></script>
+<script defer src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" crossorigin="anonymous"></script>
 </head>
 <body class="onboarding-active">
 
@@ -7202,6 +7202,7 @@ function analyzeState(){
   const clinical=prof?.clinical||null;
 
   /* ── STREAK CELEBRATION (priorità alta) ── */
+  let weeklyRate=null;
   const streakCount=getStreakCount('checkin');
   if(streakCount>=3){
     return{ico:'🔥',ib:'#F97316',gl:'rgba(249,115,22,.28)',br:'#F97316',
