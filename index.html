@@ -3167,14 +3167,26 @@ async function _resumePostOnboardingOrBoot(){
   }
   /* Mandatory Google login: check for existing session */
   if(sb){
+    /* Keep splash visible while we wait for Supabase — prevents black screen on slow
+       networks / Safari iOS cold starts. A hard 6s cap ensures we never hang forever. */
+    const _splashKillTimer=setTimeout(()=>{
+      console.warn('[IK] getSession timeout — forcing onboarding fallback');
+      hideSplash();
+      lsS(SK.onboardingDone,false);
+      try{showOnboarding();}catch(e){_bootAfterGates();}
+    },6000);
     try{
       const{data:{session}}=await sb.auth.getSession();
+      clearTimeout(_splashKillTimer);
       if(session?.user){
         await syncUserAfterLogin(session.user);
         _bootAfterGates();
         return;
       }
-    }catch(e){console.warn('[IK] resumePostOnboarding error',e);}
+    }catch(e){
+      clearTimeout(_splashKillTimer);
+      console.warn('[IK] resumePostOnboarding error',e);
+    }
     /* No valid session — replay slideshow so auth gate follows naturally at the end */
     lsS(SK.onboardingDone,false);
     showOnboarding();
@@ -10377,6 +10389,10 @@ function _bootAfterLangGate(){
 /* WATCHDOG: se dopo 4s non è visibile nessun contenuto, forza onboarding */
 setTimeout(function(){
   if(booted)return; // Already booted — watchdog not needed
+  /* If splash is still visible AND we have a lang set, we're likely waiting for getSession().
+     Do not interfere — the 6s timer inside _resumePostOnboardingOrBoot() will handle it. */
+  const splashVisible=!document.getElementById('ik-splash')?.classList.contains('hidden');
+  if(splashVisible&&lsR(SK.lang))return;
   const appShellVisible=document.getElementById('app-shell')?.classList.contains('on');
   const onbScreenVisible=document.getElementById('onb-screen')?.classList.contains('on');
   const onbOverlayVisible=document.getElementById('onboarding-overlay')?.style.display==='flex';
