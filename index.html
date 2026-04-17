@@ -2578,30 +2578,15 @@ const STRIPE_PK='pk_live_51TJVZ2JYTPcSrsvtjpVbCEtvJFpC9pIj5n0PPOSPLtIGcQ12rc6YOH
 const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,storage:window.localStorage,storageKey:'ik_sb_session',autoRefreshToken:true,detectSessionInUrl:true}});}catch(e){console.error('[IK] Supabase init failed:',e);return null;}})();
 
 /* Global trend access state — closure prevents console override */
-const _trendState={access:true,mode:'trial',daysLeft:TRIAL_DAYS,_serverValidated:false};
+const _trendState={access:false,mode:'none',daysLeft:0,_serverValidated:false};
 function getTrendAccess(){return{..._trendState};}
 function setTrendAccess(v){Object.assign(_trendState,v,{_serverValidated:true});}
 /* Legacy compat — read-only proxy */
 let trendAccess=new Proxy(_trendState,{set(){console.warn('[IK] trendAccess is read-only — use server verification');return false;}});
 
-/* Sync check for anonymous users (no network needed) */
+/* [SERVER-SUB] Local trial removed — all verification goes through verify-subscription Edge Function */
 function _checkTrendLocal(){
-  try{
-    let stored=localStorage.getItem('ik_trial_start');
-    const resets=parseInt(localStorage.getItem('ik_trial_resets')||'0');
-    if(resets>1)return{access:false,mode:'expired'}; // max 1 reset allowed
-    const ts=parseInt(stored,10);
-    /* Reset corrupted or future-dated timestamps */
-    if(!stored||isNaN(ts)||ts>Date.now()){
-      localStorage.setItem('ik_trial_start',String(Date.now()));
-      if(stored)localStorage.setItem('ik_trial_resets',String(resets+1));
-      return{access:true,mode:'trial',daysLeft:TRIAL_DAYS};
-    }
-    const elapsed=(Date.now()-ts)/86400000;
-    const left=Math.max(0,TRIAL_DAYS-elapsed);
-    if(left<=0)return{access:false,mode:'expired'};
-    return{access:true,mode:'trial',daysLeft:Math.ceil(left)};
-  }catch(e){return{access:false,mode:'expired'};}
+  return{access:false,mode:'none',daysLeft:0,plan:null};
 }
 
 async function getUser(){
@@ -2611,46 +2596,32 @@ async function getUser(){
 
 async function checkTrendAccess(){
   const user=await getUser();
-  if(!user)return _checkTrendLocal();
-  try{
-    const{data,error}=await sb.from('users')
-      .select('trend_active,trial_end,grace_period_until,plan')
-      .eq('id',user.id).single();
-    /* RLS block or network error — never expire the user, fall back to local trial */
-    if(error){
-      console.warn('[IK] checkTrendAccess server error:',error.message,'→ using local trial fallback');
-      return _checkTrendLocal();
-    }
-    /* Row exists but empty (newly upserted) — treat as fresh trial */
-    if(!data){return _checkTrendLocal();}
-    if(data?.trend_active){
-      if(data.grace_period_until){
-        const graceEnd=new Date(data.grace_period_until);
-        if(graceEnd>new Date()){
-          const hoursLeft=Math.ceil((graceEnd-new Date())/(3600000));
-          return{access:true,mode:'grace',hoursLeft,plan:data.plan||'monthly'};
-        }
-        localStorage.removeItem('ik_trend_active');
-        return{access:false,mode:'expired',reason:'grace_expired'};
-      }
-      const resolvedPlan=data.plan||'monthly';
-      if(!data.plan)console.warn('[IK] users.plan is null for paid user — defaulting to monthly');
-      return{access:true,mode:'paid',plan:resolvedPlan};
-    }
-    if(data?.trial_end&&new Date(data.trial_end)>new Date()){
-      const left=Math.ceil((new Date(data.trial_end)-new Date())/86400000);
-      return{access:true,mode:'trial',daysLeft:left};
-    }
-    /* Row exists but no trial_end set — start local trial, avoid false expired */
-    if(!data?.trial_end){
-      console.warn('[IK] users row missing trial_end → local trial fallback');
-      return _checkTrendLocal();
-    }
-  }catch(e){
-    console.warn('[IK] checkTrendAccess exception:',e,'→ local trial fallback');
-    return _checkTrendLocal();
+  if(!user){
+    /* Not logged in = no access, period — trial starts only after signup via Edge Function */
+    setTrendAccess({access:false,mode:'none',daysLeft:0,plan:null});
+    return trendAccess;
   }
-  return{access:false,mode:'expired'};
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    if(!session)throw new Error('no session');
+    const res=await fetch(SUPABASE_URL+'/functions/v1/verify-subscription',{
+      method:'POST',
+      headers:{
+        'Authorization':'Bearer '+session.access_token,
+        'apikey':SUPABASE_KEY,
+        'Content-Type':'application/json'
+      }
+    });
+    if(!res.ok)throw new Error('verify failed: '+res.status);
+    const result=await res.json();
+    setTrendAccess(result);
+    return result;
+  }catch(e){
+    console.warn('[IK] verify-subscription error:',e);
+    /* On error, DENY access — no localStorage fallback */
+    setTrendAccess({access:false,mode:'none',daysLeft:0,plan:null});
+    return trendAccess;
+  }
 }
 
 /* MED-09: module-level trend element cache */
@@ -2662,24 +2633,23 @@ function _getTrendEl(id){if(!_trendEls[id])_trendEls[id]=document.getElementById
    TODO: consider replacing with an explicit state machine if complexity grows. */
 let _trendInitResolve;const trendInitPromise=new Promise(r=>{_trendInitResolve=r;});
 async function initTrend(){
-  /* Keep optimistic trial default until server responds — prevents flash of expired state */
+  /* [SERVER-SUB] Server-only verification — no localStorage fallback */
   const user=await getUser();
-  if(!user){setTrendAccess(_checkTrendLocal());updateTrendBadge();}
+  if(!user){setTrendAccess({access:false,mode:'none',daysLeft:0,plan:null});updateTrendBadge();}
   const subMgmt=_getTrendEl('set-sub-manage');
   if(subMgmt)subMgmt.style.display=trendAccess.mode==='paid'?'block':'none';
   const subStatus=_getTrendEl('set-sub-status');
   if(subStatus&&trendAccess.mode==='paid')subStatus.textContent=t('set.sub.active');
-  /* Then async Supabase check (refines if logged in) */
-  const remote=await checkTrendAccess();
-  if(JSON.stringify(remote)!==JSON.stringify(getTrendAccess())){
-    setTrendAccess(remote);
+  /* Server verification via verify-subscription Edge Function */
+  if(user){
+    await checkTrendAccess();
     updateTrendBadge();
-    const lb=_getTrendEl('trend-lock-banner');
-    const _scrProg=_getTrendEl('scr-prog');
-    const _isOnProg=_scrProg&&_scrProg.style.display!=='none';
-    if(lb)lb.style.display=(trendAccess.access||!_isOnProg)?'none':'block';
-    if(_getTrendEl('scr-set')?.style.display!=='none'){updateSubManagementCard();}
   }
+  const lb=_getTrendEl('trend-lock-banner');
+  const _scrProg=_getTrendEl('scr-prog');
+  const _isOnProg=_scrProg&&_scrProg.style.display!=='none';
+  if(lb)lb.style.display=(trendAccess.access||!_isOnProg)?'none':'block';
+  if(_getTrendEl('scr-set')?.style.display!=='none'){updateSubManagementCard();}
   applyTrendBlurOverlay();
   syncTrendLockCopy();
   if(trendAccess.mode==='trial'&&trendAccess.daysLeft===1)
@@ -3357,16 +3327,14 @@ async function _resumePostOnboardingOrBoot(){
     /* Clear any pending checkout to prevent redirect loops */
     try{localStorage.removeItem('ik_pending_checkout_plan');localStorage.removeItem('ik_checkout_retry');localStorage.removeItem('ik_auth_origin');}catch{}
     window._trendPolling=true;
-    /* Show processing toast, then poll Supabase for up to 60s */
     const pollTrendActivation=async()=>{
       const user=await getUser();
       if(!user){window._trendActivatedMsg='Processing... refresh shortly';return;}
       for(let i=0;i<12;i++){ // 12 x 5s = 60s
         try{
-          const{data}=await sb.from('users').select('trend_active,plan').eq('id',user.id).single();
-          if(data?.trend_active){
-            /* SEC-07: access verified server-side via Supabase RLS — not client-trusted */
-            setTrendAccess({access:true,mode:'paid',plan:data.plan||'monthly'});
+          /* [SERVER-SUB] Use verify-subscription EF for consistent server-side check */
+          const result=await checkTrendAccess();
+          if(result.access&&result.mode==='paid'){
             updateTrendBadge();
             if(typeof updateSubManagementCard==='function')updateSubManagementCard();
             showToast(t('toast.trendActivated'),4000);
@@ -7836,8 +7804,7 @@ function activateGeneratedPlan(){
 
 function activatePlanAndContinue(){
   hap('medium');
-  /* Start 7-day trial if not already running */
-  if(!localStorage.getItem('ik_trial_start'))lsW('ik_trial_start',Date.now().toString());
+  /* [SERVER-SUB] Trial starts via verify-subscription EF after signup — no localStorage */
   activateGeneratedPlan();
 }
 
@@ -8826,7 +8793,7 @@ function applyMod(u){
   const stepper=getEl('mod-stepper');
   if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
 }
-const KEEP_PREFIX=['ikgdpr','iklang','iknotif','ik_trial_start'];
+const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
 async function clearAppData(){if(typeof sb!=='undefined'&&sb)try{await sb.auth.signOut();}catch{}Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
 
 /* ── Custom confirm modal (FIX1) ── */
@@ -9812,10 +9779,17 @@ function switchTab(name){
     const progOverlay=document.getElementById('scr-prog-blur-overlay');
     if(progOverlay){progOverlay.style.display='none';progOverlay.classList.remove('on');}
   }
-  // Single source of truth handles all cases
-  updateTrendLockUI();
-  if(name==='prog'){syncTrendLockCopy();}
-  if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
+  // [SERVER-SUB] Re-verify subscription when switching to Trend tab
+  if(name==='prog'){
+    checkTrendAccess().then(result=>{
+      updateTrendBadge();
+      updateTrendLockUI();
+      syncTrendLockCopy();
+      if(result.access&&_tabDirty.prog){
+        renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;
+      }
+    });
+  }
   if(name==='set'){renderSettings();renderKcalRing();_tabDirty.set=false;trendInitPromise.then(()=>updateSubManagementCard());_ikRefLoad();}
   if(name==='info'){updateConsentUI();}
   if(name==='oggi'){try{renderTodayAction();}catch(e){}try{renderPlanUpdateNote();}catch(e){}}
