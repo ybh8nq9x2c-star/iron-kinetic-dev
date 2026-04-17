@@ -530,6 +530,10 @@ body.onboarding-active #onb-screen{
   .onboarding-slide{padding:28px 28px 20px;}
   .onb-emoji{font-size:58px;margin-bottom:20px;}
   .onb-title{font-size:21px;}
+  .inp{height:46px;font-size:16px !important;}
+  .btn{height:46px;}
+  #inp-weight-upd{min-width:64px;width:72px;}
+  .wr-stat-grid{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:360px){
   .onboarding-slide{padding:24px 24px 18px;}
@@ -695,7 +699,7 @@ body.onboarding-active #onb-screen{
   color:var(--on);
 }
 .modal-close{
-  width:32px;height:32px;border-radius:50%;
+  width:44px;height:44px;border-radius:50%;
   background:rgba(255,255,255,.08);
   border:none;color:var(--muted);
   display:flex;align-items:center;justify-content:center;
@@ -1072,7 +1076,21 @@ hr{height:1px;}
 /* Checkin analytics empty state icon */
 .empty-state-icon-sm{font-size:24px;opacity:.4;}
 /* Adherence calendar empty */
-.cal-empty-state{padding:20px 0;text-align:center;color:var(--muted);font-size:11px;font-weight:600;}
+/* ── UX-AUDIT-P2 additions ── */
+/* Kcal ring oggi: smooth transition */
+#kcal-ring-oggi{transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1),stroke .3s,opacity .3s;}
+/* Meal row done: checkmark indicator */
+.meal-row.done::after{content:'\2713';position:absolute;top:13px;right:14px;font-size:14px;font-weight:700;color:var(--p);}
+/* Stat chips: default muted color */
+#st-w,#st-wdiff,#st-wst,#st-wstdiff{color:var(--muted);}
+/* Paywall sheet: scrollable with hidden scrollbar */
+#paywall-sheet{max-height:92dvh;overflow-y:auto;scrollbar-width:none;}
+#paywall-sheet::-webkit-scrollbar{display:none;}
+/* Checkout plan buttons: hover state */
+#cpo-monthly:hover,#cpo-annual:hover{border-color:var(--line-hi);background:var(--s3);}
+/* Prog stat scroll: scroll-snap */
+.prog-stat-scroll{scroll-snap-type:x mandatory;}
+.prog-stat-chip{scroll-snap-align:start;}
 </style>
 <!-- ── SPLASH SCREEN: pure CSS, shows instantly before any JS ── -->
 <style>
@@ -2174,7 +2192,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
             <p id="set-profile-text" class="sn" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;">—</p>
             <div id="weight-update-row" style="display:flex;gap:8px;margin-top:10px;align-items:center">
-              <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="width:80px">
+              <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="min-width:72px;width:80px">
               <button onclick="updateWeight();event.stopPropagation();" class="btn btn-neon-o btn-xs" style="flex:1" id="btn-weight-upd" data-i18n="set.btn.updateWeight">Aggiorna peso</button>
             </div>
             <div id="set-prefs-text" style="margin-top:10px;display:none;">
@@ -11080,7 +11098,7 @@ setTimeout(function(){
 
 <!-- ── PAYWALL OVERLAY ── -->
 <!-- ── CHECKOUT PREVIEW OVERLAY ── -->
-<div id="checkout-preview-overlay" aria-modal="true" role="dialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);z-index:10002;align-items:flex-end;justify-content:center;">
+<div id="checkout-preview-overlay" aria-modal="true" role="dialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);z-index:10002;align-items:flex-end;justify-content:center;" onclick="if(event.target===this)closeCheckoutPreview()">
   <div id="checkout-preview-sheet" style="background:var(--s1);border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform .38s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;max-height:92dvh;padding-bottom:env(safe-area-inset-bottom,16px);">
     <!-- drag handle -->
     <div style="width:36px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;margin:12px auto 0;"></div>
@@ -11136,7 +11154,7 @@ setTimeout(function(){
   </div>
 </div>
 
-<div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic Trend">
+<div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic Trend" onclick="if(event.target===this)closePaywall()">
   <div id="paywall-sheet">
     <button onclick="closePaywall()" aria-label="Chiudi" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;touch-action:manipulation;min-width:44px;min-height:44px;">×</button>
     <div id="pw-trial-badge" style="display:none;background:rgba(77,220,198,.12);color:var(--p);font-size:10px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:999px;width:fit-content;margin:0 auto 16px;"><span id="pw-days-left"></span> <span data-i18n="paywall.daysLeft">GIORNI RIMASTI</span></div>
