@@ -134,6 +134,20 @@ Deno.serve(async (req) => {
       paid_at:                   new Date().toISOString()
     })
 
+    // ── AREA 8a: Log to payout_log for audit trail ──
+    await sb.from('payout_log').insert({
+      user_id:            user.id,
+      amount_cents:       amount,
+      stripe_transfer_id: transfer.id,
+    })
+
+    // ── AREA 10a: Audit log ──
+    await sb.from('audit_log').insert({
+      user_id:  user.id,
+      action:   'payout_completed',
+      metadata: { amount_cents: amount, transfer_id: transfer.id },
+    })
+
     return json(req, { success: true, amount_cents: amount, transfer_id: transfer.id })
 
   } catch (err) {

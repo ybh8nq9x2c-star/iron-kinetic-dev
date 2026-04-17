@@ -213,6 +213,13 @@ Deno.serve(async (req) => {
       return json(req, { error: 'Errore durante la creazione della sessione di pagamento' }, 500)
     }
 
+    // ── AREA 10a: Audit log ──
+    await supabase.from('audit_log').insert({
+      user_id:  user.id,
+      action:   'checkout_session_created',
+      metadata: { session_id: session.id, plan, referral_code: referral_code || null },
+    })
+
     return json(req, { url: session.url })
 
   } catch (stripeErr) {

@@ -3321,6 +3321,12 @@ function _initAuthListener(){
   sb.auth.onAuthStateChange(async(event,session)=>{
     /* Always update the session cache */
     _cachedSession=session||null;
+    /* ── AREA 2a/9a: Clear trend access and session on SIGNED_OUT ── */
+    if(event==='SIGNED_OUT'){
+      if(typeof setTrendAccess==='function')setTrendAccess({access:false,mode:'none',daysLeft:0,plan:null});
+      if(typeof updateTrendBadge==='function')updateTrendBadge();
+      _cachedSession=null;
+    }
     if(event==='SIGNED_IN'&&session?.user){
       await syncUserAfterLogin(session.user);
       const origin=localStorage.getItem('ik_auth_origin');
@@ -3408,6 +3414,9 @@ async function _resumePostOnboardingOrBoot(){
   /* Supabase unavailable (CDN failed) — proceed to avoid bricking the app */
   _bootAfterGates();
 }
+
+/* ── AREA 2b: Clean OAuth access_token from URL (prevent Referer/token leak) ── */
+(()=>{if(location.hash.includes('access_token='))history.replaceState({},'',location.pathname+location.search);})();
 
 /* Handle Stripe success redirect — poll server for confirmation */
 (()=>{
@@ -8898,11 +8907,28 @@ function applyMod(u){
   const stepper=getEl('mod-stepper');
   if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
 }
-const KEEP_PREFIX=['ikgdpr','iklang','iknotif','ik_trial_start'];
-async function clearAppData(){if(typeof sb!=='undefined'&&sb)try{await sb.auth.signOut();}catch{}Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
+const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
+async function clearAppData(opts){
+  /* ── AREA 6b: GDPR delete-account via Edge Function ── */
+  const doServerDelete=opts?.serverDelete!==false && typeof sb!=='undefined' && sb;
+  let session=null;
+  if(doServerDelete){
+    try{session=await sb.auth.getSession();session=session?.data?.session||null;}catch{session=null;}
+  }
+  if(typeof sb!=='undefined'&&sb)try{await sb.auth.signOut();}catch{}
+  Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});
+  /* Call delete-account EF if user was logged in */
+  if(session?.access_token){
+    try{
+      await fetch(SUPABASE_URL+'/functions/v1/delete-account',{
+        method:'POST',
+        headers:{'Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_KEY,'Content-Type':'application/json'}
+      });
+    }catch(e){console.warn('[IK] delete-account EF failed:',e);}
+  }
+}
 
 /* ── Custom confirm modal (FIX1) ── */
-/* MED-29: openConfirmModal delegates to showConfirm for single implementation */
 function openConfirmModal(title,body,okLabel,cancelLabel,onOk){
   showConfirm(title + (body ? '\n' + body : ''),onOk);
   /* Override button labels if custom ones were provided */
