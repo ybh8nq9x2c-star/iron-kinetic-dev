@@ -1046,7 +1046,33 @@ hr{height:1px;}
 .inp.invalid{border-color:rgba(255,59,48,.38);}
 
 /* ── Gauth btn: use CSS var instead of hardcoded #fff/#1a1a1a ── */
+/* ── Gauth btn: use CSS var instead of hardcoded #fff/#1a1a1a ── */
 .gauth-btn{background:var(--on);color:var(--bg);}
+/* ── UX-AUDIT-P1 additions ── */
+/* Toast error variant */
+#toast.toast-error{border-color:var(--red);color:var(--red);}
+/* Nav button: relative for badge positioning */
+.nb{position:relative;}
+/* Active nav tab: stronger visual distinction */
+.nb.on .nl{font-weight:800;}
+/* Empty state action button */
+.empty-state .btn{margin-top:4px;min-width:140px;}
+/* Day-chip & micro-chip: extend tap area to 44px */
+.day-chip::before,.micro-chip::before{
+  content:'';position:absolute;
+  top:-4px;bottom:-4px;left:-3px;right:-3px;
+}
+/* Skeleton card placeholder */
+.skeleton-card{height:120px;border-radius:var(--r);}
+.skeleton-text{height:14px;border-radius:var(--r3);margin-bottom:8px;width:80%;}
+.skeleton-text.short{width:50%;}
+.skeleton-stat{height:40px;width:60px;border-radius:var(--r3);}
+/* Onboarding disabled button visual */
+.btn[disabled]{opacity:0.5;cursor:not-allowed;pointer-events:none;}
+/* Checkin analytics empty state icon */
+.empty-state-icon-sm{font-size:24px;opacity:.4;}
+/* Adherence calendar empty */
+.cal-empty-state{padding:20px 0;text-align:center;color:var(--muted);font-size:11px;font-weight:600;}
 </style>
 <!-- ── SPLASH SCREEN: pure CSS, shows instantly before any JS ── -->
 <style>
@@ -1244,11 +1270,11 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
   <!-- Stepper: 5 dots -->
   <div class="stepper" style="justify-content:center;margin-bottom:22px;" id="stepper">
-    <div class="step-dot on" id="dot-0"></div>
-    <div class="step-dot" id="dot-1"></div>
-    <div class="step-dot" id="dot-2"></div>
-    <div class="step-dot" id="dot-3"></div>
-    <div class="step-dot" id="dot-4"></div>
+    <div class="step-dot on" id="dot-0" aria-label="Step 1 di 5" role="progressbar"></div>
+    <div class="step-dot" id="dot-1" aria-label="Step 2 di 5"></div>
+    <div class="step-dot" id="dot-2" aria-label="Step 3 di 5"></div>
+    <div class="step-dot" id="dot-3" aria-label="Step 4 di 5"></div>
+    <div class="step-dot" id="dot-4" aria-label="Step 5 di 5"></div>
   </div>
 
   <!-- STEP 0 — Corpo -->
@@ -1273,7 +1299,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <p style="font-size:9px;color:var(--dim);margin-top:4px;font-weight:500;" class="sn" data-i18n="onb.field.bf.hint">Opzionale. Se inserito, il calcolo diventa più preciso.</p>
       </div>
     </div>
-    <button class="btn btn-primary w100 sn" onclick="goStep(1)" data-i18n="onb.btn.avanti">Continua →</button>
+    <button class="btn btn-primary w100 sn" id="to-step1-btn" onclick="goStep(1)" data-i18n="onb.btn.avanti" disabled style="opacity:0.5;cursor:not-allowed;">Continua →</button>
   </div>
 
   <!-- STEP 1 — Attività -->
@@ -1320,7 +1346,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
     </div>
     <div class="row g2">
       <button class="btn btn-ghost sn" onclick="goStep(0)" style="flex:1;" data-i18n="onb.btn.indietro">← Indietro</button>
-      <button class="btn btn-primary sn" onclick="goStep(2)" style="flex:2;" data-i18n="onb.btn.avanti">Continua →</button>
+      <button class="btn btn-primary sn" id="to-step2-btn" onclick="goStep(2)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled data-i18n="onb.btn.avanti">Continua →</button>
     </div>
   </div>
 
@@ -1401,7 +1427,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
     <div class="row g2">
       <button class="btn btn-ghost sn" onclick="goStep(2)" style="flex:1;" data-i18n="onb.btn.indietro">← Indietro</button>
-      <button class="btn btn-primary sn" onclick="goStep(4)" style="flex:2;" data-i18n="onb.btn.avanti">Continua →</button>
+      <button class="btn btn-primary sn" id="to-step4-btn" onclick="goStep(4)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled data-i18n="onb.btn.avanti">Continua →</button>
     </div>
   </div>
 
@@ -1702,7 +1728,11 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
         <!-- Meals list -->
         <div id="meals-list" role="list" style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;">
-          <div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Genera il tuo piano dall'onboarding —</span></div>
+          <div class="empty-state" id="meals-empty">
+            <span class="material-symbols-outlined empty-state-icon">restaurant_menu</span>
+            <span class="empty-state-label">Nessun piano generato</span>
+            <button class="btn btn-primary btn-sm" onclick="switchTab('set')" style="margin-top:4px;">Configura il tuo piano</button>
+          </div>
         </div>
         <!-- Shopping -->
         <div class="pasti-shopping">
@@ -1882,7 +1912,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           <button onclick="switchChart('waist',this)" id="ctab-wst" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;" data-i18n="prog.stat.girovita">Girovita</button>
           <button onclick="requireTrend(()=>switchChart('prediction',this),'Trend')" id="ctab-pred" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Previsione</button>
         </div>
-        <p id="chart-empty" class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;text-align:center;padding:24px 0;display:none;">Nessun dato</p>
+        <div id="chart-empty" class="empty-state" style="display:none;"><span class="material-symbols-outlined empty-state-icon">monitoring</span><span class="empty-state-label">Nessun dato ancora</span><span style="font-size:11px;color:var(--dim);">Registra il primo peso per visualizzare il grafico</span></div>
         <div id="wChart-wrap" style="display:none;"><canvas id="wChart"></canvas></div>
         <div id="prediction-summary" style="display:none;margin-top:10px;padding:10px;background:var(--s2);border-radius:var(--r3);border:1px solid var(--line);">
           <p id="prediction-text" class="sn" style="font-size:11px;color:var(--muted);line-height:1.5;margin:0;"></p>
@@ -1905,7 +1935,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           <span class="sec-label" style="margin-bottom:0;" data-i18n="prog.fp.title">Impronta Metabolica</span>
           <span id="fp-badge-lbl" class="t-xxs muted">PROFILO UNICO</span>
         </div>
-        <div id="fingerprint-content"></div>
+        <div id="fingerprint-content"><div class="empty-state" id="fingerprint-empty"><span class="material-symbols-outlined empty-state-icon">fingerprint</span><span class="empty-state-label">Dati insufficienti</span><span style="font-size:11px;color:var(--dim);">Servono almeno 7 rilevazioni per calcolare la tua impronta metabolica</span></div></div>
       </div>
 
       <!-- Il Tuo Report Settimanale — expanded -->
@@ -1995,7 +2025,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div class="card" style="padding:14px;">
         <span class="sec-label" data-i18n="prog.calendar.title">Calendario Aderenza</span>
         <p class="muted sn" style="font-size:10px;margin-bottom:12px;">Verde: ≥80% · Giallo: 40-80% · Rosso: &lt;40%</p>
-        <div id="adherence-calendar"></div>
+        <div id="adherence-calendar"><div class="empty-state" id="cal-empty-state"><span class="material-symbols-outlined empty-state-icon">calendar_month</span><span class="empty-state-label">Nessun dato</span><span style="font-size:11px;color:var(--dim);">Inizia a registrare pasti e check-in per vedere il calendario</span></div></div>
       </div>
 
       <!-- Promemoria -->
@@ -2015,7 +2045,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <div style="padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;">
           <span class="sec-label" data-i18n="prog.storico.title" style="margin-bottom:0;">Storico</span>
         </div>
-        <div id="hist-list"><div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Nessuna voce —</span></div></div>
+        <div id="hist-list"><div class="empty-state" id="hist-empty"><span class="material-symbols-outlined empty-state-icon">scale</span><span class="empty-state-label">Nessuna rilevazione</span><span style="font-size:11px;color:var(--dim);">Registra il tuo primo peso per iniziare a tracciare i progressi</span></div></div>
       </div>
     </div>
   </div><!-- /scr-prog -->
@@ -2547,6 +2577,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
   <button id="nav-prog" class="nb" onclick="switchTab('prog')" aria-label="Progresso">
     <span class="material-symbols-outlined ni sn">insights</span>
     <span class="nl sn" id="nav-lbl-trend" data-i18n="nav.trend">Trend</span>
+    <span id="trend-access-badge" class="t-xxs sn" style="position:absolute;top:4px;right:4px;font-size:8px;font-weight:800;max-width:50px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
   </button>
   <button id="nav-set" class="nb" onclick="switchTab('set')" aria-label="Config">
     <span class="material-symbols-outlined ni sn">person</span>
@@ -5773,10 +5804,12 @@ function calcMetabolicFingerprint(){
   return{efficiency,adaptation,responseDays,avgWeekly};
 }
 function renderFingerprint(){
-  requireTrend(()=>{
   const card=document.getElementById('fingerprint-card');
   const cont=document.getElementById('fingerprint-content');
   if(!card||!cont)return;
+  card.style.display='block';
+  cont.innerHTML='<div class="skeleton skeleton-card" style="margin-bottom:12px;"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div>';
+  requireTrend(()=>{
   const fp=getCachedFingerprint();
   if(!fp){card.style.display='none';return;}
   card.style.display='block';
@@ -5938,11 +5971,13 @@ function renderPredictionChart(){
 function renderRealTDEE(){
   if(!trendAccess?.access)return; /* HIGH-15: paywall gate — skip if no trend access */
   const card=document.getElementById('real-tdee-card');if(!card)return;
-  const data=calcRealTDEE();
-  if(!data){card.style.display='none';return;}
   card.style.display='block';
   const valEl=document.getElementById('real-tdee-val');
   const rateEl=document.getElementById('real-tdee-rate');
+  if(valEl)valEl.innerHTML='<span class="skeleton" style="display:inline-block;width:60px;height:22px;"></span>';
+  if(rateEl)rateEl.innerHTML='<span class="skeleton" style="display:inline-block;width:50px;height:18px;"></span>';
+  const data=calcRealTDEE();
+  if(!data){card.style.display='none';return;}
   const noteEl=document.getElementById('real-tdee-note');
   if(valEl){
     valEl.textContent=data.realTDEE;
@@ -6015,12 +6050,17 @@ function generateReportInsight(rep){
   return parts.join(' ')||t('weekly.insight.default');
 }
 function renderWeeklyReport(){
-  requireTrend(()=>{
   const card=document.getElementById('weekly-report-card');
   if(!card)return;
+  card.style.display='block';
+  /* Show skeleton while loading */
+  const grid=document.getElementById('wr-stat-grid');
+  const barChart=document.getElementById('wr-bar-chart');
+  if(grid)grid.innerHTML='<div class="wr-stat-box"><div class="skeleton" style="height:24px;width:50px;margin:0 auto 4px;"></div><div class="skeleton skeleton-text short" style="margin:0 auto;"></div></div>'.repeat(3);
+  if(barChart)barChart.innerHTML='<div class="skeleton" style="height:80px;"></div>';
+  requireTrend(()=>{
   const log=getLog();
   if(!dietData&&!log.length){card.style.display='none';return;}
-  card.style.display='block';
   const rep=generateWeeklyReport();
   const insight=generateReportInsight(rep);
   const pct=rep.mealsTotal>0?Math.round(rep.mealsDone/rep.mealsTotal*100):0;
@@ -7624,8 +7664,9 @@ function analyzeState(){
    ONBOARDING — new 5-step flow
 ═══════════════════════════════════════ */
 function setSex(s){profState.sex=s;const m=document.getElementById('sex-m'),f=document.getElementById('sex-f');if(m)m.classList.toggle('seg-on',s==='M');if(f)f.classList.toggle('seg-on',s==='F');}
-function setWk(n){profState.workoutsWk=n;const lbl=document.getElementById('wk-label');if(lbl)lbl.textContent=t('onb.wk.selected',{n});document.querySelectorAll('#wk-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});if(n===6)toast(t('onb.wk.cap6'));}
-function setSt(n){profState.stepsDay=n;const lbl=document.getElementById('st-label');if(lbl)lbl.textContent=t('onb.st.selected',{n:n.toLocaleString(_lang==='en'?'en-US':'it-IT')});document.querySelectorAll('#st-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});}
+function setWk(n){profState.workoutsWk=n;const lbl=document.getElementById('wk-label');if(lbl)lbl.textContent=t('onb.wk.selected',{n});document.querySelectorAll('#wk-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});if(n===6)toast(t('onb.wk.cap6'));_updateStep2Btn();}
+function setSt(n){profState.stepsDay=n;const lbl=document.getElementById('st-label');if(lbl)lbl.textContent=t('onb.st.selected',{n:n.toLocaleString(_lang==='en'?'en-US':'it-IT')});document.querySelectorAll('#st-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});_updateStep2Btn();}
+function _updateStep2Btn(){const btn=document.getElementById('to-step2-btn');if(btn){const ok=profState.workoutsWk!==null&&profState.stepsDay!==null;btn.disabled=!ok;btn.style.opacity=ok?'1':'0.5';btn.style.cursor=ok?'pointer':'not-allowed';}}
 function setGoal(btn){
   profState.goal=btn.dataset.goal;profState.goalMod=parseInt(btn.dataset.mod);
   document.querySelectorAll('#goal-wrap button').forEach(b=>b.classList.toggle('seg-on',b===btn));
@@ -7637,17 +7678,21 @@ function setMealsCount(n){
   document.querySelectorAll('#meals-seg .seg-btn').forEach(b=>{
     const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);
   });
+  _updateStep4Btn();
 }
-function setTaste(t){
-  prefState.taste=t;
-  ['salato','dolce','misto'].forEach(v=>document.getElementById('taste-'+v)?.classList.toggle('seg-on',v===t));
+function setTaste(v){
+  prefState.taste=v;
+  ['salato','dolce','misto'].forEach(x=>document.getElementById('taste-'+x)?.classList.toggle('seg-on',x===v));
+  _updateStep4Btn();
 }
 function setDietStyle(s){
   prefState.dietStyle=s;
   document.querySelectorAll('#diet-style-seg .seg-btn').forEach(b=>{
     b.classList.toggle('seg-on',b.getAttribute('onclick').includes(`'${s}'`));
   });
+  _updateStep4Btn();
 }
+function _updateStep4Btn(){const btn=document.getElementById('to-step4-btn');if(btn){const ok=prefState.mealsCount&&prefState.taste&&prefState.dietStyle;btn.disabled=!ok;btn.style.opacity=ok?'1':'0.5';btn.style.cursor=ok?'pointer':'not-allowed';}}
 function setClinical(val,btn){
   profState.clinical=val;
   /* Reset all chips */
@@ -7716,7 +7761,7 @@ function goStep(n){
   const totalSteps=5;
   for(let i=0;i<totalSteps;i++){
     const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===n);
-    const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===n);dot.classList.toggle('completed',i<n);}
+    const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===n);dot.classList.toggle('completed',i<n);dot.setAttribute('aria-label','Step '+(i+1)+' di 5'+(i===n?' (attivo)':''));}
   }
   if(n===2){const s3btn=document.getElementById('to-step3-btn');const hasGoal=!!profState.goal;s3btn.disabled=!hasGoal;s3btn.style.opacity=hasGoal?'1':'0.5';s3btn.style.cursor=hasGoal?'pointer':'not-allowed';}
   document.getElementById('onb-screen').scrollTo({top:0,behavior:'smooth'});
@@ -7913,7 +7958,7 @@ function setCheckTag(btn,tag){selectedCheckTag=tag;document.querySelectorAll('.m
 function saveDailyCheckin(){
   const entry={iso:toISO(),hunger:parseInt(document.getElementById('ci-hunger')?.value||'5',10),energy:parseInt(document.getElementById('ci-energy')?.value||'6',10),adherence:parseInt(document.getElementById('ci-adherence')?.value||'8',10),digestion:parseInt(document.getElementById('ci-digestion')?.value||'8',10),tag:selectedCheckTag};
   const arr=[entry,...lsG(SK.checkins,[]).filter(x=>x.iso!==entry.iso)].slice(0,30);
-  lsS(SK.checkins,arr);_invalidateCheckinsCache();
+  try{lsS(SK.checkins,arr);}catch(e){showToastError(t('toast.saveError')||'Errore nel salvataggio. Riprova.');return;}
   updateStreaks();
   updateAdherenceCalendar();
   if(activeTab==='prog')renderCalendar();
@@ -7996,8 +8041,14 @@ function renderCheckinAnalytics(){
   const last7=arr.slice(0,7);
   const avg=(k)=>last7.length?last7.reduce((a,v)=>a+(+v[k]||0),0)/last7.length:null;
   ['hunger','energy','adherence','digestion'].forEach(k=>{
+    const bar=document.getElementById('an-'+k);const val=document.getElementById('an-'+k+'-v');
+    if(bar){bar.style.width='0%';bar.style.transition='none';}
+    if(val){val.innerHTML='<span class="skeleton" style="display:inline-block;width:24px;height:12px;"></span>';}
+  });
+  requestAnimationFrame(()=>{
+  ['hunger','energy','adherence','digestion'].forEach(k=>{
     const v=avg(k);const bar=document.getElementById('an-'+k);const val=document.getElementById('an-'+k+'-v');
-    if(bar)bar.style.width=v!=null?Math.max(0,Math.min(100,v*10))+'%':'0%';
+    if(bar){bar.style.transition='width .35s ease';bar.style.width=v!=null?Math.max(0,Math.min(100,v*10))+'%':'0%';}
     if(val)val.textContent=v!=null?v.toFixed(1):'--';
   });
   const note=document.getElementById('checkin-analytics-note');
@@ -8016,7 +8067,8 @@ function renderCheckinAnalytics(){
     } else {
       note.textContent=t('ci.an.stable');
     }
-  }
+  } /* end if(note) */
+  }); /* end requestAnimationFrame */
 }
 
 
@@ -8969,7 +9021,7 @@ function logMetric(){
   const log=getLog();const idx=log.findIndex(e=>e.isoDate===iso);
   const entry={date:isoDisp(iso),isoDate:iso,weight:wv,waist:wst,ts:idx>=0?log[idx].ts:Date.now()};
   if(idx>=0){log[idx]=entry;toast(t('toast.aggiornato'));}else{log.push(entry);toast(t(wst?'toast.pesoGirovita':'toast.pesolog'));}
-  saveLog(log);_tabDirty.prog=true;invalidateLogCaches();
+  try{saveLog(log);}catch(e){showToastError(t('toast.saveError')||'Errore nel salvataggio. Riprova.');return;}
   document.getElementById('log-w').value='';document.getElementById('log-wst').value='';
   document.getElementById('log-w').blur();document.getElementById('log-wst').blur();
   renderProgress();renderCoach();renderMacros();
@@ -10053,7 +10105,11 @@ document.addEventListener('touchend',e=>{
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600);}
 function showToast(html,dur){const t=document.getElementById('toast');t.textContent=sanitize(html);t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),dur||2600);}
-function closeToast(){const t=document.getElementById('toast');t.classList.remove('on');clearTimeout(t._t);}
+function closeToast(){const t=document.getElementById('toast');t.classList.remove('on');t.classList.remove('toast-error');clearTimeout(t._t);}
+function showToastError(msg,dur){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on','toast-error');clearTimeout(t._t);t._t=setTimeout(()=>{t.classList.remove('on','toast-error');},dur||3200);}
+/* ── UX-P1: Step 0 → Step 1 button auto-enable ── */
+function _updateStep1Btn(){const btn=document.getElementById('to-step1-btn');if(!btn)return;const age=document.getElementById('f-age')?.value;const h=document.getElementById('f-height')?.value;const w=document.getElementById('f-weight')?.value;const ok=age&&h&&w&&parseFloat(age)>=16&&parseFloat(h)>=140&&parseFloat(w)>=40;btn.disabled=!ok;btn.style.opacity=ok?'1':'0.5';btn.style.cursor=ok?'pointer':'not-allowed';}
+document.addEventListener('DOMContentLoaded',()=>{['f-age','f-height','f-weight'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',_updateStep1Btn);});_updateStep1Btn();});
 
 /* ── FIX16 / FIX4: Modal focus trap ── */
 let _modalTrigger=null;
