@@ -1,11 +1,43 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14?target=deno'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://irokninetic-production.up.railway.app',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+/* ══════════════════════════════════════════════════════════════
+   create-portal-session — Iron Kinetic
+   ══════════════════════════════════════════════════════════════ */
+
+const ALLOWED_ORIGINS = [
+  'https://irokninetic-production.up.railway.app',
+  'https://iron-kinetic.app',
+  'http://localhost:3000',
+]
+
+function corsHeaders(req: Request) {
+  const origin = req.headers.get('Origin') || ''
+  return {
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
+}
+
+function json(req: Request, body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
+  })
+}
+
+/* ── Rate limiting: 5 requests per user per minute ── */
+const _rlMap = new Map<string, { count: number; expires: number }>()
+function checkRateLimit(userId: string, maxReqs = 5): boolean {
+  const now = Date.now()
+  const entry = _rlMap.get(userId)
+  if (!entry || entry.expires < now) {
+    _rlMap.set(userId, { count: 1, expires: now + 60_000 })
+    return true
+  }
+  entry.count++
+  return entry.count <= maxReqs
 }
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
@@ -13,23 +45,21 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
   httpClient: Stripe.createFetchHttpClient(),
 })
 
-serve(async (req) => {
-  // ── CORS preflight ──
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders(req) })
   }
 
   try {
-    // ── Auth: extract JWT from Authorization header ──
+    /* ── 1. Auth: extract JWT ── */
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Missing Authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+      return json(req, { error: 'Missing Authorization header' }, 401)
     }
 
-    // 1. Auth client — anon key + user JWT to verify identity
+    const token = authHeader.replace('Bearer ', '')
+
+    /* ── 2. Verify JWT with anon client ── */
     const authClient = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_ANON_KEY')!,
@@ -40,19 +70,21 @@ serve(async (req) => {
 
     const { data: { user }, error: authError } = await authClient.auth.getUser()
     if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid or expired token' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+      return json(req, { error: 'Invalid or expired token' }, 401)
     }
 
-    // 2. Admin client — service_role for DB queries (bypasses RLS)
+    /* ── 3. Rate limit ── */
+    if (!checkRateLimit(user.id, 5)) {
+      return json(req, { error: 'Too many requests' }, 429)
+    }
+
+    /* ── 4. Admin client for DB queries ── */
     const adminClient = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     )
 
-    // ── Look up stripe_customer_id from public.users ──
+    /* ── 5. Look up stripe_customer_id ── */
     const { data: userData, error: userError } = await adminClient
       .from('users')
       .select('stripe_customer_id')
@@ -60,27 +92,20 @@ serve(async (req) => {
       .single()
 
     if (userError || !userData?.stripe_customer_id) {
-      return new Response(
-        JSON.stringify({ error: 'No Stripe customer found' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+      return json(req, { error: 'No Stripe customer found' }, 400)
     }
 
-    // ── Create Stripe Billing Portal session ──
+    /* ── 6. Create Stripe Billing Portal session ── */
     const session = await stripe.billingPortal.sessions.create({
       customer: userData.stripe_customer_id,
-      return_url: Deno.env.get('APP_URL')!,
+      return_url: Deno.env.get('APP_URL') || 'https://irokninetic-production.up.railway.app',
     })
 
-    return new Response(
-      JSON.stringify({ url: session.url }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
+    return json(req, { url: session.url })
+
   } catch (err) {
-    console.error('Portal session error:', err)
-    return new Response(
-      JSON.stringify({ error: err.message ?? 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
+    console.error('[portal] Error:', err)
+    // Never expose internal error details to client
+    return json(req, { error: 'Internal server error' }, 500)
   }
 })

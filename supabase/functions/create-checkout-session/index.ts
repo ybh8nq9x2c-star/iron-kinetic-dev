@@ -6,56 +6,65 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
    ──────────────────────────────────────────────────────────────
    POST /functions/v1/create-checkout-session
    Headers:
-     Authorization: Bearer <supabase_access_token>   ← JWT utente
+     Authorization: Bearer <supabase_access_token>
      apikey: <supabase_anon_key>
      Content-Type: application/json
    Body:
      { "plan": "monthly" | "annual" | "lifetime" }
-     (accetta anche "price_tier" per compatibilità col client)
    Returns:
      200  { "url": "https://checkout.stripe.com/..." }
-     400  { "error": "..." }   ← input non valido
-     401  { "error": "..." }   ← auth fallita
-     500  { "error": "..." }   ← errore interno / Stripe
-   ══════════════════════════════════════════════════════════════ */
+     400  { "error": "..." }
+     401  { "error": "..." }
+     500  { "error": "..." }
+══════════════════════════════════════════════════════════════ */
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://irokninetic-production.up.railway.app',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-user-jwt',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+const ALLOWED_ORIGINS = [
+  'https://irokninetic-production.up.railway.app',
+  'https://iron-kinetic.app',
+  'http://localhost:3000',
+]
+
+function corsHeaders(req: Request) {
+  const origin = req.headers.get('Origin') || ''
+  return {
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-user-jwt',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
 }
 
-function json(body: unknown, status = 200): Response {
+function json(req: Request, body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   })
+}
+
+/* ── Rate limiting: in-memory Map per user ── */
+const _rlMap = new Map<string, { count: number; expires: number }>()
+function checkRateLimit(userId: string, maxReqs = 5): boolean {
+  const now = Date.now()
+  const entry = _rlMap.get(userId)
+  if (!entry || entry.expires < now) {
+    _rlMap.set(userId, { count: 1, expires: now + 60_000 })
+    return true
+  }
+  entry.count++
+  return entry.count <= maxReqs
 }
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders(req) })
   }
 
-  /* ── 0. Rate limiting: max 5 requests per user per minute ── */
-  const _rlKey = 'rl_checkout_' + (req.headers.get('X-User-JWT') ?? req.headers.get('Authorization') ?? '').slice(-20)
-  const _rlCount = Number(Deno.env.get(_rlKey)) || 0
-  if (_rlCount >= 5) {
-    console.warn('[checkout] Rate limit exceeded for key:', _rlKey.slice(-8))
-    return json({ error: 'Too many requests — riprova tra qualche minuto' }, 429)
-  }
-  await Deno.env.set(_rlKey, String(_rlCount + 1))
-  /* Note: Deno.env rate limit resets on deploy. For production, use KV or Redis. */
-
-  /* ── 1. Read user JWT ──
-     Prefer X-User-JWT custom header; fall back to Authorization. */
+  /* ── 1. Read user JWT ── */
   const accessToken =
     req.headers.get('X-User-JWT') ??
     req.headers.get('Authorization')?.replace('Bearer ', '') ?? ''
 
   if (!accessToken) {
-    console.error('[checkout] Missing X-User-JWT header')
-    return json({ error: 'Unauthorized — missing token' }, 401)
+    return json(req, { error: 'Unauthorized — missing token' }, 401)
   }
 
   /* ── 2. Verify user JWT via service_role ── */
@@ -72,7 +81,12 @@ Deno.serve(async (req) => {
 
   if (authError || !user) {
     console.error('[checkout] JWT verification failed:', authError?.message ?? 'no user')
-    return json({ error: 'Unauthorized — sessione non valida o scaduta' }, 401)
+    return json(req, { error: 'Unauthorized — sessione non valida o scaduta' }, 401)
+  }
+
+  /* ── 2b. Rate limit per user ── */
+  if (!checkRateLimit(user.id, 5)) {
+    return json(req, { error: 'Too many requests — riprova tra qualche minuto' }, 429)
   }
 
   console.log('[checkout] user verified:', user.id, user.email)
@@ -91,10 +105,15 @@ Deno.serve(async (req) => {
   const validPlans = ['monthly', 'annual', 'lifetime']
   if (!validPlans.includes(plan)) {
     console.error('[checkout] Invalid plan:', plan)
-    return json({ error: `Piano non valido: "${plan}". Valori accettati: monthly, annual, lifetime` }, 400)
+    return json(req, { error: 'Piano non valido' }, 400)
   }
 
-  /* ── 3b. Validate referral_code against DB ── */
+  /* ── 3b. Sanitize referral_code: alphanumeric + dash, max 32 chars ── */
+  if (referral_code) {
+    referral_code = referral_code.replace(/[^A-Za-z0-9-]/g, '').substring(0, 32)
+  }
+
+  /* ── 3c. Validate referral_code against DB ── */
   if (referral_code) {
     const { data: referrer } = await supabase
       .from('referral_codes')
@@ -110,7 +129,6 @@ Deno.serve(async (req) => {
     }
   }
 
-
   /* ── 4. Risolvi Price ID ── */
   const priceMap: Record<string, string> = {
     monthly:  Deno.env.get('STRIPE_PRICE_MONTHLY')  || '',
@@ -118,7 +136,10 @@ Deno.serve(async (req) => {
     lifetime: Deno.env.get('STRIPE_PRICE_LIFETIME') || '',
   }
   for (const [k, v] of Object.entries(priceMap)) {
-    if (!v) throw new Error(`Missing env var STRIPE_PRICE_${k.toUpperCase()}`)
+    if (!v) {
+      console.error(`[checkout] Missing env var STRIPE_PRICE_${k.toUpperCase()}`)
+      return json(req, { error: 'Configurazione Stripe mancante — contatta il supporto' }, 500)
+    }
   }
   const priceId = priceMap[plan]
   console.log('[checkout] plan=', plan, 'priceId=', priceId)
@@ -127,10 +148,10 @@ Deno.serve(async (req) => {
   const stripeKey = Deno.env.get('STRIPE_SECRET_KEY')
   if (!stripeKey) {
     console.error('[checkout] STRIPE_SECRET_KEY not set')
-    return json({ error: 'Configurazione Stripe mancante — contatta il supporto' }, 500)
+    return json(req, { error: 'Configurazione Stripe mancante — contatta il supporto' }, 500)
   }
   if (stripeKey.startsWith('sk_test_')) {
-    console.warn('[checkout] ⚠️  ATTENZIONE: stai usando una STRIPE TEST key in produzione!')
+    console.warn('[checkout] WARNING: using STRIPE TEST key in production!')
   }
 
   /* ── 6. Cerca customer Stripe esistente (evita duplicati) ── */
@@ -182,27 +203,22 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const session = await stripe.checkout.sessions.create(sessionParams)
+    const session = await stripe.checkout.sessions.create(sessionParams, {
+      idempotencyKey: `checkout_${user.id}_${plan}`,
+    })
     console.log('[checkout] session created:', session.id)
 
     if (!session.url) {
       console.error('[checkout] Stripe returned no URL for session:', session.id)
-      return json({ error: 'Stripe non ha restituito un URL di checkout' }, 500)
+      return json(req, { error: 'Errore durante la creazione della sessione di pagamento' }, 500)
     }
 
-    return json({ url: session.url })
+    return json(req, { url: session.url })
 
   } catch (stripeErr) {
     const msg = (stripeErr as Error).message
     console.error('[checkout] Stripe error:', msg)
-
-    if (msg.includes('No such price')) {
-      return json({ error: 'Errore durante la creazione della sessione di pagamento. Riprova più tardi.' }, 500)
-    }
-    if (msg.includes('Invalid API Key') || msg.includes('No such api key')) {
-      return json({ error: 'Errore durante la creazione della sessione di pagamento. Riprova più tardi.' }, 500)
-    }
-
-    return json({ error: 'Errore durante la creazione della sessione di pagamento. Riprova più tardi.' }, 500)
+    // Never expose Stripe error details to client
+    return json(req, { error: 'Errore durante la creazione della sessione di pagamento. Riprova più tardi.' }, 500)
   }
 })

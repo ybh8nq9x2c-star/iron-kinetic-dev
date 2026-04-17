@@ -20,16 +20,19 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ]
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': ALLOWED_ORIGINS[0],
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+function corsHeaders(req: Request) {
+  const origin = req.headers.get('Origin') || ''
+  return {
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
 }
 
-function json(body: unknown, status = 200): Response {
+function json(req: Request, body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   })
 }
 
@@ -56,18 +59,18 @@ function getServiceClient() {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders(req) })
   }
 
   if (req.method !== 'POST') {
-    return json({ error: 'Method not allowed' }, 405)
+    return json(req, { error: 'Method not allowed' }, 405)
   }
 
   /* ── 1. Extract and verify user JWT ── */
   const authHeader = req.headers.get('Authorization') || ''
   const token = authHeader.replace('Bearer ', '').trim()
   if (!token) {
-    return json({ error: 'Missing authorization token' }, 401)
+    return json(req, { error: 'Missing authorization token' }, 401)
   }
 
   /* Use anon client to verify the JWT (validates signature + expiry) */
@@ -77,12 +80,12 @@ Deno.serve(async (req) => {
   )
   const { data: { user }, error: authError } = await anonClient.auth.getUser(token)
   if (authError || !user) {
-    return json({ error: 'Invalid or expired token' }, 401)
+    return json(req, { error: 'Invalid or expired token' }, 401)
   }
 
   /* ── 2. Rate limit per user ── */
   if (!checkRateLimit(user.id)) {
-    return json({ error: 'Too many requests — try again in a minute' }, 429)
+    return json(req, { error: 'Too many requests — try again in a minute' }, 429)
   }
 
   /* ── 3. Read user subscription row with service role ── */
@@ -95,7 +98,7 @@ Deno.serve(async (req) => {
 
   if (error) {
     console.error('[verify-subscription] DB error:', error.message)
-    return json({ error: 'Failed to read subscription data' }, 500)
+    return json(req, { error: 'Failed to read subscription data' }, 500)
   }
 
   /* ── 4. No row yet — initialize trial and grant access ── */
@@ -107,7 +110,7 @@ Deno.serve(async (req) => {
       trend_active: false,
       plan: null,
     })
-    return json({
+    return json(req, {
       access: true,
       mode: 'trial',
       daysLeft: 7,
@@ -127,7 +130,7 @@ Deno.serve(async (req) => {
       const graceEnd = new Date(data.grace_period_until)
       if (graceEnd > now) {
         const hoursLeft = Math.ceil((graceEnd.getTime() - now.getTime()) / 3_600_000)
-        return json({
+        return json(req, {
           access: true,
           mode: 'grace',
           daysLeft: Math.ceil(hoursLeft / 24),
@@ -137,7 +140,7 @@ Deno.serve(async (req) => {
         })
       }
       /* Grace period expired — access revoked */
-      return json({
+      return json(req, {
         access: false,
         mode: 'none',
         daysLeft: 0,
@@ -148,7 +151,7 @@ Deno.serve(async (req) => {
     }
 
     /* Active paid subscription */
-    return json({
+    return json(req, {
       access: true,
       mode: 'paid',
       daysLeft: 0,
@@ -164,7 +167,7 @@ Deno.serve(async (req) => {
     if (trialEndDate > now) {
       const daysLeft = Math.ceil((trialEndDate.getTime() - now.getTime()) / 86_400_000)
       const hoursLeft = Math.ceil((trialEndDate.getTime() - now.getTime()) / 3_600_000)
-      return json({
+      return json(req, {
         access: true,
         mode: 'trial',
         daysLeft,
@@ -180,7 +183,7 @@ Deno.serve(async (req) => {
       .from('users')
       .update({ trial_end: trialEnd })
       .eq('id', user.id)
-    return json({
+    return json(req, {
       access: true,
       mode: 'trial',
       daysLeft: 7,
@@ -191,7 +194,7 @@ Deno.serve(async (req) => {
   }
 
   /* ── 6. No access — trial expired, not paid ── */
-  return json({
+  return json(req, {
     access: false,
     mode: 'none',
     daysLeft: 0,

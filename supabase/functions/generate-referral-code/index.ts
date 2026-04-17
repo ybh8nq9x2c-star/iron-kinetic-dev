@@ -1,10 +1,15 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
+/* ══════════════════════════════════════════════════════════════
+   generate-referral-code — Iron Kinetic
+   ══════════════════════════════════════════════════════════════ */
+
 const ALLOWED_ORIGINS = [
   'https://irokninetic-production.up.railway.app',
   'https://iron-kinetic.app',
   'http://localhost:3000',
 ]
+
 function corsHeaders(req: Request) {
   const origin = req.headers.get('Origin') || ''
   return {
@@ -13,17 +18,28 @@ function corsHeaders(req: Request) {
   }
 }
 
+function json(req: Request, body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
+  })
+}
+
+/* ── Rate limiting: 10 requests per user per minute ── */
+const _rlMap = new Map<string, { count: number; expires: number }>()
+function checkRateLimit(userId: string, maxReqs = 10): boolean {
+  const now = Date.now()
+  const entry = _rlMap.get(userId)
+  if (!entry || entry.expires < now) {
+    _rlMap.set(userId, { count: 1, expires: now + 60_000 })
+    return true
+  }
+  entry.count++
+  return entry.count <= maxReqs
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) })
-
-  /* Rate limiting: max 10 requests per user per minute */
-  const _rlToken = req.headers.get('Authorization')?.replace('Bearer ', '') || ''
-  const _rlKey = 'rl_referral_' + _rlToken.slice(-20)
-  const _rlCount = Number(Deno.env.get(_rlKey)) || 0
-  if (_rlCount >= 10) {
-    return new Response(JSON.stringify({ error: 'Too many requests' }), { status: 429, headers: { ...corsHeaders(req), 'Content-Type': 'application/json' } })
-  }
-  Deno.env.set(_rlKey, String(_rlCount + 1))
 
   try {
     const sb = createClient(
@@ -32,10 +48,15 @@ Deno.serve(async (req) => {
     )
 
     const token = req.headers.get('Authorization')?.replace('Bearer ', '')
-    if (!token) return new Response('Unauthorized', { status: 401, headers: corsHeaders(req) })
+    if (!token) return json(req, { error: 'Unauthorized' }, 401)
 
     const { data: { user }, error: authError } = await sb.auth.getUser(token)
-    if (authError || !user) return new Response('Unauthorized', { status: 401, headers: corsHeaders(req) })
+    if (authError || !user) return json(req, { error: 'Unauthorized' }, 401)
+
+    /* ── Rate limit ── */
+    if (!checkRateLimit(user.id, 10)) {
+      return json(req, { error: 'Too many requests' }, 429)
+    }
 
     // Idempotente: restituisce il codice esistente se già creato
     const { data: existing } = await sb
@@ -49,7 +70,10 @@ Deno.serve(async (req) => {
     // Genera codice univoco con retry su collisione se non esiste
     if (!code) {
       for (let attempt = 0; attempt < 5; attempt++) {
-        const raw = crypto.randomUUID().replace(/-/g, '').substring(0, 6).toUpperCase()
+        // Use crypto.getRandomValues for secure randomness (Deno compatible)
+        const bytes = new Uint8Array(3)
+        crypto.getRandomValues(bytes)
+        const raw = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('').substring(0, 6).toUpperCase()
         const candidate = 'IK-' + raw
         const { error: insertError } = await sb
           .from('referral_codes')
@@ -74,21 +98,16 @@ Deno.serve(async (req) => {
       .eq('referrer_id', user.id)
       .eq('status', 'confirmed')
 
-    return new Response(JSON.stringify({
+    return json(req, {
       code,
       referral_credit_cents: userData?.referral_credit_cents || 0,
       stripe_connect_account_id: userData?.stripe_connect_account_id || null,
       stripe_connect_onboarded: userData?.stripe_connect_onboarded || false,
       confirmed_referrals: count || 0
-    }), {
-      headers: { ...corsHeaders(req), 'Content-Type': 'application/json' }
     })
 
   } catch (err) {
     console.error('[generate-referral-code]', err)
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
-      status: 500,
-      headers: { ...corsHeaders(req), 'Content-Type': 'application/json' }
-    })
+    return json(req, { error: 'Internal server error' }, 500)
   }
 })
