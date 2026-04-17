@@ -1753,9 +1753,9 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <div>
               <p class="t-xxs muted sn" data-i18n="oggi.workout">Workout</p>
               <p id="wk-ratio" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--on);margin:4px 0;" class="sn">0/1</p>
-              <p id="wk-status" class="t-xxs sn" style="color:var(--dim);">Non fatto</p>
+              <p id="wk-status" class="t-xxs sn" data-i18n="oggi.workout.nonFatto" style="color:var(--dim);">Non fatto</p>
               <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill" id="wk-bar" style="width:0%;background:rgba(199,196,216,.25);transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
-              <button id="wk-btn" onclick="toggleWk()" class="btn btn-ghost btn-xs w100 sn">Fatto ✓</button>
+              <button id="wk-btn" onclick="toggleWk()" class="btn btn-ghost btn-xs w100 sn" data-i18n="oggi.workout.fatto">Fatto ✓</button>
             </div>
           </div>
         </div>
@@ -1773,7 +1773,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           <div class="range-wrap"><label class="field-label" for="ci-digestion" data-i18n="oggi.checkin.digestione">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-digestion">8</output></div>
         </div>
         <div>
-          <label class="field-label">Contesto giornata</label>
+          <label class="field-label" data-i18n="oggi.checkin.contesto">Contesto giornata</label>
           <div class="chip-row">
             <button class="micro-chip" type="button" onclick="setCheckTag(this,'routine')">Routine</button>
             <button class="micro-chip" type="button" onclick="setCheckTag(this,'sociale')">Sociale</button>
@@ -2172,7 +2172,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <div id="acc-mod" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
           <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
             <div class="rowb">
-              <p id="mod-status" class="t-xxs muted sn">Base invariata</p>
+              <p id="mod-status" class="t-xxs muted sn" data-i18n="set.mod.base">Base invariata</p>
               <div id="mod-stepper" class="mod-stepper">
                 <button onclick="applyMod(-1);event.stopPropagation();" class="mod-stepper-btn sn" aria-label="−100 kcal">−</button>
                 <span id="mod-display" class="mod-stepper-val sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;min-width:72px;text-align:center;">0 kcal</span>
@@ -2374,23 +2374,23 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <span class="sec-label" id="info-app-lbl" data-i18n="info.app.title" style="margin-bottom:8px;">Application</span>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <div class="rowb">
-            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Versione</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn" data-i18n="info.app.versione">Versione</span>
             <span style="font-size:12px;font-weight:700;color:var(--on);" class="sn">2.0.0 · PWA</span>
           </div>
           <div class="rowb">
-            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Storage</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn" data-i18n="info.app.storage">Storage</span>
             <span style="font-size:12px;font-weight:700;color:var(--on);" class="sn" id="info-storage-size">—</span>
           </div>
           <div class="rowb">
-            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Dati su server</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn" data-i18n="info.app.server">Dati su server</span>
              <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn" id="info-server-data" data-i18n="info.app.server.val">Nessuno ✓</span>
           </div>
           <div class="rowb">
-            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Cookie</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn" data-i18n="info.app.cookie">Cookie</span>
             <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn">Zero ✓</span>
           </div>
           <div class="rowb">
-            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Tracking</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn" data-i18n="info.app.tracking">Tracking</span>
             <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn" data-i18n="info.app.server.val">Nessuno ✓</span>
           </div>
         </div>
@@ -2861,7 +2861,7 @@ function updateTrendBadge(){
   else if(trendAccess.mode==='grace'){
     badge.textContent='⚠️ TREND';badge.style.color='#f5a623';
     const hours=trendAccess.hoursLeft||48;
-    if(!_graceToastShown){_graceToastShown=true;showToast('⚠️ Pagamento in ritardo — accesso attivo per altre '+hours+' ore',8000);}
+    if(!_graceToastShown){_graceToastShown=true;showToast(t("toast.paymentLate",{gg:hours}),8000);}
   }
   else if(trendAccess.mode==='trial'){badge.textContent='⏱ '+trendAccess.daysLeft+'gg';badge.style.color='#f5a623';}
   else{badge.textContent='TREND';badge.style.color='var(--muted)';}
@@ -3155,21 +3155,21 @@ async function openAuthModal(){
   /* SEC-05: strict email validation — prevent injection */
   const _emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   if(!email||!_emailRe.test(email.trim())){showToast(t('toast.invalidEmail'));return;}
-  if(!sb){showToast('Auth non configurata');return;}
+  if(!sb){showToast(t("toast.authNotConfigured"));return;}
   try{
     const{error}=await sb.auth.signInWithOtp({email});
     if(error)showToast(error.message);
-    else showToast('✉️ Link di accesso inviato a '+sanitize(email.trim()));
+    else showToast(t("toast.loginLinkSent",{email:sanitize(email.trim())}));
   }catch(e){console.warn('[IK] signInWithOtp error',e);showToast(t('toast.signInError'));}
 }
 
 function showTrialExpiringSoon(){
-  showToast('⏱ Ultimo giorno di prova — sblocca Trend per continuare',5000);
+  showToast(t("toast.lastTrialDay"),5000);
 }
 
 /* ── Google OAuth ── */
 async function signOut(){
-  if(!sb){showToast('Auth non configurata');return;}
+  if(!sb){showToast(t("toast.authNotConfigured"));return;}
   const btn=document.getElementById('btn-logout');
   const lbl=document.getElementById('btn-logout-label');
   if(btn){btn.disabled=true;}
@@ -3192,7 +3192,7 @@ async function signOut(){
 }
 
 async function signInWithGoogle(){
-  if(!sb){showToast('Auth non configurata');return;}
+  if(!sb){showToast(t("toast.authNotConfigured"));return;}
   /* No explicit redirectTo — Supabase uses Site URL configured in dashboard */
   const{error}=await sb.auth.signInWithOAuth({provider:'google'});
   if(error)showToast(error.message);
@@ -3751,7 +3751,6 @@ it:{
   'onb.label.age':'Età','onb.label.height':'Altezza','onb.label.weight':'Peso',
   'confirm.resetPlanOnly':'Rigenera solo il piano? Profilo e preferenze cancellati, log peso e check-in conservati.',
   'confirm.resetAll':'Reset completo? Tutti i dati (peso, check-in, piano, profilo) saranno cancellati. Irreversibile.',
-  'lang.gate.title':'Scegli la lingua',
   'oggi.trackers.title':'Attività e Trackers',
   'oggi.kcal.target':'Target Giorno','oggi.kcal.totali':'Kcal totali','oggi.trackers':'Attività e Trackers',
   'oggi.kcal.pct':'{pct}% consumato',
@@ -3912,9 +3911,6 @@ it:{
   'toast.errore':'⚠️ Errore inatteso',
   'toast.valoreNonValido':'⚠️ Valore non valido',
   'gdpr.footer2':'Richiesto dalla legge UE (GDPR). Puoi revocare il consenso in qualsiasi momento da Profilo → Privacy.',
-  'autoadj.slow_loss.title':'Progresso più lento del previsto',
-  'autoadj.fast_loss.title':'Perdi troppo velocemente',
-  'autoadj.maintain_drift.title':'Peso in deriva sul mantenimento',
   'autoadj.apply':'Applica la modifica',
   'autoadj.ignore':'Ignora per ora',
   'today.action.weight':'Registra il peso di stamattina',
@@ -4087,6 +4083,11 @@ it:{
   'privacy.details.btn':'Privacy details',
   'weekly.report.label.energia':'Energia media',
   'faq.a.10.html':'<strong>Programma referral</strong> — condividi il tuo link personalizzato dalle Impostazioni. Ogni amico che si iscrive ti fa guadagnare crediti.',
+  'toast.paymentLate':'⚠️ Pagamento in ritardo — accesso attivo per altre {gg} ore',
+  'toast.authNotConfigured':'Auth non configurata',
+  'toast.loginLinkSent':'✉️ Link di accesso inviato a {email}',
+  'toast.lastTrialDay':'⏱ Ultimo giorno di prova — sblocca Trend per continuare',
+  'toast.importErrors':'⚠️ {n} errori di importazione — alcuni dati potrebbero essere incompleti',
 
 },
 en:{
@@ -4419,7 +4420,6 @@ en:{
   'onb.label.age':'Age','onb.label.height':'Height','onb.label.weight':'Weight',
   'confirm.resetPlanOnly':'Regenerate plan only? Profile and preferences cleared, weight log and check-ins kept.',
   'confirm.resetAll':'Full reset? All data (weight, check-ins, plan, profile) will be deleted. Irreversible.',
-  'lang.gate.title':'Choose your language',
   'oggi.trackers.title':'Activity & Trackers',
   'aria.day.prev':'Previous day','aria.day.next':'Next day',
   'aria.checkin.hunger':'Hunger (1–10)','aria.checkin.energy':'Energy (1–10)',
@@ -4579,9 +4579,6 @@ en:{
   'toast.errore':'⚠️ Unexpected error',
   'toast.valoreNonValido':'⚠️ Invalid value',
   'gdpr.footer2':'Required by EU law (GDPR). You can revoke consent anytime from Profile → Privacy.',
-  'autoadj.slow_loss.title':'Slower progress than expected',
-  'autoadj.fast_loss.title':'Losing weight too fast',
-  'autoadj.maintain_drift.title':'Weight drifting on maintenance',
   'autoadj.apply':'Apply the change',
   'autoadj.ignore':'Ignore for now',
   'today.action.weight':'Log your morning weight',
@@ -4634,7 +4631,7 @@ en:{
   'sub.badge.grace': 'PAYMENT OVERDUE',
   'sub.badge.expired': 'EXPIRED',
   'sub.badge.login': 'SIGN IN',
-  'sub.trial.subtitle': '{d} day{s} remaining · then free plan only',
+  'sub.trial.subtitle': '{d} day{s} remaining{r} · then free plan only',
   'sub.trial.subtitle.zero': 'Trial expired · Upgrade to keep your analysis',
   'sub.trial.detail': 'You\'re using your 24/7 adaptive nutritionist',
   'sub.trial.detail.zero': 'Activate Trend to keep your progress insights',
@@ -4754,6 +4751,11 @@ en:{
   'privacy.details.btn':'Privacy details',
   'weekly.report.label.energia':'Average energy',
   'faq.a.10.html':'<strong>Referral program</strong> — share your personalised link from Settings. Every friend who signs up earns you credit.',
+  'toast.paymentLate':'⚠️ Late payment — access active for {gg} more hours',
+  'toast.authNotConfigured':'Auth not configured',
+  'toast.loginLinkSent':'✉️ Login link sent to {email}',
+  'toast.lastTrialDay':'⏱ Last trial day — unlock Trend to continue',
+  'toast.importErrors':'⚠️ {n} import error(s) — some data may be incomplete',
 }
 };
 let _lang='en';
@@ -4828,9 +4830,7 @@ function applyTranslations(deferOffscreen){
     const keys=['oggi.checkin.fame','oggi.checkin.energia','oggi.checkin.aderenza','oggi.checkin.digestione'];
     const el=document.querySelector('label[for="'+id+'"]');if(el)el.textContent=t(keys[i]);
   });
-  document.querySelectorAll('.check-card .field-label').forEach(el=>{
-    if(el.textContent.trim()==='Contesto giornata'||el.textContent.trim()==='Day context')el.textContent=t('oggi.checkin.contesto');
-  });
+  /* M1: Contesto giornata - handled by data-i18n */
   document.querySelectorAll('.micro-chip').forEach(b=>{
     const oc=b.getAttribute('onclick')||'';
     if(oc.includes("'routine'"))b.textContent=t('oggi.checkin.routine');
@@ -4842,10 +4842,8 @@ function applyTranslations(deferOffscreen){
   if(_saveCi)_saveCi.textContent=t('oggi.checkin.salva');
   const _ciFb=document.getElementById('checkin-feedback');
   if(_ciFb&&!_ciFb.classList.contains('has-feedback'))_ciFb.textContent=t('oggi.checkin.feedback_default');
-  const _wkS=document.getElementById('wk-status');
-  if(_wkS&&(_wkS.textContent==='Non fatto'||_wkS.textContent==='Not done'))_wkS.textContent=t('oggi.workout.nonFatto');
-  const _wkB=document.getElementById('wk-btn');
-  if(_wkB&&(_wkB.textContent.trim()==='Fatto ✓'||_wkB.textContent.trim()==='Done ✓'))_wkB.textContent=t('oggi.workout.fatto');
+  /* M2: wk-status - data-i18n default; render overrides */
+  /* M3: wk-btn - data-i18n default; render overrides */
   ['log-w','log-wst','log-date'].forEach((id,i)=>{
     const keys=['prog.peso','prog.girovita','prog.data'];
     const el=document.querySelector('label[for="'+id+'"]');if(el)el.textContent=t(keys[i]);
@@ -4861,28 +4859,15 @@ function applyTranslations(deferOffscreen){
   const _pT=document.getElementById('set-btn-privacy-txt');if(_pT)_pT.textContent=t('set.btn.privacy');
   const _aT=document.getElementById('set-btn-aiuto-txt');if(_aT)_aT.textContent=t('set.btn.aiuto');
   const _lL=document.getElementById('lang-label-txt');if(_lL)_lL.textContent=t('set.lang.label');
-  const _mS=document.getElementById('mod-status');
-  if(_mS&&(_mS.textContent.trim()==='Base invariata'||_mS.textContent.trim()==='Unchanged'))_mS.textContent=t('set.mod.base');
+  /* M4: mod-status - data-i18n default; render overrides */
   {const _e=getEl('btn-export-data');if(_e)_e.textContent=t('set.dati.esporta');}
   {const _i=getEl('btn-import-data');if(_i)_i.textContent=t('set.dati.importa');}
   document.querySelectorAll('[onclick="resetProfile()"]').forEach(b=>b.textContent=t('set.rigenera'));
   {const _c=getEl('btn-change-diet');if(_c)_c.textContent=t('set.dati.ricomincia');}
-  document.querySelectorAll('[onclick="applyMod(0)"]').forEach(b=>{if(b.textContent.includes('Reset')||b.textContent.includes('reset'))b.textContent=t('set.mod.reset');});
+  document.querySelectorAll('[onclick="applyMod(0)"').forEach(b=>b.textContent=t('set.mod.reset'));
   document.querySelectorAll('[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
-  /* danger zone accordion warning text */
-  document.querySelectorAll('#acc-danger .sn.t-xxs.muted').forEach(p=>{
-    if(p.dataset.i18n==='set.danger.warn'||p.textContent.includes('irreversibili')||p.textContent.includes('irreversible')||p.textContent.includes('backup'))
-      p.textContent=t('set.danger.warn');
-  });
-  document.querySelectorAll('#scr-info .rowb').forEach(row=>{
-    const lbl=row.querySelector('span:first-child');if(!lbl)return;
-    const v=lbl.textContent.trim();
-    if(v==='Versione'||v==='Version')lbl.textContent=t('info.app.versione');
-    else if(v==='Storage')lbl.textContent=t('info.app.storage');
-    else if(v==='Dati su server'||v==='Server data')lbl.textContent=t('info.app.server');
-    else if(v==='Cookie'||v==='Cookies')lbl.textContent=t('info.app.cookie');
-    else if(v==='Tracking')lbl.textContent=t('info.app.tracking');
-  });
+  /* danger zone — handled by data-i18n */
+  /* M7-M10: scr-info labels - handled by data-i18n */
   /* ── end i18n static patch ── */
   /* ── extra always-run patches ── */
   const _fatLbl=document.getElementById('macro-fat-lbl');
@@ -5334,17 +5319,7 @@ function applyTranslations(deferOffscreen){
       p.textContent=t('info.faq.sub');
   });
   /* info app rows */
-  document.querySelectorAll('#scr-info .rowb span.sn').forEach(span=>{
-    const v=span.textContent.trim();
-    if(v==='Versione'||v==='Version')span.textContent=t('info.app.versione');
-    else if(v==='Storage')span.textContent=t('info.app.storage');
-    else if(v==='Dati su server'||v==='Server data')span.textContent=t('info.app.server');
-    else if(v==='Nessuno ✓'||v==='None ✓')span.textContent=t('info.app.server.val');
-    else if(v==='Cookie'||v==='Cookies')span.textContent=t('info.app.cookie');
-    else if(v==='Zero ✓')span.textContent=t('info.app.cookie.val');
-    else if(v==='Tracking')span.textContent=t('info.app.tracking');
-    else if(v==='Nessuno ✓')span.textContent=t('info.app.tracking.val');
-  });
+  /* scr-info labels - handled by data-i18n on elements */
   /* consent/revoke buttons */
   document.querySelectorAll('button[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
   document.querySelectorAll('button[onclick="openModal(\'privacy\')"]').forEach(b=>{
@@ -5401,11 +5376,7 @@ function applyTranslations(deferOffscreen){
   if(_pid('gdpr-p3-sub'))_pid('gdpr-p3-sub').innerHTML=sanitize(t('gdpr.p3.sub'));
   if(_pid('gdpr-gate-footer'))_pid('gdpr-gate-footer').innerHTML=sanitize(t('gdpr.footer'));
   if(_pid('gdpr-gate-footer2'))_pid('gdpr-gate-footer2').textContent=t('gdpr.footer2');
-  /* ── DANGER ZONE accordion warning ── */
-  document.querySelectorAll('#acc-danger .sn.t-xxs.muted').forEach(p=>{
-    if(p.textContent.includes('irreversibili')||p.textContent.includes('irreversible'))
-      p.textContent=t('set.danger.warn');
-  });
+  /* danger zone — handled by data-i18n */
   }; /* end _offscreen */
   if(deferOffscreen){if(window.requestIdleCallback)window.requestIdleCallback(_offscreen,{timeout:300});else setTimeout(_offscreen,300);}
   else _offscreen();
@@ -9216,7 +9187,7 @@ function importBackup(evt){
         /* B4D: versioned success toast */
         dietData=parsed;mountApp();toast(t('toast.backupImp')+(d._exportedAt?` (${d._exportedAt})`:''));
       }else{dietData=null;showOnb();toast(t('toast.noPianoBackup'));}
-      if(importErrors>0)showToast(`⚠️ ${importErrors} import error(s) — some data may be incomplete`,4000);
+      if(importErrors>0)showToast(t("toast.importErrors",{n:importErrors}),4000);
       }); // end showConfirm callback
 
     }catch(err){toast(`⚠️ ${err.message||t('toast.errExp')}`);}
