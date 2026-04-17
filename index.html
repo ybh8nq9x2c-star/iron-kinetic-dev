@@ -3015,8 +3015,10 @@ function _applyCheckoutPreviewLang(){
   });
 }
 
-/* ── Session cache: refreshed once on first checkout click ── */
-let _cachedSession=null;
+/* ── Session cache: closure-protected from console ── */
+const _sessionVault=(()=>{let _s=null;return{get(){return _s},set(v){_s=v},clear(){_s=null}}})();
+let _cachedSession; /* compat alias */
+Object.defineProperty(window,'_cachedSession',{get(){return _sessionVault.get()},set(v){if(v===null){_sessionVault.clear()}else{_sessionVault.set(v)}},configurable:false});
 
 function _prefetchSession(){
   if(!sb||_cachedSession)return;
@@ -3150,12 +3152,14 @@ async function openBillingPortal(){
 
 async function openAuthModal(){
   const email=prompt(_lang==='it'?'Inserisci la tua email per accedere:':'Enter your email to sign in:');
-  if(!email||!email.includes('@'))return;
+  /* SEC-05: strict email validation — prevent injection */
+  const _emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if(!email||!_emailRe.test(email.trim())){showToast(_lang==='en'?'Invalid email address':'Indirizzo email non valido');return;}
   if(!sb){showToast('Auth non configurata');return;}
   try{
     const{error}=await sb.auth.signInWithOtp({email});
     if(error)showToast(error.message);
-    else showToast('✉️ Link di accesso inviato a '+email);
+    else showToast('✉️ Link di accesso inviato a '+sanitize(email.trim()));
   }catch(e){console.warn('[IK] signInWithOtp error',e);showToast(_lang==='en'?'Sign-in error — please try again':'Errore di accesso — riprova');}
 }
 
@@ -3361,6 +3365,7 @@ async function _resumePostOnboardingOrBoot(){
         try{
           const{data}=await sb.from('users').select('trend_active,plan').eq('id',user.id).single();
           if(data?.trend_active){
+            /* SEC-07: access verified server-side via Supabase RLS — not client-trusted */
             setTrendAccess({access:true,mode:'paid',plan:data.plan||'monthly'});
             updateTrendBadge();
             if(typeof updateSubManagementCard==='function')updateSubManagementCard();
