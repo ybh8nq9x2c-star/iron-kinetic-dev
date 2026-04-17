@@ -1193,7 +1193,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       </div>
     </div>
 
-    <p id="gdpr-gate-footer" style="font-size:11px;color:var(--dim);line-height:1.6;text-align:center;" class="sn">
+    <p id="gdpr-gate-footer" style="font-size:11px;color:var(--dim);line-height:1.6;text-align:center;" class="sn" data-i18n-html="gdpr.footer">
       By clicking <strong style="color:var(--on);">Accept &amp; Continue</strong> you consent to data processing as described in the <button onclick="openModal('privacy')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:'Manrope',sans-serif;">Privacy Policy</button>.<br>
       You can revoke consent at any time from <em>Profile → Privacy</em>.
     </p>
@@ -1205,7 +1205,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <span data-i18n="gdpr.ageConfirm">Confermo di avere almeno 16 anni</span>
     </label>
     <button id="gdpr-accept-btn" onclick="gdprAccept()" class="btn btn-primary w100 sn" style="height:52px;font-size:13px;">Accetto — Inizia il mio piano →</button>
-    <button id="gdpr-read-btn" onclick="openModal('privacy')" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;">Read the full Privacy Policy</button>
+    <button id="gdpr-read-btn" onclick="openModal('privacy')" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;" data-i18n="gdpr.btn.leggi">Read the full Privacy Policy</button>
     <p style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;" class="sn">
       <span id="gdpr-gate-footer2">Richiesto dalla legge UE (GDPR). Puoi revocare il consenso in qualsiasi momento da Profilo → Privacy.</span><br>
       Controller: Iron Kinetic™ · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
@@ -1265,15 +1265,15 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div>
         <label class="field-label" for="f-bf" data-i18n="onb.field.bf">Grasso corporeo (%)</label>
         <input class="inp" id="f-bf" type="number" inputmode="decimal" step="0.5" placeholder="16" min="4" max="50"/>
-        <p style="font-size:9px;color:var(--dim);margin-top:4px;font-weight:500;" class="sn">Opzionale. Se inserito, il calcolo diventa più preciso.</p>
+        <p style="font-size:9px;color:var(--dim);margin-top:4px;font-weight:500;" class="sn" data-i18n="onb.field.bf.hint">Opzionale. Se inserito, il calcolo diventa più preciso.</p>
       </div>
     </div>
-    <button class="btn btn-primary w100 sn" onclick="goStep(1)">Continua →</button>
+    <button class="btn btn-primary w100 sn" onclick="goStep(1)" data-i18n="onb.btn.avanti">Continua →</button>
   </div>
 
   <!-- STEP 1 — Attività -->
   <div class="onb-step" id="step-1" style="gap:14px;">
-    <p class="sec-label" style="margin-bottom:0;" id="onb-step1-lbl">La tua attività</p>
+    <p class="sec-label" style="margin-bottom:0;" id="onb-step1-lbl" data-i18n="onb.step1.title">La tua attività</p>
     <div>
       <label class="field-label" data-i18n="onb.field.allenamenti">Allenamenti / settimana</label>
       <div class="seg-wrap" id="wk-seg">
@@ -1284,7 +1284,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <button class="seg-btn sn" onclick="setWk(5)">5</button>
         <button class="seg-btn sn" onclick="setWk(6)">6+</button>
       </div>
-      <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="wk-label">Selezionato: —</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="wk-label" data-i18n="onb.sel.none">Selezionato: —</p>
     </div>
     <div>
       <label class="field-label" data-i18n="onb.field.passi">Passi giornalieri medi</label>
@@ -1295,7 +1295,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <button class="seg-btn sn" onclick="setSt(10000)">10k</button>
         <button class="seg-btn sn" onclick="setSt(12000)">12k+</button>
       </div>
-      <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="st-label">Selezionato: —</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="st-label" data-i18n="onb.sel.none">Selezionato: —</p>
     </div>
     <div>
       <label class="field-label" for="f-sport" data-i18n="onb.field.sport">Sport praticato</label>
@@ -1314,8 +1314,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <p style="font-size:10px;color:var(--dim);margin-top:5px;font-weight:500;line-height:1.5;" class="sn">⏱ Cruciale per il nutrient timing: i pasti pre/post-workout verranno calibrati su questo orario.</p>
     </div>
     <div class="row g2">
-      <button class="btn btn-ghost sn" onclick="goStep(0)" style="flex:1;">← Indietro</button>
-      <button class="btn btn-primary sn" onclick="goStep(2)" style="flex:2;">Continua →</button>
+      <button class="btn btn-ghost sn" onclick="goStep(0)" style="flex:1;" data-i18n="onb.btn.indietro">← Indietro</button>
+      <button class="btn btn-primary sn" onclick="goStep(2)" style="flex:2;" data-i18n="onb.btn.avanti">Continua →</button>
     </div>
   </div>
 
@@ -1332,8 +1332,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       </div>
     </div>
     <div class="row g2" id="back-from-2">
-      <button class="btn btn-ghost sn" onclick="goStep(1)" style="flex:1;">← Indietro</button>
-      <button class="btn btn-primary sn" id="to-step3-btn" onclick="goStep(3)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled>Continua →</button>
+      <button class="btn btn-ghost sn" onclick="goStep(1)" style="flex:1;" data-i18n="onb.btn.indietro">← Indietro</button>
+      <button class="btn btn-primary sn" id="to-step3-btn" onclick="goStep(3)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled data-i18n="onb.btn.avanti">Continua →</button>
     </div>
   </div>
 
@@ -1383,20 +1383,20 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <label class="field-label" data-i18n="onb.field.clinical">Protocollo clinico (opzionale)</label>
       <p style="font-size:10px;color:var(--dim);margin-bottom:8px;font-weight:500;" class="sn">Solo se hai una diagnosi medica specifica. Adatta proteine, sodio e selezione cibi.</p>
       <div style="display:flex;flex-wrap:wrap;gap:6px;" id="clinical-chips">
-        <button class="food-tag" id="cp-none"    onclick="setClinical(null,this)"      style="background:rgba(77,220,198,.14);border-color:rgba(77,220,198,.32);color:var(--p);">✓ Nessuno</button>
+        <button class="food-tag" id="cp-none"    onclick="setClinical(null,this)"      style="background:rgba(77,220,198,.14);border-color:rgba(77,220,198,.32);color:var(--p);" data-i18n="clinical.none">✓ Nessuno</button>
         <button class="food-tag" id="cp-CKD"     onclick="setClinical('CKD',this)">🫁 CKD / Renale</button>
         <button class="food-tag" id="cp-DASH"    onclick="setClinical('DASH',this)">❤️ DASH / Pressione</button>
         <button class="food-tag" id="cp-IBS"     onclick="setClinical('IBS',this)">IBS / Low-FODMAP</button>
         <button class="food-tag" id="cp-T2D"     onclick="setClinical('T2D',this)">Diabete T2D</button>
-        <button class="food-tag" id="cp-IBD_acute"  onclick="setClinical('IBD_acute',this)">🔥 IBD Attiva</button>
+        <button class="food-tag" id="cp-IBD_acute"  onclick="setClinical('IBD_acute',this)" data-i18n="clinical.ibd.active">🔥 IBD Attiva</button>
         <button class="food-tag" id="cp-IBD_remiss" onclick="setClinical('IBD_remiss',this)">IBD Remissione</button>
       </div>
       <p style="font-size:10px;color:var(--dim);margin-top:6px;line-height:1.5;" class="sn" id="clinical-hint"></p>
     </div>
 
     <div class="row g2">
-      <button class="btn btn-ghost sn" onclick="goStep(2)" style="flex:1;">← Indietro</button>
-      <button class="btn btn-primary sn" onclick="goStep(4)" style="flex:2;">Continua →</button>
+      <button class="btn btn-ghost sn" onclick="goStep(2)" style="flex:1;" data-i18n="onb.btn.indietro">← Indietro</button>
+      <button class="btn btn-primary sn" onclick="goStep(4)" style="flex:2;" data-i18n="onb.btn.avanti">Continua →</button>
     </div>
   </div>
 
@@ -1407,7 +1407,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
     <!-- Food quick-select chips by category -->
     <div>
-      <p class="field-label" style="margin-bottom:8px;">Proteine preferite</p>
+      <p class="field-label" style="margin-bottom:8px;" data-i18n="onb.cibi.proteine">Proteine preferite</p>
       <div class="chip-row" id="food-proteins">
         <button class="food-tag" onclick="toggleFood(this,'pollo')">🍗 Pollo</button>
         <button class="food-tag" onclick="toggleFood(this,'coscia pollo')">🍗 Coscia pollo</button>
@@ -1429,7 +1429,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
     </div>
 
     <div>
-      <p class="field-label" style="margin-bottom:8px;">Carboidrati preferiti</p>
+      <p class="field-label" style="margin-bottom:8px;" data-i18n="onb.cibi.carb">Carboidrati preferiti</p>
       <div class="chip-row" id="food-carbs">
         <button class="food-tag" onclick="toggleFood(this,'riso')">🍚 Riso</button>
         <button class="food-tag" onclick="toggleFood(this,'riso basmati')">🍚 Riso basmati</button>
@@ -1450,7 +1450,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
     </div>
 
     <div>
-      <p class="field-label" style="margin-bottom:8px;">Grassi e altro</p>
+      <p class="field-label" style="margin-bottom:8px;" data-i18n="onb.food.grassi_altro">Grassi e altro</p>
       <div class="chip-row" id="food-fats">
         <button class="food-tag" onclick="toggleFood(this,'avocado')">🥑 Avocado</button>
         <button class="food-tag" onclick="toggleFood(this,'olio oliva')">🫒 Olio EVO</button>
@@ -1476,7 +1476,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
     </div>
 
     <div class="row g2" id="gen-btn-row" aria-busy="false">
-      <button class="btn btn-ghost sn" onclick="goStep(3)" style="flex:1;min-width:80px;">← Indietro</button>
+      <button class="btn btn-ghost sn" onclick="goStep(3)" style="flex:1;min-width:80px;" data-i18n="onb.btn.indietro">← Indietro</button>
       <button class="btn btn-primary sn" id="btn-generate-plan" onclick="runCalcAndGenerate()" style="flex:2;height:auto;min-height:54px;padding:12px 14px;line-height:1.3;font-size:13px;white-space:normal;text-align:center;">⚡ Calcola il mio piano →</button>
     </div>
     <div id="gen-status" aria-live="polite" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"></div>
@@ -1502,7 +1502,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <!-- Piano personalizzato generato -->
       <div id="plan-preview" style="margin-top:14px;display:none;">
         <div class="divider" style="margin-bottom:14px;"></div>
-        <p class="sec-label" style="margin-bottom:10px;">Il Tuo Piano — Anteprima</p>
+        <p class="sec-label" style="margin-bottom:10px;" data-i18n="onb.result.preview">Il Tuo Piano — Anteprima</p>
         <div id="plan-preview-content"></div>
       </div>
 
@@ -1538,7 +1538,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
         <!-- Pricing CTAs -->
         <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€6,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;">Cancella quando vuoi</span></button>
+          <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€6,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;" data-i18n="checkout.cancel">Cancella quando vuoi</span></button>
           <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:var(--p);border:1px solid rgba(77,220,198,.35);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€69,99/anno<br><span style="font-weight:400;font-size:10px;opacity:.7;">💰 Risparmia il 17%</span></button>
         </div>
         <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.2);border-radius:var(--r);padding:10px 8px;font-weight:800;font-size:11px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:8px;">€179,99 · Accesso permanente</button>
@@ -1590,7 +1590,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
               <p id="adaptive-msg" class="sn" style="font-size:12px;font-weight:600;color:var(--on);line-height:1.45;margin:4px 0 10px;"></p>
               <div style="display:flex;gap:8px;">
                 <button onclick="applyAdaptiveSuggestion()" class="btn btn-xs sn" style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:11px;font-weight:700;height:30px;border-radius:var(--r3);padding:0 12px;">Applica</button>
-                <button onclick="dismissAdaptive()" class="btn btn-xs sn" style="background:transparent;border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:600;height:30px;border-radius:var(--r3);padding:0 12px;">Ignora</button>
+                <button onclick="dismissAdaptive()" class="btn btn-xs sn" style="background:transparent;border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:600;height:30px;border-radius:var(--r3);padding:0 12px;" data-i18n="autoadj.ignore">Ignora</button>
               </div>
             </div>
           </div>
@@ -1606,7 +1606,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <p id="autoadj-body" class="sn" style="font-size:11px;color:var(--muted);line-height:1.5;margin:0 0 10px;"></p>
             <div style="display:flex;gap:8px;">
               <button id="autoadj-apply-btn" onclick="applyAutoAdj()" class="btn btn-primary btn-xs sn" style="padding:0 14px;"></button>
-              <button onclick="dismissAutoAdj()" class="btn btn-ghost btn-xs sn" style="padding:0 12px;">Ignora</button>
+              <button onclick="dismissAutoAdj()" class="btn btn-ghost btn-xs sn" style="padding:0 12px;" data-i18n="autoadj.ignore">Ignora</button>
             </div>
           </div>
         </div>
@@ -1725,7 +1725,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <div class="row g2">
               <button onclick="addWater(.5)" class="btn btn-neon-o btn-sm f1 sn">+0.5L</button>
               <button onclick="addWater(.25)" class="btn btn-ghost btn-sm f1 sn">+250ml</button>
-              <button onclick="resetT('water')" class="btn btn-ghost btn-sm sn" style="height:36px;padding:0 12px;font-size:12px;" aria-label="Azzera acqua">↺ Reset</button>
+              <button onclick="resetT('water')" class="btn btn-ghost btn-sm sn" style="height:36px;padding:0 12px;font-size:12px;" aria-label="Azzera acqua" data-i18n="unit.reset">↺ Reset</button>
             </div>
           </div>
           <!-- Sale -->
@@ -1738,7 +1738,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <div class="row g2">
               <button onclick="addSalt(1)" class="btn btn-ghost btn-sm f1 sn">+1g</button>
               <button onclick="addSalt(.5)" class="btn btn-ghost btn-sm f1 sn">+0.5g</button>
-              <button onclick="resetT('salt')" class="btn btn-ghost btn-sm sn" style="height:36px;padding:0 12px;font-size:12px;" aria-label="Azzera sale">↺ Reset</button>
+              <button onclick="resetT('salt')" class="btn btn-ghost btn-sm sn" style="height:36px;padding:0 12px;font-size:12px;" aria-label="Azzera sale" data-i18n="unit.reset">↺ Reset</button>
             </div>
           </div>
           <!-- Passi + Workout -->
@@ -1765,12 +1765,12 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div class="check-card" id="daily-check-card">
         <div class="rowb"><span class="sec-label" data-i18n="oggi.checkin.title" style="margin-bottom:0;">Check-in giornaliero</span><span class="t-xxs muted">20 sec</span></div>
         <div class="range-row">
-          <div class="range-wrap"><label class="field-label" for="ci-hunger">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-hunger">5</output></div>
-          <div class="range-wrap"><label class="field-label" for="ci-energy">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-energy">6</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-hunger" data-i18n="oggi.checkin.fame">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-hunger">5</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-energy" data-i18n="oggi.checkin.energia">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-energy">6</output></div>
         </div>
         <div class="range-row">
-          <div class="range-wrap"><label class="field-label" for="ci-adherence">Aderenza</label><input id="ci-adherence" type="range" min="1" max="10" value="8" aria-label="Aderenza (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-adherence">8</output></div>
-          <div class="range-wrap"><label class="field-label" for="ci-digestion">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-digestion">8</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-adherence" data-i18n="oggi.checkin.aderenza">Aderenza</label><input id="ci-adherence" type="range" min="1" max="10" value="8" aria-label="Aderenza (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-adherence">8</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-digestion" data-i18n="oggi.checkin.digestione">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-digestion">8</output></div>
         </div>
         <div>
           <label class="field-label">Contesto giornata</label>
@@ -1781,7 +1781,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <button class="micro-chip" type="button" onclick="setCheckTag(this,'workout')">Workout</button>
           </div>
         </div>
-        <button class="btn btn-primary w100 sn" onclick="saveDailyCheckin()">Salva check-in</button>
+        <button class="btn btn-primary w100 sn" onclick="saveDailyCheckin()" data-i18n="oggi.checkin.salva">Salva check-in</button>
         <div class="note-box" id="checkin-feedback">Dopo il primo check-in riceverai un supporto contestuale.</div>
         <button id="ci-edit-btn" class="btn btn-ghost w100" onclick="editDailyCheckin()" style="display:none;font-size:13px;margin-top:4px;"></button>
       </div>
@@ -1828,7 +1828,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <span class="sec-label" data-i18n="prog.registra">Registra</span>
         <div class="grid2" style="margin-bottom:10px;">
           <div><label class="field-label" for="log-w">Peso (kg)</label><input class="inp" id="log-w" type="number" step="0.1" min="30" max="300" placeholder="78.5" inputmode="decimal"/></div>
-          <div><label class="field-label" for="log-wst">Girovita (cm)</label><input class="inp" id="log-wst" type="number" step="0.1" min="40" max="200" placeholder="84.0" inputmode="decimal"/></div>
+          <div><label class="field-label" for="log-wst" data-i18n="prog.girovita">Girovita (cm)</label><input class="inp" id="log-wst" type="number" step="0.1" min="40" max="200" placeholder="84.0" inputmode="decimal"/></div>
         </div>
         <div style="margin-bottom:12px;"><label class="field-label" for="log-date">Data</label><input class="inp" id="log-date" type="date"/></div>
         <button onclick="logMetric()" class="btn btn-primary w100 sn">+ Aggiungi Rilevazione</button>
@@ -1845,7 +1845,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <div class="stat-val sn" id="st-wdiff" style="font-size:22px;margin-top:6px;">—</div>
           </div>
           <div class="prog-stat-chip">
-            <span class="t-xxs muted sn">Girovita</span>
+            <span class="t-xxs muted sn" data-i18n="prog.stat.girovita">Girovita</span>
             <div class="stat-val sn" id="st-wst" style="font-size:22px;margin-top:6px;">—</div>
           </div>
           <div class="prog-stat-chip sa">
@@ -1858,7 +1858,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div class="card" style="padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
           <div>
-            <p id="chart-mode-label" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin:0 0 5px;">Weight Trend</p>
+            <p id="chart-mode-label" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin:0 0 5px;" data-i18n="prog.chart.weight">Weight Trend</p>
             <div style="display:flex;align-items:center;gap:6px;">
               <span style="width:7px;height:7px;border-radius:50%;background:var(--p);display:inline-block;flex-shrink:0;"></span>
               <span class="t-xxs muted sn">Reale</span>
@@ -1871,7 +1871,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
         <div class="row g2" style="margin-bottom:12px;">
           <button onclick="switchChart('weight',this)" id="ctab-w" class="btn btn-neon-o btn-xs sn chart-tab" style="padding:0 14px;">Peso</button>
-          <button onclick="switchChart('waist',this)" id="ctab-wst" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Girovita</button>
+          <button onclick="switchChart('waist',this)" id="ctab-wst" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;" data-i18n="prog.stat.girovita">Girovita</button>
           <button onclick="switchChart('prediction',this)" id="ctab-pred" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Previsione</button>
         </div>
         <p id="chart-empty" class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;text-align:center;padding:24px 0;display:none;">Nessun dato</p>
@@ -1884,10 +1884,10 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div class="analytics-card" id="checkin-analytics-card">
         <div class="rowb"><span class="sec-label" data-i18n="prog.checkin.title" style="margin-bottom:0;">Trend check-in</span><span id="checkin-last7-lbl" class="t-xxs muted">ULTIMI 7 GIORNI</span></div>
         <div class="analytics-bars">
-          <div class="analytics-row"><span class="analytics-lab">Fame</span><div class="analytics-track"><div class="analytics-fill" id="an-hunger"></div></div><span class="analytics-val" id="an-hunger-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab">Energia</span><div class="analytics-track"><div class="analytics-fill" id="an-energy"></div></div><span class="analytics-val" id="an-energy-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab">Aderenza</span><div class="analytics-track"><div class="analytics-fill" id="an-adherence"></div></div><span class="analytics-val" id="an-adherence-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab">Digestione</span><div class="analytics-track"><div class="analytics-fill" id="an-digestion"></div></div><span class="analytics-val" id="an-digestion-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.fame">Fame</span><div class="analytics-track"><div class="analytics-fill" id="an-hunger"></div></div><span class="analytics-val" id="an-hunger-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.energia">Energia</span><div class="analytics-track"><div class="analytics-fill" id="an-energy"></div></div><span class="analytics-val" id="an-energy-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.aderenza">Aderenza</span><div class="analytics-track"><div class="analytics-fill" id="an-adherence"></div></div><span class="analytics-val" id="an-adherence-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.digestione">Digestione</span><div class="analytics-track"><div class="analytics-fill" id="an-digestion"></div></div><span class="analytics-val" id="an-digestion-v">--</span></div>
         </div>
         <div class="note-box" id="checkin-analytics-note">Salva almeno 2-3 check-in per visualizzare trend interpretabili.</div>
       </div>
@@ -1999,7 +1999,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           <input id="notif-hour" type="number" min="5" max="23" value="8" style="width:52px;background:var(--s2);border:1px solid var(--line);border-radius:var(--r3);color:var(--on);font-size:12px;padding:4px 8px;text-align:center;" />
           <span class="muted sn" style="font-size:11px;">:00</span>
         </div>
-        <button id="notif-perm-btn" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
+        <button id="notif-perm-btn" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;" data-i18n="prog.notif.btn">🔔 Attiva Promemoria</button>
       </div>
 
       <!-- Storico -->
@@ -2094,7 +2094,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <!-- SUBSCRIPTION MANAGEMENT CARD content inline -->
             <div id="sub-mgmt-card" style="padding:0">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-                <span class="sec-label" style="margin-bottom:0">Trend</span>
+                <span class="sec-label" style="margin-bottom:0" data-i18n="nav.trend">Trend</span>
                 <span id="sub-status-badge" style="font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block"></span>
               </div>
               <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
@@ -2180,7 +2180,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
               </div>
             </div>
             <p id="mod-units-label" class="t-xxs muted sn" style="text-align:center;margin-top:4px;"></p>
-            <button onclick="applyMod(0);event.stopPropagation();" class="btn btn-ghost btn-xs sn" style="margin-top:10px;width:100%;">Reset modificatore</button>
+            <button onclick="applyMod(0);event.stopPropagation();" class="btn btn-ghost btn-xs sn" style="margin-top:10px;width:100%;" data-i18n="reset.modificatore">Reset modificatore</button>
           </div>
         </div>
 
@@ -2307,7 +2307,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
       <!-- Notif button (compat) -->
       <div style="display:none;">
-        <button id="notif-perm-btn-alt" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
+        <button id="notif-perm-btn-alt" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;" data-i18n="prog.notif.btn">🔔 Attiva Promemoria</button>
       </div>
       <div style="height:8px;"></div>
     </div>
@@ -2328,8 +2328,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
                 <span class="material-symbols-outlined" style="font-size:18px;color:var(--p);font-variation-settings:'FILL' 1;">shield</span>
               </div>
               <div>
-                <p style="font-size:14px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Privacy &amp; GDPR</p>
-                <p style="font-size:11px;color:var(--muted);margin:0;" class="sn">Informativa completa · Gestione consenso</p>
+                <p style="font-size:14px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn" data-i18n="info.privacy.title">Privacy &amp; GDPR</p>
+                <p style="font-size:11px;color:var(--muted);margin:0;" class="sn" data-i18n="info.privacy.sub">Informativa completa · Gestione consenso</p>
               </div>
             </div>
             <span class="material-symbols-outlined" style="color:var(--muted);font-size:18px;">chevron_right</span>
@@ -2383,7 +2383,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           </div>
           <div class="rowb">
             <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Dati su server</span>
-             <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn" id="info-server-data">Nessuno ✓</span>
+             <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn" id="info-server-data" data-i18n="info.app.server.val">Nessuno ✓</span>
           </div>
           <div class="rowb">
             <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Cookie</span>
@@ -2391,14 +2391,14 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           </div>
           <div class="rowb">
             <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Tracking</span>
-            <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn">Nessuno ✓</span>
+            <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn" data-i18n="info.app.server.val">Nessuno ✓</span>
           </div>
         </div>
       </div>
 
       <!-- Disclaimer -->
       <div style="background:rgba(255,59,48,.05);border:1px solid rgba(255,59,48,.14);border-radius:var(--r);padding:14px;">
-        <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 5px;" class="sn" id="info-disclaimer-title">⚕️ Avviso medico importante</p>
+        <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 5px;" class="sn" id="info-disclaimer-title" data-i18n="info.disclaimer.title">⚕️ Avviso medico importante</p>
         <p style="font-size:11px;color:var(--muted);margin:0;line-height:1.6;" class="sn" id="info-disclaimer-text">Iron Kinetic™ è uno strumento informativo di supporto e <strong style="color:var(--on);">non costituisce consiglio medico</strong>. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
       </div>
 
@@ -2538,7 +2538,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
   </button>
   <button id="nav-prog" class="nb" onclick="switchTab('prog')" aria-label="Progresso">
     <span class="material-symbols-outlined ni sn">insights</span>
-    <span class="nl sn" id="nav-lbl-trend">Trend</span>
+    <span class="nl sn" id="nav-lbl-trend" data-i18n="nav.trend">Trend</span>
   </button>
   <button id="nav-set" class="nb" onclick="switchTab('set')" aria-label="Config">
     <span class="material-symbols-outlined ni sn">person</span>
@@ -2743,7 +2743,7 @@ function updateSubManagementCard(){
     badge.style.cssText=badgeStyle('rgba(77,220,198,.12)','var(--p)','rgba(77,220,198,.25)');
     setRing(pct,col);
     if(ringNum){ringNum.textContent=d;ringNum.style.color=col;}
-    if(ringUnit)ringUnit.textContent=_lang==='en'?'d':'gg';
+    if(ringUnit)ringUnit.textContent=t('unit.days');
     if(subtitle)subtitle.textContent=d<=0?t('sub.trial.subtitle.zero'):t('sub.trial.subtitle',{d,s,r});
     if(detail)detail.textContent=d<=0?t('sub.trial.detail.zero'):t('sub.trial.detail');
     if(progLbl)progLbl.textContent=t('sub.trial.prog.left',{d:TRIAL_DAYS-d});
@@ -2792,7 +2792,7 @@ function updateSubManagementCard(){
     badge.style.cssText=badgeStyle('rgba(255,159,10,.12)','var(--orange)','rgba(255,159,10,.28)');
     setRing(h/48,'var(--orange)');
     if(ringNum){ringNum.textContent=h;ringNum.style.color='var(--orange)';}
-    if(ringUnit)ringUnit.textContent=_lang==='en'?'h':'ore';
+    if(ringUnit)ringUnit.textContent=t('unit.hours');
     if(subtitle)subtitle.textContent=t('sub.grace.subtitle',{h,s,r});
     if(detail)detail.textContent=t('sub.grace.detail');
     if(progLbl)progLbl.textContent=t('sub.grace.prog.left');
@@ -2810,7 +2810,7 @@ function updateSubManagementCard(){
     badge.style.cssText=badgeStyle('rgba(255,59,48,.10)','var(--red)','rgba(255,59,48,.22)');
     setRing(0,'var(--red)');
     if(ringNum){ringNum.textContent='0';ringNum.style.color='var(--red)';}
-    if(ringUnit)ringUnit.textContent=_lang==='en'?'d':'gg';
+    if(ringUnit)ringUnit.textContent=t('unit.days');
     if(subtitle)subtitle.textContent=t('sub.expired.subtitle');
     if(detail)detail.textContent=t('sub.expired.detail');
     if(progLbl)progLbl.textContent=t('sub.expired.prog.left');
@@ -2955,7 +2955,7 @@ function selectCheckoutPlan(plan){
   const cta=document.getElementById('cpo-cta');
   if(cta){
     const price=plan==='annual'?'€69,99':plan==='monthly'?'€6,99':'€179,99';
-    const label=_lang==='en'?`Continue — ${price}`:`Continua — ${price}`;
+    const label=t('checkout.cta.continue',{price});
     cta.textContent=label+' →';
   }
 }
@@ -2965,7 +2965,7 @@ function confirmCheckoutPreview(){
      La sheet rimane visibile fino al window.location.href= (che sostituisce la pagina).
      Viene chiusa solo se _doStartCheckout fallisce (errore o login gate). */
   const ctaBtn=document.getElementById('cpo-cta');
-  if(ctaBtn){ctaBtn.textContent=_lang==='en'?'Redirecting…':'Reindirizzamento…';ctaBtn.disabled=true;ctaBtn.style.opacity='0.7';}
+  if(ctaBtn){ctaBtn.textContent=t('checkout.redirecting');ctaBtn.disabled=true;ctaBtn.style.opacity='0.7';}
   /* Lancia checkout direttamente senza timeout e senza chiudere l'overlay */
   _doStartCheckout(_cpoPlan);
 }
@@ -3040,7 +3040,7 @@ async function _doStartCheckout(plan){
   const setLoading=on=>{
     btns.forEach(b=>{b.disabled=on;b.style.opacity=on?'0.6':'1';});
     if(ctaBtn){ctaBtn.disabled=on;ctaBtn.style.opacity=on?'0.7':'1';
-      if(on)ctaBtn.textContent=_lang==='en'?'Processing…':'Elaborazione…';
+      if(on)ctaBtn.textContent=t('checkout.processing');
       else ctaBtn.textContent=ctaOrig;}
   };
   setLoading(true);
@@ -3076,7 +3076,7 @@ async function _doStartCheckout(plan){
     if(!res.ok){
       if(typeof Sentry!=='undefined')try{Sentry.captureMessage('[IK] checkout '+res.status,{level:'error'});}catch(e2){console.warn('[IK] Sentry capture failed',e2);}
       if(res.status===401||res.status===403){
-        showToast(_lang==='en'?'Auth error — please sign out and back in':'Errore auth — esci e rientra',4000);
+        showToast(t('toast.authError'),4000);
         setLoading(false);return;
       }
       throw new Error(body?.error||body?.message||'Errore server '+res.status);
@@ -3154,13 +3154,13 @@ async function openAuthModal(){
   const email=prompt(_lang==='it'?'Inserisci la tua email per accedere:':'Enter your email to sign in:');
   /* SEC-05: strict email validation — prevent injection */
   const _emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  if(!email||!_emailRe.test(email.trim())){showToast(_lang==='en'?'Invalid email address':'Indirizzo email non valido');return;}
+  if(!email||!_emailRe.test(email.trim())){showToast(t('toast.invalidEmail'));return;}
   if(!sb){showToast('Auth non configurata');return;}
   try{
     const{error}=await sb.auth.signInWithOtp({email});
     if(error)showToast(error.message);
     else showToast('✉️ Link di accesso inviato a '+sanitize(email.trim()));
-  }catch(e){console.warn('[IK] signInWithOtp error',e);showToast(_lang==='en'?'Sign-in error — please try again':'Errore di accesso — riprova');}
+  }catch(e){console.warn('[IK] signInWithOtp error',e);showToast(t('toast.signInError'));}
 }
 
 function showTrialExpiringSoon(){
@@ -3173,7 +3173,7 @@ async function signOut(){
   const btn=document.getElementById('btn-logout');
   const lbl=document.getElementById('btn-logout-label');
   if(btn){btn.disabled=true;}
-  if(lbl){lbl.textContent=_lang==='en'?'Signing out…':'Uscita in corso…';}
+  if(lbl){lbl.textContent=t('toast.signingOut');}
   try{
     /* Clear all local state */
     try{localStorage.removeItem('ik_pending_checkout_plan');}catch{}
@@ -3185,9 +3185,9 @@ async function signOut(){
     window.location.reload();
   }catch(err){
     console.error('[IK][signOut] error:',err?.message||err);
-    showToast(_lang==='en'?'Sign out failed — try again':'Errore logout — riprova');
+    showToast(t('toast.signOutFailed'));
     if(btn){btn.disabled=false;}
-    if(lbl){lbl.textContent=_lang==='en'?'Sign out':'Esci dall\'account';}
+    if(lbl){lbl.textContent=t('logout');}
   }
 }
 
@@ -4062,6 +4062,32 @@ it:{
   'sport.label.strength':'Forza/Potenza','sport.label.endurance':'Resistenza','sport.label.team':'Squadra/Ibrido','sport.label.fitness':'Fitness Generale','sport.label.powerlifting':'Powerlifting/Sollevamento Pesi','sport.label.combat':'Sport da Combattimento',
   'sport.system.strength':'ATP-CP / Glicolitico','sport.system.endurance':'Aerobico','sport.system.team':'Glicolitico Misto','sport.system.fitness':'Misto','sport.system.powerlifting':'ATP-CP / Forza Massimale','sport.system.combat':'Glicolitico / Fosfageno',
   'res.detail.sport':'Sport','res.detail.sistema':'Sistema energetico','aria.info':'Info',
+  'oggi.checkin.aderenza':'Aderenza','oggi.checkin.digestione':'Digestione',
+  'unit.days':'gg','unit.hours':'ore','unit.reset':'↺ Reset',
+  'checkout.cta.continue':'Continua — {price}','checkout.redirecting':'Reindirizzamento…','checkout.processing':'Elaborazione…',
+  'day.type.training':'GIORNO ALLENAMENTO','day.type.rest':'GIORNO RIPOSO',
+  'pred.chart.title':'Previsione Peso (12 sett)','tdee.card.unit.daily':' kcal/giorno',
+  'toast.authError':'Errore auth — esci e rientra','toast.invalidEmail':'Indirizzo email non valido',
+  'toast.signInError':'Errore di accesso — riprova','toast.signingOut':'Uscita in corso…',
+  'toast.signOutFailed':'Errore logout — riprova',
+  'paywall.daysLeft':'GIORNI RIMASTI','paywall.title':'Iron Kinetic™ Trend','paywall.sub':'Analisi predittiva sul tuo metabolismo. Proiezione a 12 settimane basata sui tuoi dati di peso, aderenza e check-in.',
+  'paywall.feat.pred':'Curva Predittiva','paywall.feat.metabo':'Impronta Metabolica','paywall.feat.report':'Report Settimanale','paywall.feat.circ':'Timing Circadiano','paywall.feat.adapt':'Motore Adattivo','paywall.feat.shop':'Lista della Spesa',
+  'paywall.lifetime':'€179,99 · Accesso permanente','paywall.lifetime.sub':'Pagamento unico','paywall.hasAccount':'Hai già un account?','paywall.login':'Accedi',
+  'prv.title':'🛡 Privacy & GDPR','prv.badge':'Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003',
+  'prv.s5b.h':'5b. Dati e abbonamento (freemium / premium)',
+  'checkout.preview.title':'Iron Kinetic™ Trend','checkout.preview.includes':'Trend include:',
+  'checkout.preview.cta':'Attiva Trend →','checkout.preview.cancel':'Annulla',
+  'checkout.paywall.title':'Iron Kinetic™ Trend','checkout.paywall.cancel':'Cancella quando vuoi',
+  'checkout.ponb.title':'Salva il tuo percorso','checkout.cancel':'Cancella quando vuoi',
+  'onb.food.grassi_altro':'Grassi e altro',
+  'info.medical.warning':'⚕️ Avviso medico importante',
+  'clinical.ibd.active':'🔥 IBD Attiva',
+  'prog.chart.weight':'Weight Trend',
+  'reset.modificatore':'Reset modificatore',
+  'privacy.details.btn':'Privacy details',
+  'weekly.report.label.energia':'Energia media',
+  'faq.a.10.html':'<strong>Programma referral</strong> — condividi il tuo link personalizzato dalle Impostazioni. Ogni amico che si iscrive ti fa guadagnare crediti.',
+
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -4703,6 +4729,31 @@ en:{
   'sport.label.strength':'Strength/Power','sport.label.endurance':'Endurance','sport.label.team':'Team/Hybrid','sport.label.fitness':'General Fitness','sport.label.powerlifting':'Powerlifting','sport.label.combat':'Combat Sports',
   'sport.system.strength':'ATP-CP / Glycolytic','sport.system.endurance':'Aerobic','sport.system.team':'Mixed Glycolytic','sport.system.fitness':'Mixed','sport.system.powerlifting':'ATP-CP / Max Strength','sport.system.combat':'Glycolytic / Phosphagen',
   'res.detail.sport':'Sport','res.detail.sistema':'Energy system','aria.info':'Info',
+  'oggi.checkin.aderenza':'Adherence','oggi.checkin.digestione':'Digestion',
+  'unit.days':'d','unit.hours':'h','unit.reset':'↺ Reset',
+  'checkout.cta.continue':'Continue — {price}','checkout.redirecting':'Redirecting…','checkout.processing':'Processing…',
+  'day.type.training':'TRAINING DAY','day.type.rest':'REST DAY',
+  'pred.chart.title':'Weight Forecast (12 wk)','tdee.card.unit.daily':' kcal/day',
+  'toast.authError':'Auth error — please sign out and back in','toast.invalidEmail':'Invalid email address',
+  'toast.signInError':'Sign-in error — please try again','toast.signingOut':'Signing out…',
+  'toast.signOutFailed':'Sign out failed — try again',
+  'paywall.daysLeft':'DAYS LEFT','paywall.title':'Iron Kinetic™ Trend','paywall.sub':'Predictive analysis of your metabolism. 12-week projection based on your weight, adherence and check-in data.',
+  'paywall.feat.pred':'Predictive Curve','paywall.feat.metabo':'Metabolic Fingerprint','paywall.feat.report':'Weekly Report','paywall.feat.circ':'Circadian Timing','paywall.feat.adapt':'Adaptive Engine','paywall.feat.shop':'Shopping List',
+  'paywall.lifetime':'€179.99 · Lifetime access','paywall.lifetime.sub':'One-time payment','paywall.hasAccount':'Already have an account?','paywall.login':'Sign in',
+  'prv.title':'🛡 Privacy & GDPR','prv.badge':'Updated: April 2026 · GDPR (EU Reg. 2016/679) · D.Lgs. 196/2003',
+  'prv.s5b.h':'5b. Data and subscription (freemium / premium)',
+  'checkout.preview.title':'Iron Kinetic™ Trend','checkout.preview.includes':'Trend includes:',
+  'checkout.preview.cta':'Activate Trend →','checkout.preview.cancel':'Cancel',
+  'checkout.paywall.title':'Iron Kinetic™ Trend','checkout.paywall.cancel':'Cancel anytime',
+  'checkout.ponb.title':'Save your progress','checkout.cancel':'Cancel anytime',
+  'onb.food.grassi_altro':'Fats & other',
+  'info.medical.warning':'⚕️ Important medical notice',
+  'clinical.ibd.active':'🔥 Active IBD',
+  'prog.chart.weight':'Weight Trend',
+  'reset.modificatore':'Reset modifier',
+  'privacy.details.btn':'Privacy details',
+  'weekly.report.label.energia':'Average energy',
+  'faq.a.10.html':'<strong>Referral program</strong> — share your personalised link from Settings. Every friend who signs up earns you credit.',
 }
 };
 let _lang='en';
@@ -4835,7 +4886,7 @@ function applyTranslations(deferOffscreen){
   /* ── end i18n static patch ── */
   /* ── extra always-run patches ── */
   const _fatLbl=document.getElementById('macro-fat-lbl');
-  if(_fatLbl)_fatLbl.textContent=_lang==='en'?'FAT':'GRASSI';
+  if(_fatLbl)_fatLbl.textContent=t('meal.comp.fat');
   const _u7=document.getElementById('checkin-last7-lbl');
   if(_u7)_u7.textContent=t('prog.checkin.ultimi7');
   const _fpBadge=document.getElementById('fp-badge-lbl');
@@ -5185,7 +5236,7 @@ function applyTranslations(deferOffscreen){
   if(_rTgtEl){
     const _nodes=[..._rTgtEl.parentElement.childNodes].filter(n=>n.nodeType===3);
     const _sfx=_nodes.find(n=>n.textContent.includes('giorno')||n.textContent.includes('/day'));
-    if(_sfx)_sfx.textContent=_lang==='en'?' kcal/day':' kcal/giorno';
+    if(_sfx)_sfx.textContent=t('tdee.card.unit.daily');
   }
   /* Coach loading msg */
   const _coachMsg=document.getElementById('coach-msg');
@@ -8208,7 +8259,7 @@ function renderMacros(){
   if(!_dtb){_dtb=document.createElement('span');_dtb.id='m-daytype-badge';
     _dtb.className='t-xxs sn';_dtb.style.cssText='font-size:8px;letter-spacing:.06em;font-weight:700;margin-left:4px;';
     const _mbp=mb?.parentNode;if(_mbp)_mbp.appendChild(_dtb);}
-  if(_dtb){_dtb.textContent=m.dayType==='training'?(_lang==='en'?'TRAINING DAY':'GIORNO ALLENAMENTO'):(_lang==='en'?'REST DAY':'GIORNO RIPOSO');
+  if(_dtb){_dtb.textContent=m.dayType==='training'?t('day.type.training'):t('day.type.rest');
     _dtb.style.color=m.dayType==='training'?'var(--p)':'var(--muted)';}
 }
 
@@ -9048,7 +9099,7 @@ function switchChart(mode,btn){
   if(lbl)lbl.dataset.mode=mode;
   const predSum=document.getElementById('prediction-summary');
   if(mode==='prediction'){
-    if(lbl)lbl.textContent=_lang==='en'?'Weight Forecast (12 wk)':'Previsione Peso (12 sett)';
+    if(lbl)lbl.textContent=t('pred.chart.title');
     renderPredictionChart();
   } else {
     if(predSum)predSum.style.display='none';
@@ -10749,7 +10800,7 @@ setTimeout(function(){
         <div class="prv-right-item"><span class="prv-right-ico">✏️</span><span class="prv-right-label">Rettifica (Art.16)</span><span class="prv-right-desc">Correggi i tuoi dati in qualsiasi momento dall'app.</span></div>
         <div class="prv-right-item"><span class="prv-right-ico">🗑</span><span class="prv-right-label">Cancellazione (Art.17)</span><span class="prv-right-desc">Usa "Ricomincia da capo" o scrivi per cancellare account e dati.</span></div>
         <div class="prv-right-item"><span class="prv-right-ico">⏸</span><span class="prv-right-label">Limitazione (Art.18)</span><span class="prv-right-desc">Chiedi sospensione del trattamento scrivendo al titolare.</span></div>
-        <div class="prv-right-item"><span class="prv-right-ico">📦</span><span class="prv-right-label">Portabilità (Art.20)</span><span class="prv-right-desc">Esporta i tuoi dati in formato JSON leggibile tramite l'app.</span></div>
+        <div class="prv-right-item"><span class="prv-right-ico">📦</span><span class="prv-right-label" data-i18n="prv.s7.r4.lbl">Portabilità (Art.20)</span><span class="prv-right-desc" data-i18n="prv.s7.r4.desc">Esporta i tuoi dati in formato JSON leggibile tramite l'app.</span></div>
         <div class="prv-right-item"><span class="prv-right-ico">🚫</span><span class="prv-right-label">Opposizione (Art.21)</span><span class="prv-right-desc">Opponiti al trattamento scrivendo al titolare.</span></div>
         <div class="prv-right-item"><span class="prv-right-ico">🔓</span><span class="prv-right-label">Revoca consenso (Art.7)</span><span class="prv-right-desc">Revoca da Profilo → Privacy in qualsiasi momento.</span></div>
         <div class="prv-right-item"><span class="prv-right-ico">⚖️</span><span class="prv-right-label">Reclamo al Garante</span><span class="prv-right-desc">Proponi reclamo al Garante Privacy (www.garanteprivacy.it).</span></div>
@@ -10776,7 +10827,7 @@ setTimeout(function(){
 
     <!-- Contacts -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-contact-h">Contatti e Autorità di Controllo</p>
+      <p class="prv-h2" id="prv-contact-h" data-i18n="prv.contact.h">Contatti e Autorità di Controllo</p>
       <p class="prv-p" id="prv-contact-p1">Per esercitare i tuoi diritti o per qualsiasi domanda: <strong>[<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="93e3fae0faf0fcfffffcd3f4fef2faffbdf0fcfe">[email&#160;protected]</a>]</strong></p>
       <p class="prv-p" id="prv-contact-p2">Autorità di controllo: <strong>Garante per la protezione dei dati personali</strong><br>Piazza Venezia 11 — 00187 Roma<br><a href="https://www.garanteprivacy.it" style="color:var(--p);" target="_blank" rel="noopener">www.garanteprivacy.it</a></p>
     </div>
@@ -10954,7 +11005,7 @@ setTimeout(function(){
 
     <!-- Disclaimer medico -->
     <div style="background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.18);border-radius:var(--r);padding:14px 16px;margin-top:4px;">
-      <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 6px;" class="sn" id="help-disclaimer-title">⚕️ Avviso medico importante</p>
+      <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 6px;" class="sn" id="help-disclaimer-title" data-i18n="help.disclaimer.title">⚕️ Avviso medico importante</p>
       <p style="font-size:11px;color:var(--muted);line-height:1.6;font-weight:500;margin:0;" class="sn" id="help-disclaimer-text">Iron Kinetic™ è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
     </div>
 
@@ -11046,26 +11097,26 @@ setTimeout(function(){
 <div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic Trend">
   <div id="paywall-sheet">
     <button onclick="closePaywall()" aria-label="Chiudi" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;touch-action:manipulation;min-width:44px;min-height:44px;">×</button>
-    <div id="pw-trial-badge" style="display:none;background:rgba(77,220,198,.12);color:var(--p);font-size:10px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:999px;width:fit-content;margin:0 auto 16px;"><span id="pw-days-left"></span> GIORNI RIMASTI</div>
+    <div id="pw-trial-badge" style="display:none;background:rgba(77,220,198,.12);color:var(--p);font-size:10px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:999px;width:fit-content;margin:0 auto 16px;"><span id="pw-days-left"></span> <span data-i18n="paywall.daysLeft">GIORNI RIMASTI</span></div>
     <div style="width:56px;height:56px;background:rgba(77,220,198,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
       <span class="material-symbols-outlined" style="color:var(--p);font-size:28px;font-variation-settings:'FILL' 1;">trending_up</span>
     </div>
-    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 8px;" id="pw-main-title">Iron Kinetic™ Trend</h2>
-    <p style="font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:0 0 24px;" id="pw-main-sub">Analisi predittiva sul tuo metabolismo. Proiezione a 12 settimane basata sui tuoi dati di peso, aderenza e check-in.</p>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 8px;" id="pw-main-title" data-i18n="paywall.title">Iron Kinetic™ Trend</h2>
+    <p style="font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:0 0 24px;" id="pw-main-sub" data-i18n="paywall.sub">Analisi predittiva sul tuo metabolismo. Proiezione a 12 settimane basata sui tuoi dati di peso, aderenza e check-in.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
-      <div class="pw-feat">Curva Predittiva</div>
-      <div class="pw-feat">Impronta Metabolica</div>
-      <div class="pw-feat">Report Settimanale</div>
-      <div class="pw-feat">Timing Circadiano</div>
-      <div class="pw-feat">Motore Adattivo</div>
-      <div class="pw-feat">Lista della Spesa</div>
+      <div class="pw-feat" data-i18n="paywall.feat.pred">Curva Predittiva</div>
+      <div class="pw-feat" data-i18n="paywall.feat.metabo">Impronta Metabolica</div>
+      <div class="pw-feat" data-i18n="paywall.feat.report">Report Settimanale</div>
+      <div class="pw-feat" data-i18n="paywall.feat.circ">Timing Circadiano</div>
+      <div class="pw-feat" data-i18n="paywall.feat.adapt">Motore Adattivo</div>
+      <div class="pw-feat" data-i18n="paywall.feat.shop">Lista della Spesa</div>
     </div>
     <div style="display:flex;gap:10px;margin-bottom:10px;">
-      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€6,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.75;">Cancella quando vuoi</span></button>
+      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€6,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.75;" data-i18n="checkout.cancel">Cancella quando vuoi</span></button>
       <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.12);color:var(--p);border:1px solid rgba(77,220,198,.3);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€69,99/anno<br><span style="font-weight:600;font-size:11px;">€5,83/mese · −17%</span></button>
     </div>
-    <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);padding:12px;font-weight:700;font-size:12px;cursor:pointer;margin-bottom:16px;touch-action:manipulation;">€179,99 · Accesso permanente<br><span style="font-weight:400;font-size:11px;opacity:.7;">Pagamento unico</span></button>
-    <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:8px;">Hai già un account? <span style="color:var(--p);">Accedi</span></button>
+    <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);padding:12px;font-weight:700;font-size:12px;cursor:pointer;margin-bottom:16px;touch-action:manipulation;"><span data-i18n="paywall.lifetime">€179,99 · Accesso permanente</span><br><span style="font-weight:400;font-size:11px;opacity:.7;" data-i18n="paywall.lifetime.sub">Pagamento unico</span></button>
+    <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:8px;"><span data-i18n="paywall.hasAccount">Hai già un account?</span> <span style="color:var(--p);" data-i18n="paywall.login">Accedi</span></button>
   </div>
 </div>
 
