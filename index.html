@@ -331,9 +331,11 @@ body.onboarding-active #onb-screen{
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}.bar-fill,.result-card{transition:none;}}
 /* ── Trend blur overlay ── */
 #scr-prog{position:relative;}
-#scr-prog-blur-overlay{display:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:50;background:transparent;pointer-events:none;}
-#scr-prog-blur-overlay.on{display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(8px) saturate(120%);-webkit-backdrop-filter:blur(8px) saturate(120%);background:rgba(14,14,14,.80);pointer-events:auto;}
-#scr-prog.locked-trend .pg{pointer-events:auto!important;}
+/* Fix-2: position:fixed so the overlay covers the full viewport (including sticky header/banner).
+   z-index:190 keeps it below the app nav/header (z-index:200) so those stay accessible,
+   but above all Trend content. */
+#scr-prog-blur-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:190;background:transparent;pointer-events:none;}
+#scr-prog-blur-overlay.on{display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(10px) saturate(120%);-webkit-backdrop-filter:blur(10px) saturate(120%);background:rgba(14,14,14,.82);pointer-events:auto;}
 /* ── Trackers collapsible ── */
 #trackers-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
 #trackers-chevron{transition:transform .25s ease;color:var(--muted);font-size:18px;}
@@ -867,10 +869,13 @@ body.onboarding-active #onb-screen{
 .pw-feat{background:rgba(255,255,255,.04);border:1px solid var(--glass-stroke);border-radius:var(--r3);padding:10px 12px;font-size:12px;color:var(--on-v);font-weight:500;}
 #paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9999;align-items:flex-end;justify-content:center;}
 #paywall-sheet{background:var(--s1);border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;padding:28px 24px 32px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
-#trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
-#scr-prog.locked-trend{flex-direction:column;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-#scr-prog.locked-trend .pg{flex:1;display:flex;flex-direction:column;overflow-y:auto!important;-webkit-overflow-scrolling:touch;pointer-events:auto!important;}
-#trend-lock-banner.locked-card{flex-direction:column;margin:auto 0;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px 16px;pointer-events:auto;cursor:auto;}
+#trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;gap:8px;align-items:center;justify-content:center;}
+/* Fix-8: when locked, prevent scroll-through under the blur overlay on iOS.
+   The overlay (now position:fixed) handles everything — no need to change scr-prog layout. */
+#scr-prog.locked-trend{overflow:hidden;}
+#scr-prog.locked-trend .pg{pointer-events:none;user-select:none;}
+/* Fix-3: #trend-lock-banner.locked-card used to set display:flex, overriding display:none.
+   Removed — overlay is now the single lock display mechanism. Banner stays hidden. */
 [onclick*="startCheckout"]:disabled{cursor:not-allowed;pointer-events:none;}
 /* ── Post-onboarding auth gate ── */
 #post-onb-auth-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.90);backdrop-filter:blur(18px);z-index:10001;align-items:flex-end;justify-content:center;}
@@ -1813,13 +1818,16 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px 20px;text-align:center;pointer-events:auto;width:100%;">
         <span class="material-symbols-outlined" style="font-size:52px;color:var(--p);font-variation-settings:'FILL' 1;filter:drop-shadow(0 0 16px rgba(77,220,198,.4));">lock</span>
         <div>
-          <p id="trend-blur-title" style="font-size:17px;font-weight:700;color:var(--on);margin:0 0 6px;line-height:1.3;font-family:'Space Grotesk',sans-serif;"></p>
-          <p id="trend-blur-days" style="font-size:12px;color:var(--muted);margin:0;line-height:1.5;"></p>
+          <p id="trend-blur-title" style="font-size:17px;font-weight:700;color:var(--on);margin:0 0 6px;line-height:1.3;font-family:'Space Grotesk',sans-serif;">Prova scaduta</p>
+          <p id="trend-blur-days" style="font-size:12px;color:var(--muted);margin:0;line-height:1.5;">Attiva Trend per continuare ad usare tutte le funzionalità.</p>
         </div>
-        <button onclick="openPaywall('Trend')" style="background:var(--p);color:#003730;border:none;border-radius:var(--r-pill);height:48px;padding:0 32px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;pointer-events:auto;box-shadow:0 8px 24px rgba(77,220,198,.35);font-family:'Manrope',sans-serif;"><span id="trend-blur-cta"></span></button>
+        <button onclick="openPaywall('Trend')" style="background:var(--p);color:#003730;border:none;border-radius:var(--r-pill);height:48px;padding:0 32px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;pointer-events:auto;box-shadow:0 8px 24px rgba(77,220,198,.35);font-family:'Manrope',sans-serif;"><span id="trend-blur-cta">Attiva Trend →</span></button>
       </div>
     </div>
     <div id="trend-lock-banner">
+      <!-- Fix-1: fallback content — JS overwrites via syncTrendLockCopy() -->
+      <span style="font-size:13px;color:#ccc;">Prova scaduta.</span>
+      <button onclick="openPaywall('Trend')" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:13px">Attiva Trend →</button>
     </div>
     <div class="pg">
       <p class="sec-title" data-i18n="prog.title">Progresso</p>
@@ -1872,7 +1880,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <div class="row g2" style="margin-bottom:12px;">
           <button onclick="switchChart('weight',this)" id="ctab-w" class="btn btn-neon-o btn-xs sn chart-tab" style="padding:0 14px;">Peso</button>
           <button onclick="switchChart('waist',this)" id="ctab-wst" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;" data-i18n="prog.stat.girovita">Girovita</button>
-          <button onclick="switchChart('prediction',this)" id="ctab-pred" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Previsione</button>
+          <button onclick="requireTrend(()=>switchChart('prediction',this),'Trend')" id="ctab-pred" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Previsione</button>
         </div>
         <p id="chart-empty" class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;text-align:center;padding:24px 0;display:none;">Nessun dato</p>
         <div id="wChart-wrap" style="display:none;"><canvas id="wChart"></canvas></div>
@@ -2578,15 +2586,30 @@ const STRIPE_PK='pk_live_51TJVZ2JYTPcSrsvtjpVbCEtvJFpC9pIj5n0PPOSPLtIGcQ12rc6YOH
 const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,storage:window.localStorage,storageKey:'ik_sb_session',autoRefreshToken:true,detectSessionInUrl:true}});}catch(e){console.error('[IK] Supabase init failed:',e);return null;}})();
 
 /* Global trend access state — closure prevents console override */
-const _trendState={access:false,mode:'none',daysLeft:0,_serverValidated:false};
+const _trendState={access:true,mode:'trial',daysLeft:TRIAL_DAYS,_serverValidated:false};
 function getTrendAccess(){return{..._trendState};}
 function setTrendAccess(v){Object.assign(_trendState,v,{_serverValidated:true});}
 /* Legacy compat — read-only proxy */
 let trendAccess=new Proxy(_trendState,{set(){console.warn('[IK] trendAccess is read-only — use server verification');return false;}});
 
-/* [SERVER-SUB] Local trial removed — all verification goes through verify-subscription Edge Function */
+/* Sync check for anonymous users (no network needed) */
 function _checkTrendLocal(){
-  return{access:false,mode:'none',daysLeft:0,plan:null};
+  try{
+    let stored=localStorage.getItem('ik_trial_start');
+    const resets=parseInt(localStorage.getItem('ik_trial_resets')||'0');
+    if(resets>1)return{access:false,mode:'expired'}; // max 1 reset allowed
+    const ts=parseInt(stored,10);
+    /* Reset corrupted or future-dated timestamps */
+    if(!stored||isNaN(ts)||ts>Date.now()){
+      localStorage.setItem('ik_trial_start',String(Date.now()));
+      if(stored)localStorage.setItem('ik_trial_resets',String(resets+1));
+      return{access:true,mode:'trial',daysLeft:TRIAL_DAYS};
+    }
+    const elapsed=(Date.now()-ts)/86400000;
+    const left=Math.max(0,TRIAL_DAYS-elapsed);
+    if(left<=0)return{access:false,mode:'expired'};
+    return{access:true,mode:'trial',daysLeft:Math.ceil(left)};
+  }catch(e){return{access:false,mode:'expired'};}
 }
 
 async function getUser(){
@@ -2596,32 +2619,46 @@ async function getUser(){
 
 async function checkTrendAccess(){
   const user=await getUser();
-  if(!user){
-    /* Not logged in = no access, period — trial starts only after signup via Edge Function */
-    setTrendAccess({access:false,mode:'none',daysLeft:0,plan:null});
-    return trendAccess;
-  }
+  if(!user)return _checkTrendLocal();
   try{
-    const{data:{session}}=await sb.auth.getSession();
-    if(!session)throw new Error('no session');
-    const res=await fetch(SUPABASE_URL+'/functions/v1/verify-subscription',{
-      method:'POST',
-      headers:{
-        'Authorization':'Bearer '+session.access_token,
-        'apikey':SUPABASE_KEY,
-        'Content-Type':'application/json'
+    const{data,error}=await sb.from('users')
+      .select('trend_active,trial_end,grace_period_until,plan')
+      .eq('id',user.id).single();
+    /* RLS block or network error — never expire the user, fall back to local trial */
+    if(error){
+      console.warn('[IK] checkTrendAccess server error:',error.message,'→ using local trial fallback');
+      return _checkTrendLocal();
+    }
+    /* Row exists but empty (newly upserted) — treat as fresh trial */
+    if(!data){return _checkTrendLocal();}
+    if(data?.trend_active){
+      if(data.grace_period_until){
+        const graceEnd=new Date(data.grace_period_until);
+        if(graceEnd>new Date()){
+          const hoursLeft=Math.ceil((graceEnd-new Date())/(3600000));
+          return{access:true,mode:'grace',hoursLeft,plan:data.plan||'monthly'};
+        }
+        localStorage.removeItem('ik_trend_active');
+        return{access:false,mode:'expired',reason:'grace_expired'};
       }
-    });
-    if(!res.ok)throw new Error('verify failed: '+res.status);
-    const result=await res.json();
-    setTrendAccess(result);
-    return result;
+      const resolvedPlan=data.plan||'monthly';
+      if(!data.plan)console.warn('[IK] users.plan is null for paid user — defaulting to monthly');
+      return{access:true,mode:'paid',plan:resolvedPlan};
+    }
+    if(data?.trial_end&&new Date(data.trial_end)>new Date()){
+      const left=Math.ceil((new Date(data.trial_end)-new Date())/86400000);
+      return{access:true,mode:'trial',daysLeft:left};
+    }
+    /* Row exists but no trial_end set — start local trial, avoid false expired */
+    if(!data?.trial_end){
+      console.warn('[IK] users row missing trial_end → local trial fallback');
+      return _checkTrendLocal();
+    }
   }catch(e){
-    console.warn('[IK] verify-subscription error:',e);
-    /* On error, DENY access — no localStorage fallback */
-    setTrendAccess({access:false,mode:'none',daysLeft:0,plan:null});
-    return trendAccess;
+    console.warn('[IK] checkTrendAccess exception:',e,'→ local trial fallback');
+    return _checkTrendLocal();
   }
+  return{access:false,mode:'expired'};
 }
 
 /* MED-09: module-level trend element cache */
@@ -2633,23 +2670,21 @@ function _getTrendEl(id){if(!_trendEls[id])_trendEls[id]=document.getElementById
    TODO: consider replacing with an explicit state machine if complexity grows. */
 let _trendInitResolve;const trendInitPromise=new Promise(r=>{_trendInitResolve=r;});
 async function initTrend(){
-  /* [SERVER-SUB] Server-only verification — no localStorage fallback */
+  /* Keep optimistic trial default until server responds — prevents flash of expired state */
   const user=await getUser();
-  if(!user){setTrendAccess({access:false,mode:'none',daysLeft:0,plan:null});updateTrendBadge();}
+  if(!user){setTrendAccess(_checkTrendLocal());updateTrendBadge();}
   const subMgmt=_getTrendEl('set-sub-manage');
   if(subMgmt)subMgmt.style.display=trendAccess.mode==='paid'?'block':'none';
   const subStatus=_getTrendEl('set-sub-status');
   if(subStatus&&trendAccess.mode==='paid')subStatus.textContent=t('set.sub.active');
-  /* Server verification via verify-subscription Edge Function */
-  if(user){
-    await checkTrendAccess();
+  /* Then async Supabase check (refines if logged in) */
+  const remote=await checkTrendAccess();
+  if(JSON.stringify(remote)!==JSON.stringify(getTrendAccess())){
+    setTrendAccess(remote);
     updateTrendBadge();
+    /* Fix: removed direct lb.style.display — updateTrendLockUI() is the single controller */
+    if(_getTrendEl('scr-set')?.style.display!=='none'){updateSubManagementCard();}
   }
-  const lb=_getTrendEl('trend-lock-banner');
-  const _scrProg=_getTrendEl('scr-prog');
-  const _isOnProg=_scrProg&&_scrProg.style.display!=='none';
-  if(lb)lb.style.display=(trendAccess.access||!_isOnProg)?'none':'block';
-  if(_getTrendEl('scr-set')?.style.display!=='none'){updateSubManagementCard();}
   applyTrendBlurOverlay();
   syncTrendLockCopy();
   if(trendAccess.mode==='trial'&&trendAccess.daysLeft===1)
@@ -2804,23 +2839,28 @@ function updateSubManagementCard(){
 }
 
 function updateTrendLockUI(){
+  /* Fix-3+5: single authoritative function.
+     When locked + on Trend tab: show full-screen blur overlay only.
+     Banner hidden (overlay already covers it — avoids double-lock).
+     aria-hidden blocks screen-reader bypass of underlying content. */
   const onTrend=activeTab==='prog';
   const locked=!trendAccess.access;
   const overlay=document.getElementById('scr-prog-blur-overlay');
   const lb=document.getElementById('trend-lock-banner');
+  const pg=document.querySelector('#scr-prog .pg');
 
   if(!onTrend||!locked){
     if(overlay){overlay.style.display='none';overlay.classList.remove('on');}
     if(lb)lb.style.display='none';
+    if(pg){pg.removeAttribute('aria-hidden');pg.style.pointerEvents='';}
     return;
   }
   if(overlay){
     overlay.style.display='flex';
     overlay.classList.add('on');
-    overlay.style.pointerEvents='auto';
-    overlay.style.background='rgba(14,14,14,.80)';
   }
-  if(lb)lb.style.display='flex';
+  if(lb)lb.style.display='none';
+  if(pg){pg.setAttribute('aria-hidden','true');pg.style.pointerEvents='none';}
 }
 
 let _graceToastShown=false;
@@ -3327,14 +3367,16 @@ async function _resumePostOnboardingOrBoot(){
     /* Clear any pending checkout to prevent redirect loops */
     try{localStorage.removeItem('ik_pending_checkout_plan');localStorage.removeItem('ik_checkout_retry');localStorage.removeItem('ik_auth_origin');}catch{}
     window._trendPolling=true;
+    /* Show processing toast, then poll Supabase for up to 60s */
     const pollTrendActivation=async()=>{
       const user=await getUser();
       if(!user){window._trendActivatedMsg='Processing... refresh shortly';return;}
       for(let i=0;i<12;i++){ // 12 x 5s = 60s
         try{
-          /* [SERVER-SUB] Use verify-subscription EF for consistent server-side check */
-          const result=await checkTrendAccess();
-          if(result.access&&result.mode==='paid'){
+          const{data}=await sb.from('users').select('trend_active,plan').eq('id',user.id).single();
+          if(data?.trend_active){
+            /* SEC-07: access verified server-side via Supabase RLS — not client-trusted */
+            setTrendAccess({access:true,mode:'paid',plan:data.plan||'monthly'});
             updateTrendBadge();
             if(typeof updateSubManagementCard==='function')updateSubManagementCard();
             showToast(t('toast.trendActivated'),4000);
@@ -7804,7 +7846,8 @@ function activateGeneratedPlan(){
 
 function activatePlanAndContinue(){
   hap('medium');
-  /* [SERVER-SUB] Trial starts via verify-subscription EF after signup — no localStorage */
+  /* Start 7-day trial if not already running */
+  if(!localStorage.getItem('ik_trial_start'))lsW('ik_trial_start',Date.now().toString());
   activateGeneratedPlan();
 }
 
@@ -7816,20 +7859,19 @@ function applyTrendBlurOverlay(){
 
 function syncTrendLockCopy(){
   try{
-  // Only run when Trend/Progress screen is actually active
-  const scrProg=document.getElementById('scr-prog');
-  if(!scrProg)return;
   /* Note: do NOT early-return on display:none — we must set state before tab becomes visible */
-  const lockBanner=document.getElementById('trend-lock-banner');
   const blurTitle=document.getElementById('trend-blur-title');
   const blurDays=document.getElementById('trend-blur-days');
   const blurCta=document.getElementById('trend-blur-cta');
+  /* Always update CTA text (i18n) */
   if(blurCta)blurCta.textContent=t('trend.blur.cta');
   if(trendAccess?.access){
+    /* Unlocked: just sync layout class and UI — no copy needed */
     updateTrendLockedLayout();
     updateTrendLockUI();
     return;
   }
+  /* Locked: populate blur overlay copy */
   if(blurTitle){
     if(trendAccess?.mode==='trial'&&trendAccess?.daysLeft>1){
       blurTitle.textContent=t('trend.blur.trialActive');
@@ -7846,16 +7888,9 @@ function syncTrendLockCopy(){
       blurDays.textContent=t('trend.blur.expiredSub');
     }
   }
-  if(lockBanner){
-    lockBanner.innerHTML=sanitize(`
-      <span style="font-size:13px;color:#ccc">${sanitize(t('trend.blur.expired'))}</span>
-      <button onclick="openPaywall('Trend')" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:13px">
-        ${sanitize(t('trend.blur.cta'))}
-      </button>
-    `);
-    updateTrendLockedLayout();
-  }
-  // Do NOT set lockBanner.style.display here — updateTrendLockUI() controls visibility
+  /* Fix-1+3: lockBanner innerHTML injection removed — banner is always hidden when overlay
+     is active. updateTrendLockUI() is the single controller of all lock visibility. */
+  updateTrendLockedLayout();
   updateTrendLockUI();
   }catch(e){if(typeof IK_DEBUG!=='undefined'&&IK_DEBUG)console.warn('[IK] syncTrendLockCopy error:',e);}
 }
@@ -8793,7 +8828,7 @@ function applyMod(u){
   const stepper=getEl('mod-stepper');
   if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
 }
-const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
+const KEEP_PREFIX=['ikgdpr','iklang','iknotif','ik_trial_start'];
 async function clearAppData(){if(typeof sb!=='undefined'&&sb)try{await sb.auth.signOut();}catch{}Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
 
 /* ── Custom confirm modal (FIX1) ── */
@@ -9779,17 +9814,23 @@ function switchTab(name){
     const progOverlay=document.getElementById('scr-prog-blur-overlay');
     if(progOverlay){progOverlay.style.display='none';progOverlay.classList.remove('on');}
   }
-  // [SERVER-SUB] Re-verify subscription when switching to Trend tab
+  // Single source of truth handles all cases
+  updateTrendLockUI();
   if(name==='prog'){
-    checkTrendAccess().then(result=>{
-      updateTrendBadge();
-      updateTrendLockUI();
-      syncTrendLockCopy();
-      if(result.access&&_tabDirty.prog){
-        renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;
+    syncTrendLockCopy();
+    /* Fix-7: re-validate access each time user navigates to Trend
+       so expiry that happened in background is caught immediately */
+    checkTrendAccess().then(remote=>{
+      const cur=getTrendAccess();
+      if(JSON.stringify(remote)!==JSON.stringify(cur)){
+        setTrendAccess(remote);
+        updateTrendBadge();
+        syncTrendLockCopy();
+        updateTrendLockUI();
       }
-    });
+    }).catch(()=>{});
   }
+  if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
   if(name==='set'){renderSettings();renderKcalRing();_tabDirty.set=false;trendInitPromise.then(()=>updateSubManagementCard());_ikRefLoad();}
   if(name==='info'){updateConsentUI();}
   if(name==='oggi'){try{renderTodayAction();}catch(e){}try{renderPlanUpdateNote();}catch(e){}}
