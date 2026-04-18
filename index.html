@@ -1690,29 +1690,29 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div class="card" style="padding:16px;">
         <span class="sec-label" data-i18n="prog.registra">Registra</span>
         <div class="grid2" style="margin-bottom:10px;">
-          <div><label class="field-label" for="log-w">Peso (kg)</label><input class="inp" id="log-w" type="number" step="0.1" min="30" max="300" placeholder="78.5" inputmode="decimal"/></div>
-          <div><label class="field-label" for="log-wst">Girovita (cm)</label><input class="inp" id="log-wst" type="number" step="0.1" min="40" max="200" placeholder="84.0" inputmode="decimal"/></div>
+          <div><label class="field-label" for="log-w" data-i18n="prog.peso">Peso (kg)</label><input class="inp" id="log-w" type="number" step="0.1" min="30" max="300" placeholder="78.5" inputmode="decimal"/></div>
+          <div><label class="field-label" for="log-wst" data-i18n="prog.girovita">Girovita (cm)</label><input class="inp" id="log-wst" type="number" step="0.1" min="40" max="200" placeholder="84.0" inputmode="decimal"/></div>
         </div>
-        <div style="margin-bottom:12px;"><label class="field-label" for="log-date">Data</label><input class="inp" id="log-date" type="date"/></div>
-        <button onclick="logMetric()" class="btn btn-primary w100 sn">+ Aggiungi Rilevazione</button>
+        <div style="margin-bottom:12px;"><label class="field-label" for="log-date" data-i18n="prog.data">Data</label><input class="inp" id="log-date" type="date"/></div>
+        <button onclick="logMetric()" class="btn btn-primary w100 sn" data-i18n="prog.btn.aggiungi">+ Aggiungi Rilevazione</button>
       </div>
       <!-- Stat chips - horizontal scroll -->
       <div class="prog-stat-scroll">
         <div class="prog-stat-row">
           <div class="prog-stat-chip">
-            <span class="t-xxs muted sn">Ultimo peso</span>
+            <span class="t-xxs muted sn" data-i18n="prog.stat.ultimoPeso">Ultimo peso</span>
             <div class="stat-val neon sn" id="st-w" style="font-size:22px;margin-top:6px;">—</div>
           </div>
           <div class="prog-stat-chip sa">
-            <span class="t-xxs muted sn">Variazione</span>
+            <span class="t-xxs muted sn" data-i18n="prog.stat.variazione">Variazione</span>
             <div class="stat-val sn" id="st-wdiff" style="font-size:22px;margin-top:6px;">—</div>
           </div>
           <div class="prog-stat-chip">
-            <span class="t-xxs muted sn">Girovita</span>
+            <span class="t-xxs muted sn" data-i18n="prog.stat.girovita">Girovita</span>
             <div class="stat-val sn" id="st-wst" style="font-size:22px;margin-top:6px;">—</div>
           </div>
           <div class="prog-stat-chip sa">
-            <span class="t-xxs muted sn">Var. girovita</span>
+            <span class="t-xxs muted sn" data-i18n="prog.stat.varGirovita">Var. girovita</span>
             <div class="stat-val sn" id="st-wstdiff" style="font-size:22px;margin-top:6px;">—</div>
           </div>
         </div>
@@ -1721,23 +1721,23 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div class="card" style="padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
           <div>
-            <p id="chart-mode-label" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin:0 0 5px;">Weight Trend</p>
+            <p id="chart-mode-label" class="sn" data-i18n="prog.chart.peso" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin:0 0 5px;">Trend Peso</p>
             <div style="display:flex;align-items:center;gap:6px;">
               <span style="width:7px;height:7px;border-radius:50%;background:var(--p);display:inline-block;flex-shrink:0;"></span>
-              <span class="t-xxs muted sn">Reale</span>
+              <span class="t-xxs muted sn" data-i18n="prog.chart.reale">Reale</span>
             </div>
           </div>
           <div style="text-align:right;">
             <div id="chart-monthly-delta" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--p);">—</div>
-            <span class="t-xxs muted sn">questo mese</span>
+            <span class="t-xxs muted sn" data-i18n="prog.chart.questeMese">questo mese</span>
           </div>
         </div>
         <div class="row g2" style="margin-bottom:12px;">
-          <button onclick="switchChart('weight',this)" id="ctab-w" class="btn btn-neon-o btn-xs sn chart-tab" style="padding:0 14px;">Peso</button>
-          <button onclick="switchChart('waist',this)" id="ctab-wst" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Girovita</button>
-          <button onclick="switchChart('prediction',this)" id="ctab-pred" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Previsione</button>
+          <button onclick="switchChart('weight',this)" id="ctab-w" class="btn btn-neon-o btn-xs sn chart-tab" style="padding:0 14px;" data-i18n="prog.chart.tab.peso">Peso</button>
+          <button onclick="switchChart('waist',this)" id="ctab-wst" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;" data-i18n="prog.chart.tab.girovita">Girovita</button>
+          <button onclick="switchChart('prediction',this)" id="ctab-pred" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;" data-i18n="prog.chart.tab.pred">Previsione</button>
         </div>
-        <p id="chart-empty" class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;text-align:center;padding:24px 0;display:none;">Nessun dato</p>
+        <p id="chart-empty" class="muted sn" data-i18n="prog.chart.noData" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;text-align:center;padding:24px 0;display:none;">Nessun dato</p>
         <div id="wChart-wrap" style="display:none;"><canvas id="wChart"></canvas></div>
         <div id="prediction-summary" style="display:none;margin-top:10px;padding:10px;background:var(--s2);border-radius:var(--r3);border:1px solid var(--line);">
           <p id="prediction-text" class="sn" style="font-size:11px;color:var(--muted);line-height:1.5;margin:0;"></p>
@@ -1745,20 +1745,20 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       </div>
       <!-- Check-in analytics (unchanged) -->
       <div class="analytics-card" id="checkin-analytics-card">
-        <div class="rowb"><span class="sec-label" data-i18n="prog.checkin.title" style="margin-bottom:0;">Trend check-in</span><span id="checkin-last7-lbl" class="t-xxs muted">ULTIMI 7 GIORNI</span></div>
+        <div class="rowb"><span class="sec-label" data-i18n="prog.checkin.title" style="margin-bottom:0;">Trend check-in</span><span id="checkin-last7-lbl" class="t-xxs muted" data-i18n="prog.checkin.ultimi7">ULTIMI 7 GIORNI</span></div>
         <div class="analytics-bars">
-          <div class="analytics-row"><span class="analytics-lab">Fame</span><div class="analytics-track"><div class="analytics-fill" id="an-hunger"></div></div><span class="analytics-val" id="an-hunger-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab">Energia</span><div class="analytics-track"><div class="analytics-fill" id="an-energy"></div></div><span class="analytics-val" id="an-energy-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab">Aderenza</span><div class="analytics-track"><div class="analytics-fill" id="an-adherence"></div></div><span class="analytics-val" id="an-adherence-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab">Digestione</span><div class="analytics-track"><div class="analytics-fill" id="an-digestion"></div></div><span class="analytics-val" id="an-digestion-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="checkin.field.fame">Fame</span><div class="analytics-track"><div class="analytics-fill" id="an-hunger"></div></div><span class="analytics-val" id="an-hunger-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="checkin.field.energia">Energia</span><div class="analytics-track"><div class="analytics-fill" id="an-energy"></div></div><span class="analytics-val" id="an-energy-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="checkin.field.aderenza">Aderenza</span><div class="analytics-track"><div class="analytics-fill" id="an-adherence"></div></div><span class="analytics-val" id="an-adherence-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab" data-i18n="checkin.field.digestione">Digestione</span><div class="analytics-track"><div class="analytics-fill" id="an-digestion"></div></div><span class="analytics-val" id="an-digestion-v">--</span></div>
         </div>
-        <div class="note-box" id="checkin-analytics-note">Salva almeno 2-3 check-in per visualizzare trend interpretabili.</div>
+        <div class="note-box" id="checkin-analytics-note" data-i18n="prog.checkin.note_default">Salva almeno 2-3 check-in per visualizzare trend interpretabili.</div>
       </div>
       <!-- Metabolic Fingerprint -->
       <div class="card" id="fingerprint-card" style="padding:14px;display:none;">
         <div class="rowb" style="margin-bottom:12px;">
           <span class="sec-label" style="margin-bottom:0;" data-i18n="prog.fp.title">Impronta Metabolica</span>
-          <span id="fp-badge-lbl" class="t-xxs muted">PROFILO UNICO</span>
+          <span id="fp-badge-lbl" class="t-xxs muted" data-i18n="prog.fp.badge">PROFILO UNICO</span>
         </div>
         <div id="fingerprint-content"></div>
       </div>
@@ -1782,7 +1782,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             </div>
             <div class="wr-stat-box">
               <div class="wr-stat-num" id="wr-checkin-val" style="color:var(--on);">—</div>
-              <div class="wr-stat-lbl">Check-in</div>
+              <div class="wr-stat-lbl" data-i18n="weekly.report.label.checkin">Check-in</div>
             </div>
             <div class="wr-stat-box">
               <div class="wr-stat-num" id="wr-adher-val" style="color:var(--p);">—</div>
@@ -1849,20 +1849,20 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <!-- Calendario aderenza -->
       <div class="card" style="padding:14px;">
         <span class="sec-label" data-i18n="prog.calendar.title">Calendario Aderenza</span>
-        <p class="muted sn" style="font-size:10px;margin-bottom:12px;">Verde: ≥80% · Giallo: 40-80% · Rosso: &lt;40%</p>
+        <p class="muted sn" data-i18n="prog.calendar.legend" style="font-size:10px;margin-bottom:12px;">Verde: ≥80% · Giallo: 40-80% · Rosso: &lt;40%</p>
         <div id="adherence-calendar"></div>
       </div>
 
       <!-- Promemoria -->
       <div class="card" style="padding:14px;">
         <span class="sec-label" data-i18n="prog.notif.title">Promemoria Check-in</span>
-        <p id="notif-status-txt" class="muted sn" style="font-size:11px;margin-bottom:10px;">Promemoria giornaliero per il check-in</p>
+        <p id="notif-status-txt" class="muted sn" data-i18n="prog.notif.subtitle" style="font-size:11px;margin-bottom:10px;">Promemoria giornaliero per il check-in</p>
         <div class="row g2" style="margin-bottom:10px;align-items:center;">
-          <span class="muted sn" style="font-size:11px;font-weight:600;">Ora:</span>
+          <span class="muted sn" data-i18n="prog.notif.ora" style="font-size:11px;font-weight:600;">Ora:</span>
           <input id="notif-hour" type="number" min="5" max="23" value="8" style="width:52px;background:var(--s2);border:1px solid var(--line);border-radius:var(--r3);color:var(--on);font-size:12px;padding:4px 8px;text-align:center;" />
           <span class="muted sn" style="font-size:11px;">:00</span>
         </div>
-        <button id="notif-perm-btn" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
+        <button id="notif-perm-btn" onclick="requestNotifPermission()" class="btn btn-neon-o w100" data-i18n="prog.notif.btn" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
       </div>
 
       <!-- Storico -->
@@ -1870,7 +1870,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <div style="padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;">
           <span class="sec-label" data-i18n="prog.storico.title" style="margin-bottom:0;">Storico</span>
         </div>
-        <div id="hist-list"><div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Nessuna voce —</span></div></div>
+        <div id="hist-list"><div style="padding:14px;text-align:center;"><span class="muted sn" data-i18n="prog.storico.empty" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Nessuna voce —</span></div></div>
       </div>
       <!-- iOS/Safari scroll spacer: padding-bottom on overflow:scroll is unreliable — explicit spacer guarantees content clears the floating nav bar -->
       <div aria-hidden="true" style="height:max(env(safe-area-inset-bottom,20px),20px);flex-shrink:0;"></div>
@@ -2583,7 +2583,7 @@ function updateSubManagementCard(){
     if(progLbl)progLbl.textContent='';
     if(progRgt)progRgt.textContent='';
     if(progBar)progBar.style.width='0%';
-    if(ctaWrap)ctaWrap.innerHTML=sanitize(`
+    if(ctaWrap)ctaWrap.innerHTML=`
       <p style="font-size:11px;color:var(--muted);margin:0 0 8px;line-height:1.5">${t('sub.anon.prompt')}</p>
       <button onclick="signInWithGoogle()" class="btn btn-primary w100"
         style="font-size:12px;height:44px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px">
@@ -2594,7 +2594,7 @@ function updateSubManagementCard(){
           <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
         </svg>
         ${t('sub.anon.cta')}
-      </button>`);
+      </button>`;
     return;
   }
 
@@ -2626,7 +2626,7 @@ function updateSubManagementCard(){
     if(progLbl)progLbl.textContent=t('sub.trial.prog.left',{d:TRIAL_DAYS-d});
     if(progRgt)progRgt.textContent=t('sub.trial.prog.right',{d});
     if(progBar){progBar.style.width=`${Math.round(pct*100)}%`;progBar.style.background=col;}
-    ctaWrap.innerHTML=sanitize(`
+    ctaWrap.innerHTML=`
       <button onclick="startCheckout('monthly')" class="btn btn-primary w100"
         style="font-size:12px;height:44px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">star</span>
@@ -2639,7 +2639,7 @@ function updateSubManagementCard(){
       <button onclick="startCheckout('lifetime')" class="btn btn-ghost w100"
         style="font-size:11px;height:36px;color:var(--muted)">
         ${t('sub.trial.cta.lifetime')}
-      </button>`);
+      </button>`;
 
   }else if(mode==='paid'){
     const isLT=plan==='lifetime';
@@ -2654,12 +2654,12 @@ function updateSubManagementCard(){
     if(progLbl)progLbl.textContent=t('sub.paid.prog.left');
     if(progRgt)progRgt.textContent=t(isLT?'sub.paid.prog.right.lifetime':isAN?'sub.paid.prog.right.annual':'sub.paid.prog.right.monthly');
     if(progBar){progBar.style.width='100%';progBar.style.background='var(--p)';}
-    ctaWrap.innerHTML=sanitize(`
+    ctaWrap.innerHTML=`
       <button onclick="openBillingPortal()" class="btn btn-ghost w100"
         style="font-size:12px;height:44px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;border-color:var(--p);color:var(--p)">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">manage_accounts</span>
         ${t('sub.paid.cta.manage')}
-      </button>`);
+      </button>`;
 
   }else if(mode==='grace'){
     const h=hoursLeft||0;
@@ -2675,12 +2675,12 @@ function updateSubManagementCard(){
     if(progLbl)progLbl.textContent=t('sub.grace.prog.left');
     if(progRgt)progRgt.textContent=t('sub.grace.prog.right',{h});
     if(progBar){progBar.style.width=`${Math.round((h/48)*100)}%`;progBar.style.background='var(--orange)';}
-    ctaWrap.innerHTML=sanitize(`
+    ctaWrap.innerHTML=`
       <button onclick="openBillingPortal()" class="btn w100"
         style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:12px;height:44px;font-weight:800;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">warning</span>
         ${t('sub.grace.cta.update')}
-      </button>`);
+      </button>`;
 
   }else{
     badge.textContent=t('sub.badge.expired');
@@ -2693,7 +2693,7 @@ function updateSubManagementCard(){
     if(progLbl)progLbl.textContent=t('sub.expired.prog.left');
     if(progRgt)progRgt.textContent='';
     if(progBar)progBar.style.width='0%';
-    ctaWrap.innerHTML=sanitize(`
+    ctaWrap.innerHTML=`
       <button onclick="startCheckout('monthly')" class="btn btn-primary w100"
         style="font-size:12px;height:44px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px">
         <span class="material-symbols-outlined sn" style="font-size:16px;font-variation-settings:'FILL' 1">star</span>
@@ -2706,7 +2706,7 @@ function updateSubManagementCard(){
       <button onclick="startCheckout('lifetime')" class="btn btn-ghost w100"
         style="font-size:11px;height:36px;color:var(--muted)">
         ${t('sub.expired.cta.lifetime')}
-      </button>`);
+      </button>`;
   }
 }
 
@@ -3775,11 +3775,20 @@ it:{
   'weekly.report.share':'Condividi',
   'weekly.report.label.peso':'Peso',
   'weekly.report.label.pasti':'Pasti',
+  'weekly.report.label.checkin':'Check-in',
+  'prog.chart.tab.peso':'Peso',
+  'prog.chart.tab.girovita':'Girovita',
+  'prog.chart.tab.pred':'Previsione',
+  'checkin.field.fame':'Fame',
+  'checkin.field.energia':'Energia',
+  'checkin.field.aderenza':'Aderenza',
+  'checkin.field.digestione':'Digestione',
   'checkout.login.title':'Accedi per continuare',
   'checkout.login.sub':'Accedi con Google per completare il pagamento e attivare Iron Kinetic™ Trend.',
   'checkout.login.badge':'Richiesto',
   'checkout.login.cta':'Continua con Google',
   'weekly.report.label.fame':'Fame media',
+  'weekly.report.label.energia':'Energia media',
   'weekly.report.chart.lbl':'Aderenza settimanale',
   'weekly.insight.noData':'Registra pesate e check-in questa settimana per ricevere la tua analisi personalizzata.',
   'weekly.insight.weightDown':'Hai perso {val} kg questa settimana. Ottimo lavoro — il piano sta funzionando. 🎯',
@@ -4416,11 +4425,20 @@ en:{
   'weekly.report.share':'Share',
   'weekly.report.label.peso':'Weight',
   'weekly.report.label.pasti':'Meals done',
+  'weekly.report.label.checkin':'Check-in',
+  'prog.chart.tab.peso':'Weight',
+  'prog.chart.tab.girovita':'Waist',
+  'prog.chart.tab.pred':'Prediction',
+  'checkin.field.fame':'Hunger',
+  'checkin.field.energia':'Energy',
+  'checkin.field.aderenza':'Adherence',
+  'checkin.field.digestione':'Digestion',
   'checkout.login.title':'Sign in to continue',
   'checkout.login.sub':'Sign in with Google to complete your payment and activate Iron Kinetic™ Trend.',
   'checkout.login.badge':'Required',
   'checkout.login.cta':'Continue with Google',
   'weekly.report.label.fame':'Avg hunger',
+  'weekly.report.label.energia':'Avg energy',
   'weekly.report.chart.lbl':'Weekly adherence',
   'weekly.insight.noData':'Log your weight and check-ins this week to receive your personalised analysis.',
   'weekly.insight.weightDown':'You lost {val} kg this week. Great work — the plan is working. 🎯',
@@ -4639,7 +4657,7 @@ const _HELP_FEATURES=[
 function renderHelpFeatures(){
   const el=document.getElementById('help-features-list');
   if(!el)return;
-  el.innerHTML=sanitize(_HELP_FEATURES.map(f=>`
+  el.innerHTML=_HELP_FEATURES.map(f=>`
     <div class="help-feature-item">
       <div class="help-feature-head">
         <div class="help-feature-ico">
@@ -4648,7 +4666,7 @@ function renderHelpFeatures(){
         <span class="help-feature-name sn">${sanitize(t(f.key+'.title'))}</span>
       </div>
       <p class="help-feature-desc sn">${sanitize(t(f.key+'.desc'))}</p>
-    </div>`).join(''));
+    </div>`).join('');
 }
 function applyTranslations(deferOffscreen){
   /* ── i18n static patch ── */
@@ -5638,7 +5656,7 @@ function renderFingerprint(){
   card.style.display='block';
   const bar=(v,color)=>`<div style="height:6px;border-radius:3px;background:var(--s3);overflow:hidden;"><div style="width:${Math.min(100,Math.max(0,v))}%;height:100%;background:${color};border-radius:3px;transition:width .4s;"></div></div>`;
   const tip=(key)=>`<button class="sn" onclick="showFingerprintTip('${key}')" style="background:none;border:none;color:var(--muted);font-size:11px;padding:0 0 0 4px;cursor:pointer;vertical-align:middle;line-height:1;" aria-label="${t('aria.info')}">ⓘ</button>`;
-  cont.innerHTML=sanitize(`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+  cont.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
     <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.efficienza')}</span>${tip('efficiency')}
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--p);margin:2px 0 4px;">${fp.efficiency}%</p>
       ${bar(fp.efficiency,'var(--p)')}
@@ -5653,7 +5671,7 @@ function renderFingerprint(){
     <div><span class="t-xxs muted sn" style="letter-spacing:.08em;">${t('fp.perditaReale')}</span>${tip('weekly')}
       <p class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--on);margin:2px 0 4px;">${fp.avgWeekly}kg/w</p>
       <p class="muted sn" style="font-size:10px;margin-top:2px;">${t('fp.mediaSettimanaleFP')}</p></div>
-  </div>`);
+  </div>`;
   },'Metabolic Fingerprint',true);
 }
 
@@ -5922,7 +5940,7 @@ function renderWeeklyReport(){
       :['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
     const now_dow=new Date().getDay();// 0=sun
     // Map: i=0 is 6 days ago
-    barEl.innerHTML=sanitize(days7.map((item,i)=>{
+    barEl.innerHTML=days7.map((item,i)=>{
       const realDow=((now_dow-6+i)+7)%7;// 0-indexed sun=0
       const lblIdx=(realDow+6)%7;// convert to mon=0
       const color=item.p>=80?'var(--p)':item.p>=50?'var(--orange)':'rgba(199,196,216,.2)';
@@ -5931,9 +5949,8 @@ function renderWeeklyReport(){
         <div class="wr-bar-track"><div class="wr-bar-fill" style="height:${h}px;background:${color};min-height:4px;"></div></div>
         <span class="wr-bar-lbl">${dayLabels[lblIdx]}</span>
       </div>`;
-    }).join(''));
+    }).join('');
   }
-  /* Chart label i18n */
   const lbl=document.getElementById('wr-chart-lbl');
   if(lbl)lbl.textContent=t('weekly.report.chart.lbl');
   },'Weekly Report',true);
@@ -7745,12 +7762,12 @@ function syncTrendLockCopy(){
     }
   }
   if(lockBanner){
-    lockBanner.innerHTML=sanitize(`
-      <span style="font-size:13px;color:#ccc">${sanitize(t('trend.blur.expired'))}</span>
+    lockBanner.innerHTML=`
+      <span style="font-size:13px;color:#ccc">${t('trend.blur.expired')}</span>
       <button onclick="openPaywall('Trend')" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:13px">
-        ${sanitize(t('trend.blur.cta'))}
+        ${t('trend.blur.cta')}
       </button>
-    `);
+    `;
     updateTrendLockedLayout();
   }
   // Do NOT set lockBanner.style.display here — updateTrendLockUI() controls visibility
@@ -9250,7 +9267,7 @@ function openShoppingList(){
   const categories=generateShoppingList();
   const isEmpty=Object.values(categories).every(arr=>arr.length===0);
   if(isEmpty){
-    shopEl.innerHTML=sanitize(`<div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;">${t('shopping.empty')}</span></div>`);
+    shopEl.innerHTML=`<div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;">${t('shopping.empty')}</span></div>`;
     openModal('shopping');
     return;
   }
@@ -9276,7 +9293,7 @@ function openShoppingList(){
     }
   });
 
-  shopEl.innerHTML=sanitize(html);
+  shopEl.innerHTML=html;
   openModal('shopping');
   },'Shopping List');
 }
@@ -9605,7 +9622,7 @@ function renderCalendar(){
   }
   html+=`</div>`;
 
-  calEl.innerHTML=sanitize(html);
+  calEl.innerHTML=html;
 }
 
 function updateAdherenceCalendar(){
@@ -9763,12 +9780,12 @@ async function _ikRefLoad(){
     if(previewEl)previewEl.textContent=creditCents>0?t('ref.preview.credit',{amount:creditEur}):t('ref.preview.empty');
     if(ctaWrap){
       if(!onboarded){
-        ctaWrap.innerHTML=sanitize('<button class="btn btn-primary w100" onclick="_ikRefStartOnboarding()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">account_balance</span>'+t('ref.cta.connect')+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.connectSub')+'</p>');
+        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefStartOnboarding()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">account_balance</span>'+t('ref.cta.connect')+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.connectSub')+'</p>';
       }else if(canPayout){
-        ctaWrap.innerHTML=sanitize('<button class="btn btn-primary w100" onclick="_ikRefRequestPayout()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">payments</span>'+t('ref.cta.payout',{amount:creditEur})+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.payoutSub')+'</p>');
+        ctaWrap.innerHTML='<button class="btn btn-primary w100" onclick="_ikRefRequestPayout()" style="gap:8px;margin-bottom:6px;"><span class="material-symbols-outlined" style="font-size:18px;">payments</span>'+t('ref.cta.payout',{amount:creditEur})+'</button><p style="font-size:10px;color:var(--muted);text-align:center;margin:0;">'+t('ref.cta.payoutSub')+'</p>';
       }else{
         const rem=((2000-creditCents)/100).toFixed(2);
-        ctaWrap.innerHTML=sanitize('<div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 14px;display:flex;align-items:center;gap:10px;"><span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">check_circle</span><div><div style="font-size:12px;font-weight:600;color:var(--on);">'+t('ref.status.connected')+'</div><div style="font-size:10px;color:var(--muted);">'+t('ref.status.minRemaining',{amount:rem})+'</div></div></div>');
+        ctaWrap.innerHTML='<div style="background:var(--s2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 14px;display:flex;align-items:center;gap:10px;"><span class="material-symbols-outlined" style="font-size:20px;color:var(--p);">check_circle</span><div><div style="font-size:12px;font-weight:600;color:var(--on);">'+t('ref.status.connected')+'</div><div style="font-size:10px;color:var(--muted);">'+t('ref.status.minRemaining',{amount:rem})+'</div></div></div>';
       }
     }
   }catch(e){console.warn('[IK][referral] load error',e);}
