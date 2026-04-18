@@ -9759,6 +9759,11 @@ async function _ikRefLoad(){
         'Content-Type':'application/json'
       }
     });
+    if(!codeRes.ok){
+      if(linkEl){linkEl.textContent=t('ref.error.generic');linkEl.dataset.link='';}
+      console.warn('[IK][referral] generate-referral-code HTTP error',codeRes.status);
+      return;
+    }
     const codeData=await codeRes.json();
     if(codeData.error||!codeData.code){
       if(linkEl){linkEl.textContent=t('ref.error.generic');linkEl.dataset.link='';}
@@ -9813,12 +9818,15 @@ function _refShareLink(){
 async function _ikRefStartOnboarding(){
   const{data:{session}}=await sb.auth.getSession();
   if(!session){showToast(t('ref.onboard.loginRequired'));return;}
+  let token=session.access_token;
+  try{const{data:r}=await sb.auth.refreshSession();if(r?.session?.access_token)token=r.session.access_token;}catch{}
   showToast(t('ref.onboard.opening'));
   try{
     const res=await fetch(SUPABASE_URL+'/functions/v1/connect-onboard',{
       method:'POST',
-      headers:{Authorization:'Bearer '+session.access_token,apikey:SUPABASE_KEY,'Content-Type':'application/json'}
+      headers:{Authorization:'Bearer '+token,apikey:SUPABASE_KEY,'Content-Type':'application/json'}
     });
+    if(!res.ok){showToast(t('ref.error.generic'));console.error('[IK][referral] connect-onboard HTTP error',res.status);return;}
     const{url,error}=await res.json();
     if(url){location.href=url;}
     else{showToast(t('ref.error.generic')+': '+(error||''));}
@@ -9830,12 +9838,15 @@ async function _ikRefStartOnboarding(){
 async function _ikRefRequestPayout(){
   const{data:{session}}=await sb.auth.getSession();
   if(!session)return;
+  let token=session.access_token;
+  try{const{data:r}=await sb.auth.refreshSession();if(r?.session?.access_token)token=r.session.access_token;}catch{}
   showToast(t('ref.payout.processing'));
   try{
     const res=await fetch(SUPABASE_URL+'/functions/v1/request-payout',{
       method:'POST',
-      headers:{Authorization:'Bearer '+session.access_token,apikey:SUPABASE_KEY,'Content-Type':'application/json'}
+      headers:{Authorization:'Bearer '+token,apikey:SUPABASE_KEY,'Content-Type':'application/json'}
     });
+    if(!res.ok){showToast(t('ref.error.generic'));console.error('[IK][referral] request-payout HTTP error',res.status);return;}
     const body=await res.json();
     if(body.success){
       showToast(t('ref.payout.success'));
