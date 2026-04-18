@@ -107,6 +107,8 @@ body{margin:0;height:100%;height:100dvh;width:100%;overflow:hidden;overscroll-be
 #scr-set>.pg,#scr-info>.pg{padding-top:12px;}
 /* Fix: ensure Today screen can scroll to bottom (Trackers fully visible) */
 #scr-oggi>.pg{padding-bottom:32px;}
+/* Fix: ensure Trend/Progress screen scrolls fully to bottom — padding must clear the floating nav + safe area + extra breathing room */
+#scr-prog>.pg{padding-bottom:calc(var(--page-bottom) + max(env(safe-area-inset-bottom,0px),0px) + 40px);}
 .card{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);}
 .card-ghost{background:rgba(255,255,255,.04);border:1px solid var(--glass-stroke);border-radius:var(--r);}
 .card-neon{background:rgba(77,220,198,.04);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);}
@@ -221,22 +223,7 @@ textarea.inp{height:auto;padding:12px 14px;resize:none;line-height:1.5;}
 .install-banner{position:fixed;bottom:calc(var(--nav-bottom) + var(--nav-h) + 8px);left:12px;right:12px;background:var(--s1);border:1px solid rgba(77,220,198,.22);border-radius:var(--r2);padding:10px 12px;display:flex;align-items:center;gap:10px;z-index:490;box-shadow:var(--glass-shadow);}
 #toast{position:fixed;bottom:calc(var(--nav-bottom) + var(--nav-h) + 14px + var(--kb-offset));left:50%;transform:translateX(-50%) translateY(16px) scale(.95);background:rgba(20,20,20,.96);border:1px solid rgba(77,220,198,.22);color:var(--on);font-size:12px;font-weight:600;font-family:'Manrope',sans-serif;padding:9px 18px;border-radius:var(--r-pill);opacity:0;transition:opacity .22s cubic-bezier(.4,0,.2,1),transform .22s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;z-index:500;max-width:calc(100vw - 40px);overflow:hidden;text-overflow:ellipsis;box-shadow:0 8px 32px rgba(0,0,0,.4);}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0) scale(1);}
-#onb-screen{
-  display:none;
-  position:fixed;
-  inset:0;
-  min-width:320px;
-  padding-top:max(var(--sat),16px);
-  padding-bottom:max(var(--sab),24px);
-  z-index:100;
-  background:var(--bg);
-  flex-direction:column;
-  overflow-y:auto;
-  overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior-y:contain;
-  scroll-behavior:smooth;
-}
+#onb-screen{display:none;position:fixed;inset:0;min-width:320px;padding-top:var(--sat);padding-bottom:calc(var(--nav-bottom) + var(--nav-h) + 16px + var(--kb-offset));z-index:100;background:var(--bg);flex-direction:column;overflow-y:scroll;-webkit-overflow-scrolling:touch;scroll-padding-bottom:calc(var(--nav-bottom) + var(--nav-h) + var(--kb-offset) + 16px);}
 #onb-screen.on{display:flex;}
 #app-shell{display:none;height:100%;height:100dvh;min-height:0;position:relative;overflow:hidden;}
 #app-shell.on{display:block;}
@@ -244,17 +231,17 @@ textarea.inp{height:auto;padding:12px 14px;resize:none;line-height:1.5;}
 body.onboarding-active #hdr,
 body.onboarding-active #nav{display:none!important;}
 body.onboarding-active #onb-screen{
-  padding-bottom:max(var(--sab),32px);
+  padding-bottom:calc(var(--sab) + 24px);
+  scroll-padding-bottom:calc(var(--sab) + 24px);
 }
 .onb-step{display:none;flex-direction:column;}
 .onb-step.on{display:flex;}
-.stepper{display:flex;align-items:center;gap:6px;min-height:32px;padding:4px 0;}
-.step-dot{width:8px;height:8px;border-radius:50%;background:var(--s3);border:1.5px solid rgba(255,255,255,.06);transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;touch-action:manipulation;position:relative;}
-.step-dot::before{content:'';position:absolute;inset:-6px;border-radius:50%;}
-.step-dot.on{width:24px;border-radius:4px;background:var(--p);border-color:transparent;}
-.step-dot.completed{background:rgba(77,220,198,.4);border-color:rgba(77,220,198,.2);}
-.result-card{background:var(--s1);border:1px solid rgba(77,220,198,.22);border-radius:var(--r);padding:18px;overflow:hidden;max-height:0;opacity:0;transition:max-height .6s cubic-bezier(.4,0,.2,1),opacity .4s ease .1s;}
-.result-card.on{max-height:3200px;opacity:1;}
+.stepper{display:flex;align-items:center;gap:6px;min-height:20px;}
+.step-dot{width:6px;height:6px;border-radius:50%;background:var(--s3);transition:all .25s;}
+.step-dot.on{width:20px;border-radius:3px;background:var(--p);}
+.step-dot.completed{background:var(--p);opacity:0.5;}
+.result-card{background:var(--s1);border:1px solid rgba(77,220,198,.22);border-radius:var(--r);padding:18px;overflow:hidden;max-height:0;opacity:0;transition:max-height .5s cubic-bezier(.4,0,.2,1),opacity .4s ease .1s;}
+.result-card.on{max-height:1400px;opacity:1;}
 .result-big{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;letter-spacing:-.05em;line-height:1;color:var(--p);}
 .result-macro-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;}
 .result-macro{background:var(--s2);border-radius:var(--r2);padding:10px;text-align:center;}
@@ -290,9 +277,9 @@ body.onboarding-active #onb-screen{
 .micro-chip{height:36px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--s2);color:var(--on-v);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;touch-action:manipulation;}
 .active-chip{background:rgba(77,220,198,.12)!important;border-color:rgba(77,220,198,.28)!important;color:var(--p)!important;}
 /* Food tag chips for onboarding */
-.food-tag{height:38px;padding:0 14px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--s2);color:var(--on-v);font-size:11px;font-weight:600;touch-action:manipulation;transition:all .15s;cursor:pointer;line-height:1;}
+.food-tag{height:36px;padding:0 14px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--s2);color:var(--on-v);font-size:11px;font-weight:600;touch-action:manipulation;transition:all .15s;cursor:pointer;}
 .food-tag.on{background:rgba(77,220,198,.14);border-color:rgba(77,220,198,.32);color:var(--p);}
-.food-tag:active{opacity:.75;transform:scale(.95);}
+.food-tag:active{opacity:.75;}
 .analytics-card{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;}
 .analytics-bars{display:flex;flex-direction:column;gap:8px;}
 .analytics-row{display:grid;grid-template-columns:88px 1fr 42px;gap:10px;align-items:center;}
@@ -330,12 +317,10 @@ body.onboarding-active #onb-screen{
 .streak-badge .fire{font-size:12px;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}.bar-fill,.result-card{transition:none;}}
 /* ── Trend blur overlay ── */
-#scr-prog{position:relative;}
-/* Fix-2: position:fixed so the overlay covers the full viewport (including sticky header/banner).
-   z-index:190 keeps it below the app nav/header (z-index:200) so those stay accessible,
-   but above all Trend content. */
-#scr-prog-blur-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:190;background:transparent;pointer-events:none;}
-#scr-prog-blur-overlay.on{display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(10px) saturate(120%);-webkit-backdrop-filter:blur(10px) saturate(120%);background:rgba(14,14,14,.82);pointer-events:auto;}
+/* Overlay lives OUTSIDE app-shell as a fixed sibling — never inside a scroll container */
+/* No isolation:isolate needed — removed as it trapped position:fixed children on Safari */
+#scr-prog-blur-overlay{display:none;position:fixed;top:calc(var(--hdr-top) + var(--hdr));left:var(--sal);right:var(--sar);bottom:calc(var(--nav-bottom) + var(--nav-h));z-index:190;background:transparent;pointer-events:none;}
+#scr-prog-blur-overlay.on{display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(8px) saturate(120%);-webkit-backdrop-filter:blur(8px) saturate(120%);background:rgba(14,14,14,.80);pointer-events:auto;}
 /* ── Trackers collapsible ── */
 #trackers-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
 #trackers-chevron{transition:transform .25s ease;color:var(--muted);font-size:18px;}
@@ -530,10 +515,6 @@ body.onboarding-active #onb-screen{
   .onboarding-slide{padding:28px 28px 20px;}
   .onb-emoji{font-size:58px;margin-bottom:20px;}
   .onb-title{font-size:21px;}
-  .inp{height:46px;font-size:16px !important;}
-  .btn{height:46px;}
-  #inp-weight-upd{min-width:64px;width:72px;}
-  .wr-stat-grid{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:360px){
   .onboarding-slide{padding:24px 24px 18px;}
@@ -548,114 +529,6 @@ body.onboarding-active #onb-screen{
   .onb-title{font-size:18px;margin-bottom:10px;max-width:260px;}
   .onb-body{font-size:13px;max-width:252px;}
   .onb-nav{padding-left:16px;padding-right:16px;gap:6px;}
-}
-
-/* ══ ONBOARDING MOBILE FIXES ══ */
-
-/* Ensure step 4 result + paywall scrolls properly */
-#step-4{
-  padding-bottom:0;
-}
-
-/* Plan preview: keep content accessible */
-#plan-preview-content{
-  font-size:12px;
-  line-height:1.6;
-  color:var(--on-v);
-}
-
-/* Paywall choice: proper spacing on small screens */
-#onb-paywall-choice{
-  padding-bottom:8px;
-}
-
-/* Scroll indicator when plan is revealed */
-.result-card.on{
-  scroll-margin-top:16px;
-}
-
-/* Seg-btn in goal-wrap: cleaner icon alignment */
-#goal-wrap .seg-btn{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  text-align:left;
-}
-#goal-wrap .seg-btn strong{
-  font-size:13px;
-}
-
-/* Clinical chips: better wrap on small screens */
-#clinical-chips{
-  gap:6px;
-}
-
-/* Chip rows: ensure wrap and consistent gap */
-.chip-row{
-  gap:7px;
-  padding-bottom:2px;
-}
-
-/* Back/Continue button row in steps: ensure equal height */
-#onb-screen .row.g2 .btn{
-  min-height:50px;
-}
-
-/* Field labels: consistent 10px minimum */
-.field-label{
-  font-size:10px;
-  letter-spacing:.12em;
-  margin-bottom:7px;
-}
-
-/* Seg-wrap: slightly taller for touch */
-.seg-wrap{
-  min-height:50px;
-}
-.seg-btn{
-  min-height:46px;
-}
-
-/* Step header label: consistent spacing */
-.onb-step > .sec-label:first-child{
-  margin-bottom:4px !important;
-}
-
-/* Material icons in onboarding: force correct rendering */
-#onb-screen .material-symbols-outlined{
-  font-variation-settings:'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-
-/* Inputs: prevent iOS zoom (already 16px but enforce) */
-#onb-screen .inp,
-#onb-screen input,
-#onb-screen select{
-  font-size:16px !important;
-}
-
-/* Select arrow on dark bg */
-#onb-screen select.inp{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(199,196,216,0.5)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:right 14px center;
-  padding-right:36px;
-  -webkit-appearance:none;
-  appearance:none;
-}
-
-/* Time input: fix dark mode on iOS */
-#f-train-time{
-  color-scheme:dark;
-}
-
-/* Bottom safe-area spacer after paywall buttons */
-#onb-paywall-choice > p:last-child{
-  padding-bottom:max(env(safe-area-inset-bottom,0px),8px);
-}
-
-/* Scroll-to-result: smooth, account for no header */
-#result-card{
-  scroll-margin-top:16px;
 }
 
 /* MODALS — Privacy / Aiuto */
@@ -699,7 +572,7 @@ body.onboarding-active #onb-screen{
   color:var(--on);
 }
 .modal-close{
-  width:44px;height:44px;border-radius:50%;
+  width:32px;height:32px;border-radius:50%;
   background:rgba(255,255,255,.08);
   border:none;color:var(--muted);
   display:flex;align-items:center;justify-content:center;
@@ -873,13 +746,10 @@ body.onboarding-active #onb-screen{
 .pw-feat{background:rgba(255,255,255,.04);border:1px solid var(--glass-stroke);border-radius:var(--r3);padding:10px 12px;font-size:12px;color:var(--on-v);font-weight:500;}
 #paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9999;align-items:flex-end;justify-content:center;}
 #paywall-sheet{background:var(--s1);border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;padding:28px 24px 32px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
-#trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;gap:8px;align-items:center;justify-content:center;}
-/* Fix-8: when locked, prevent scroll-through under the blur overlay on iOS.
-   The overlay (now position:fixed) handles everything — no need to change scr-prog layout. */
-#scr-prog.locked-trend{overflow:hidden;}
+#trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
+/* locked-trend: overlay (fixed sibling) handles visual block — no layout override needed on .pg */
 #scr-prog.locked-trend .pg{pointer-events:none;user-select:none;}
-/* Fix-3: #trend-lock-banner.locked-card used to set display:flex, overriding display:none.
-   Removed — overlay is now the single lock display mechanism. Banner stays hidden. */
+#trend-lock-banner.locked-card{flex-direction:column;margin:auto 0;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px 16px;pointer-events:auto;cursor:auto;}
 [onclick*="startCheckout"]:disabled{cursor:not-allowed;pointer-events:none;}
 /* ── Post-onboarding auth gate ── */
 #post-onb-auth-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.90);backdrop-filter:blur(18px);z-index:10001;align-items:flex-end;justify-content:center;}
@@ -1003,11 +873,6 @@ button[onclick*="toggleFaq"]:focus-visible{
 .hist-row{transition:background .12s;}
 .hist-row:active{background:var(--s2);}
 
-/* ── scr-prog-blur-overlay: account for floating nav ── */
-#scr-prog-blur-overlay{
-  bottom:calc(var(--nav-bottom) + var(--nav-h) + 8px);
-}
-
 /* ── ring-track stroke-width consistency ── */
 .ring-track{stroke-width:4!important;}
 
@@ -1050,47 +915,7 @@ hr{height:1px;}
 .inp.invalid{border-color:rgba(255,59,48,.38);}
 
 /* ── Gauth btn: use CSS var instead of hardcoded #fff/#1a1a1a ── */
-/* ── Gauth btn: use CSS var instead of hardcoded #fff/#1a1a1a ── */
 .gauth-btn{background:var(--on);color:var(--bg);}
-/* ── UX-AUDIT-P1 additions ── */
-/* Toast error variant */
-#toast.toast-error{border-color:var(--red);color:var(--red);}
-/* Nav button: relative for badge positioning */
-.nb{position:relative;}
-/* Active nav tab: stronger visual distinction */
-.nb.on .nl{font-weight:800;}
-/* Empty state action button */
-.empty-state .btn{margin-top:4px;min-width:140px;}
-/* Day-chip & micro-chip: extend tap area to 44px */
-.day-chip::before,.micro-chip::before{
-  content:'';position:absolute;
-  top:-4px;bottom:-4px;left:-3px;right:-3px;
-}
-/* Skeleton card placeholder */
-.skeleton-card{height:120px;border-radius:var(--r);}
-.skeleton-text{height:14px;border-radius:var(--r3);margin-bottom:8px;width:80%;}
-.skeleton-text.short{width:50%;}
-.skeleton-stat{height:40px;width:60px;border-radius:var(--r3);}
-/* Onboarding disabled button visual */
-.btn[disabled]{opacity:0.5;cursor:not-allowed;pointer-events:none;}
-/* Checkin analytics empty state icon */
-.empty-state-icon-sm{font-size:24px;opacity:.4;}
-/* Adherence calendar empty */
-/* ── UX-AUDIT-P2 additions ── */
-/* Kcal ring oggi: smooth transition */
-#kcal-ring-oggi{transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1),stroke .3s,opacity .3s;}
-/* Meal row done: checkmark indicator */
-.meal-row.done::after{content:'\2713';position:absolute;top:13px;right:14px;font-size:14px;font-weight:700;color:var(--p);}
-/* Stat chips: default muted color */
-#st-w,#st-wdiff,#st-wst,#st-wstdiff{color:var(--muted);}
-/* Paywall sheet: scrollable with hidden scrollbar */
-#paywall-sheet{max-height:92dvh;overflow-y:auto;scrollbar-width:none;}
-#paywall-sheet::-webkit-scrollbar{display:none;}
-/* Checkout plan buttons: hover state */
-#cpo-monthly:hover,#cpo-annual:hover{border-color:var(--line-hi);background:var(--s3);}
-/* Prog stat scroll: scroll-snap */
-.prog-stat-scroll{scroll-snap-type:x mandatory;}
-.prog-stat-chip{scroll-snap-align:start;}
 </style>
 <!-- ── SPLASH SCREEN: pure CSS, shows instantly before any JS ── -->
 <style>
@@ -1123,9 +948,9 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
 <!-- Supabase: kept synchronous — inline boot depends on `supabase` global at parse time -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
-<script defer src="https://js.stripe.com/v3/" crossorigin="anonymous"></script>
+<script defer src="https://js.stripe.com/v3/" integrity="sha384-TEBuKD1DvAKebMS0TGTXn/tbig+nnYNsMC4sr0OzgYs2xAHR2yDLZH+va8tKT47x" crossorigin="anonymous"></script>
 <script>window.sentryOnLoad=function(){Sentry.init({release:'iron-kinetic@1.0.0',tracesSampleRate:0.1,replaysSessionSampleRate:0.1,replaysOnErrorSampleRate:1.0,environment:location.hostname.includes('railway')?'production':'development'});};</script>
-<script defer src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" crossorigin="anonymous"></script>
+<script defer src="https://js-de.sentry-cdn.com/53415d8991f07ae380ca333e9e7aabee.min.js" integrity="sha384-7xGRbA4IumR22TZkO0qKKawombfOd6XW9Uz+IONGHGkfwIoXAnhqlPRe8UXOVIKQ" crossorigin="anonymous"></script>
 </head>
 <body class="onboarding-active">
 
@@ -1242,7 +1067,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       </div>
     </div>
 
-    <p id="gdpr-gate-footer" style="font-size:11px;color:var(--dim);line-height:1.6;text-align:center;" class="sn" data-i18n-html="gdpr.footer">
+    <p id="gdpr-gate-footer" style="font-size:11px;color:var(--dim);line-height:1.6;text-align:center;" class="sn">
       By clicking <strong style="color:var(--on);">Accept &amp; Continue</strong> you consent to data processing as described in the <button onclick="openModal('privacy')" style="background:none;border:none;color:var(--p);font-size:11px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:'Manrope',sans-serif;">Privacy Policy</button>.<br>
       You can revoke consent at any time from <em>Profile → Privacy</em>.
     </p>
@@ -1254,7 +1079,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <span data-i18n="gdpr.ageConfirm">Confermo di avere almeno 16 anni</span>
     </label>
     <button id="gdpr-accept-btn" onclick="gdprAccept()" class="btn btn-primary w100 sn" style="height:52px;font-size:13px;">Accetto — Inizia il mio piano →</button>
-    <button id="gdpr-read-btn" onclick="openModal('privacy')" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;" data-i18n="gdpr.btn.leggi">Read the full Privacy Policy</button>
+    <button id="gdpr-read-btn" onclick="openModal('privacy')" class="btn btn-ghost w100 sn" style="height:44px;font-size:11px;">Read the full Privacy Policy</button>
     <p style="font-size:10px;color:var(--dim);text-align:center;line-height:1.5;" class="sn">
       <span id="gdpr-gate-footer2">Richiesto dalla legge UE (GDPR). Puoi revocare il consenso in qualsiasi momento da Profilo → Privacy.</span><br>
       Controller: Iron Kinetic™ · <span style="color:var(--dim);font-size:10px;">privacy&#64;ironkinetic.app</span>
@@ -1276,9 +1101,9 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
 <!-- ONBOARDING — 5 STEPS -->
 <div id="onb-screen">
-<div style="max-width:420px;margin:0 auto;width:100%;padding:20px 20px max(env(safe-area-inset-bottom,0px),40px);display:flex;flex-direction:column;gap:0;flex:1;">
+<div style="max-width:420px;margin:0 auto;width:100%;padding:calc(var(--hdr-top) + var(--hdr) + 16px) 20px 48px;display:flex;flex-direction:column;gap:0;">
 
-  <div style="text-align:center;margin-bottom:18px;padding-top:8px;">
+  <div style="text-align:center;margin-bottom:18px;">
     <div style="width:56px;height:56px;background:rgba(77,220,198,.12);border:1.5px solid rgba(77,220,198,.28);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
       <span class="material-symbols-outlined sn" style="color:var(--p);font-size:26px;font-variation-settings:'FILL' 1;">bolt</span>
     </div>
@@ -1288,11 +1113,11 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
   <!-- Stepper: 5 dots -->
   <div class="stepper" style="justify-content:center;margin-bottom:22px;" id="stepper">
-    <div class="step-dot on" id="dot-0" aria-label="Step 1 di 5" role="progressbar"></div>
-    <div class="step-dot" id="dot-1" aria-label="Step 2 di 5"></div>
-    <div class="step-dot" id="dot-2" aria-label="Step 3 di 5"></div>
-    <div class="step-dot" id="dot-3" aria-label="Step 4 di 5"></div>
-    <div class="step-dot" id="dot-4" aria-label="Step 5 di 5"></div>
+    <div class="step-dot on" id="dot-0"></div>
+    <div class="step-dot" id="dot-1"></div>
+    <div class="step-dot" id="dot-2"></div>
+    <div class="step-dot" id="dot-3"></div>
+    <div class="step-dot" id="dot-4"></div>
   </div>
 
   <!-- STEP 0 — Corpo -->
@@ -1314,15 +1139,15 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div>
         <label class="field-label" for="f-bf" data-i18n="onb.field.bf">Grasso corporeo (%)</label>
         <input class="inp" id="f-bf" type="number" inputmode="decimal" step="0.5" placeholder="16" min="4" max="50"/>
-        <p style="font-size:9px;color:var(--dim);margin-top:4px;font-weight:500;" class="sn" data-i18n="onb.field.bf.hint">Opzionale. Se inserito, il calcolo diventa più preciso.</p>
+        <p style="font-size:9px;color:var(--dim);margin-top:4px;font-weight:500;" class="sn">Opzionale. Se inserito, il calcolo diventa più preciso.</p>
       </div>
     </div>
-    <button class="btn btn-primary w100 sn" id="to-step1-btn" onclick="goStep(1)" data-i18n="onb.btn.avanti" disabled style="opacity:0.5;cursor:not-allowed;">Continua →</button>
+    <button class="btn btn-primary w100 sn" onclick="goStep(1)">Continua →</button>
   </div>
 
   <!-- STEP 1 — Attività -->
   <div class="onb-step" id="step-1" style="gap:14px;">
-    <p class="sec-label" style="margin-bottom:0;" id="onb-step1-lbl" data-i18n="onb.step1.title">La tua attività</p>
+    <p class="sec-label" style="margin-bottom:0;" id="onb-step1-lbl">La tua attività</p>
     <div>
       <label class="field-label" data-i18n="onb.field.allenamenti">Allenamenti / settimana</label>
       <div class="seg-wrap" id="wk-seg">
@@ -1333,7 +1158,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <button class="seg-btn sn" onclick="setWk(5)">5</button>
         <button class="seg-btn sn" onclick="setWk(6)">6+</button>
       </div>
-      <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="wk-label" data-i18n="onb.sel.none">Selezionato: —</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="wk-label">Selezionato: —</p>
     </div>
     <div>
       <label class="field-label" data-i18n="onb.field.passi">Passi giornalieri medi</label>
@@ -1344,7 +1169,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <button class="seg-btn sn" onclick="setSt(10000)">10k</button>
         <button class="seg-btn sn" onclick="setSt(12000)">12k+</button>
       </div>
-      <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="st-label" data-i18n="onb.sel.none">Selezionato: —</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:6px;font-weight:500;" class="sn" id="st-label">Selezionato: —</p>
     </div>
     <div>
       <label class="field-label" for="f-sport" data-i18n="onb.field.sport">Sport praticato</label>
@@ -1363,8 +1188,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <p style="font-size:10px;color:var(--dim);margin-top:5px;font-weight:500;line-height:1.5;" class="sn">⏱ Cruciale per il nutrient timing: i pasti pre/post-workout verranno calibrati su questo orario.</p>
     </div>
     <div class="row g2">
-      <button class="btn btn-ghost sn" onclick="goStep(0)" style="flex:1;" data-i18n="onb.btn.indietro">← Indietro</button>
-      <button class="btn btn-primary sn" id="to-step2-btn" onclick="goStep(2)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled data-i18n="onb.btn.avanti">Continua →</button>
+      <button class="btn btn-ghost sn" onclick="goStep(0)" style="flex:1;">← Indietro</button>
+      <button class="btn btn-primary sn" onclick="goStep(2)" style="flex:2;">Continua →</button>
     </div>
   </div>
 
@@ -1381,8 +1206,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       </div>
     </div>
     <div class="row g2" id="back-from-2">
-      <button class="btn btn-ghost sn" onclick="goStep(1)" style="flex:1;" data-i18n="onb.btn.indietro">← Indietro</button>
-      <button class="btn btn-primary sn" id="to-step3-btn" onclick="goStep(3)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled data-i18n="onb.btn.avanti">Continua →</button>
+      <button class="btn btn-ghost sn" onclick="goStep(1)" style="flex:1;">← Indietro</button>
+      <button class="btn btn-primary sn" id="to-step3-btn" onclick="goStep(3)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled>Continua →</button>
     </div>
   </div>
 
@@ -1432,20 +1257,20 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <label class="field-label" data-i18n="onb.field.clinical">Protocollo clinico (opzionale)</label>
       <p style="font-size:10px;color:var(--dim);margin-bottom:8px;font-weight:500;" class="sn">Solo se hai una diagnosi medica specifica. Adatta proteine, sodio e selezione cibi.</p>
       <div style="display:flex;flex-wrap:wrap;gap:6px;" id="clinical-chips">
-        <button class="food-tag" id="cp-none"    onclick="setClinical(null,this)"      style="background:rgba(77,220,198,.14);border-color:rgba(77,220,198,.32);color:var(--p);" data-i18n="clinical.none">✓ Nessuno</button>
+        <button class="food-tag" id="cp-none"    onclick="setClinical(null,this)"      style="background:rgba(77,220,198,.14);border-color:rgba(77,220,198,.32);color:var(--p);">✓ Nessuno</button>
         <button class="food-tag" id="cp-CKD"     onclick="setClinical('CKD',this)">🫁 CKD / Renale</button>
         <button class="food-tag" id="cp-DASH"    onclick="setClinical('DASH',this)">❤️ DASH / Pressione</button>
         <button class="food-tag" id="cp-IBS"     onclick="setClinical('IBS',this)">IBS / Low-FODMAP</button>
         <button class="food-tag" id="cp-T2D"     onclick="setClinical('T2D',this)">Diabete T2D</button>
-        <button class="food-tag" id="cp-IBD_acute"  onclick="setClinical('IBD_acute',this)" data-i18n="clinical.ibd.active">🔥 IBD Attiva</button>
+        <button class="food-tag" id="cp-IBD_acute"  onclick="setClinical('IBD_acute',this)">🔥 IBD Attiva</button>
         <button class="food-tag" id="cp-IBD_remiss" onclick="setClinical('IBD_remiss',this)">IBD Remissione</button>
       </div>
       <p style="font-size:10px;color:var(--dim);margin-top:6px;line-height:1.5;" class="sn" id="clinical-hint"></p>
     </div>
 
     <div class="row g2">
-      <button class="btn btn-ghost sn" onclick="goStep(2)" style="flex:1;" data-i18n="onb.btn.indietro">← Indietro</button>
-      <button class="btn btn-primary sn" id="to-step4-btn" onclick="goStep(4)" style="flex:2;opacity:0.5;cursor:not-allowed;" disabled data-i18n="onb.btn.avanti">Continua →</button>
+      <button class="btn btn-ghost sn" onclick="goStep(2)" style="flex:1;">← Indietro</button>
+      <button class="btn btn-primary sn" onclick="goStep(4)" style="flex:2;">Continua →</button>
     </div>
   </div>
 
@@ -1456,7 +1281,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
     <!-- Food quick-select chips by category -->
     <div>
-      <p class="field-label" style="margin-bottom:8px;" data-i18n="onb.cibi.proteine">Proteine preferite</p>
+      <p class="field-label" style="margin-bottom:8px;">Proteine preferite</p>
       <div class="chip-row" id="food-proteins">
         <button class="food-tag" onclick="toggleFood(this,'pollo')">🍗 Pollo</button>
         <button class="food-tag" onclick="toggleFood(this,'coscia pollo')">🍗 Coscia pollo</button>
@@ -1478,7 +1303,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
     </div>
 
     <div>
-      <p class="field-label" style="margin-bottom:8px;" data-i18n="onb.cibi.carb">Carboidrati preferiti</p>
+      <p class="field-label" style="margin-bottom:8px;">Carboidrati preferiti</p>
       <div class="chip-row" id="food-carbs">
         <button class="food-tag" onclick="toggleFood(this,'riso')">🍚 Riso</button>
         <button class="food-tag" onclick="toggleFood(this,'riso basmati')">🍚 Riso basmati</button>
@@ -1499,7 +1324,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
     </div>
 
     <div>
-      <p class="field-label" style="margin-bottom:8px;" data-i18n="onb.food.grassi_altro">Grassi e altro</p>
+      <p class="field-label" style="margin-bottom:8px;">Grassi e altro</p>
       <div class="chip-row" id="food-fats">
         <button class="food-tag" onclick="toggleFood(this,'avocado')">🥑 Avocado</button>
         <button class="food-tag" onclick="toggleFood(this,'olio oliva')">🫒 Olio EVO</button>
@@ -1525,8 +1350,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
     </div>
 
     <div class="row g2" id="gen-btn-row" aria-busy="false">
-      <button class="btn btn-ghost sn" onclick="goStep(3)" style="flex:1;min-width:80px;" data-i18n="onb.btn.indietro">← Indietro</button>
-      <button class="btn btn-primary sn" id="btn-generate-plan" onclick="runCalcAndGenerate()" style="flex:2;height:auto;min-height:54px;padding:12px 14px;line-height:1.3;font-size:13px;white-space:normal;text-align:center;">⚡ Calcola il mio piano →</button>
+      <button class="btn btn-ghost sn" onclick="goStep(3)" style="flex:1;">← Indietro</button>
+      <button class="btn btn-primary sn" id="btn-generate-plan" onclick="runCalcAndGenerate()" style="flex:2;">⚡ Calcola il mio piano personalizzato →</button>
     </div>
     <div id="gen-status" aria-live="polite" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"></div>
 
@@ -1551,12 +1376,12 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <!-- Piano personalizzato generato -->
       <div id="plan-preview" style="margin-top:14px;display:none;">
         <div class="divider" style="margin-bottom:14px;"></div>
-        <p class="sec-label" style="margin-bottom:10px;" data-i18n="onb.result.preview">Il Tuo Piano — Anteprima</p>
+        <p class="sec-label" style="margin-bottom:10px;">Il Tuo Piano — Anteprima</p>
         <div id="plan-preview-content"></div>
       </div>
 
       <!-- Freemium paywall choice (shown after plan generation) -->
-      <div id="onb-paywall-choice" style="display:none;margin-top:20px;">
+      <div id="onb-paywall-choice" style="display:none;margin-top:16px;">
         <!-- Blurred Trend preview card -->
         <div style="background:rgba(77,220,198,.04);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);padding:14px;margin-bottom:14px;position:relative;overflow:hidden;">
           <div style="filter:blur(6px);opacity:.4;pointer-events:none;margin-bottom:8px;">
@@ -1587,7 +1412,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
         <!-- Pricing CTAs -->
         <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€6,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;" data-i18n="checkout.cancel">Cancella quando vuoi</span></button>
+          <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:#003730;border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€6,99/mese<br><span style="font-weight:400;font-size:10px;opacity:.7;">Cancella quando vuoi</span></button>
           <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.15);color:var(--p);border:1px solid rgba(77,220,198,.35);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.3;">€69,99/anno<br><span style="font-weight:400;font-size:10px;opacity:.7;">💰 Risparmia il 17%</span></button>
         </div>
         <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.2);border-radius:var(--r);padding:10px 8px;font-weight:800;font-size:11px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-bottom:8px;">€179,99 · Accesso permanente</button>
@@ -1639,7 +1464,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
               <p id="adaptive-msg" class="sn" style="font-size:12px;font-weight:600;color:var(--on);line-height:1.45;margin:4px 0 10px;"></p>
               <div style="display:flex;gap:8px;">
                 <button onclick="applyAdaptiveSuggestion()" class="btn btn-xs sn" style="background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange);font-size:11px;font-weight:700;height:30px;border-radius:var(--r3);padding:0 12px;">Applica</button>
-                <button onclick="dismissAdaptive()" class="btn btn-xs sn" style="background:transparent;border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:600;height:30px;border-radius:var(--r3);padding:0 12px;" data-i18n="autoadj.ignore">Ignora</button>
+                <button onclick="dismissAdaptive()" class="btn btn-xs sn" style="background:transparent;border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:600;height:30px;border-radius:var(--r3);padding:0 12px;">Ignora</button>
               </div>
             </div>
           </div>
@@ -1655,7 +1480,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <p id="autoadj-body" class="sn" style="font-size:11px;color:var(--muted);line-height:1.5;margin:0 0 10px;"></p>
             <div style="display:flex;gap:8px;">
               <button id="autoadj-apply-btn" onclick="applyAutoAdj()" class="btn btn-primary btn-xs sn" style="padding:0 14px;"></button>
-              <button onclick="dismissAutoAdj()" class="btn btn-ghost btn-xs sn" style="padding:0 12px;" data-i18n="autoadj.ignore">Ignora</button>
+              <button onclick="dismissAutoAdj()" class="btn btn-ghost btn-xs sn" style="padding:0 12px;">Ignora</button>
             </div>
           </div>
         </div>
@@ -1746,11 +1571,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
         <!-- Meals list -->
         <div id="meals-list" role="list" style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;">
-          <div class="empty-state" id="meals-empty">
-            <span class="material-symbols-outlined empty-state-icon">restaurant_menu</span>
-            <span class="empty-state-label">Nessun piano generato</span>
-            <button class="btn btn-primary btn-sm" onclick="switchTab('set')" style="margin-top:4px;">Configura il tuo piano</button>
-          </div>
+          <div class="card" style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Genera il tuo piano dall'onboarding —</span></div>
         </div>
         <!-- Shopping -->
         <div class="pasti-shopping">
@@ -1778,7 +1599,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <div class="row g2">
               <button onclick="addWater(.5)" class="btn btn-neon-o btn-sm f1 sn">+0.5L</button>
               <button onclick="addWater(.25)" class="btn btn-ghost btn-sm f1 sn">+250ml</button>
-              <button onclick="resetT('water')" class="btn btn-ghost btn-sm sn" style="height:36px;padding:0 12px;font-size:12px;" aria-label="Azzera acqua" data-i18n="unit.reset">↺ Reset</button>
+              <button onclick="resetT('water')" class="btn btn-ghost btn-sm sn" style="height:36px;padding:0 12px;font-size:12px;" aria-label="Azzera acqua">↺ Reset</button>
             </div>
           </div>
           <!-- Sale -->
@@ -1791,7 +1612,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <div class="row g2">
               <button onclick="addSalt(1)" class="btn btn-ghost btn-sm f1 sn">+1g</button>
               <button onclick="addSalt(.5)" class="btn btn-ghost btn-sm f1 sn">+0.5g</button>
-              <button onclick="resetT('salt')" class="btn btn-ghost btn-sm sn" style="height:36px;padding:0 12px;font-size:12px;" aria-label="Azzera sale" data-i18n="unit.reset">↺ Reset</button>
+              <button onclick="resetT('salt')" class="btn btn-ghost btn-sm sn" style="height:36px;padding:0 12px;font-size:12px;" aria-label="Azzera sale">↺ Reset</button>
             </div>
           </div>
           <!-- Passi + Workout -->
@@ -1806,9 +1627,9 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <div>
               <p class="t-xxs muted sn" data-i18n="oggi.workout">Workout</p>
               <p id="wk-ratio" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--on);margin:4px 0;" class="sn">0/1</p>
-              <p id="wk-status" class="t-xxs sn" data-i18n="oggi.workout.nonFatto" style="color:var(--dim);">Non fatto</p>
+              <p id="wk-status" class="t-xxs sn" style="color:var(--dim);">Non fatto</p>
               <div class="bar-track" style="margin:8px 0 10px;"><div class="bar-fill" id="wk-bar" style="width:0%;background:rgba(199,196,216,.25);transition:width .5s cubic-bezier(.4,0,.2,1);"></div></div>
-              <button id="wk-btn" onclick="toggleWk()" class="btn btn-ghost btn-xs w100 sn" data-i18n="oggi.workout.fatto">Fatto ✓</button>
+              <button id="wk-btn" onclick="toggleWk()" class="btn btn-ghost btn-xs w100 sn">Fatto ✓</button>
             </div>
           </div>
         </div>
@@ -1818,15 +1639,15 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div class="check-card" id="daily-check-card">
         <div class="rowb"><span class="sec-label" data-i18n="oggi.checkin.title" style="margin-bottom:0;">Check-in giornaliero</span><span class="t-xxs muted">20 sec</span></div>
         <div class="range-row">
-          <div class="range-wrap"><label class="field-label" for="ci-hunger" data-i18n="oggi.checkin.fame">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-hunger">5</output></div>
-          <div class="range-wrap"><label class="field-label" for="ci-energy" data-i18n="oggi.checkin.energia">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-energy">6</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-hunger">Fame</label><input id="ci-hunger" type="range" min="1" max="10" value="5" aria-label="Fame (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-hunger">5</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-energy">Energia</label><input id="ci-energy" type="range" min="1" max="10" value="6" aria-label="Energia (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-energy">6</output></div>
         </div>
         <div class="range-row">
-          <div class="range-wrap"><label class="field-label" for="ci-adherence" data-i18n="oggi.checkin.aderenza">Aderenza</label><input id="ci-adherence" type="range" min="1" max="10" value="8" aria-label="Aderenza (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-adherence">8</output></div>
-          <div class="range-wrap"><label class="field-label" for="ci-digestion" data-i18n="oggi.checkin.digestione">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-digestion">8</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-adherence">Aderenza</label><input id="ci-adherence" type="range" min="1" max="10" value="8" aria-label="Aderenza (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-adherence">8</output></div>
+          <div class="range-wrap"><label class="field-label" for="ci-digestion">Digestione</label><input id="ci-digestion" type="range" min="1" max="10" value="8" aria-label="Digestione (1–10)" oninput="this.setAttribute('aria-valuenow',this.value);this.setAttribute('aria-valuetext',this.value+'/10'),this.nextElementSibling.value=this.value"/><output class="sn" style="font-size:11px;color:var(--p);font-weight:700;min-width:16px;text-align:right" for="ci-digestion">8</output></div>
         </div>
         <div>
-          <label class="field-label" data-i18n="oggi.checkin.contesto">Contesto giornata</label>
+          <label class="field-label">Contesto giornata</label>
           <div class="chip-row">
             <button class="micro-chip" type="button" onclick="setCheckTag(this,'routine')">Routine</button>
             <button class="micro-chip" type="button" onclick="setCheckTag(this,'sociale')">Sociale</button>
@@ -1834,7 +1655,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <button class="micro-chip" type="button" onclick="setCheckTag(this,'workout')">Workout</button>
           </div>
         </div>
-        <button class="btn btn-primary w100 sn" onclick="saveDailyCheckin()" data-i18n="oggi.checkin.salva">Salva check-in</button>
+        <button class="btn btn-primary w100 sn" onclick="saveDailyCheckin()">Salva check-in</button>
         <div class="note-box" id="checkin-feedback">Dopo il primo check-in riceverai un supporto contestuale.</div>
         <button id="ci-edit-btn" class="btn btn-ghost w100" onclick="editDailyCheckin()" style="display:none;font-size:13px;margin-top:4px;"></button>
       </div>
@@ -1861,21 +1682,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
   <!-- PROGRESSO -->
   <div id="scr-prog" class="scr" style="display:none;">
-    <!-- Blur overlay — SCOPED inside scr-prog, position:absolute -->
-    <div id="scr-prog-blur-overlay" style="display:none;">
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px 20px;text-align:center;pointer-events:auto;width:100%;">
-        <span class="material-symbols-outlined" style="font-size:52px;color:var(--p);font-variation-settings:'FILL' 1;filter:drop-shadow(0 0 16px rgba(77,220,198,.4));">lock</span>
-        <div>
-          <p id="trend-blur-title" style="font-size:17px;font-weight:700;color:var(--on);margin:0 0 6px;line-height:1.3;font-family:'Space Grotesk',sans-serif;">Prova scaduta</p>
-          <p id="trend-blur-days" style="font-size:12px;color:var(--muted);margin:0;line-height:1.5;">Attiva Trend per continuare ad usare tutte le funzionalità.</p>
-        </div>
-        <button onclick="openPaywall('Trend')" style="background:var(--p);color:#003730;border:none;border-radius:var(--r-pill);height:48px;padding:0 32px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;pointer-events:auto;box-shadow:0 8px 24px rgba(77,220,198,.35);font-family:'Manrope',sans-serif;"><span id="trend-blur-cta">Attiva Trend →</span></button>
-      </div>
-    </div>
     <div id="trend-lock-banner">
-      <!-- Fix-1: fallback content — JS overwrites via syncTrendLockCopy() -->
-      <span style="font-size:13px;color:#ccc;">Prova scaduta.</span>
-      <button onclick="openPaywall('Trend')" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:13px">Attiva Trend →</button>
     </div>
     <div class="pg">
       <p class="sec-title" data-i18n="prog.title">Progresso</p>
@@ -1884,7 +1691,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <span class="sec-label" data-i18n="prog.registra">Registra</span>
         <div class="grid2" style="margin-bottom:10px;">
           <div><label class="field-label" for="log-w">Peso (kg)</label><input class="inp" id="log-w" type="number" step="0.1" min="30" max="300" placeholder="78.5" inputmode="decimal"/></div>
-          <div><label class="field-label" for="log-wst" data-i18n="prog.girovita">Girovita (cm)</label><input class="inp" id="log-wst" type="number" step="0.1" min="40" max="200" placeholder="84.0" inputmode="decimal"/></div>
+          <div><label class="field-label" for="log-wst">Girovita (cm)</label><input class="inp" id="log-wst" type="number" step="0.1" min="40" max="200" placeholder="84.0" inputmode="decimal"/></div>
         </div>
         <div style="margin-bottom:12px;"><label class="field-label" for="log-date">Data</label><input class="inp" id="log-date" type="date"/></div>
         <button onclick="logMetric()" class="btn btn-primary w100 sn">+ Aggiungi Rilevazione</button>
@@ -1901,7 +1708,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <div class="stat-val sn" id="st-wdiff" style="font-size:22px;margin-top:6px;">—</div>
           </div>
           <div class="prog-stat-chip">
-            <span class="t-xxs muted sn" data-i18n="prog.stat.girovita">Girovita</span>
+            <span class="t-xxs muted sn">Girovita</span>
             <div class="stat-val sn" id="st-wst" style="font-size:22px;margin-top:6px;">—</div>
           </div>
           <div class="prog-stat-chip sa">
@@ -1914,7 +1721,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div class="card" style="padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
           <div>
-            <p id="chart-mode-label" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin:0 0 5px;" data-i18n="prog.chart.weight">Weight Trend</p>
+            <p id="chart-mode-label" class="sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin:0 0 5px;">Weight Trend</p>
             <div style="display:flex;align-items:center;gap:6px;">
               <span style="width:7px;height:7px;border-radius:50%;background:var(--p);display:inline-block;flex-shrink:0;"></span>
               <span class="t-xxs muted sn">Reale</span>
@@ -1927,10 +1734,10 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
         <div class="row g2" style="margin-bottom:12px;">
           <button onclick="switchChart('weight',this)" id="ctab-w" class="btn btn-neon-o btn-xs sn chart-tab" style="padding:0 14px;">Peso</button>
-          <button onclick="switchChart('waist',this)" id="ctab-wst" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;" data-i18n="prog.stat.girovita">Girovita</button>
-          <button onclick="requireTrend(()=>switchChart('prediction',this),'Trend')" id="ctab-pred" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Previsione</button>
+          <button onclick="switchChart('waist',this)" id="ctab-wst" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Girovita</button>
+          <button onclick="switchChart('prediction',this)" id="ctab-pred" class="btn btn-ghost btn-xs sn chart-tab" style="padding:0 14px;">Previsione</button>
         </div>
-        <div id="chart-empty" class="empty-state" style="display:none;"><span class="material-symbols-outlined empty-state-icon">monitoring</span><span class="empty-state-label">Nessun dato ancora</span><span style="font-size:11px;color:var(--dim);">Registra il primo peso per visualizzare il grafico</span></div>
+        <p id="chart-empty" class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;text-align:center;padding:24px 0;display:none;">Nessun dato</p>
         <div id="wChart-wrap" style="display:none;"><canvas id="wChart"></canvas></div>
         <div id="prediction-summary" style="display:none;margin-top:10px;padding:10px;background:var(--s2);border-radius:var(--r3);border:1px solid var(--line);">
           <p id="prediction-text" class="sn" style="font-size:11px;color:var(--muted);line-height:1.5;margin:0;"></p>
@@ -1940,10 +1747,10 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div class="analytics-card" id="checkin-analytics-card">
         <div class="rowb"><span class="sec-label" data-i18n="prog.checkin.title" style="margin-bottom:0;">Trend check-in</span><span id="checkin-last7-lbl" class="t-xxs muted">ULTIMI 7 GIORNI</span></div>
         <div class="analytics-bars">
-          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.fame">Fame</span><div class="analytics-track"><div class="analytics-fill" id="an-hunger"></div></div><span class="analytics-val" id="an-hunger-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.energia">Energia</span><div class="analytics-track"><div class="analytics-fill" id="an-energy"></div></div><span class="analytics-val" id="an-energy-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.aderenza">Aderenza</span><div class="analytics-track"><div class="analytics-fill" id="an-adherence"></div></div><span class="analytics-val" id="an-adherence-v">--</span></div>
-          <div class="analytics-row"><span class="analytics-lab" data-i18n="oggi.checkin.digestione">Digestione</span><div class="analytics-track"><div class="analytics-fill" id="an-digestion"></div></div><span class="analytics-val" id="an-digestion-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab">Fame</span><div class="analytics-track"><div class="analytics-fill" id="an-hunger"></div></div><span class="analytics-val" id="an-hunger-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab">Energia</span><div class="analytics-track"><div class="analytics-fill" id="an-energy"></div></div><span class="analytics-val" id="an-energy-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab">Aderenza</span><div class="analytics-track"><div class="analytics-fill" id="an-adherence"></div></div><span class="analytics-val" id="an-adherence-v">--</span></div>
+          <div class="analytics-row"><span class="analytics-lab">Digestione</span><div class="analytics-track"><div class="analytics-fill" id="an-digestion"></div></div><span class="analytics-val" id="an-digestion-v">--</span></div>
         </div>
         <div class="note-box" id="checkin-analytics-note">Salva almeno 2-3 check-in per visualizzare trend interpretabili.</div>
       </div>
@@ -1953,7 +1760,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           <span class="sec-label" style="margin-bottom:0;" data-i18n="prog.fp.title">Impronta Metabolica</span>
           <span id="fp-badge-lbl" class="t-xxs muted">PROFILO UNICO</span>
         </div>
-        <div id="fingerprint-content"><div class="empty-state" id="fingerprint-empty"><span class="material-symbols-outlined empty-state-icon">fingerprint</span><span class="empty-state-label">Dati insufficienti</span><span style="font-size:11px;color:var(--dim);">Servono almeno 7 rilevazioni per calcolare la tua impronta metabolica</span></div></div>
+        <div id="fingerprint-content"></div>
       </div>
 
       <!-- Il Tuo Report Settimanale — expanded -->
@@ -2043,7 +1850,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div class="card" style="padding:14px;">
         <span class="sec-label" data-i18n="prog.calendar.title">Calendario Aderenza</span>
         <p class="muted sn" style="font-size:10px;margin-bottom:12px;">Verde: ≥80% · Giallo: 40-80% · Rosso: &lt;40%</p>
-        <div id="adherence-calendar"><div class="empty-state" id="cal-empty-state"><span class="material-symbols-outlined empty-state-icon">calendar_month</span><span class="empty-state-label">Nessun dato</span><span style="font-size:11px;color:var(--dim);">Inizia a registrare pasti e check-in per vedere il calendario</span></div></div>
+        <div id="adherence-calendar"></div>
       </div>
 
       <!-- Promemoria -->
@@ -2055,7 +1862,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           <input id="notif-hour" type="number" min="5" max="23" value="8" style="width:52px;background:var(--s2);border:1px solid var(--line);border-radius:var(--r3);color:var(--on);font-size:12px;padding:4px 8px;text-align:center;" />
           <span class="muted sn" style="font-size:11px;">:00</span>
         </div>
-        <button id="notif-perm-btn" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;" data-i18n="prog.notif.btn">🔔 Attiva Promemoria</button>
+        <button id="notif-perm-btn" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
       </div>
 
       <!-- Storico -->
@@ -2063,8 +1870,10 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <div style="padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;">
           <span class="sec-label" data-i18n="prog.storico.title" style="margin-bottom:0;">Storico</span>
         </div>
-        <div id="hist-list"><div class="empty-state" id="hist-empty"><span class="material-symbols-outlined empty-state-icon">scale</span><span class="empty-state-label">Nessuna rilevazione</span><span style="font-size:11px;color:var(--dim);">Registra il tuo primo peso per iniziare a tracciare i progressi</span></div></div>
+        <div id="hist-list"><div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Nessuna voce —</span></div></div>
       </div>
+      <!-- iOS/Safari scroll spacer: padding-bottom on overflow:scroll is unreliable — explicit spacer guarantees content clears the floating nav bar -->
+      <div aria-hidden="true" style="height:max(env(safe-area-inset-bottom,20px),20px);flex-shrink:0;"></div>
     </div>
   </div><!-- /scr-prog -->
 
@@ -2150,7 +1959,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
             <!-- SUBSCRIPTION MANAGEMENT CARD content inline -->
             <div id="sub-mgmt-card" style="padding:0">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-                <span class="sec-label" style="margin-bottom:0" data-i18n="nav.trend">Trend</span>
+                <span class="sec-label" style="margin-bottom:0">Trend</span>
                 <span id="sub-status-badge" style="font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;display:inline-block"></span>
               </div>
               <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
@@ -2192,7 +2001,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
           <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
             <p id="set-profile-text" class="sn" style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:500;white-space:pre-line;">—</p>
             <div id="weight-update-row" style="display:flex;gap:8px;margin-top:10px;align-items:center">
-              <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="min-width:72px;width:80px">
+              <input id="inp-weight-upd" class="inp" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="kg" style="width:80px">
               <button onclick="updateWeight();event.stopPropagation();" class="btn btn-neon-o btn-xs" style="flex:1" id="btn-weight-upd" data-i18n="set.btn.updateWeight">Aggiorna peso</button>
             </div>
             <div id="set-prefs-text" style="margin-top:10px;display:none;">
@@ -2228,7 +2037,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <div id="acc-mod" class="acc-body" style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
           <div style="padding:14px 16px;border-top:1px solid var(--line);background:var(--s0);">
             <div class="rowb">
-              <p id="mod-status" class="t-xxs muted sn" data-i18n="set.mod.base">Base invariata</p>
+              <p id="mod-status" class="t-xxs muted sn">Base invariata</p>
               <div id="mod-stepper" class="mod-stepper">
                 <button onclick="applyMod(-1);event.stopPropagation();" class="mod-stepper-btn sn" aria-label="−100 kcal">−</button>
                 <span id="mod-display" class="mod-stepper-val sn" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;min-width:72px;text-align:center;">0 kcal</span>
@@ -2236,7 +2045,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
               </div>
             </div>
             <p id="mod-units-label" class="t-xxs muted sn" style="text-align:center;margin-top:4px;"></p>
-            <button onclick="applyMod(0);event.stopPropagation();" class="btn btn-ghost btn-xs sn" style="margin-top:10px;width:100%;" data-i18n="reset.modificatore">Reset modificatore</button>
+            <button onclick="applyMod(0);event.stopPropagation();" class="btn btn-ghost btn-xs sn" style="margin-top:10px;width:100%;">Reset modificatore</button>
           </div>
         </div>
 
@@ -2363,7 +2172,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
 
       <!-- Notif button (compat) -->
       <div style="display:none;">
-        <button id="notif-perm-btn-alt" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;" data-i18n="prog.notif.btn">🔔 Attiva Promemoria</button>
+        <button id="notif-perm-btn-alt" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
       </div>
       <div style="height:8px;"></div>
     </div>
@@ -2384,8 +2193,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
                 <span class="material-symbols-outlined" style="font-size:18px;color:var(--p);font-variation-settings:'FILL' 1;">shield</span>
               </div>
               <div>
-                <p style="font-size:14px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn" data-i18n="info.privacy.title">Privacy &amp; GDPR</p>
-                <p style="font-size:11px;color:var(--muted);margin:0;" class="sn" data-i18n="info.privacy.sub">Informativa completa · Gestione consenso</p>
+                <p style="font-size:14px;font-weight:700;color:var(--on);margin:0 0 2px;" class="sn">Privacy &amp; GDPR</p>
+                <p style="font-size:11px;color:var(--muted);margin:0;" class="sn">Informativa completa · Gestione consenso</p>
               </div>
             </div>
             <span class="material-symbols-outlined" style="color:var(--muted);font-size:18px;">chevron_right</span>
@@ -2430,31 +2239,31 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <span class="sec-label" id="info-app-lbl" data-i18n="info.app.title" style="margin-bottom:8px;">Application</span>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <div class="rowb">
-            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn" data-i18n="info.app.versione">Versione</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Versione</span>
             <span style="font-size:12px;font-weight:700;color:var(--on);" class="sn">2.0.0 · PWA</span>
           </div>
           <div class="rowb">
-            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn" data-i18n="info.app.storage">Storage</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Storage</span>
             <span style="font-size:12px;font-weight:700;color:var(--on);" class="sn" id="info-storage-size">—</span>
           </div>
           <div class="rowb">
-            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn" data-i18n="info.app.server">Dati su server</span>
-             <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn" id="info-server-data" data-i18n="info.app.server.val">Nessuno ✓</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Dati su server</span>
+             <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn" id="info-server-data">Nessuno ✓</span>
           </div>
           <div class="rowb">
-            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn" data-i18n="info.app.cookie">Cookie</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Cookie</span>
             <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn">Zero ✓</span>
           </div>
           <div class="rowb">
-            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn" data-i18n="info.app.tracking">Tracking</span>
-            <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn" data-i18n="info.app.server.val">Nessuno ✓</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:500;" class="sn">Tracking</span>
+            <span style="font-size:12px;font-weight:700;color:var(--p);" class="sn">Nessuno ✓</span>
           </div>
         </div>
       </div>
 
       <!-- Disclaimer -->
       <div style="background:rgba(255,59,48,.05);border:1px solid rgba(255,59,48,.14);border-radius:var(--r);padding:14px;">
-        <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 5px;" class="sn" id="info-disclaimer-title" data-i18n="info.disclaimer.title">⚕️ Avviso medico importante</p>
+        <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 5px;" class="sn" id="info-disclaimer-title">⚕️ Avviso medico importante</p>
         <p style="font-size:11px;color:var(--muted);margin:0;line-height:1.6;" class="sn" id="info-disclaimer-text">Iron Kinetic™ è uno strumento informativo di supporto e <strong style="color:var(--on);">non costituisce consiglio medico</strong>. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
       </div>
 
@@ -2463,6 +2272,18 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
   </div><!-- /scr-info -->
 
 </div><!-- /#app-shell -->
+
+<!-- Trend blur overlay — OUTSIDE app-shell so position:fixed is never trapped by overflow:scroll parent -->
+<div id="scr-prog-blur-overlay" style="display:none;" aria-modal="true" role="dialog" aria-label="Sezione bloccata">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px 20px;text-align:center;pointer-events:auto;width:100%;">
+    <span class="material-symbols-outlined" style="font-size:52px;color:var(--p);font-variation-settings:'FILL' 1;filter:drop-shadow(0 0 16px rgba(77,220,198,.4));">lock</span>
+    <div>
+      <p id="trend-blur-title" style="font-size:17px;font-weight:700;color:var(--on);margin:0 0 6px;line-height:1.3;font-family:'Space Grotesk',sans-serif;"></p>
+      <p id="trend-blur-days" style="font-size:12px;color:var(--muted);margin:0;line-height:1.5;"></p>
+    </div>
+    <button onclick="openPaywall('Trend')" style="background:var(--p);color:#003730;border:none;border-radius:var(--r-pill);height:48px;padding:0 32px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;pointer-events:auto;box-shadow:0 8px 24px rgba(77,220,198,.35);font-family:'Manrope',sans-serif;"><span id="trend-blur-cta"></span></button>
+  </div>
+</div>
 
 <!-- ONBOARDING SLIDESHOW — moved BEFORE main script so getElementById finds it at boot -->
 <div id="onboarding-overlay" style="display:none;">
@@ -2594,8 +2415,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
   </button>
   <button id="nav-prog" class="nb" onclick="switchTab('prog')" aria-label="Progresso">
     <span class="material-symbols-outlined ni sn">insights</span>
-    <span class="nl sn" id="nav-lbl-trend" data-i18n="nav.trend">Trend</span>
-    <span id="trend-access-badge" class="t-xxs sn" style="position:absolute;top:4px;right:4px;font-size:8px;font-weight:800;max-width:50px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+    <span class="nl sn" id="nav-lbl-trend">Trend</span>
   </button>
   <button id="nav-set" class="nb" onclick="switchTab('set')" aria-label="Config">
     <span class="material-symbols-outlined ni sn">person</span>
@@ -2731,7 +2551,10 @@ async function initTrend(){
   if(JSON.stringify(remote)!==JSON.stringify(getTrendAccess())){
     setTrendAccess(remote);
     updateTrendBadge();
-    /* Fix: removed direct lb.style.display — updateTrendLockUI() is the single controller */
+    const lb=_getTrendEl('trend-lock-banner');
+    const _scrProg=_getTrendEl('scr-prog');
+    const _isOnProg=_scrProg&&_scrProg.style.display!=='none';
+    if(lb)lb.style.display=(trendAccess.access||!_isOnProg)?'none':'block';
     if(_getTrendEl('scr-set')?.style.display!=='none'){updateSubManagementCard();}
   }
   applyTrendBlurOverlay();
@@ -2797,7 +2620,7 @@ function updateSubManagementCard(){
     badge.style.cssText=badgeStyle('rgba(77,220,198,.12)','var(--p)','rgba(77,220,198,.25)');
     setRing(pct,col);
     if(ringNum){ringNum.textContent=d;ringNum.style.color=col;}
-    if(ringUnit)ringUnit.textContent=t('unit.days');
+    if(ringUnit)ringUnit.textContent=_lang==='en'?'d':'gg';
     if(subtitle)subtitle.textContent=d<=0?t('sub.trial.subtitle.zero'):t('sub.trial.subtitle',{d,s,r});
     if(detail)detail.textContent=d<=0?t('sub.trial.detail.zero'):t('sub.trial.detail');
     if(progLbl)progLbl.textContent=t('sub.trial.prog.left',{d:TRIAL_DAYS-d});
@@ -2846,7 +2669,7 @@ function updateSubManagementCard(){
     badge.style.cssText=badgeStyle('rgba(255,159,10,.12)','var(--orange)','rgba(255,159,10,.28)');
     setRing(h/48,'var(--orange)');
     if(ringNum){ringNum.textContent=h;ringNum.style.color='var(--orange)';}
-    if(ringUnit)ringUnit.textContent=t('unit.hours');
+    if(ringUnit)ringUnit.textContent=_lang==='en'?'h':'ore';
     if(subtitle)subtitle.textContent=t('sub.grace.subtitle',{h,s,r});
     if(detail)detail.textContent=t('sub.grace.detail');
     if(progLbl)progLbl.textContent=t('sub.grace.prog.left');
@@ -2864,7 +2687,7 @@ function updateSubManagementCard(){
     badge.style.cssText=badgeStyle('rgba(255,59,48,.10)','var(--red)','rgba(255,59,48,.22)');
     setRing(0,'var(--red)');
     if(ringNum){ringNum.textContent='0';ringNum.style.color='var(--red)';}
-    if(ringUnit)ringUnit.textContent=t('unit.days');
+    if(ringUnit)ringUnit.textContent=_lang==='en'?'d':'gg';
     if(subtitle)subtitle.textContent=t('sub.expired.subtitle');
     if(detail)detail.textContent=t('sub.expired.detail');
     if(progLbl)progLbl.textContent=t('sub.expired.prog.left');
@@ -2888,28 +2711,28 @@ function updateSubManagementCard(){
 }
 
 function updateTrendLockUI(){
-  /* Fix-3+5: single authoritative function.
-     When locked + on Trend tab: show full-screen blur overlay only.
-     Banner hidden (overlay already covers it — avoids double-lock).
-     aria-hidden blocks screen-reader bypass of underlying content. */
   const onTrend=activeTab==='prog';
   const locked=!trendAccess.access;
   const overlay=document.getElementById('scr-prog-blur-overlay');
   const lb=document.getElementById('trend-lock-banner');
-  const pg=document.querySelector('#scr-prog .pg');
+  const scrProg=document.getElementById('scr-prog');
 
   if(!onTrend||!locked){
     if(overlay){overlay.style.display='none';overlay.classList.remove('on');}
     if(lb)lb.style.display='none';
-    if(pg){pg.removeAttribute('aria-hidden');pg.style.pointerEvents='';}
+    /* Restore interaction and SR access when unlocked */
+    if(scrProg){scrProg.removeAttribute('aria-hidden');}
+    const pg=scrProg?.querySelector('.pg');
+    if(pg){pg.style.pointerEvents='';pg.style.userSelect='';}
     return;
   }
-  if(overlay){
-    overlay.style.display='flex';
-    overlay.classList.add('on');
-  }
-  if(lb)lb.style.display='none';
-  if(pg){pg.setAttribute('aria-hidden','true');pg.style.pointerEvents='none';}
+  /* Show overlay (now a fixed sibling — always visible regardless of scroll position) */
+  if(overlay){overlay.style.display='flex';overlay.classList.add('on');}
+  if(lb)lb.style.display='flex';
+  /* Block SR access and touch interaction on content beneath the overlay */
+  if(scrProg){scrProg.setAttribute('aria-hidden','true');}
+  const pg=scrProg?.querySelector('.pg');
+  if(pg){pg.style.pointerEvents='none';pg.style.userSelect='none';}
 }
 
 let _graceToastShown=false;
@@ -2920,7 +2743,7 @@ function updateTrendBadge(){
   else if(trendAccess.mode==='grace'){
     badge.textContent='⚠️ TREND';badge.style.color='#f5a623';
     const hours=trendAccess.hoursLeft||48;
-    if(!_graceToastShown){_graceToastShown=true;showToast(t("toast.paymentLate",{gg:hours}),8000);}
+    if(!_graceToastShown){_graceToastShown=true;showToast('⚠️ Pagamento in ritardo — accesso attivo per altre '+hours+' ore',8000);}
   }
   else if(trendAccess.mode==='trial'){badge.textContent='⏱ '+trendAccess.daysLeft+'gg';badge.style.color='#f5a623';}
   else{badge.textContent='TREND';badge.style.color='var(--muted)';}
@@ -3014,7 +2837,7 @@ function selectCheckoutPlan(plan){
   const cta=document.getElementById('cpo-cta');
   if(cta){
     const price=plan==='annual'?'€69,99':plan==='monthly'?'€6,99':'€179,99';
-    const label=t('checkout.cta.continue',{price});
+    const label=_lang==='en'?`Continue — ${price}`:`Continua — ${price}`;
     cta.textContent=label+' →';
   }
 }
@@ -3024,7 +2847,7 @@ function confirmCheckoutPreview(){
      La sheet rimane visibile fino al window.location.href= (che sostituisce la pagina).
      Viene chiusa solo se _doStartCheckout fallisce (errore o login gate). */
   const ctaBtn=document.getElementById('cpo-cta');
-  if(ctaBtn){ctaBtn.textContent=t('checkout.redirecting');ctaBtn.disabled=true;ctaBtn.style.opacity='0.7';}
+  if(ctaBtn){ctaBtn.textContent=_lang==='en'?'Redirecting…':'Reindirizzamento…';ctaBtn.disabled=true;ctaBtn.style.opacity='0.7';}
   /* Lancia checkout direttamente senza timeout e senza chiudere l'overlay */
   _doStartCheckout(_cpoPlan);
 }
@@ -3074,10 +2897,8 @@ function _applyCheckoutPreviewLang(){
   });
 }
 
-/* ── Session cache: closure-protected from console ── */
-const _sessionVault=(()=>{let _s=null;return{get(){return _s},set(v){_s=v},clear(){_s=null}}})();
-let _cachedSession; /* compat alias */
-Object.defineProperty(window,'_cachedSession',{get(){return _sessionVault.get()},set(v){if(v===null){_sessionVault.clear()}else{_sessionVault.set(v)}},configurable:false});
+/* ── Session cache: refreshed once on first checkout click ── */
+let _cachedSession=null;
 
 function _prefetchSession(){
   if(!sb||_cachedSession)return;
@@ -3099,7 +2920,7 @@ async function _doStartCheckout(plan){
   const setLoading=on=>{
     btns.forEach(b=>{b.disabled=on;b.style.opacity=on?'0.6':'1';});
     if(ctaBtn){ctaBtn.disabled=on;ctaBtn.style.opacity=on?'0.7':'1';
-      if(on)ctaBtn.textContent=t('checkout.processing');
+      if(on)ctaBtn.textContent=_lang==='en'?'Processing…':'Elaborazione…';
       else ctaBtn.textContent=ctaOrig;}
   };
   setLoading(true);
@@ -3135,7 +2956,7 @@ async function _doStartCheckout(plan){
     if(!res.ok){
       if(typeof Sentry!=='undefined')try{Sentry.captureMessage('[IK] checkout '+res.status,{level:'error'});}catch(e2){console.warn('[IK] Sentry capture failed',e2);}
       if(res.status===401||res.status===403){
-        showToast(t('toast.authError'),4000);
+        showToast(_lang==='en'?'Auth error — please sign out and back in':'Errore auth — esci e rientra',4000);
         setLoading(false);return;
       }
       throw new Error(body?.error||body?.message||'Errore server '+res.status);
@@ -3211,28 +3032,26 @@ async function openBillingPortal(){
 
 async function openAuthModal(){
   const email=prompt(_lang==='it'?'Inserisci la tua email per accedere:':'Enter your email to sign in:');
-  /* SEC-05: strict email validation — prevent injection */
-  const _emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  if(!email||!_emailRe.test(email.trim())){showToast(t('toast.invalidEmail'));return;}
-  if(!sb){showToast(t("toast.authNotConfigured"));return;}
+  if(!email||!email.includes('@'))return;
+  if(!sb){showToast('Auth non configurata');return;}
   try{
     const{error}=await sb.auth.signInWithOtp({email});
     if(error)showToast(error.message);
-    else showToast(t("toast.loginLinkSent",{email:sanitize(email.trim())}));
-  }catch(e){console.warn('[IK] signInWithOtp error',e);showToast(t('toast.signInError'));}
+    else showToast('✉️ Link di accesso inviato a '+email);
+  }catch(e){console.warn('[IK] signInWithOtp error',e);showToast(_lang==='en'?'Sign-in error — please try again':'Errore di accesso — riprova');}
 }
 
 function showTrialExpiringSoon(){
-  showToast(t("toast.lastTrialDay"),5000);
+  showToast('⏱ Ultimo giorno di prova — sblocca Trend per continuare',5000);
 }
 
 /* ── Google OAuth ── */
 async function signOut(){
-  if(!sb){showToast(t("toast.authNotConfigured"));return;}
+  if(!sb){showToast('Auth non configurata');return;}
   const btn=document.getElementById('btn-logout');
   const lbl=document.getElementById('btn-logout-label');
   if(btn){btn.disabled=true;}
-  if(lbl){lbl.textContent=t('toast.signingOut');}
+  if(lbl){lbl.textContent=_lang==='en'?'Signing out…':'Uscita in corso…';}
   try{
     /* Clear all local state */
     try{localStorage.removeItem('ik_pending_checkout_plan');}catch{}
@@ -3244,14 +3063,14 @@ async function signOut(){
     window.location.reload();
   }catch(err){
     console.error('[IK][signOut] error:',err?.message||err);
-    showToast(t('toast.signOutFailed'));
+    showToast(_lang==='en'?'Sign out failed — try again':'Errore logout — riprova');
     if(btn){btn.disabled=false;}
-    if(lbl){lbl.textContent=t('logout');}
+    if(lbl){lbl.textContent=_lang==='en'?'Sign out':'Esci dall\'account';}
   }
 }
 
 async function signInWithGoogle(){
-  if(!sb){showToast(t("toast.authNotConfigured"));return;}
+  if(!sb){showToast('Auth non configurata');return;}
   /* No explicit redirectTo — Supabase uses Site URL configured in dashboard */
   const{error}=await sb.auth.signInWithOAuth({provider:'google'});
   if(error)showToast(error.message);
@@ -3271,7 +3090,18 @@ function openPostOnboardingAuthGate(){
   const note=document.getElementById('ponb-note');const badge=document.getElementById('ponb-badge');
   if(tit)tit.textContent=t('postAuth.title');
   if(sub)sub.textContent=t('postAuth.sub');
-  if(gcta)gcta.textContent=t('postAuth.cta.google');
+  if(gcta){
+    /* Fix Bug 1: gcta.textContent destroys the Google SVG icon.
+       Only update the text label span; if it doesn't exist yet, create it. */
+    let gctaLabel=gcta.querySelector('.gauth-label');
+    if(!gctaLabel){
+      /* Wrap any existing bare text nodes in a span so we can target them */
+      const textNode=[...gcta.childNodes].find(n=>n.nodeType===Node.TEXT_NODE&&n.textContent.trim());
+      if(textNode){gctaLabel=document.createElement('span');gctaLabel.className='gauth-label';textNode.replaceWith(gctaLabel);}
+      else{gctaLabel=document.createElement('span');gctaLabel.className='gauth-label';gcta.appendChild(gctaLabel);}
+    }
+    gctaLabel.textContent=t('postAuth.cta.google');
+  }
   if(note)note.textContent=t('postAuth.note');
   if(badge)badge.textContent=t('postAuth.badge');
   ov.classList.add('on');
@@ -3321,12 +3151,6 @@ function _initAuthListener(){
   sb.auth.onAuthStateChange(async(event,session)=>{
     /* Always update the session cache */
     _cachedSession=session||null;
-    /* ── AREA 2a/9a: Clear trend access and session on SIGNED_OUT ── */
-    if(event==='SIGNED_OUT'){
-      if(typeof setTrendAccess==='function')setTrendAccess({access:false,mode:'none',daysLeft:0,plan:null});
-      if(typeof updateTrendBadge==='function')updateTrendBadge();
-      _cachedSession=null;
-    }
     if(event==='SIGNED_IN'&&session?.user){
       await syncUserAfterLogin(session.user);
       const origin=localStorage.getItem('ik_auth_origin');
@@ -3415,9 +3239,6 @@ async function _resumePostOnboardingOrBoot(){
   _bootAfterGates();
 }
 
-/* ── AREA 2b: Clean OAuth access_token from URL (prevent Referer/token leak) ── */
-(()=>{if(location.hash.includes('access_token='))history.replaceState({},'',location.pathname+location.search);})();
-
 /* Handle Stripe success redirect — poll server for confirmation */
 (()=>{
   if(new URLSearchParams(location.search).get('trend')==='success'){
@@ -3433,7 +3254,6 @@ async function _resumePostOnboardingOrBoot(){
         try{
           const{data}=await sb.from('users').select('trend_active,plan').eq('id',user.id).single();
           if(data?.trend_active){
-            /* SEC-07: access verified server-side via Supabase RLS — not client-trusted */
             setTrendAccess({access:true,mode:'paid',plan:data.plan||'monthly'});
             updateTrendBadge();
             if(typeof updateSubManagementCard==='function')updateSubManagementCard();
@@ -3819,6 +3639,7 @@ it:{
   'onb.label.age':'Età','onb.label.height':'Altezza','onb.label.weight':'Peso',
   'confirm.resetPlanOnly':'Rigenera solo il piano? Profilo e preferenze cancellati, log peso e check-in conservati.',
   'confirm.resetAll':'Reset completo? Tutti i dati (peso, check-in, piano, profilo) saranno cancellati. Irreversibile.',
+  'lang.gate.title':'Scegli la lingua',
   'oggi.trackers.title':'Attività e Trackers',
   'oggi.kcal.target':'Target Giorno','oggi.kcal.totali':'Kcal totali','oggi.trackers':'Attività e Trackers',
   'oggi.kcal.pct':'{pct}% consumato',
@@ -3979,6 +3800,9 @@ it:{
   'toast.errore':'⚠️ Errore inatteso',
   'toast.valoreNonValido':'⚠️ Valore non valido',
   'gdpr.footer2':'Richiesto dalla legge UE (GDPR). Puoi revocare il consenso in qualsiasi momento da Profilo → Privacy.',
+  'autoadj.slow_loss.title':'Progresso più lento del previsto',
+  'autoadj.fast_loss.title':'Perdi troppo velocemente',
+  'autoadj.maintain_drift.title':'Peso in deriva sul mantenimento',
   'autoadj.apply':'Applica la modifica',
   'autoadj.ignore':'Ignora per ora',
   'today.action.weight':'Registra il peso di stamattina',
@@ -4126,37 +3950,6 @@ it:{
   'sport.label.strength':'Forza/Potenza','sport.label.endurance':'Resistenza','sport.label.team':'Squadra/Ibrido','sport.label.fitness':'Fitness Generale','sport.label.powerlifting':'Powerlifting/Sollevamento Pesi','sport.label.combat':'Sport da Combattimento',
   'sport.system.strength':'ATP-CP / Glicolitico','sport.system.endurance':'Aerobico','sport.system.team':'Glicolitico Misto','sport.system.fitness':'Misto','sport.system.powerlifting':'ATP-CP / Forza Massimale','sport.system.combat':'Glicolitico / Fosfageno',
   'res.detail.sport':'Sport','res.detail.sistema':'Sistema energetico','aria.info':'Info',
-  'oggi.checkin.aderenza':'Aderenza','oggi.checkin.digestione':'Digestione',
-  'unit.days':'gg','unit.hours':'ore','unit.reset':'↺ Reset',
-  'checkout.cta.continue':'Continua — {price}','checkout.redirecting':'Reindirizzamento…','checkout.processing':'Elaborazione…',
-  'day.type.training':'GIORNO ALLENAMENTO','day.type.rest':'GIORNO RIPOSO',
-  'pred.chart.title':'Previsione Peso (12 sett)','tdee.card.unit.daily':' kcal/giorno',
-  'toast.authError':'Errore auth — esci e rientra','toast.invalidEmail':'Indirizzo email non valido',
-  'toast.signInError':'Errore di accesso — riprova','toast.signingOut':'Uscita in corso…',
-  'toast.signOutFailed':'Errore logout — riprova',
-  'paywall.daysLeft':'GIORNI RIMASTI','paywall.title':'Iron Kinetic™ Trend','paywall.sub':'Analisi predittiva sul tuo metabolismo. Proiezione a 12 settimane basata sui tuoi dati di peso, aderenza e check-in.',
-  'paywall.feat.pred':'Curva Predittiva','paywall.feat.metabo':'Impronta Metabolica','paywall.feat.report':'Report Settimanale','paywall.feat.circ':'Timing Circadiano','paywall.feat.adapt':'Motore Adattivo','paywall.feat.shop':'Lista della Spesa',
-  'paywall.lifetime':'€179,99 · Accesso permanente','paywall.lifetime.sub':'Pagamento unico','paywall.hasAccount':'Hai già un account?','paywall.login':'Accedi',
-  'prv.title':'🛡 Privacy & GDPR','prv.badge':'Aggiornata: Aprile 2026 · GDPR (Reg. UE 2016/679) · D.Lgs. 196/2003',
-  'prv.s5b.h':'5b. Dati e abbonamento (freemium / premium)',
-  'checkout.preview.title':'Iron Kinetic™ Trend','checkout.preview.includes':'Trend include:',
-  'checkout.preview.cta':'Attiva Trend →','checkout.preview.cancel':'Annulla',
-  'checkout.paywall.title':'Iron Kinetic™ Trend','checkout.paywall.cancel':'Cancella quando vuoi',
-  'checkout.ponb.title':'Salva il tuo percorso','checkout.cancel':'Cancella quando vuoi',
-  'onb.food.grassi_altro':'Grassi e altro',
-  'info.medical.warning':'⚕️ Avviso medico importante',
-  'clinical.ibd.active':'🔥 IBD Attiva',
-  'prog.chart.weight':'Weight Trend',
-  'reset.modificatore':'Reset modificatore',
-  'privacy.details.btn':'Privacy details',
-  'weekly.report.label.energia':'Energia media',
-  'faq.a.10.html':'<strong>Programma referral</strong> — condividi il tuo link personalizzato dalle Impostazioni. Ogni amico che si iscrive ti fa guadagnare crediti.',
-  'toast.paymentLate':'⚠️ Pagamento in ritardo — accesso attivo per altre {gg} ore',
-  'toast.authNotConfigured':'Auth non configurata',
-  'toast.loginLinkSent':'✉️ Link di accesso inviato a {email}',
-  'toast.lastTrialDay':'⏱ Ultimo giorno di prova — sblocca Trend per continuare',
-  'toast.importErrors':'⚠️ {n} errori di importazione — alcuni dati potrebbero essere incompleti',
-
 },
 en:{
   'nav.oggi':'Today','nav.trend':'Trend','nav.profilo':'Profile','nav.aiuto':'Help',
@@ -4488,6 +4281,7 @@ en:{
   'onb.label.age':'Age','onb.label.height':'Height','onb.label.weight':'Weight',
   'confirm.resetPlanOnly':'Regenerate plan only? Profile and preferences cleared, weight log and check-ins kept.',
   'confirm.resetAll':'Full reset? All data (weight, check-ins, plan, profile) will be deleted. Irreversible.',
+  'lang.gate.title':'Choose your language',
   'oggi.trackers.title':'Activity & Trackers',
   'aria.day.prev':'Previous day','aria.day.next':'Next day',
   'aria.checkin.hunger':'Hunger (1–10)','aria.checkin.energy':'Energy (1–10)',
@@ -4647,6 +4441,9 @@ en:{
   'toast.errore':'⚠️ Unexpected error',
   'toast.valoreNonValido':'⚠️ Invalid value',
   'gdpr.footer2':'Required by EU law (GDPR). You can revoke consent anytime from Profile → Privacy.',
+  'autoadj.slow_loss.title':'Slower progress than expected',
+  'autoadj.fast_loss.title':'Losing weight too fast',
+  'autoadj.maintain_drift.title':'Weight drifting on maintenance',
   'autoadj.apply':'Apply the change',
   'autoadj.ignore':'Ignore for now',
   'today.action.weight':'Log your morning weight',
@@ -4699,7 +4496,7 @@ en:{
   'sub.badge.grace': 'PAYMENT OVERDUE',
   'sub.badge.expired': 'EXPIRED',
   'sub.badge.login': 'SIGN IN',
-  'sub.trial.subtitle': '{d} day{s} remaining{r} · then free plan only',
+  'sub.trial.subtitle': '{d} day{s} remaining · then free plan only',
   'sub.trial.subtitle.zero': 'Trial expired · Upgrade to keep your analysis',
   'sub.trial.detail': 'You\'re using your 24/7 adaptive nutritionist',
   'sub.trial.detail.zero': 'Activate Trend to keep your progress insights',
@@ -4794,36 +4591,6 @@ en:{
   'sport.label.strength':'Strength/Power','sport.label.endurance':'Endurance','sport.label.team':'Team/Hybrid','sport.label.fitness':'General Fitness','sport.label.powerlifting':'Powerlifting','sport.label.combat':'Combat Sports',
   'sport.system.strength':'ATP-CP / Glycolytic','sport.system.endurance':'Aerobic','sport.system.team':'Mixed Glycolytic','sport.system.fitness':'Mixed','sport.system.powerlifting':'ATP-CP / Max Strength','sport.system.combat':'Glycolytic / Phosphagen',
   'res.detail.sport':'Sport','res.detail.sistema':'Energy system','aria.info':'Info',
-  'oggi.checkin.aderenza':'Adherence','oggi.checkin.digestione':'Digestion',
-  'unit.days':'d','unit.hours':'h','unit.reset':'↺ Reset',
-  'checkout.cta.continue':'Continue — {price}','checkout.redirecting':'Redirecting…','checkout.processing':'Processing…',
-  'day.type.training':'TRAINING DAY','day.type.rest':'REST DAY',
-  'pred.chart.title':'Weight Forecast (12 wk)','tdee.card.unit.daily':' kcal/day',
-  'toast.authError':'Auth error — please sign out and back in','toast.invalidEmail':'Invalid email address',
-  'toast.signInError':'Sign-in error — please try again','toast.signingOut':'Signing out…',
-  'toast.signOutFailed':'Sign out failed — try again',
-  'paywall.daysLeft':'DAYS LEFT','paywall.title':'Iron Kinetic™ Trend','paywall.sub':'Predictive analysis of your metabolism. 12-week projection based on your weight, adherence and check-in data.',
-  'paywall.feat.pred':'Predictive Curve','paywall.feat.metabo':'Metabolic Fingerprint','paywall.feat.report':'Weekly Report','paywall.feat.circ':'Circadian Timing','paywall.feat.adapt':'Adaptive Engine','paywall.feat.shop':'Shopping List',
-  'paywall.lifetime':'€179.99 · Lifetime access','paywall.lifetime.sub':'One-time payment','paywall.hasAccount':'Already have an account?','paywall.login':'Sign in',
-  'prv.title':'🛡 Privacy & GDPR','prv.badge':'Updated: April 2026 · GDPR (EU Reg. 2016/679) · D.Lgs. 196/2003',
-  'prv.s5b.h':'5b. Data and subscription (freemium / premium)',
-  'checkout.preview.title':'Iron Kinetic™ Trend','checkout.preview.includes':'Trend includes:',
-  'checkout.preview.cta':'Activate Trend →','checkout.preview.cancel':'Cancel',
-  'checkout.paywall.title':'Iron Kinetic™ Trend','checkout.paywall.cancel':'Cancel anytime',
-  'checkout.ponb.title':'Save your progress','checkout.cancel':'Cancel anytime',
-  'onb.food.grassi_altro':'Fats & other',
-  'info.medical.warning':'⚕️ Important medical notice',
-  'clinical.ibd.active':'🔥 Active IBD',
-  'prog.chart.weight':'Weight Trend',
-  'reset.modificatore':'Reset modifier',
-  'privacy.details.btn':'Privacy details',
-  'weekly.report.label.energia':'Average energy',
-  'faq.a.10.html':'<strong>Referral program</strong> — share your personalised link from Settings. Every friend who signs up earns you credit.',
-  'toast.paymentLate':'⚠️ Late payment — access active for {gg} more hours',
-  'toast.authNotConfigured':'Auth not configured',
-  'toast.loginLinkSent':'✉️ Login link sent to {email}',
-  'toast.lastTrialDay':'⏱ Last trial day — unlock Trend to continue',
-  'toast.importErrors':'⚠️ {n} import error(s) — some data may be incomplete',
 }
 };
 let _lang='en';
@@ -4898,7 +4665,9 @@ function applyTranslations(deferOffscreen){
     const keys=['oggi.checkin.fame','oggi.checkin.energia','oggi.checkin.aderenza','oggi.checkin.digestione'];
     const el=document.querySelector('label[for="'+id+'"]');if(el)el.textContent=t(keys[i]);
   });
-  /* M1: Contesto giornata - handled by data-i18n */
+  document.querySelectorAll('.check-card .field-label').forEach(el=>{
+    if(el.textContent.trim()==='Contesto giornata'||el.textContent.trim()==='Day context')el.textContent=t('oggi.checkin.contesto');
+  });
   document.querySelectorAll('.micro-chip').forEach(b=>{
     const oc=b.getAttribute('onclick')||'';
     if(oc.includes("'routine'"))b.textContent=t('oggi.checkin.routine');
@@ -4910,8 +4679,10 @@ function applyTranslations(deferOffscreen){
   if(_saveCi)_saveCi.textContent=t('oggi.checkin.salva');
   const _ciFb=document.getElementById('checkin-feedback');
   if(_ciFb&&!_ciFb.classList.contains('has-feedback'))_ciFb.textContent=t('oggi.checkin.feedback_default');
-  /* M2: wk-status - data-i18n default; render overrides */
-  /* M3: wk-btn - data-i18n default; render overrides */
+  const _wkS=document.getElementById('wk-status');
+  if(_wkS&&(_wkS.textContent==='Non fatto'||_wkS.textContent==='Not done'))_wkS.textContent=t('oggi.workout.nonFatto');
+  const _wkB=document.getElementById('wk-btn');
+  if(_wkB&&(_wkB.textContent.trim()==='Fatto ✓'||_wkB.textContent.trim()==='Done ✓'))_wkB.textContent=t('oggi.workout.fatto');
   ['log-w','log-wst','log-date'].forEach((id,i)=>{
     const keys=['prog.peso','prog.girovita','prog.data'];
     const el=document.querySelector('label[for="'+id+'"]');if(el)el.textContent=t(keys[i]);
@@ -4927,19 +4698,32 @@ function applyTranslations(deferOffscreen){
   const _pT=document.getElementById('set-btn-privacy-txt');if(_pT)_pT.textContent=t('set.btn.privacy');
   const _aT=document.getElementById('set-btn-aiuto-txt');if(_aT)_aT.textContent=t('set.btn.aiuto');
   const _lL=document.getElementById('lang-label-txt');if(_lL)_lL.textContent=t('set.lang.label');
-  /* M4: mod-status - data-i18n default; render overrides */
+  const _mS=document.getElementById('mod-status');
+  if(_mS&&(_mS.textContent.trim()==='Base invariata'||_mS.textContent.trim()==='Unchanged'))_mS.textContent=t('set.mod.base');
   {const _e=getEl('btn-export-data');if(_e)_e.textContent=t('set.dati.esporta');}
   {const _i=getEl('btn-import-data');if(_i)_i.textContent=t('set.dati.importa');}
   document.querySelectorAll('[onclick="resetProfile()"]').forEach(b=>b.textContent=t('set.rigenera'));
   {const _c=getEl('btn-change-diet');if(_c)_c.textContent=t('set.dati.ricomincia');}
-  document.querySelectorAll('[onclick="applyMod(0)"').forEach(b=>b.textContent=t('set.mod.reset'));
+  document.querySelectorAll('[onclick="applyMod(0)"]').forEach(b=>{if(b.textContent.includes('Reset')||b.textContent.includes('reset'))b.textContent=t('set.mod.reset');});
   document.querySelectorAll('[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
-  /* danger zone — handled by data-i18n */
-  /* M7-M10: scr-info labels - handled by data-i18n */
+  /* danger zone accordion warning text */
+  document.querySelectorAll('#acc-danger .sn.t-xxs.muted').forEach(p=>{
+    if(p.dataset.i18n==='set.danger.warn'||p.textContent.includes('irreversibili')||p.textContent.includes('irreversible')||p.textContent.includes('backup'))
+      p.textContent=t('set.danger.warn');
+  });
+  document.querySelectorAll('#scr-info .rowb').forEach(row=>{
+    const lbl=row.querySelector('span:first-child');if(!lbl)return;
+    const v=lbl.textContent.trim();
+    if(v==='Versione'||v==='Version')lbl.textContent=t('info.app.versione');
+    else if(v==='Storage')lbl.textContent=t('info.app.storage');
+    else if(v==='Dati su server'||v==='Server data')lbl.textContent=t('info.app.server');
+    else if(v==='Cookie'||v==='Cookies')lbl.textContent=t('info.app.cookie');
+    else if(v==='Tracking')lbl.textContent=t('info.app.tracking');
+  });
   /* ── end i18n static patch ── */
   /* ── extra always-run patches ── */
   const _fatLbl=document.getElementById('macro-fat-lbl');
-  if(_fatLbl)_fatLbl.textContent=t('meal.comp.fat');
+  if(_fatLbl)_fatLbl.textContent=_lang==='en'?'FAT':'GRASSI';
   const _u7=document.getElementById('checkin-last7-lbl');
   if(_u7)_u7.textContent=t('prog.checkin.ultimi7');
   const _fpBadge=document.getElementById('fp-badge-lbl');
@@ -5289,7 +5073,7 @@ function applyTranslations(deferOffscreen){
   if(_rTgtEl){
     const _nodes=[..._rTgtEl.parentElement.childNodes].filter(n=>n.nodeType===3);
     const _sfx=_nodes.find(n=>n.textContent.includes('giorno')||n.textContent.includes('/day'));
-    if(_sfx)_sfx.textContent=t('tdee.card.unit.daily');
+    if(_sfx)_sfx.textContent=_lang==='en'?' kcal/day':' kcal/giorno';
   }
   /* Coach loading msg */
   const _coachMsg=document.getElementById('coach-msg');
@@ -5387,7 +5171,17 @@ function applyTranslations(deferOffscreen){
       p.textContent=t('info.faq.sub');
   });
   /* info app rows */
-  /* scr-info labels - handled by data-i18n on elements */
+  document.querySelectorAll('#scr-info .rowb span.sn').forEach(span=>{
+    const v=span.textContent.trim();
+    if(v==='Versione'||v==='Version')span.textContent=t('info.app.versione');
+    else if(v==='Storage')span.textContent=t('info.app.storage');
+    else if(v==='Dati su server'||v==='Server data')span.textContent=t('info.app.server');
+    else if(v==='Nessuno ✓'||v==='None ✓')span.textContent=t('info.app.server.val');
+    else if(v==='Cookie'||v==='Cookies')span.textContent=t('info.app.cookie');
+    else if(v==='Zero ✓')span.textContent=t('info.app.cookie.val');
+    else if(v==='Tracking')span.textContent=t('info.app.tracking');
+    else if(v==='Nessuno ✓')span.textContent=t('info.app.tracking.val');
+  });
   /* consent/revoke buttons */
   document.querySelectorAll('button[onclick="gdprWithdraw()"]').forEach(b=>b.textContent=t('info.consenso.revoca'));
   document.querySelectorAll('button[onclick="openModal(\'privacy\')"]').forEach(b=>{
@@ -5444,7 +5238,11 @@ function applyTranslations(deferOffscreen){
   if(_pid('gdpr-p3-sub'))_pid('gdpr-p3-sub').innerHTML=sanitize(t('gdpr.p3.sub'));
   if(_pid('gdpr-gate-footer'))_pid('gdpr-gate-footer').innerHTML=sanitize(t('gdpr.footer'));
   if(_pid('gdpr-gate-footer2'))_pid('gdpr-gate-footer2').textContent=t('gdpr.footer2');
-  /* danger zone — handled by data-i18n */
+  /* ── DANGER ZONE accordion warning ── */
+  document.querySelectorAll('#acc-danger .sn.t-xxs.muted').forEach(p=>{
+    if(p.textContent.includes('irreversibili')||p.textContent.includes('irreversible'))
+      p.textContent=t('set.danger.warn');
+  });
   }; /* end _offscreen */
   if(deferOffscreen){if(window.requestIdleCallback)window.requestIdleCallback(_offscreen,{timeout:300});else setTimeout(_offscreen,300);}
   else _offscreen();
@@ -5831,12 +5629,10 @@ function calcMetabolicFingerprint(){
   return{efficiency,adaptation,responseDays,avgWeekly};
 }
 function renderFingerprint(){
+  requireTrend(()=>{
   const card=document.getElementById('fingerprint-card');
   const cont=document.getElementById('fingerprint-content');
   if(!card||!cont)return;
-  card.style.display='block';
-  cont.innerHTML='<div class="skeleton skeleton-card" style="margin-bottom:12px;"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div>';
-  requireTrend(()=>{
   const fp=getCachedFingerprint();
   if(!fp){card.style.display='none';return;}
   card.style.display='block';
@@ -5998,13 +5794,11 @@ function renderPredictionChart(){
 function renderRealTDEE(){
   if(!trendAccess?.access)return; /* HIGH-15: paywall gate — skip if no trend access */
   const card=document.getElementById('real-tdee-card');if(!card)return;
+  const data=calcRealTDEE();
+  if(!data){card.style.display='none';return;}
   card.style.display='block';
   const valEl=document.getElementById('real-tdee-val');
   const rateEl=document.getElementById('real-tdee-rate');
-  if(valEl)valEl.innerHTML='<span class="skeleton" style="display:inline-block;width:60px;height:22px;"></span>';
-  if(rateEl)rateEl.innerHTML='<span class="skeleton" style="display:inline-block;width:50px;height:18px;"></span>';
-  const data=calcRealTDEE();
-  if(!data){card.style.display='none';return;}
   const noteEl=document.getElementById('real-tdee-note');
   if(valEl){
     valEl.textContent=data.realTDEE;
@@ -6077,17 +5871,12 @@ function generateReportInsight(rep){
   return parts.join(' ')||t('weekly.insight.default');
 }
 function renderWeeklyReport(){
+  requireTrend(()=>{
   const card=document.getElementById('weekly-report-card');
   if(!card)return;
-  card.style.display='block';
-  /* Show skeleton while loading */
-  const grid=document.getElementById('wr-stat-grid');
-  const barChart=document.getElementById('wr-bar-chart');
-  if(grid)grid.innerHTML='<div class="wr-stat-box"><div class="skeleton" style="height:24px;width:50px;margin:0 auto 4px;"></div><div class="skeleton skeleton-text short" style="margin:0 auto;"></div></div>'.repeat(3);
-  if(barChart)barChart.innerHTML='<div class="skeleton" style="height:80px;"></div>';
-  requireTrend(()=>{
   const log=getLog();
   if(!dietData&&!log.length){card.style.display='none';return;}
+  card.style.display='block';
   const rep=generateWeeklyReport();
   const insight=generateReportInsight(rep);
   const pct=rep.mealsTotal>0?Math.round(rep.mealsDone/rep.mealsTotal*100):0;
@@ -7429,7 +7218,6 @@ function analyzeState(){
   const clinical=prof?.clinical||null;
 
   /* ── STREAK CELEBRATION (priorità alta) ── */
-  let weeklyRate=null;
   const streakCount=getStreakCount('checkin');
   if(streakCount>=3){
     return{ico:'🔥',ib:'#F97316',gl:'rgba(249,115,22,.28)',br:'#F97316',
@@ -7691,9 +7479,8 @@ function analyzeState(){
    ONBOARDING — new 5-step flow
 ═══════════════════════════════════════ */
 function setSex(s){profState.sex=s;const m=document.getElementById('sex-m'),f=document.getElementById('sex-f');if(m)m.classList.toggle('seg-on',s==='M');if(f)f.classList.toggle('seg-on',s==='F');}
-function setWk(n){profState.workoutsWk=n;const lbl=document.getElementById('wk-label');if(lbl)lbl.textContent=t('onb.wk.selected',{n});document.querySelectorAll('#wk-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});if(n===6)toast(t('onb.wk.cap6'));_updateStep2Btn();}
-function setSt(n){profState.stepsDay=n;const lbl=document.getElementById('st-label');if(lbl)lbl.textContent=t('onb.st.selected',{n:n.toLocaleString(_lang==='en'?'en-US':'it-IT')});document.querySelectorAll('#st-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});_updateStep2Btn();}
-function _updateStep2Btn(){const btn=document.getElementById('to-step2-btn');if(btn){const ok=profState.workoutsWk!==null&&profState.stepsDay!==null;btn.disabled=!ok;btn.style.opacity=ok?'1':'0.5';btn.style.cursor=ok?'pointer':'not-allowed';}}
+function setWk(n){profState.workoutsWk=(n===6?'6+':n);const lbl=document.getElementById('wk-label');if(lbl)lbl.textContent=t('onb.wk.selected',{n});document.querySelectorAll('#wk-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});if(n===6)toast(t('onb.wk.cap6'));}
+function setSt(n){profState.stepsDay=n;const lbl=document.getElementById('st-label');if(lbl)lbl.textContent=t('onb.st.selected',{n:n.toLocaleString(_lang==='en'?'en-US':'it-IT')});document.querySelectorAll('#st-seg .seg-btn').forEach(b=>{const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);});}
 function setGoal(btn){
   profState.goal=btn.dataset.goal;profState.goalMod=parseInt(btn.dataset.mod);
   document.querySelectorAll('#goal-wrap button').forEach(b=>b.classList.toggle('seg-on',b===btn));
@@ -7705,21 +7492,17 @@ function setMealsCount(n){
   document.querySelectorAll('#meals-seg .seg-btn').forEach(b=>{
     const m=b.getAttribute('onclick').match(/\d+/);b.classList.toggle('seg-on',m&&parseInt(m[0])===n);
   });
-  _updateStep4Btn();
 }
-function setTaste(v){
-  prefState.taste=v;
-  ['salato','dolce','misto'].forEach(x=>document.getElementById('taste-'+x)?.classList.toggle('seg-on',x===v));
-  _updateStep4Btn();
+function setTaste(t){
+  prefState.taste=t;
+  ['salato','dolce','misto'].forEach(v=>document.getElementById('taste-'+v)?.classList.toggle('seg-on',v===t));
 }
 function setDietStyle(s){
   prefState.dietStyle=s;
   document.querySelectorAll('#diet-style-seg .seg-btn').forEach(b=>{
     b.classList.toggle('seg-on',b.getAttribute('onclick').includes(`'${s}'`));
   });
-  _updateStep4Btn();
 }
-function _updateStep4Btn(){const btn=document.getElementById('to-step4-btn');if(btn){const ok=prefState.mealsCount&&prefState.taste&&prefState.dietStyle;btn.disabled=!ok;btn.style.opacity=ok?'1':'0.5';btn.style.cursor=ok?'pointer':'not-allowed';}}
 function setClinical(val,btn){
   profState.clinical=val;
   /* Reset all chips */
@@ -7777,7 +7560,7 @@ function goStep(n){
     profState.bf=(!isNaN(bf)&&bf>0)?bf:null;
   }
   if(n===2){if(profState.workoutsWk===null||profState.stepsDay===null){toast(t('toast.selAllenamentiPassi'));hap('error');return;}}
-  if(n===3){if(!profState.goal){toast(t('toast.selObiettivo'));hap('error');return;}}
+  if(n===3&&n>curStep){if(!profState.goal){toast(t('toast.selObiettivo'));hap('error');return;}}
   if(n===4){
     prefState.intolerances=document.getElementById('f-intolerances').value||'';
     if(!prefState.mealsCount){toast(t('toast.selPasti'));hap('error');return;}
@@ -7788,7 +7571,7 @@ function goStep(n){
   const totalSteps=5;
   for(let i=0;i<totalSteps;i++){
     const el=document.getElementById('step-'+i);if(el)el.classList.toggle('on',i===n);
-    const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===n);dot.classList.toggle('completed',i<n);dot.setAttribute('aria-label','Step '+(i+1)+' di 5'+(i===n?' (attivo)':''));}
+    const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===n);dot.classList.toggle('completed',i<n);}
   }
   if(n===2){const s3btn=document.getElementById('to-step3-btn');const hasGoal=!!profState.goal;s3btn.disabled=!hasGoal;s3btn.style.opacity=hasGoal?'1':'0.5';s3btn.style.cursor=hasGoal?'pointer':'not-allowed';}
   document.getElementById('onb-screen').scrollTo({top:0,behavior:'smooth'});
@@ -7859,7 +7642,7 @@ function runCalcAndGenerate(){
     const meal=day1[mn];if(!meal)return;
     html+=`<div class="plan-insight-row"><span class="material-symbols-outlined" style="font-size:16px;color:var(--p);flex-shrink:0;margin-top:1px;">restaurant</span><div><p style="font-size:12px;font-weight:700;color:var(--on);margin:0 0 2px;">${localizedMealName(mn)}</p><p style="font-size:11px;color:var(--muted);margin:0;line-height:1.45;">${meal.rest}</p></div></div>`;
   });
-  previewEl.innerHTML=sanitize(html);
+  previewEl.innerHTML=html;
   document.getElementById('plan-preview').style.display='block';
   document.getElementById('result-card').classList.add('on');
 
@@ -7931,19 +7714,20 @@ function applyTrendBlurOverlay(){
 
 function syncTrendLockCopy(){
   try{
+  // Only run when Trend/Progress screen is actually active
+  const scrProg=document.getElementById('scr-prog');
+  if(!scrProg)return;
   /* Note: do NOT early-return on display:none — we must set state before tab becomes visible */
+  const lockBanner=document.getElementById('trend-lock-banner');
   const blurTitle=document.getElementById('trend-blur-title');
   const blurDays=document.getElementById('trend-blur-days');
   const blurCta=document.getElementById('trend-blur-cta');
-  /* Always update CTA text (i18n) */
   if(blurCta)blurCta.textContent=t('trend.blur.cta');
   if(trendAccess?.access){
-    /* Unlocked: just sync layout class and UI — no copy needed */
     updateTrendLockedLayout();
     updateTrendLockUI();
     return;
   }
-  /* Locked: populate blur overlay copy */
   if(blurTitle){
     if(trendAccess?.mode==='trial'&&trendAccess?.daysLeft>1){
       blurTitle.textContent=t('trend.blur.trialActive');
@@ -7960,9 +7744,16 @@ function syncTrendLockCopy(){
       blurDays.textContent=t('trend.blur.expiredSub');
     }
   }
-  /* Fix-1+3: lockBanner innerHTML injection removed — banner is always hidden when overlay
-     is active. updateTrendLockUI() is the single controller of all lock visibility. */
-  updateTrendLockedLayout();
+  if(lockBanner){
+    lockBanner.innerHTML=sanitize(`
+      <span style="font-size:13px;color:#ccc">${sanitize(t('trend.blur.expired'))}</span>
+      <button onclick="openPaywall('Trend')" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-size:13px">
+        ${sanitize(t('trend.blur.cta'))}
+      </button>
+    `);
+    updateTrendLockedLayout();
+  }
+  // Do NOT set lockBanner.style.display here — updateTrendLockUI() controls visibility
   updateTrendLockUI();
   }catch(e){if(typeof IK_DEBUG!=='undefined'&&IK_DEBUG)console.warn('[IK] syncTrendLockCopy error:',e);}
 }
@@ -7985,7 +7776,7 @@ function setCheckTag(btn,tag){selectedCheckTag=tag;document.querySelectorAll('.m
 function saveDailyCheckin(){
   const entry={iso:toISO(),hunger:parseInt(document.getElementById('ci-hunger')?.value||'5',10),energy:parseInt(document.getElementById('ci-energy')?.value||'6',10),adherence:parseInt(document.getElementById('ci-adherence')?.value||'8',10),digestion:parseInt(document.getElementById('ci-digestion')?.value||'8',10),tag:selectedCheckTag};
   const arr=[entry,...lsG(SK.checkins,[]).filter(x=>x.iso!==entry.iso)].slice(0,30);
-  try{lsS(SK.checkins,arr);}catch(e){showToastError(t('toast.saveError')||'Errore nel salvataggio. Riprova.');return;}
+  lsS(SK.checkins,arr);_invalidateCheckinsCache();
   updateStreaks();
   updateAdherenceCalendar();
   if(activeTab==='prog')renderCalendar();
@@ -8068,14 +7859,8 @@ function renderCheckinAnalytics(){
   const last7=arr.slice(0,7);
   const avg=(k)=>last7.length?last7.reduce((a,v)=>a+(+v[k]||0),0)/last7.length:null;
   ['hunger','energy','adherence','digestion'].forEach(k=>{
-    const bar=document.getElementById('an-'+k);const val=document.getElementById('an-'+k+'-v');
-    if(bar){bar.style.width='0%';bar.style.transition='none';}
-    if(val){val.innerHTML='<span class="skeleton" style="display:inline-block;width:24px;height:12px;"></span>';}
-  });
-  requestAnimationFrame(()=>{
-  ['hunger','energy','adherence','digestion'].forEach(k=>{
     const v=avg(k);const bar=document.getElementById('an-'+k);const val=document.getElementById('an-'+k+'-v');
-    if(bar){bar.style.transition='width .35s ease';bar.style.width=v!=null?Math.max(0,Math.min(100,v*10))+'%':'0%';}
+    if(bar)bar.style.width=v!=null?Math.max(0,Math.min(100,v*10))+'%':'0%';
     if(val)val.textContent=v!=null?v.toFixed(1):'--';
   });
   const note=document.getElementById('checkin-analytics-note');
@@ -8094,8 +7879,7 @@ function renderCheckinAnalytics(){
     } else {
       note.textContent=t('ci.an.stable');
     }
-  } /* end if(note) */
-  }); /* end requestAnimationFrame */
+  }
 }
 
 
@@ -8311,7 +8095,7 @@ function renderMacros(){
   if(!_dtb){_dtb=document.createElement('span');_dtb.id='m-daytype-badge';
     _dtb.className='t-xxs sn';_dtb.style.cssText='font-size:8px;letter-spacing:.06em;font-weight:700;margin-left:4px;';
     const _mbp=mb?.parentNode;if(_mbp)_mbp.appendChild(_dtb);}
-  if(_dtb){_dtb.textContent=m.dayType==='training'?t('day.type.training'):t('day.type.rest');
+  if(_dtb){_dtb.textContent=m.dayType==='training'?(_lang==='en'?'TRAINING DAY':'GIORNO ALLENAMENTO'):(_lang==='en'?'REST DAY':'GIORNO RIPOSO');
     _dtb.style.color=m.dayType==='training'?'var(--p)':'var(--muted)';}
 }
 
@@ -8907,28 +8691,11 @@ function applyMod(u){
   const stepper=getEl('mod-stepper');
   if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
 }
-const KEEP_PREFIX=['ikgdpr','iklang','iknotif'];
-async function clearAppData(opts){
-  /* ── AREA 6b: GDPR delete-account via Edge Function ── */
-  const doServerDelete=opts?.serverDelete!==false && typeof sb!=='undefined' && sb;
-  let session=null;
-  if(doServerDelete){
-    try{session=await sb.auth.getSession();session=session?.data?.session||null;}catch{session=null;}
-  }
-  if(typeof sb!=='undefined'&&sb)try{await sb.auth.signOut();}catch{}
-  Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});
-  /* Call delete-account EF if user was logged in */
-  if(session?.access_token){
-    try{
-      await fetch(SUPABASE_URL+'/functions/v1/delete-account',{
-        method:'POST',
-        headers:{'Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_KEY,'Content-Type':'application/json'}
-      });
-    }catch(e){console.warn('[IK] delete-account EF failed:',e);}
-  }
-}
+const KEEP_PREFIX=['ikgdpr','iklang','iknotif','ik_trial_start'];
+async function clearAppData(){if(typeof sb!=='undefined'&&sb)try{await sb.auth.signOut();}catch{}Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
 
 /* ── Custom confirm modal (FIX1) ── */
+/* MED-29: openConfirmModal delegates to showConfirm for single implementation */
 function openConfirmModal(title,body,okLabel,cancelLabel,onOk){
   showConfirm(title + (body ? '\n' + body : ''),onOk);
   /* Override button labels if custom ones were provided */
@@ -9065,7 +8832,7 @@ function logMetric(){
   const log=getLog();const idx=log.findIndex(e=>e.isoDate===iso);
   const entry={date:isoDisp(iso),isoDate:iso,weight:wv,waist:wst,ts:idx>=0?log[idx].ts:Date.now()};
   if(idx>=0){log[idx]=entry;toast(t('toast.aggiornato'));}else{log.push(entry);toast(t(wst?'toast.pesoGirovita':'toast.pesolog'));}
-  try{saveLog(log);}catch(e){showToastError(t('toast.saveError')||'Errore nel salvataggio. Riprova.');return;}
+  saveLog(log);_tabDirty.prog=true;invalidateLogCaches();
   document.getElementById('log-w').value='';document.getElementById('log-wst').value='';
   document.getElementById('log-w').blur();document.getElementById('log-wst').blur();
   renderProgress();renderCoach();renderMacros();
@@ -9168,7 +8935,7 @@ function switchChart(mode,btn){
   if(lbl)lbl.dataset.mode=mode;
   const predSum=document.getElementById('prediction-summary');
   if(mode==='prediction'){
-    if(lbl)lbl.textContent=t('pred.chart.title');
+    if(lbl)lbl.textContent=_lang==='en'?'Weight Forecast (12 wk)':'Previsione Peso (12 sett)';
     renderPredictionChart();
   } else {
     if(predSum)predSum.style.display='none';
@@ -9285,7 +9052,7 @@ function importBackup(evt){
         /* B4D: versioned success toast */
         dietData=parsed;mountApp();toast(t('toast.backupImp')+(d._exportedAt?` (${d._exportedAt})`:''));
       }else{dietData=null;showOnb();toast(t('toast.noPianoBackup'));}
-      if(importErrors>0)showToast(t("toast.importErrors",{n:importErrors}),4000);
+      if(importErrors>0)showToast(`⚠️ ${importErrors} import error(s) — some data may be incomplete`,4000);
       }); // end showConfirm callback
 
     }catch(err){toast(`⚠️ ${err.message||t('toast.errExp')}`);}
@@ -9895,7 +9662,9 @@ function switchTab(name){
     if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}
     if(!scr)return;
     if(t===name){
-      scr.style.display=scr.classList.contains('locked-trend')?'flex':'block';
+      scr.style.display='block';
+      /* Fix Bug5: scroll to top when entering a tab so content starts from top */
+      scr.scrollTop=0;
       requestAnimationFrame(()=>scr.classList.add('tab-enter'));
       setTimeout(()=>scr.classList.remove('tab-enter'),200);
     } else {
@@ -9912,21 +9681,9 @@ function switchTab(name){
   }
   // Single source of truth handles all cases
   updateTrendLockUI();
-  if(name==='prog'){
-    syncTrendLockCopy();
-    /* Fix-7: re-validate access each time user navigates to Trend
-       so expiry that happened in background is caught immediately */
-    checkTrendAccess().then(remote=>{
-      const cur=getTrendAccess();
-      if(JSON.stringify(remote)!==JSON.stringify(cur)){
-        setTrendAccess(remote);
-        updateTrendBadge();
-        syncTrendLockCopy();
-        updateTrendLockUI();
-      }
-    }).catch(()=>{});
-  }
-  if(name==='prog'&&_tabDirty.prog){renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;}
+  if(name==='prog'){syncTrendLockCopy();}
+  /* Fix Bug5: defer render calls to next frame so layout is settled before chart/calendar measure DOM */
+  if(name==='prog'&&_tabDirty.prog){requestAnimationFrame(()=>{renderProgress();updateAdherenceCalendar();renderCalendar();updateNotifUI();renderFingerprint();renderWeeklyReport();renderRealTDEE();_tabDirty.prog=false;});}
   if(name==='set'){renderSettings();renderKcalRing();_tabDirty.set=false;trendInitPromise.then(()=>updateSubManagementCard());_ikRefLoad();}
   if(name==='info'){updateConsentUI();}
   if(name==='oggi'){try{renderTodayAction();}catch(e){}try{renderPlanUpdateNote();}catch(e){}}
@@ -10149,11 +9906,7 @@ document.addEventListener('touchend',e=>{
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600);}
 function showToast(html,dur){const t=document.getElementById('toast');t.textContent=sanitize(html);t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),dur||2600);}
-function closeToast(){const t=document.getElementById('toast');t.classList.remove('on');t.classList.remove('toast-error');clearTimeout(t._t);}
-function showToastError(msg,dur){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on','toast-error');clearTimeout(t._t);t._t=setTimeout(()=>{t.classList.remove('on','toast-error');},dur||3200);}
-/* ── UX-P1: Step 0 → Step 1 button auto-enable ── */
-function _updateStep1Btn(){const btn=document.getElementById('to-step1-btn');if(!btn)return;const age=document.getElementById('f-age')?.value;const h=document.getElementById('f-height')?.value;const w=document.getElementById('f-weight')?.value;const ok=age&&h&&w&&parseFloat(age)>=16&&parseFloat(h)>=140&&parseFloat(w)>=40;btn.disabled=!ok;btn.style.opacity=ok?'1':'0.5';btn.style.cursor=ok?'pointer':'not-allowed';}
-document.addEventListener('DOMContentLoaded',()=>{['f-age','f-height','f-weight'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',_updateStep1Btn);});_updateStep1Btn();});
+function closeToast(){const t=document.getElementById('toast');t.classList.remove('on');clearTimeout(t._t);}
 
 /* ── FIX16 / FIX4: Modal focus trap ── */
 let _modalTrigger=null;
@@ -10886,7 +10639,7 @@ setTimeout(function(){
         <div class="prv-right-item"><span class="prv-right-ico">✏️</span><span class="prv-right-label">Rettifica (Art.16)</span><span class="prv-right-desc">Correggi i tuoi dati in qualsiasi momento dall'app.</span></div>
         <div class="prv-right-item"><span class="prv-right-ico">🗑</span><span class="prv-right-label">Cancellazione (Art.17)</span><span class="prv-right-desc">Usa "Ricomincia da capo" o scrivi per cancellare account e dati.</span></div>
         <div class="prv-right-item"><span class="prv-right-ico">⏸</span><span class="prv-right-label">Limitazione (Art.18)</span><span class="prv-right-desc">Chiedi sospensione del trattamento scrivendo al titolare.</span></div>
-        <div class="prv-right-item"><span class="prv-right-ico">📦</span><span class="prv-right-label" data-i18n="prv.s7.r4.lbl">Portabilità (Art.20)</span><span class="prv-right-desc" data-i18n="prv.s7.r4.desc">Esporta i tuoi dati in formato JSON leggibile tramite l'app.</span></div>
+        <div class="prv-right-item"><span class="prv-right-ico">📦</span><span class="prv-right-label">Portabilità (Art.20)</span><span class="prv-right-desc">Esporta i tuoi dati in formato JSON leggibile tramite l'app.</span></div>
         <div class="prv-right-item"><span class="prv-right-ico">🚫</span><span class="prv-right-label">Opposizione (Art.21)</span><span class="prv-right-desc">Opponiti al trattamento scrivendo al titolare.</span></div>
         <div class="prv-right-item"><span class="prv-right-ico">🔓</span><span class="prv-right-label">Revoca consenso (Art.7)</span><span class="prv-right-desc">Revoca da Profilo → Privacy in qualsiasi momento.</span></div>
         <div class="prv-right-item"><span class="prv-right-ico">⚖️</span><span class="prv-right-label">Reclamo al Garante</span><span class="prv-right-desc">Proponi reclamo al Garante Privacy (www.garanteprivacy.it).</span></div>
@@ -10913,7 +10666,7 @@ setTimeout(function(){
 
     <!-- Contacts -->
     <div class="prv-section">
-      <p class="prv-h2" id="prv-contact-h" data-i18n="prv.contact.h">Contatti e Autorità di Controllo</p>
+      <p class="prv-h2" id="prv-contact-h">Contatti e Autorità di Controllo</p>
       <p class="prv-p" id="prv-contact-p1">Per esercitare i tuoi diritti o per qualsiasi domanda: <strong>[<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="93e3fae0faf0fcfffffcd3f4fef2faffbdf0fcfe">[email&#160;protected]</a>]</strong></p>
       <p class="prv-p" id="prv-contact-p2">Autorità di controllo: <strong>Garante per la protezione dei dati personali</strong><br>Piazza Venezia 11 — 00187 Roma<br><a href="https://www.garanteprivacy.it" style="color:var(--p);" target="_blank" rel="noopener">www.garanteprivacy.it</a></p>
     </div>
@@ -11091,7 +10844,7 @@ setTimeout(function(){
 
     <!-- Disclaimer medico -->
     <div style="background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.18);border-radius:var(--r);padding:14px 16px;margin-top:4px;">
-      <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 6px;" class="sn" id="help-disclaimer-title" data-i18n="help.disclaimer.title">⚕️ Avviso medico importante</p>
+      <p style="font-size:11px;font-weight:700;color:var(--red);margin:0 0 6px;" class="sn" id="help-disclaimer-title">⚕️ Avviso medico importante</p>
       <p style="font-size:11px;color:var(--muted);line-height:1.6;font-weight:500;margin:0;" class="sn" id="help-disclaimer-text">Iron Kinetic™ è uno strumento informativo di supporto e non costituisce consiglio medico. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
     </div>
 
@@ -11124,7 +10877,7 @@ setTimeout(function(){
 
 <!-- ── PAYWALL OVERLAY ── -->
 <!-- ── CHECKOUT PREVIEW OVERLAY ── -->
-<div id="checkout-preview-overlay" aria-modal="true" role="dialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);z-index:10002;align-items:flex-end;justify-content:center;" onclick="if(event.target===this)closeCheckoutPreview()">
+<div id="checkout-preview-overlay" aria-modal="true" role="dialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);z-index:10002;align-items:flex-end;justify-content:center;">
   <div id="checkout-preview-sheet" style="background:var(--s1);border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform .38s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;max-height:92dvh;padding-bottom:env(safe-area-inset-bottom,16px);">
     <!-- drag handle -->
     <div style="width:36px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;margin:12px auto 0;"></div>
@@ -11180,29 +10933,29 @@ setTimeout(function(){
   </div>
 </div>
 
-<div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic Trend" onclick="if(event.target===this)closePaywall()">
+<div id="paywall-overlay" aria-modal="true" role="dialog" aria-label="Iron Kinetic Trend">
   <div id="paywall-sheet">
     <button onclick="closePaywall()" aria-label="Chiudi" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;touch-action:manipulation;min-width:44px;min-height:44px;">×</button>
-    <div id="pw-trial-badge" style="display:none;background:rgba(77,220,198,.12);color:var(--p);font-size:10px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:999px;width:fit-content;margin:0 auto 16px;"><span id="pw-days-left"></span> <span data-i18n="paywall.daysLeft">GIORNI RIMASTI</span></div>
+    <div id="pw-trial-badge" style="display:none;background:rgba(77,220,198,.12);color:var(--p);font-size:10px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:999px;width:fit-content;margin:0 auto 16px;"><span id="pw-days-left"></span> GIORNI RIMASTI</div>
     <div style="width:56px;height:56px;background:rgba(77,220,198,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
       <span class="material-symbols-outlined" style="color:var(--p);font-size:28px;font-variation-settings:'FILL' 1;">trending_up</span>
     </div>
-    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 8px;" id="pw-main-title" data-i18n="paywall.title">Iron Kinetic™ Trend</h2>
-    <p style="font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:0 0 24px;" id="pw-main-sub" data-i18n="paywall.sub">Analisi predittiva sul tuo metabolismo. Proiezione a 12 settimane basata sui tuoi dati di peso, aderenza e check-in.</p>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 8px;" id="pw-main-title">Iron Kinetic™ Trend</h2>
+    <p style="font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:0 0 24px;" id="pw-main-sub">Analisi predittiva sul tuo metabolismo. Proiezione a 12 settimane basata sui tuoi dati di peso, aderenza e check-in.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
-      <div class="pw-feat" data-i18n="paywall.feat.pred">Curva Predittiva</div>
-      <div class="pw-feat" data-i18n="paywall.feat.metabo">Impronta Metabolica</div>
-      <div class="pw-feat" data-i18n="paywall.feat.report">Report Settimanale</div>
-      <div class="pw-feat" data-i18n="paywall.feat.circ">Timing Circadiano</div>
-      <div class="pw-feat" data-i18n="paywall.feat.adapt">Motore Adattivo</div>
-      <div class="pw-feat" data-i18n="paywall.feat.shop">Lista della Spesa</div>
+      <div class="pw-feat">Curva Predittiva</div>
+      <div class="pw-feat">Impronta Metabolica</div>
+      <div class="pw-feat">Report Settimanale</div>
+      <div class="pw-feat">Timing Circadiano</div>
+      <div class="pw-feat">Motore Adattivo</div>
+      <div class="pw-feat">Lista della Spesa</div>
     </div>
     <div style="display:flex;gap:10px;margin-bottom:10px;">
-      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€6,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.75;" data-i18n="checkout.cancel">Cancella quando vuoi</span></button>
+      <button onclick="startCheckout('monthly')" style="flex:1;background:var(--p);color:var(--p-inverse);border:none;border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€6,99/mese<br><span style="font-weight:400;font-size:11px;opacity:.75;">Cancella quando vuoi</span></button>
       <button onclick="startCheckout('annual')" style="flex:1;background:rgba(77,220,198,.12);color:var(--p);border:1px solid rgba(77,220,198,.3);border-radius:var(--r);padding:14px 8px;font-weight:800;font-size:13px;cursor:pointer;line-height:1.4;touch-action:manipulation;">€69,99/anno<br><span style="font-weight:600;font-size:11px;">€5,83/mese · −17%</span></button>
     </div>
-    <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);padding:12px;font-weight:700;font-size:12px;cursor:pointer;margin-bottom:16px;touch-action:manipulation;"><span data-i18n="paywall.lifetime">€179,99 · Accesso permanente</span><br><span style="font-weight:400;font-size:11px;opacity:.7;" data-i18n="paywall.lifetime.sub">Pagamento unico</span></button>
-    <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:8px;"><span data-i18n="paywall.hasAccount">Hai già un account?</span> <span style="color:var(--p);" data-i18n="paywall.login">Accedi</span></button>
+    <button onclick="startCheckout('lifetime')" style="width:100%;background:rgba(77,220,198,.06);color:var(--p);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);padding:12px;font-weight:700;font-size:12px;cursor:pointer;margin-bottom:16px;touch-action:manipulation;">€179,99 · Accesso permanente<br><span style="font-weight:400;font-size:11px;opacity:.7;">Pagamento unico</span></button>
+    <button onclick="openAuthModal()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:8px;">Hai già un account? <span style="color:var(--p);">Accedi</span></button>
   </div>
 </div>
 
@@ -11219,4 +10972,13 @@ setTimeout(function(){
     <h2 id="ponb-title" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--on);margin:0 0 10px;letter-spacing:-.02em;">Salva il tuo percorso</h2>
     <p id="ponb-sub" style="font-size:13px;color:var(--muted);text-align:center;line-height:1.65;margin:0 0 28px;padding:0 8px;">Accedi con Google per sincronizzare piano, prova gratuita e Trend su tutti i dispositivi.</p>
     <button class="gauth-btn" onclick="signInWithGoogleFromOnboarding()" id="ponb-gcta" style="margin-bottom:12px;">
-      <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2
+      <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.14 15.89-5.81l-7.73-6C29.99 37.88 27.14 38.5 24 38.5c-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      <span class="gauth-label">Continua con Google</span>
+    </button>
+    <!-- Fix Bug 2: #ponb-note was missing from the DOM -->
+    <p id="ponb-note" style="font-size:11px;color:var(--dim);text-align:center;margin:8px 0 0;line-height:1.5;">Account gratuito · I tuoi dati rimangono sul dispositivo</p>
+  </div>
+</div>
+
+</body>
+</html>
