@@ -2385,13 +2385,21 @@ async function _resumePostOnboardingOrBoot(){
   if(sb){
     
 
+    /* Check if we're returning from an OAuth redirect — hash contains access_token */
+    const _isOAuthRedirect=location.hash.includes('access_token')||location.hash.includes('error_description')||new URLSearchParams(location.search).has('code');
+
     const _splashKillTimer=setTimeout(()=>{
       console.warn('[IK] getSession timeout — forcing onboarding fallback');
       hideSplash();
-      lsS(SK.onboardingDone,false);
+      /* Don't wipe onboardingDone during an OAuth redirect — session may not be ready yet */
+      if(!_isOAuthRedirect)lsS(SK.onboardingDone,false);
       try{showOnboarding();}catch(e){_bootAfterGates();}
     },6000);
     try{
+      /* If OAuth redirect, give Supabase time to exchange the token before calling getSession */
+      if(_isOAuthRedirect){
+        await new Promise(r=>setTimeout(r,800));
+      }
       const{data:{session}}=await sb.auth.getSession();
       clearTimeout(_splashKillTimer);
       if(session?.user){
@@ -2399,12 +2407,23 @@ async function _resumePostOnboardingOrBoot(){
         _bootAfterGates();
         return;
       }
+      /* If OAuth redirect but still no session, retry once more after a longer delay */
+      if(_isOAuthRedirect){
+        await new Promise(r=>setTimeout(r,1500));
+        const{data:{session:session2}}=await sb.auth.getSession();
+        if(session2?.user){
+          await syncUserAfterLogin(session2.user);
+          _bootAfterGates();
+          return;
+        }
+      }
     }catch(e){
       clearTimeout(_splashKillTimer);
       console.warn('[IK] resumePostOnboarding error',e);
     }
     
-    lsS(SK.onboardingDone,false);
+    /* Only reset onboarding if this is NOT an OAuth redirect */
+    if(!_isOAuthRedirect)lsS(SK.onboardingDone,false);
     showOnboarding();
     return;
   }
