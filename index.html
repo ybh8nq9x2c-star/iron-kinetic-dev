@@ -807,6 +807,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
       </div>
 
+      <!-- iOS/Safari scroll spacer: padding-bottom on overflow:scroll is unreliable — explicit spacer guarantees content clears the floating nav bar -->
+      <div aria-hidden="true" style="height:calc(var(--nav-h) + max(8px,env(safe-area-inset-bottom,0px)) + 8px);flex-shrink:0;"></div>
     </div>
   </div><!-- /scr-oggi -->
 
@@ -1298,7 +1300,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div style="display:none;">
         <button id="notif-perm-btn-alt" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
       </div>
-      <div style="height:8px;"></div>
+      <!-- iOS/Safari scroll spacer -->
+      <div aria-hidden="true" style="height:calc(var(--nav-h) + max(8px,env(safe-area-inset-bottom,0px)) + 8px);flex-shrink:0;"></div>
     </div>
   </div><!-- /scr-set -->
 
@@ -1391,7 +1394,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <p style="font-size:11px;color:var(--muted);margin:0;line-height:1.6;" class="sn" id="info-disclaimer-text">Iron Kinetic™ è uno strumento informativo di supporto e <strong style="color:var(--on);">non costituisce consiglio medico</strong>. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
       </div>
 
-      <div style="height:8px;"></div>
+      <!-- iOS/Safari scroll spacer -->
+      <div aria-hidden="true" style="height:calc(var(--nav-h) + max(8px,env(safe-area-inset-bottom,0px)) + 8px);flex-shrink:0;"></div>
     </div>
   </div><!-- /scr-info -->
 
