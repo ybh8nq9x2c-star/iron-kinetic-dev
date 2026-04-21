@@ -1597,32 +1597,9 @@ const trendAccess=new Proxy(_trendState,{set(){console.warn('[IK] trendAccess is
 
 
 function _checkTrendLocal(){
-  /* Anonymous trial: client-side only. Logged-in users always go through server. */
-  try{
-    const _now=Date.now();
-    let stored=localStorage.getItem('ik_trial_start');
-    const resets=parseInt(localStorage.getItem('ik_trial_resets')||'0');
-    /* Max 1 reset, no exceptions */
-    if(resets>1)return{access:false,mode:'expired'};
-    const ts=parseInt(stored,10);
-    /* Reject future timestamps (clock manipulation) — must be within last 30 days */
-    const _isValidTs=stored&&!isNaN(ts)&&ts<=_now&&(_now-ts)<30*86400000;
-    if(!_isValidTs){
-      /* First time or invalid timestamp: start fresh */
-      if(stored){
-        /* Replacing a bad/future timestamp counts as a reset */
-        localStorage.setItem('ik_trial_resets',String(resets+1));
-        /* If that pushes us over the limit, expire immediately */
-        if(resets+1>1)return{access:false,mode:'expired'};
-      }
-      localStorage.setItem('ik_trial_start',String(_now));
-      return{access:true,mode:'trial',daysLeft:TRIAL_DAYS};
-    }
-    const elapsed=(_now-ts)/86400000;
-    const left=Math.max(0,TRIAL_DAYS-elapsed);
-    if(left<=0)return{access:false,mode:'expired'};
-    return{access:true,mode:'trial',daysLeft:Math.ceil(left)};
-  }catch(e){return{access:false,mode:'expired'};}
+  /* Fail-closed: anonymous users get no Trend access.
+     Server-side verification is the only source of truth. */
+  return{access:false,mode:'none',daysLeft:0};
 }
 
 async function getUser(){
@@ -1634,44 +1611,48 @@ async function checkTrendAccess(){
   const user=await getUser();
   if(!user)return _checkTrendLocal();
   try{
-    const{data,error}=await sb.from('users')
-      .select('trend_active,trial_end,grace_period_until,plan')
-      .eq('id',user.id).single();
-    
-    if(error){
-      console.warn('[IK] checkTrendAccess server error:',error.message,'→ using local trial fallback');
+    /* Get fresh session token for the Edge Function call */
+    let token=null;
+    try{
+      const{data:sessData}=await sb.auth.getSession();
+      token=sessData?.session?.access_token;
+    }catch(e){console.warn('[IK] getSession failed',e);}
+    if(!token){
+      console.warn('[IK] No access token for verify-subscription → deny');
       return _checkTrendLocal();
     }
-    
-    if(!data){return _checkTrendLocal();}
-    if(data?.trend_active){
-      if(data.grace_period_until){
-        const graceEnd=new Date(data.grace_period_until);
-        if(graceEnd>new Date()){
-          const hoursLeft=Math.ceil((graceEnd-new Date())/(3600000));
-          return{access:true,mode:'grace',hoursLeft,plan:data.plan||'monthly'};
-        }
-        localStorage.removeItem('ik_trend_active');
-        return{access:false,mode:'expired',reason:'grace_expired'};
+
+    const res=await fetch(SUPABASE_URL+'/functions/v1/verify-subscription',{
+      method:'POST',
+      headers:{
+        Authorization:'Bearer '+token,
+        apikey:SUPABASE_KEY,
+        'Content-Type':'application/json'
       }
-      const resolvedPlan=data.plan||'monthly';
-      if(!data.plan)console.warn('[IK] users.plan is null for paid user — defaulting to monthly');
-      return{access:true,mode:'paid',plan:resolvedPlan};
-    }
-    if(data?.trial_end&&new Date(data.trial_end)>new Date()){
-      const left=Math.ceil((new Date(data.trial_end)-new Date())/86400000);
-      return{access:true,mode:'trial',daysLeft:left};
-    }
-    
-    if(!data?.trial_end){
-      console.warn('[IK] users row missing trial_end → local trial fallback');
+    });
+    if(!res.ok){
+      const errText=await res.text().catch(()=>'');
+      console.warn('[IK] verify-subscription HTTP',res.status,errText);
       return _checkTrendLocal();
     }
+    const data=await res.json();
+    if(data.error){
+      console.warn('[IK] verify-subscription error:',data.error);
+      return _checkTrendLocal();
+    }
+    /* Map EF response to internal shape */
+    return{
+      access:!!data.access,
+      mode:data.mode||'none',
+      daysLeft:data.daysLeft||0,
+      hoursLeft:data.hoursLeft||0,
+      plan:data.plan||null,
+      trial_end:data.trial_end||null
+    };
   }catch(e){
-    console.warn('[IK] checkTrendAccess exception:',e,'→ local trial fallback');
+    console.warn('[IK] checkTrendAccess exception:',e,'→ deny');
     return _checkTrendLocal();
   }
-  return{access:false,mode:'expired'};
 }
 
 
@@ -2337,12 +2318,7 @@ async function syncUserAfterLogin(user){
     if(error){console.warn('[IK] syncUserAfterLogin upsert error:',error.message);}
     
     const{data}=await Promise.resolve(sb.from('users').select('trend_active,trial_end,plan').eq('id',user.id).single()).catch(e=>{console.warn('[IK] syncUser DB error',e);return{data:null};});
-    if(data?.trend_active){
-      setTrendAccess({access:true,mode:'paid',plan:data.plan||'monthly'});
-    }else if(data?.trial_end&&new Date(data.trial_end)>new Date()){
-      const left=Math.ceil((new Date(data.trial_end)-new Date())/86400000);
-      setTrendAccess({access:true,mode:'trial',daysLeft:left});
-    }
+    /* Do NOT set trend access here — initTrend() calls verify-subscription EF */
     updateTrendBadge();
   }catch(e){console.warn('[IK] syncUserAfterLogin exception:',e);}
 }
