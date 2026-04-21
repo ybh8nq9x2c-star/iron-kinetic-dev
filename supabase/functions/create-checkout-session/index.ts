@@ -67,17 +67,14 @@ Deno.serve(async (req) => {
     return json(req, { error: 'Unauthorized — missing token' }, 401)
   }
 
-  /* ── 2. Verify user JWT via service_role ── */
-  const supabase = createClient(
+  /* ── 2. Verify user JWT via explicit token ── */
+  const anonClient = createClient(
     Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-    {
-      auth: { persistSession: false },
-      global: { headers: { Authorization: 'Bearer ' + accessToken } },
-    }
+    Deno.env.get('SUPABASE_ANON_KEY')!
   )
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  const { data: { user }, error: authError } = await anonClient.auth.getUser(accessToken)
+
 
   if (authError || !user) {
     console.error('[checkout] JWT verification failed:', authError?.message ?? 'no user')

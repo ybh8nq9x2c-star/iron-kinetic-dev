@@ -1,4 +1,3 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/function.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14?target=deno'
 
@@ -41,7 +40,7 @@ async function checkIdempotency(
   return null // continue processing
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const sig = req.headers.get('stripe-signature')
   const body = await req.text()
 
