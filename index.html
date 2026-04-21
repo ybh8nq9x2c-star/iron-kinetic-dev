@@ -2096,7 +2096,7 @@ async function _doStartCheckout(plan,stripeWin,origText){
       btns.forEach(b=>{b.disabled=false;b.style.opacity='1';});
       closeCheckoutPreview();
       if(stripeWin&&!stripeWin.closed)stripeWin.close();
-      try{localStorage.setItem('ik_pending_checkout_plan',plan);}catch{}
+      try{localStorage.setItem('ik_pending_checkout_plan',plan);localStorage.setItem('ik_checkout_ts',String(Date.now()));}catch{}
       document.getElementById('paywall-overlay')?.style.setProperty('display','none');
       document.body.style.overflow='';
       _showCheckoutLoginGate(plan);
@@ -2153,9 +2153,8 @@ function _showCheckoutLoginGate(plan){
   console.log('[IK][checkout] showing login gate for plan=',plan);
   const ov=document.getElementById('post-onb-auth-overlay');
   if(!ov){
-    
     console.warn('[IK][checkout] post-onb-auth-overlay not found, direct OAuth');
-    if(typeof signInWithGoogle==='function')signInWithGoogle();
+    if(typeof signInWithGoogle==='function')signInWithGoogle('checkout');
     return;
   }
   
@@ -2166,7 +2165,10 @@ function _showCheckoutLoginGate(plan){
   if(tit)tit.textContent=t('checkout.login.title');
   if(sub)sub.textContent=t('checkout.login.sub');
   if(badge)badge.textContent=t('checkout.login.badge');
-  if(gcta){gcta.innerHTML=sanitize('<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.14 15.89-5.81l-7.73-6C29.99 37.88 27.14 38.5 24 38.5c-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> '+t('checkout.login.cta'));
+  if(gcta){
+    gcta.innerHTML=sanitize('<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.14 15.89-5.81l-7.73-6C29.99 37.88 27.14 38.5 24 38.5c-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> '+t('checkout.login.cta'));
+    /* Override onclick to pass 'checkout' origin so pending plan is resumed after login */
+    gcta.onclick=()=>signInWithGoogle('checkout');
   }
   try{localStorage.setItem('ik_auth_origin','checkout');}catch{}
   ov.classList.add('on');
@@ -2257,19 +2259,25 @@ async function signOut(){
   }
 }
 
-async function signInWithGoogle(){
+async function signInWithGoogle(_origin){
   if(!sb){showToast('Auth non configurata');return;}
-  const{error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+window.location.pathname}});
+  /* Set origin BEFORE redirect so boot sequence knows not to reset onboardingDone */
+  const _authOrigin=_origin||'google_signin';
+  try{localStorage.setItem('ik_auth_origin',_authOrigin);}catch{}
+  /* Visual feedback — redirect can take 300-800ms to start */
+  showToast(_lang==='en'?'Redirecting to Google…':'Reindirizzamento a Google…',2500);
+  const{error}=await sb.auth.signInWithOAuth({
+    provider:'google',
+    options:{redirectTo:window.location.origin+window.location.pathname}
+  });
   if(error){
-    /* Clean up ik_auth_origin on failure — prevents stale value on next boot
-       (e.g. user cancels Google OAuth popup or network error occurs) */
+    /* Clean up on failure so next boot isn't affected */
     try{localStorage.removeItem('ik_auth_origin');}catch{}
     showToast(error.message);
   }
 }
 async function signInWithGoogleFromOnboarding(){
-  try{localStorage.setItem('ik_auth_origin','post_onboarding');}catch{}
-  await signInWithGoogle();
+  await signInWithGoogle('post_onboarding');
 }
 
 
@@ -2348,11 +2356,14 @@ function _initAuthListener(){
     if(event==='SIGNED_IN'&&session?.user){
       await syncUserAfterLogin(session.user);
       const origin=localStorage.getItem('ik_auth_origin');
-      if(origin==='post_onboarding'||origin==='checkout'){
+      if(origin==='post_onboarding'||origin==='checkout'||origin==='google_signin'){
         try{localStorage.removeItem('ik_auth_origin');}catch{}
-        closePostOnboardingAuthGate();
+        if(origin!=='google_signin')closePostOnboardingAuthGate();
         _bootAfterGates();
         setTimeout(()=>showToast(t('toast.loginOk')),400);
+      } else if(!document.getElementById('app-shell')?.classList.contains('on')){
+        /* App not visible yet (e.g. session restored on cold start) — boot it */
+        _bootAfterGates();
       }
       await initTrend();
       updateServerDataLabel?.();
@@ -2393,22 +2404,27 @@ function _initAuthListener(){
 
 async function _resumePostOnboardingOrBoot(){
   const origin=localStorage.getItem('ik_auth_origin');
-  if(origin==='post_onboarding'||origin==='checkout'){
+  const _isOAuthRedirect=origin==='post_onboarding'||origin==='checkout'||origin==='google_signin';
+
+  if(_isOAuthRedirect){
     try{
+      /* Give Supabase detectSessionInUrl time to process the token from the URL hash */
+      const _hasTokenInUrl=location.hash.includes('access_token')||new URLSearchParams(location.search).has('code');
+      if(_hasTokenInUrl)await new Promise(r=>setTimeout(r,600));
+
       const{data:{session}}=await sb.auth.getSession();
       if(session?.user){
         await syncUserAfterLogin(session.user);
         try{localStorage.removeItem('ik_auth_origin');}catch{}
-        closePostOnboardingAuthGate();
+        if(origin!=='google_signin')closePostOnboardingAuthGate();
         _bootAfterGates();
         setTimeout(()=>showToast(t('toast.loginOk')),400);
 
-        
         const pendingPlan=localStorage.getItem('ik_pending_checkout_plan');
         if(pendingPlan){
           try{
             localStorage.removeItem('ik_pending_checkout_plan');
-            localStorage.removeItem('ik_checkout_retry'); 
+            localStorage.removeItem('ik_checkout_retry');
           }catch{}
           console.log('[IK][checkout] resuming pending checkout (OAuth redirect) plan=',pendingPlan);
           setTimeout(()=>{
@@ -2417,20 +2433,27 @@ async function _resumePostOnboardingOrBoot(){
           },600);
           return;
         }
+        return;
+      }
+      /* Session not ready yet — onAuthStateChange will handle it when it fires.
+         For google_signin we just boot normally; for post_onboarding/checkout show the gate. */
+      if(origin==='google_signin'){
+        /* Don't reset onboardingDone — wait for onAuthStateChange SIGNED_IN */
+        hideSplash();
+        return;
       }
     }catch(e){console.warn('[IK] resumePostOnboarding error',e);}
-    
-    openPostOnboardingAuthGate();
+
+    if(origin!=='google_signin')openPostOnboardingAuthGate();
     return;
   }
-  
-  if(sb){
-    
 
+  if(sb){
     const _splashKillTimer=setTimeout(()=>{
       console.warn('[IK] getSession timeout — forcing onboarding fallback');
       hideSplash();
-      lsS(SK.onboardingDone,false);
+      /* Only reset onboardingDone if no OAuth redirect is in flight */
+      if(!localStorage.getItem('ik_auth_origin'))lsS(SK.onboardingDone,false);
       try{showOnboarding();}catch(e){_bootAfterGates();}
     },6000);
     try{
@@ -2445,12 +2468,13 @@ async function _resumePostOnboardingOrBoot(){
       clearTimeout(_splashKillTimer);
       console.warn('[IK] resumePostOnboarding error',e);
     }
-    
-    lsS(SK.onboardingDone,false);
+
+    /* No session and no OAuth in flight — safe to reset */
+    if(!localStorage.getItem('ik_auth_origin'))lsS(SK.onboardingDone,false);
     showOnboarding();
     return;
   }
-  
+
   _bootAfterGates();
 }
 
@@ -2458,13 +2482,15 @@ async function _resumePostOnboardingOrBoot(){
 (()=>{
   if(new URLSearchParams(location.search).get('trend')==='success'){
     history.replaceState({},'',location.pathname);
-    
-    try{localStorage.removeItem('ik_pending_checkout_plan');localStorage.removeItem('ik_checkout_retry');localStorage.removeItem('ik_auth_origin');}catch{}
+    /* Clean pending checkout state but preserve ik_auth_origin — boot sequence needs it */
+    try{localStorage.removeItem('ik_pending_checkout_plan');localStorage.removeItem('ik_checkout_retry');}catch{}
     window._trendPolling=true;
     
     const pollTrendActivation=async()=>{
       const user=await getUser();
       if(!user){window._trendActivatedMsg='Processing... refresh shortly';return;}
+      /* Now safe to clear auth origin — user is confirmed logged in */
+      try{localStorage.removeItem('ik_auth_origin');}catch{}
       for(let i=0;i<12;i++){ // 12 x 5s = 60s
         try{
           const{data}=await sb.from('users').select('trend_active,plan').eq('id',user.id).single();
@@ -9641,7 +9667,7 @@ function _bootAfterLangGate(){
 
   try{
     const _oauthOrigin=localStorage.getItem('ik_auth_origin');
-    if(!localStorage.getItem('ik_pwa_seen')&&_oauthOrigin!=='post_onboarding'&&_oauthOrigin!=='checkout'){
+    if(!localStorage.getItem('ik_pwa_seen')&&_oauthOrigin!=='post_onboarding'&&_oauthOrigin!=='checkout'&&_oauthOrigin!=='google_signin'){
       hideSplash();
       const pg=document.getElementById('pwa-gate');
       if(pg){pg.classList.add('on');return;}
@@ -9650,7 +9676,7 @@ function _bootAfterLangGate(){
 
   try{
     const _oauthOrigin2=localStorage.getItem('ik_auth_origin');
-    if(lsG(SK.onboardingDone)!==true&&_oauthOrigin2!=='post_onboarding'&&_oauthOrigin2!=='checkout'){
+    if(lsG(SK.onboardingDone)!==true&&_oauthOrigin2!=='post_onboarding'&&_oauthOrigin2!=='checkout'&&_oauthOrigin2!=='google_signin'){
       hideSplash();
       showOnboarding();
       return;
@@ -9679,7 +9705,7 @@ function _bootAfterLangGate(){
 
   try{
     const origin=localStorage.getItem('ik_auth_origin');
-    if(origin!=='checkout'&&origin!=='post_onboarding'){
+    if(origin!=='checkout'&&origin!=='post_onboarding'&&origin!=='google_signin'){
       const _checkoutTs=Number(localStorage.getItem('ik_checkout_ts'))||0;
       if(!_checkoutTs||(Date.now()-_checkoutTs)>1800000){
         localStorage.removeItem('ik_checkout_retry');
