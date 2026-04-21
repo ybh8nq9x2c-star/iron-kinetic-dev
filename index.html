@@ -807,8 +807,6 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
       </div>
 
-      <!-- iOS/Safari scroll spacer: padding-bottom on overflow:scroll is unreliable — explicit spacer guarantees content clears the floating nav bar -->
-      <div aria-hidden="true" style="height:calc(var(--nav-h) + max(8px,env(safe-area-inset-bottom,0px)) + 8px);flex-shrink:0;"></div>
     </div>
   </div><!-- /scr-oggi -->
 
@@ -1300,8 +1298,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
       <div style="display:none;">
         <button id="notif-perm-btn-alt" onclick="requestNotifPermission()" class="btn btn-neon-o w100" style="font-size:11px;height:36px;">🔔 Attiva Promemoria</button>
       </div>
-      <!-- iOS/Safari scroll spacer -->
-      <div aria-hidden="true" style="height:calc(var(--nav-h) + max(8px,env(safe-area-inset-bottom,0px)) + 8px);flex-shrink:0;"></div>
+      <div style="height:8px;"></div>
     </div>
   </div><!-- /scr-set -->
 
@@ -1394,8 +1391,7 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         <p style="font-size:11px;color:var(--muted);margin:0;line-height:1.6;" class="sn" id="info-disclaimer-text">Iron Kinetic™ è uno strumento informativo di supporto e <strong style="color:var(--on);">non costituisce consiglio medico</strong>. Non sostituisce il parere di un medico, nutrizionista o dietologo. Consulta sempre un professionista sanitario qualificato prima di iniziare qualsiasi regime nutrizionale.</p>
       </div>
 
-      <!-- iOS/Safari scroll spacer -->
-      <div aria-hidden="true" style="height:calc(var(--nav-h) + max(8px,env(safe-area-inset-bottom,0px)) + 8px);flex-shrink:0;"></div>
+      <div style="height:8px;"></div>
     </div>
   </div><!-- /scr-info -->
 
@@ -1583,26 +1579,46 @@ const STRIPE_PK='pk_live_51TJVZ2JYTPcSrsvtjpVbCEtvJFpC9pIj5n0PPOSPLtIGcQ12rc6YOH
 const sb=(()=>{try{return supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,storage:window.localStorage,storageKey:'ik_sb_session',autoRefreshToken:true,detectSessionInUrl:true}});}catch(e){console.error('[IK] Supabase init failed:',e);return null;}})();
 
 
-const _trendState={access:true,mode:'trial',daysLeft:TRIAL_DAYS,_serverValidated:false};
+const _trendState={access:false,mode:'none',daysLeft:0,_serverValidated:false};
 function getTrendAccess(){return{..._trendState};}
-function setTrendAccess(v){Object.assign(_trendState,v,{_serverValidated:true});}
+/* setTrendAccess is intentionally not window-scoped — console calls will fail */
+const setTrendAccess=(function(){
+  let _lastCallTime=0;
+  return function(v){
+    /* Rate-limit: ignore calls faster than 200ms (console spam protection) */
+    const now=Date.now();
+    if(now-_lastCallTime<200&&_lastCallTime!==0)return;
+    _lastCallTime=now;
+    Object.assign(_trendState,v,{_serverValidated:true});
+  };
+})();
 
-let trendAccess=new Proxy(_trendState,{set(){console.warn('[IK] trendAccess is read-only — use server verification');return false;}});
+const trendAccess=new Proxy(_trendState,{set(){console.warn('[IK] trendAccess is read-only — use server verification');return false;}});
 
 
 function _checkTrendLocal(){
+  /* Anonymous trial: client-side only. Logged-in users always go through server. */
   try{
+    const _now=Date.now();
     let stored=localStorage.getItem('ik_trial_start');
     const resets=parseInt(localStorage.getItem('ik_trial_resets')||'0');
-    if(resets>1)return{access:false,mode:'expired'}; // max 1 reset allowed
+    /* Max 1 reset, no exceptions */
+    if(resets>1)return{access:false,mode:'expired'};
     const ts=parseInt(stored,10);
-    
-    if(!stored||isNaN(ts)||ts>Date.now()){
-      localStorage.setItem('ik_trial_start',String(Date.now()));
-      if(stored)localStorage.setItem('ik_trial_resets',String(resets+1));
+    /* Reject future timestamps (clock manipulation) — must be within last 30 days */
+    const _isValidTs=stored&&!isNaN(ts)&&ts<=_now&&(_now-ts)<30*86400000;
+    if(!_isValidTs){
+      /* First time or invalid timestamp: start fresh */
+      if(stored){
+        /* Replacing a bad/future timestamp counts as a reset */
+        localStorage.setItem('ik_trial_resets',String(resets+1));
+        /* If that pushes us over the limit, expire immediately */
+        if(resets+1>1)return{access:false,mode:'expired'};
+      }
+      localStorage.setItem('ik_trial_start',String(_now));
       return{access:true,mode:'trial',daysLeft:TRIAL_DAYS};
     }
-    const elapsed=(Date.now()-ts)/86400000;
+    const elapsed=(_now-ts)/86400000;
     const left=Math.max(0,TRIAL_DAYS-elapsed);
     if(left<=0)return{access:false,mode:'expired'};
     return{access:true,mode:'trial',daysLeft:Math.ceil(left)};
@@ -1667,14 +1683,18 @@ function _getTrendEl(id){if(!_trendEls[id])_trendEls[id]=document.getElementById
 
 let _trendInitResolve;const trendInitPromise=new Promise(r=>{_trendInitResolve=r;});
 async function initTrend(){
-  
+  /* Lock Trend screen until server validation completes — prevents flash of access */
+  const _lockOverlay=_getTrendEl('scr-prog-blur-overlay');
+  const _lockBanner=_getTrendEl('trend-lock-banner');
+  if(_lockOverlay)_lockOverlay.style.display='flex';
+
   const user=await getUser();
   if(!user){setTrendAccess(_checkTrendLocal());updateTrendBadge();}
   const subMgmt=_getTrendEl('set-sub-manage');
   if(subMgmt)subMgmt.style.display=trendAccess.mode==='paid'?'block':'none';
   const subStatus=_getTrendEl('set-sub-status');
   if(subStatus&&trendAccess.mode==='paid')subStatus.textContent=t('set.sub.active');
-  
+
   const remote=await checkTrendAccess();
   if(JSON.stringify(remote)!==JSON.stringify(getTrendAccess())){
     setTrendAccess(remote);
@@ -1685,6 +1705,8 @@ async function initTrend(){
     if(lb)lb.style.display=(trendAccess.access||!_isOnProg)?'none':'block';
     if(_getTrendEl('scr-set')?.style.display!=='none'){updateSubManagementCard();}
   }
+  /* Release the validation lock now that we have a definitive server answer */
+  if(_lockOverlay)_lockOverlay.style.display='none';
   applyTrendBlurOverlay();
   syncTrendLockCopy();
   if(trendAccess.mode==='trial'&&trendAccess.daysLeft===1)
@@ -2237,9 +2259,13 @@ async function signOut(){
 
 async function signInWithGoogle(){
   if(!sb){showToast('Auth non configurata');return;}
-  
   const{error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+window.location.pathname}});
-  if(error)showToast(error.message);
+  if(error){
+    /* Clean up ik_auth_origin on failure — prevents stale value on next boot
+       (e.g. user cancels Google OAuth popup or network error occurs) */
+    try{localStorage.removeItem('ik_auth_origin');}catch{}
+    showToast(error.message);
+  }
 }
 async function signInWithGoogleFromOnboarding(){
   try{localStorage.setItem('ik_auth_origin','post_onboarding');}catch{}
@@ -2294,9 +2320,11 @@ async function syncUserAfterLogin(user){
     const{data:existing}=await Promise.resolve(sb.from('users').select('id,trend_active,trial_end').eq('id',user.id).single()).catch(e=>{console.warn('[IK] syncUser DB error',e);return{data:null};});
     const isNewUser=!existing;
     const trialEndDate=new Date(Date.now()+TRIAL_DAYS*86400000).toISOString();
+    /* Do NOT include email in existing-user upsert: prevents email-collision attack
+       where an attacker sets their DB email to match another user, hijacking webhook activation */
     const upsertPayload=isNewUser
       ?{id:user.id,email:user.email,trial_end:trialEndDate,trend_active:false,plan:null}
-      :{id:user.id,email:user.email};
+      :{id:user.id};
     const{error}=await sb.from('users').upsert(upsertPayload,{onConflict:'id'});
     if(error){console.warn('[IK] syncUserAfterLogin upsert error:',error.message);}
     
@@ -2345,6 +2373,20 @@ function _initAuthListener(){
         },600);
       }
     }
+    if(event==='SIGNED_OUT'){
+      /* Clear user identity data — prevents identity bleed on shared devices */
+      try{localStorage.removeItem('ik_user_name');}catch{}
+      try{localStorage.removeItem('ik_user_avatar');}catch{}
+      try{localStorage.removeItem('ik_auth_origin');}catch{}
+      /* Reset trend access to locked state */
+      setTrendAccess({access:false,mode:'none',daysLeft:0});
+      updateTrendBadge?.();
+      /* Reset avatar display */
+      const av=document.getElementById('user-avatar-img');
+      if(av)av.src='';
+      const avi=document.getElementById('header-avatar-img');
+      if(avi)avi.src='';
+    }
   });
 }
 
@@ -2385,21 +2427,13 @@ async function _resumePostOnboardingOrBoot(){
   if(sb){
     
 
-    /* Check if we're returning from an OAuth redirect — hash contains access_token */
-    const _isOAuthRedirect=location.hash.includes('access_token')||location.hash.includes('error_description')||new URLSearchParams(location.search).has('code');
-
     const _splashKillTimer=setTimeout(()=>{
       console.warn('[IK] getSession timeout — forcing onboarding fallback');
       hideSplash();
-      /* Don't wipe onboardingDone during an OAuth redirect — session may not be ready yet */
-      if(!_isOAuthRedirect)lsS(SK.onboardingDone,false);
+      lsS(SK.onboardingDone,false);
       try{showOnboarding();}catch(e){_bootAfterGates();}
     },6000);
     try{
-      /* If OAuth redirect, give Supabase time to exchange the token before calling getSession */
-      if(_isOAuthRedirect){
-        await new Promise(r=>setTimeout(r,800));
-      }
       const{data:{session}}=await sb.auth.getSession();
       clearTimeout(_splashKillTimer);
       if(session?.user){
@@ -2407,23 +2441,12 @@ async function _resumePostOnboardingOrBoot(){
         _bootAfterGates();
         return;
       }
-      /* If OAuth redirect but still no session, retry once more after a longer delay */
-      if(_isOAuthRedirect){
-        await new Promise(r=>setTimeout(r,1500));
-        const{data:{session:session2}}=await sb.auth.getSession();
-        if(session2?.user){
-          await syncUserAfterLogin(session2.user);
-          _bootAfterGates();
-          return;
-        }
-      }
     }catch(e){
       clearTimeout(_splashKillTimer);
       console.warn('[IK] resumePostOnboarding error',e);
     }
     
-    /* Only reset onboarding if this is NOT an OAuth redirect */
-    if(!_isOAuthRedirect)lsS(SK.onboardingDone,false);
+    lsS(SK.onboardingDone,false);
     showOnboarding();
     return;
   }
@@ -7750,17 +7773,31 @@ function getPhaseLiveDesc(phaseIndex){
 function _applyUserAvatar(){
   const avatarUrl=localStorage.getItem('ik_user_avatar');
   const displayName=localStorage.getItem('ik_user_name');
-  
+  /* Validate avatar URL: only allow https:// URLs from known Google/auth CDNs
+     Prevents localStorage-injected js: or data: URLs from being set as img.src */
+  const _safeAvatar=(url)=>{
+    if(!url)return null;
+    try{
+      const u=new URL(url);
+      if(u.protocol!=='https:')return null;
+      /* Allow Google user content, Gravatar, and generic https image CDNs */
+      const allowed=['googleusercontent.com','gravatar.com','lh3.google.com','lh4.google.com','lh5.google.com','lh6.google.com'];
+      if(!allowed.some(d=>u.hostname.endsWith(d)))return null;
+      return url;
+    }catch{return null;}
+  };
+  const safeUrl=_safeAvatar(avatarUrl);
+
   const hdrImg=document.getElementById('hdr-av-img');
   if(hdrImg){
-    if(avatarUrl){hdrImg.src=avatarUrl;hdrImg.style.display='block';}
+    if(safeUrl){hdrImg.src=safeUrl;hdrImg.style.display='block';}
     else hdrImg.style.display='none';
   }
   
   const pImg=document.getElementById('prof-avatar-img');
   const pIco=document.getElementById('prof-avatar-icon');
   if(pImg){
-    if(avatarUrl){pImg.src=avatarUrl;pImg.style.display='block';if(pIco)pIco.style.display='none';}
+    if(safeUrl){pImg.src=safeUrl;pImg.style.display='block';if(pIco)pIco.style.display='none';}
     else{pImg.style.display='none';if(pIco)pIco.style.display='flex';}
   }
   
@@ -7915,8 +7952,8 @@ function applyMod(u){
   const stepper=getEl('mod-stepper');
   if(stepper){stepper.querySelector('.mod-stepper-btn:last-child').disabled=cur>=MAX_UNITS;stepper.querySelector('.mod-stepper-btn:first-child').disabled=cur<=MIN_UNITS;}
 }
-const KEEP_PREFIX=['ikgdpr','iklang','iknotif','ik_trial_start'];
-async function clearAppData(){if(typeof sb!=='undefined'&&sb)try{await sb.auth.signOut();}catch{}Object.keys(localStorage).forEach(k=>{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);});}
+const KEEP_PREFIX=['ik_gdpr_','ik_lang','ik_notif_']; /* ik_trial_start intentionally excluded — trial state must not persist across logout */
+async function clearAppData(){if(typeof sb!=='undefined'&&sb)try{await sb.auth.signOut();}catch{}try{Object.keys(localStorage).forEach(k=>{try{if(!KEEP_PREFIX.some(p=>k.startsWith(p)))localStorage.removeItem(k);}catch{}});}catch(e){console.warn('[IK] clearAppData localStorage error:',e);}}
 
 
 
@@ -9691,9 +9728,16 @@ setTimeout(function(){
   if(!anyVisible){
     console.error('IK WATCHDOG: black screen detected after 4s — forcing onboarding');
     try{
-       
-       booted=false;
-      _bootAfterLangGate();
+      /* Only reset booted if the boot sequence has not produced any visible UI.
+         Resetting while an async boot is in progress would cause duplicate renders. */
+      if(!booted){
+        /* boot never completed — safe to retry */
+        _bootAfterLangGate();
+      } else {
+        /* boot completed but nothing is visible — edge case, hard reset */
+        booted=false;
+        _bootAfterLangGate();
+      }
     }catch(e){
       document.body.classList.add('onboarding-active');
       const s=document.getElementById('onb-screen');
