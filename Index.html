@@ -107,6 +107,8 @@ body{margin:0;height:100%;height:100dvh;width:100%;overflow:hidden;overscroll-be
 #scr-set>.pg,#scr-info>.pg{padding-top:12px;}
 /* Fix: ensure Today screen can scroll to bottom (Trackers fully visible) */
 #scr-oggi>.pg{padding-bottom:32px;}
+/* Fix: ensure Trend/Progress screen scrolls fully to bottom — extra space clears the floating nav */
+#scr-prog>.pg{padding-bottom:calc(var(--page-bottom) + 20px);}
 .card{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);}
 .card-ghost{background:rgba(255,255,255,.04);border:1px solid var(--glass-stroke);border-radius:var(--r);}
 .card-neon{background:rgba(77,220,198,.04);border:1px solid rgba(77,220,198,.18);border-radius:var(--r);}
@@ -315,8 +317,9 @@ body.onboarding-active #onb-screen{
 .streak-badge .fire{font-size:12px;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}.bar-fill,.result-card{transition:none;}}
 /* ── Trend blur overlay ── */
-#scr-prog{position:relative;}
-#scr-prog-blur-overlay{display:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:50;background:transparent;pointer-events:none;}
+/* position:fixed keeps overlay OUT of the scroll container so it never intercepts touch-scroll on iOS */
+#scr-prog{isolation:isolate;}
+#scr-prog-blur-overlay{display:none;position:fixed;top:calc(var(--hdr-top) + var(--hdr));left:var(--sal);right:var(--sar);bottom:calc(var(--nav-bottom) + var(--nav-h));z-index:50;background:transparent;pointer-events:none;}
 #scr-prog-blur-overlay.on{display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(8px) saturate(120%);-webkit-backdrop-filter:blur(8px) saturate(120%);background:rgba(14,14,14,.80);pointer-events:auto;}
 #scr-prog.locked-trend .pg{pointer-events:auto!important;}
 /* ── Trackers collapsible ── */
@@ -745,8 +748,8 @@ body.onboarding-active #onb-screen{
 #paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9999;align-items:flex-end;justify-content:center;}
 #paywall-sheet{background:var(--s1);border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;padding:28px 24px 32px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.16,1,0.3,1);position:relative;}
 #trend-lock-banner{display:none;position:sticky;top:0;z-index:10;background:rgba(14,14,14,.95);backdrop-filter:blur(8px);padding:11px 16px;border-bottom:1px solid rgba(77,220,198,.2);text-align:center;}
-#scr-prog.locked-trend{flex-direction:column;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--page-bottom) + var(--sat));}
-#scr-prog.locked-trend .pg{flex:1;display:flex;flex-direction:column;overflow-y:auto!important;-webkit-overflow-scrolling:touch;pointer-events:auto!important;}
+#scr-prog.locked-trend{overflow-y:scroll;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--page-bottom) + var(--sat));}
+#scr-prog.locked-trend .pg{display:block;overflow-y:visible!important;pointer-events:auto!important;}
 #trend-lock-banner.locked-card{flex-direction:column;margin:auto 0;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px 16px;pointer-events:auto;cursor:auto;}
 [onclick*="startCheckout"]:disabled{cursor:not-allowed;pointer-events:none;}
 /* ── Post-onboarding auth gate ── */
@@ -871,10 +874,7 @@ button[onclick*="toggleFaq"]:focus-visible{
 .hist-row{transition:background .12s;}
 .hist-row:active{background:var(--s2);}
 
-/* ── scr-prog-blur-overlay: account for floating nav ── */
-#scr-prog-blur-overlay{
-  bottom:calc(var(--nav-bottom) + var(--nav-h) + 8px);
-}
+/* ── scr-prog-blur-overlay bottom handled in main rule above ── */
 
 /* ── ring-track stroke-width consistency ── */
 .ring-track{stroke-width:4!important;}
@@ -1886,6 +1886,8 @@ setTimeout(function(){var s=document.getElementById('ik-splash');if(s)s.classLis
         </div>
         <div id="hist-list"><div style="padding:14px;text-align:center;"><span class="muted sn" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;">— Nessuna voce —</span></div></div>
       </div>
+      <!-- iOS scroll spacer: padding-bottom on overflow:scroll is unreliable on Safari -->
+      <div aria-hidden="true" style="height:1px;flex-shrink:0;"></div>
     </div>
   </div><!-- /scr-prog -->
 
@@ -9657,7 +9659,7 @@ function switchTab(name){
     if(nb){nb.classList.toggle('on',t===name);nb.classList.toggle('inactive',t!==name);}
     if(!scr)return;
     if(t===name){
-      scr.style.display=scr.classList.contains('locked-trend')?'flex':'block';
+      scr.style.display='block';
       requestAnimationFrame(()=>scr.classList.add('tab-enter'));
       setTimeout(()=>scr.classList.remove('tab-enter'),200);
     } else {
