@@ -1,4 +1,4 @@
-/* Iron Kinetic — Service Worker v27
+/* Iron Kinetic — Service Worker v28
    Fixes vs v26:
    - ASSETS vuoti: non precachiamo nulla durante install.
      cache.addAll() con index.html o manifest fallisce se la rete è lenta
